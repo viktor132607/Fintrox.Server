@@ -1,5 +1,6 @@
 using Fintrox.Application.Identity;
 using Fintrox.Application.Organizations;
+using Fintrox.Infrastructure.Audit;
 using Fintrox.Infrastructure.Identity;
 using Fintrox.Infrastructure.Organizations;
 using Fintrox.Infrastructure.Persistence;
@@ -15,7 +16,8 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        var connectionString = configuration.GetConnectionString("DefaultConnection");
+        var connectionString = configuration.GetConnectionString(
+            "DefaultConnection");
 
         if (string.IsNullOrWhiteSpace(connectionString))
         {
@@ -23,8 +25,15 @@ public static class DependencyInjection
                 "Connection string 'DefaultConnection' is not configured.");
         }
 
-        services.AddDbContextPool<FintroxDbContext>(
-            options => PersistenceOptions.Configure(options, connectionString));
+        services.AddScoped<AuditSaveChangesInterceptor>();
+
+        services.AddDbContext<FintroxDbContext>(
+            (serviceProvider, options) =>
+            {
+                PersistenceOptions.Configure(options, connectionString);
+                options.AddInterceptors(
+                    serviceProvider.GetRequiredService<AuditSaveChangesInterceptor>());
+            });
 
         services
             .AddIdentityCore<ApplicationUser>(options =>
@@ -39,7 +48,8 @@ public static class DependencyInjection
 
                 options.Lockout.AllowedForNewUsers = true;
                 options.Lockout.MaxFailedAccessAttempts = 5;
-                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+                options.Lockout.DefaultLockoutTimeSpan =
+                    TimeSpan.FromMinutes(15);
 
                 options.SignIn.RequireConfirmedEmail = false;
             })
@@ -48,7 +58,9 @@ public static class DependencyInjection
         services.AddScoped<IAuthenticationService, AuthenticationService>();
         services.AddScoped<IUserDirectory, UserDirectory>();
         services.AddScoped<IOrganizationRepository, OrganizationRepository>();
-        services.AddScoped<IOrganizationMembershipRepository, OrganizationMembershipRepository>();
+        services.AddScoped<
+            IOrganizationMembershipRepository,
+            OrganizationMembershipRepository>();
 
         return services;
     }

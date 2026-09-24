@@ -1,5 +1,6 @@
 using Fintrox.Domain.Common;
 using Fintrox.Domain.Organizations;
+using Fintrox.Infrastructure.Audit;
 using Fintrox.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -20,6 +21,8 @@ public sealed class FintroxDbContext(DbContextOptions<FintroxDbContext> options)
     public override int SaveChanges(bool acceptAllChangesOnSuccess)
     {
         ValidateOrganizationScopes();
+        ValidateAuditLogImmutability();
+
         return base.SaveChanges(acceptAllChangesOnSuccess);
     }
 
@@ -28,7 +31,11 @@ public sealed class FintroxDbContext(DbContextOptions<FintroxDbContext> options)
         CancellationToken cancellationToken = default)
     {
         ValidateOrganizationScopes();
-        return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+        ValidateAuditLogImmutability();
+
+        return base.SaveChangesAsync(
+            acceptAllChangesOnSuccess,
+            cancellationToken);
     }
 
     protected override void OnModelCreating(ModelBuilder builder)
@@ -36,7 +43,8 @@ public sealed class FintroxDbContext(DbContextOptions<FintroxDbContext> options)
         base.OnModelCreating(builder);
 
         ConfigureIdentityTables(builder);
-        builder.ApplyConfigurationsFromAssembly(typeof(FintroxDbContext).Assembly);
+        builder.ApplyConfigurationsFromAssembly(
+            typeof(FintroxDbContext).Assembly);
     }
 
     private static void ConfigureIdentityTables(ModelBuilder builder)
@@ -66,6 +74,20 @@ public sealed class FintroxDbContext(DbContextOptions<FintroxDbContext> options)
         {
             throw new InvalidOperationException(
                 $"Organization-scoped entity '{invalidEntry.Metadata.ClrType.Name}' has an empty OrganizationId.");
+        }
+    }
+
+    private void ValidateAuditLogImmutability()
+    {
+        var mutableAuditEntry = ChangeTracker
+            .Entries<AuditLogEntry>()
+            .FirstOrDefault(entry =>
+                entry.State is EntityState.Modified or EntityState.Deleted);
+
+        if (mutableAuditEntry is not null)
+        {
+            throw new InvalidOperationException(
+                "Audit log entries are append-only and cannot be modified or deleted.");
         }
     }
 }

@@ -1,4 +1,5 @@
 using System.Text;
+using Fintrox.Api.Audit;
 using Fintrox.Api.Authentication;
 using Fintrox.Api.Authorization;
 using Fintrox.Api.Health;
@@ -77,6 +78,7 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUser, HttpCurrentUser>();
 builder.Services.AddScoped<ICurrentOrganization, HttpCurrentOrganization>();
+builder.Services.AddScoped<IAuditContext, HttpAuditContext>();
 builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
 
 builder.Services.AddControllers();

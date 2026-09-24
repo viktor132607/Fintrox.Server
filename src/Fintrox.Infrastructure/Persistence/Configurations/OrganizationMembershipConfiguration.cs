@@ -5,7 +5,8 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Fintrox.Infrastructure.Persistence.Configurations;
 
-public sealed class OrganizationMembershipConfiguration : IEntityTypeConfiguration<OrganizationMembership>
+public sealed class OrganizationMembershipConfiguration
+    : IEntityTypeConfiguration<OrganizationMembership>
 {
     public void Configure(EntityTypeBuilder<OrganizationMembership> builder)
     {
@@ -40,10 +41,16 @@ public sealed class OrganizationMembershipConfiguration : IEntityTypeConfigurati
             .HasColumnType("timestamp with time zone")
             .IsRequired();
 
+        builder.Property(membership => membership.CreatedByUserId)
+            .HasColumnName("created_by_user_id");
+
         builder.Property(membership => membership.UpdatedAtUtc)
             .HasColumnName("updated_at_utc")
             .HasColumnType("timestamp with time zone")
             .IsRequired();
+
+        builder.Property(membership => membership.UpdatedByUserId)
+            .HasColumnName("updated_by_user_id");
 
         builder.HasIndex(membership => new
             {
