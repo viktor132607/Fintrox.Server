@@ -31,26 +31,26 @@ public sealed class FintroxDbContext(DbContextOptions<FintroxDbContext> options)
         return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
     }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    protected override void OnModelCreating(ModelBuilder builder)
     {
-        base.OnModelCreating(modelBuilder);
+        base.OnModelCreating(builder);
 
-        ConfigureIdentityTables(modelBuilder);
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(FintroxDbContext).Assembly);
+        ConfigureIdentityTables(builder);
+        builder.ApplyConfigurationsFromAssembly(typeof(FintroxDbContext).Assembly);
     }
 
-    private static void ConfigureIdentityTables(ModelBuilder modelBuilder)
+    private static void ConfigureIdentityTables(ModelBuilder builder)
     {
-        modelBuilder.Entity<ApplicationUser>()
+        builder.Entity<ApplicationUser>()
             .ToTable("users", DatabaseSchemas.Identity);
 
-        modelBuilder.Entity<IdentityUserClaim<Guid>>()
+        builder.Entity<IdentityUserClaim<Guid>>()
             .ToTable("user_claims", DatabaseSchemas.Identity);
 
-        modelBuilder.Entity<IdentityUserLogin<Guid>>()
+        builder.Entity<IdentityUserLogin<Guid>>()
             .ToTable("user_logins", DatabaseSchemas.Identity);
 
-        modelBuilder.Entity<IdentityUserToken<Guid>>()
+        builder.Entity<IdentityUserToken<Guid>>()
             .ToTable("user_tokens", DatabaseSchemas.Identity);
     }
 

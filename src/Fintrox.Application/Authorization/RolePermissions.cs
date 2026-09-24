@@ -4,8 +4,8 @@ namespace Fintrox.Application.Authorization;
 
 public static class RolePermissions
 {
-    private static readonly IReadOnlyDictionary<OrganizationRole, IReadOnlyCollection<string>> Map =
-        new Dictionary<OrganizationRole, IReadOnlyCollection<string>>
+    private static readonly Dictionary<OrganizationRole, IReadOnlyCollection<string>> Map =
+        new()
         {
             [OrganizationRole.Owner] = Permissions.All,
             [OrganizationRole.Administrator] =

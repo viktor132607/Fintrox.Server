@@ -43,8 +43,7 @@ public static class DependencyInjection
 
                 options.SignIn.RequireConfirmedEmail = false;
             })
-            .AddEntityFrameworkStores<FintroxDbContext>()
-            .AddDefaultTokenProviders();
+            .AddEntityFrameworkStores<FintroxDbContext>();
 
         services.AddScoped<IAuthenticationService, AuthenticationService>();
         services.AddScoped<IOrganizationRepository, OrganizationRepository>();
