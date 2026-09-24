@@ -8,6 +8,15 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
     /// <inheritdoc />
     public partial class CommonDomainAuditingFoundation : Migration
     {
+        private static readonly string[] AuditEntityIndexColumns =
+            ["entity_type", "entity_id"];
+
+        private static readonly string[] AuditOrganizationIndexColumns =
+            ["organization_id", "occurred_at_utc"];
+
+        private static readonly string[] AuditUserIndexColumns =
+            ["user_id", "occurred_at_utc"];
+
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -66,19 +75,19 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                 name: "ix_audit_log_entity",
                 schema: "audit",
                 table: "audit_log",
-                columns: new[] { "entity_type", "entity_id" });
+                columns: AuditEntityIndexColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ix_audit_log_organization_occurred",
                 schema: "audit",
                 table: "audit_log",
-                columns: new[] { "organization_id", "occurred_at_utc" });
+                columns: AuditOrganizationIndexColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ix_audit_log_user_occurred",
                 schema: "audit",
                 table: "audit_log",
-                columns: new[] { "user_id", "occurred_at_utc" });
+                columns: AuditUserIndexColumns);
         }
 
         /// <inheritdoc />
