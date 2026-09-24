@@ -8,16 +8,20 @@ The CI gate performs:
 
 1. repository checkout;
 2. .NET SDK setup from `global.json`;
-3. solution restore;
-4. Release build with warnings treated as errors;
-5. execution of every `tests/**/*Tests.csproj` project when test projects exist;
-6. Docker image build.
+3. repository-local tool restore;
+4. solution restore;
+5. Release build with warnings treated as errors;
+6. execution of every `tests/**/*Tests.csproj` project when test projects exist;
+7. PostgreSQL 18.6 service startup;
+8. EF migration snapshot validation;
+9. application of all migrations to a clean PostgreSQL database;
+10. Docker image build.
 
-A failed build or test prevents the container job from running.
+A failed build, test, migration validation, or migration application prevents container publication.
 
 ## Continuous Delivery
 
-On a successful push to `main`, the same workflow publishes the application image to GitHub Container Registry:
+On a successful push to `main`, the workflow publishes:
 
 ```text
 ghcr.io/viktor132607/fintrox.server:latest
@@ -26,13 +30,11 @@ ghcr.io/viktor132607/fintrox.server:sha-<commit>
 
 Pull requests build the image but never publish it.
 
-This creates a deployable, immutable application artifact before a hosting provider is connected.
-
 ## Deployment
 
-Provider deployment is intentionally separate from artifact delivery. When the production Render service is created, it should deploy the GHCR image produced by this workflow instead of rebuilding an unrelated source revision.
+Provider deployment remains separate from artifact delivery. When the production Render service is connected, it should consume the validated GHCR image.
 
-No long-lived registry password is stored: GHCR publishing uses the repository-scoped `GITHUB_TOKEN`.
+Production database migrations must remain an explicit deployment step; the API does not mutate the production schema automatically during startup.
 
 ## Dependency updates
 
