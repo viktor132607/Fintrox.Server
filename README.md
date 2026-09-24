@@ -15,7 +15,7 @@ src/
 └── Fintrox.Infrastructure/
 ```
 
-Dependency rules and layer responsibilities are documented in [docs/architecture.md](docs/architecture.md).
+Dependency rules are documented in [docs/architecture.md](docs/architecture.md).
 
 ## Runtime
 
@@ -25,11 +25,17 @@ Dependency rules and layer responsibilities are documented in [docs/architecture
 - Npgsql / PostgreSQL 18
 - OpenAPI
 - Problem Details
-- Health checks
+- health checks
+
+## Multi-tenancy
+
+Fintrox is organization-scoped. Organization management and the `X-Organization-Id` request context are implemented.
+
+See [docs/multi-tenancy.md](docs/multi-tenancy.md).
+
+Authentication/membership authorization is the next phase.
 
 ## Persistence
-
-Local PostgreSQL:
 
 ```bash
 docker compose up -d postgres
@@ -39,7 +45,7 @@ dotnet ef database update \
   --startup-project src/Fintrox.Api/Fintrox.Api.csproj
 ```
 
-Persistence and migration conventions are documented in [docs/persistence.md](docs/persistence.md).
+See [docs/persistence.md](docs/persistence.md).
 
 ## Run locally
 
@@ -48,32 +54,13 @@ dotnet restore Fintrox.Server.sln
 dotnet run --project src/Fintrox.Api/Fintrox.Api.csproj
 ```
 
-## Endpoints
+## Health
 
-- `GET /api/v1/system/info`
 - `GET /health/live`
 - `GET /health/ready`
-- `GET /openapi/v1.json` in Development
-
-`/health/ready` verifies PostgreSQL connectivity; `/health/live` does not depend on external infrastructure.
-
-## Container
-
-```bash
-docker build -t fintrox.server .
-docker run --rm -p 8080:8080 \
-  -e ConnectionStrings__DefaultConnection="Host=host.docker.internal;Port=5432;Database=fintrox;Username=fintrox;Password=fintrox_dev" \
-  fintrox.server
-```
 
 ## CI/CD
 
-GitHub Actions restores, builds, tests, validates EF migrations against PostgreSQL and validates the Docker image. Successful pushes to `main` publish images to:
-
-```text
-ghcr.io/viktor132607/fintrox.server
-```
+GitHub Actions validates build, tests, EF model/migrations against PostgreSQL and the Docker image before publishing to GHCR.
 
 See [docs/ci-cd.md](docs/ci-cd.md).
-
-Next core implementation phase: organization / multi-tenant foundation.

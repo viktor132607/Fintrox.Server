@@ -1,5 +1,7 @@
 using Fintrox.Api.Health;
+using Fintrox.Api.Organizations;
 using Fintrox.Application;
+using Fintrox.Application.Common.Interfaces;
 using Fintrox.Infrastructure;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -9,6 +11,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services
     .AddApplication()
     .AddInfrastructure(builder.Configuration);
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentOrganization, HttpCurrentOrganization>();
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();

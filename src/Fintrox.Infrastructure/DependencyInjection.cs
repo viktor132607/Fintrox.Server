@@ -1,3 +1,5 @@
+using Fintrox.Application.Organizations;
+using Fintrox.Infrastructure.Organizations;
 using Fintrox.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,6 +22,8 @@ public static class DependencyInjection
 
         services.AddDbContextPool<FintroxDbContext>(
             options => PersistenceOptions.Configure(options, connectionString));
+
+        services.AddScoped<IOrganizationRepository, OrganizationRepository>();
 
         return services;
     }
