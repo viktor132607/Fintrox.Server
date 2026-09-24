@@ -11,6 +11,12 @@ namespace Fintrox.Infrastructure.Persistence.Migrations;
 [Migration("20260925000200_OrganizationFoundation")]
 public partial class OrganizationFoundation : Migration
 {
+    private static readonly string[] CountryRegistrationIndexColumns =
+        ["country_code", "registration_number"];
+
+    private static readonly string[] CountryVatIndexColumns =
+        ["country_code", "vat_number"];
+
     protected override void Up(MigrationBuilder migrationBuilder)
     {
         migrationBuilder.CreateTable(
@@ -47,14 +53,14 @@ public partial class OrganizationFoundation : Migration
             name: "ux_organizations_country_registration_number",
             schema: "core",
             table: "organizations",
-            columns: new[] { "country_code", "registration_number" },
+            columns: CountryRegistrationIndexColumns,
             unique: true);
 
         migrationBuilder.CreateIndex(
             name: "ux_organizations_country_vat_number",
             schema: "core",
             table: "organizations",
-            columns: new[] { "country_code", "vat_number" },
+            columns: CountryVatIndexColumns,
             unique: true);
     }
 
