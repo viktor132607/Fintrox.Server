@@ -34,9 +34,36 @@ public sealed class OrganizationMembershipRepository(
     {
         return await dbContext.OrganizationMemberships
             .AsNoTracking()
-            .Where(membership => membership.UserId == userId && membership.IsActive)
+            .Where(membership =>
+                membership.UserId == userId &&
+                membership.IsActive)
             .OrderByDescending(membership => membership.Role)
             .ToArrayAsync(cancellationToken);
+    }
+
+    public async Task<IReadOnlyList<OrganizationMembership>> ListForOrganizationAsync(
+        Guid organizationId,
+        CancellationToken cancellationToken)
+    {
+        return await dbContext.OrganizationMemberships
+            .AsNoTracking()
+            .Where(membership => membership.OrganizationId == organizationId)
+            .OrderByDescending(membership => membership.IsActive)
+            .ThenByDescending(membership => membership.Role)
+            .ThenBy(membership => membership.CreatedAtUtc)
+            .ToArrayAsync(cancellationToken);
+    }
+
+    public Task<int> CountActiveOwnersAsync(
+        Guid organizationId,
+        CancellationToken cancellationToken)
+    {
+        return dbContext.OrganizationMemberships.CountAsync(
+            membership =>
+                membership.OrganizationId == organizationId &&
+                membership.IsActive &&
+                membership.Role == OrganizationRole.Owner,
+            cancellationToken);
     }
 
     public async Task AddAsync(
@@ -46,5 +73,10 @@ public sealed class OrganizationMembershipRepository(
         await dbContext.OrganizationMemberships.AddAsync(
             membership,
             cancellationToken);
+    }
+
+    public Task SaveChangesAsync(CancellationToken cancellationToken)
+    {
+        return dbContext.SaveChangesAsync(cancellationToken);
     }
 }

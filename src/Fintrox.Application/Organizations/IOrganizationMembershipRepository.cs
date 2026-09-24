@@ -14,7 +14,17 @@ public interface IOrganizationMembershipRepository
         Guid userId,
         CancellationToken cancellationToken);
 
+    Task<IReadOnlyList<OrganizationMembership>> ListForOrganizationAsync(
+        Guid organizationId,
+        CancellationToken cancellationToken);
+
+    Task<int> CountActiveOwnersAsync(
+        Guid organizationId,
+        CancellationToken cancellationToken);
+
     Task AddAsync(
         OrganizationMembership membership,
         CancellationToken cancellationToken);
+
+    Task SaveChangesAsync(CancellationToken cancellationToken);
 }
