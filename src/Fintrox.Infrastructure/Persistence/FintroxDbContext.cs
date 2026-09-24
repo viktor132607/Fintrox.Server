@@ -1,3 +1,4 @@
+using Fintrox.Domain.Accounting;
 using Fintrox.Domain.Common;
 using Fintrox.Domain.Organizations;
 using Fintrox.Infrastructure.Audit;
@@ -11,6 +12,8 @@ namespace Fintrox.Infrastructure.Persistence;
 public sealed class FintroxDbContext(DbContextOptions<FintroxDbContext> options)
     : IdentityUserContext<ApplicationUser, Guid>(options)
 {
+    public DbSet<Account> Accounts => Set<Account>();
+
     public DbSet<Organization> Organizations => Set<Organization>();
 
     public DbSet<OrganizationMembership> OrganizationMemberships =>
