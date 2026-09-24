@@ -1,0 +1,21 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.0.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fintrox.Api", "src\Fintrox.Api\Fintrox.Api.csproj", "{7A2431E9-77E2-4A12-8F7A-3F29DB6DCB8D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7A2431E9-77E2-4A12-8F7A-3F29DB6DCB8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A2431E9-77E2-4A12-8F7A-3F29DB6DCB8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A2431E9-77E2-4A12-8F7A-3F29DB6DCB8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A2431E9-77E2-4A12-8F7A-3F29DB6DCB8D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
