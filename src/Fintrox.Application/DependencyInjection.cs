@@ -1,3 +1,4 @@
+using Fintrox.Application.Authorization;
 using Fintrox.Application.Organizations;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,6 +10,7 @@ public static class DependencyInjection
     {
         services.AddSingleton(TimeProvider.System);
         services.AddScoped<IOrganizationService, OrganizationService>();
+        services.AddScoped<IOrganizationAccessService, OrganizationAccessService>();
 
         return services;
     }

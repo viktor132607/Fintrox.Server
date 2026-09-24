@@ -24,6 +24,10 @@ jobs:
 
     env:
       ConnectionStrings__DefaultConnection: Host=localhost;Port=5432;Database=fintrox;Username=fintrox;Password=fintrox_ci
+      Jwt__Issuer: Fintrox
+      Jwt__Audience: Fintrox.Client
+      Jwt__SigningKey: fintrox-ci-signing-key-only-not-for-production-2026
+      Jwt__AccessTokenMinutes: 15
 
     services:
       postgres:

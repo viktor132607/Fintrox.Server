@@ -7,12 +7,19 @@ namespace Fintrox.Infrastructure.Organizations;
 
 public sealed class OrganizationRepository(FintroxDbContext dbContext) : IOrganizationRepository
 {
-    public async Task<IReadOnlyList<Organization>> ListAsync(
+    public async Task<IReadOnlyList<Organization>> ListForUserAsync(
+        Guid userId,
         CancellationToken cancellationToken)
     {
-        return await dbContext.Organizations
-            .AsNoTracking()
-            .OrderBy(organization => organization.Name)
+        return await (
+            from organization in dbContext.Organizations.AsNoTracking()
+            join membership in dbContext.OrganizationMemberships.AsNoTracking()
+                on organization.Id equals membership.OrganizationId
+            where membership.UserId == userId &&
+                  membership.IsActive &&
+                  organization.IsActive
+            orderby organization.Name
+            select organization)
             .ToArrayAsync(cancellationToken);
     }
 
