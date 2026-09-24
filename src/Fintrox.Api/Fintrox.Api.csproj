@@ -1,5 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <ItemGroup>
+    <ProjectReference Include="..\Fintrox.Application\Fintrox.Application.csproj" />
+    <ProjectReference Include="..\Fintrox.Contracts\Fintrox.Contracts.csproj" />
+    <ProjectReference Include="..\Fintrox.Infrastructure\Fintrox.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.12" />
   </ItemGroup>
 </Project>
