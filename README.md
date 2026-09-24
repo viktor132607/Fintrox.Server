@@ -2,7 +2,7 @@
 
 Central accounting platform backend for Fintrox.
 
-## Current architecture
+## Architecture
 
 The backend targets .NET 10 LTS and uses Clean Architecture inside a modular monolith.
 
@@ -39,4 +39,21 @@ dotnet restore Fintrox.Server.sln
 dotnet run --project src/Fintrox.Api/Fintrox.Api.csproj
 ```
 
-Next phase: PostgreSQL + EF Core persistence and migrations.
+## Container
+
+```bash
+docker build -t fintrox.server .
+docker run --rm -p 8080:8080 fintrox.server
+```
+
+## CI/CD
+
+GitHub Actions restores, builds, tests and validates the Docker image on every PR/push. Successful pushes to `main` publish immutable and `latest` images to:
+
+```text
+ghcr.io/viktor132607/fintrox.server
+```
+
+See [docs/ci-cd.md](docs/ci-cd.md).
+
+Next core implementation phase: PostgreSQL + EF Core persistence and migrations.
