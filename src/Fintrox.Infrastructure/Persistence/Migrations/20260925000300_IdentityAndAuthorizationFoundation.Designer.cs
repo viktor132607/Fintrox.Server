@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Fintrox.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(FintroxDbContext))]
-    [Migration("20260924221342_IdentityAndAuthorizationFoundation")]
+    [Migration("20260925000300_IdentityAndAuthorizationFoundation")]
     partial class IdentityAndAuthorizationFoundation
     {
         /// <inheritdoc />
