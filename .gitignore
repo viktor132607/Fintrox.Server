@@ -1,0 +1,35 @@
+# Build output
+**/bin/
+**/obj/
+artifacts/
+TestResults/
+coverage/
+*.coverage
+*.coveragexml
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+appsettings.*.Local.json
+
+# User-specific IDE files
+.vs/
+.idea/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Logs
+*.log
+logs/
+
+# Containers / local volumes
+.postgres/
+data/
+
+# OS
+.DS_Store
+Thumbs.db
