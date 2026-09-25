@@ -8,6 +8,27 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
     /// <inheritdoc />
     public partial class PostingEngineAndReversal : Migration
     {
+        private static readonly string[] IdOrganizationColumns =
+            ["id", "organization_id"];
+
+        private static readonly string[] FiscalYearOrganizationColumns =
+            ["fiscal_year_id", "organization_id"];
+
+        private static readonly string[] ReversalOrganizationColumns =
+            ["reversal_of_journal_entry_id", "organization_id"];
+
+        private static readonly string[] ReversedByOrganizationColumns =
+            ["reversed_by_journal_entry_id", "organization_id"];
+
+        private static readonly string[] OrganizationNumberColumns =
+            ["organization_id", "number"];
+
+        private static readonly string[] OrganizationReversalColumns =
+            ["organization_id", "reversal_of_journal_entry_id"];
+
+        private static readonly string[] OrganizationReversedByColumns =
+            ["organization_id", "reversed_by_journal_entry_id"];
+
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -42,7 +63,7 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                         columns: x => new { x.fiscal_year_id, x.organization_id },
                         principalSchema: "accounting",
                         principalTable: "fiscal_years",
-                        principalColumns: new[] { "id", "organization_id" },
+                        principalColumns: IdOrganizationColumns,
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -50,19 +71,19 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                 name: "IX_journal_entries_reversal_of_journal_entry_id_organization_id",
                 schema: "accounting",
                 table: "journal_entries",
-                columns: new[] { "reversal_of_journal_entry_id", "organization_id" });
+                columns: ReversalOrganizationColumns);
 
             migrationBuilder.CreateIndex(
                 name: "IX_journal_entries_reversed_by_journal_entry_id_organization_id",
                 schema: "accounting",
                 table: "journal_entries",
-                columns: new[] { "reversed_by_journal_entry_id", "organization_id" });
+                columns: ReversedByOrganizationColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ux_journal_entries_organization_number",
                 schema: "accounting",
                 table: "journal_entries",
-                columns: new[] { "organization_id", "number" },
+                columns: OrganizationNumberColumns,
                 unique: true,
                 filter: "number IS NOT NULL");
 
@@ -70,7 +91,7 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                 name: "ux_journal_entries_reversal_of",
                 schema: "accounting",
                 table: "journal_entries",
-                columns: new[] { "organization_id", "reversal_of_journal_entry_id" },
+                columns: OrganizationReversalColumns,
                 unique: true,
                 filter: "reversal_of_journal_entry_id IS NOT NULL");
 
@@ -78,7 +99,7 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                 name: "ux_journal_entries_reversed_by",
                 schema: "accounting",
                 table: "journal_entries",
-                columns: new[] { "organization_id", "reversed_by_journal_entry_id" },
+                columns: OrganizationReversedByColumns,
                 unique: true,
                 filter: "reversed_by_journal_entry_id IS NOT NULL");
 
@@ -98,32 +119,183 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                 name: "IX_journal_number_sequences_fiscal_year_id_organization_id",
                 schema: "accounting",
                 table: "journal_number_sequences",
-                columns: new[] { "fiscal_year_id", "organization_id" });
+                columns: FiscalYearOrganizationColumns);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_journal_entries_journal_entries_reversal_of_journal_entry_i~",
                 schema: "accounting",
                 table: "journal_entries",
-                columns: new[] { "reversal_of_journal_entry_id", "organization_id" },
+                columns: ReversalOrganizationColumns,
                 principalSchema: "accounting",
                 principalTable: "journal_entries",
-                principalColumns: new[] { "id", "organization_id" },
+                principalColumns: IdOrganizationColumns,
                 onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_journal_entries_journal_entries_reversed_by_journal_entry_i~",
                 schema: "accounting",
                 table: "journal_entries",
-                columns: new[] { "reversed_by_journal_entry_id", "organization_id" },
+                columns: ReversedByOrganizationColumns,
                 principalSchema: "accounting",
                 principalTable: "journal_entries",
-                principalColumns: new[] { "id", "organization_id" },
+                principalColumns: IdOrganizationColumns,
                 onDelete: ReferentialAction.Restrict);
+
+            migrationBuilder.Sql(
+                """
+                CREATE OR REPLACE FUNCTION accounting.enforce_journal_entry_immutability()
+                RETURNS trigger
+                LANGUAGE plpgsql
+                AS $$
+                BEGIN
+                    IF TG_OP = 'DELETE' THEN
+                        IF OLD.status IN ('Posted', 'Reversed') THEN
+                            RAISE EXCEPTION 'Posted or reversed journal entries are immutable';
+                        END IF;
+
+                        RETURN OLD;
+                    END IF;
+
+                    IF OLD.status = 'Draft' THEN
+                        IF NEW.status = 'Draft' THEN
+                            RETURN NEW;
+                        END IF;
+
+                        IF NEW.status = 'Posted'
+                           AND NEW.organization_id = OLD.organization_id
+                           AND NEW.posting_date = OLD.posting_date
+                           AND NEW.document_date = OLD.document_date
+                           AND NEW.description = OLD.description
+                           AND NEW.source = OLD.source
+                           AND NEW.external_reference IS NOT DISTINCT FROM OLD.external_reference
+                           AND NEW.fiscal_period_id = OLD.fiscal_period_id
+                           AND NEW.reversal_of_journal_entry_id IS NOT DISTINCT FROM OLD.reversal_of_journal_entry_id
+                           AND NEW.reversed_by_journal_entry_id IS NOT DISTINCT FROM OLD.reversed_by_journal_entry_id
+                           AND NEW.created_at_utc = OLD.created_at_utc
+                           AND NEW.created_by_user_id IS NOT DISTINCT FROM OLD.created_by_user_id THEN
+                            RETURN NEW;
+                        END IF;
+
+                        RAISE EXCEPTION 'Invalid journal entry state transition from Draft';
+                    END IF;
+
+                    IF OLD.status = 'Posted' THEN
+                        IF NEW.status = 'Reversed'
+                           AND OLD.reversed_by_journal_entry_id IS NULL
+                           AND NEW.reversed_by_journal_entry_id IS NOT NULL
+                           AND NEW.organization_id = OLD.organization_id
+                           AND NEW.number = OLD.number
+                           AND NEW.posting_date = OLD.posting_date
+                           AND NEW.document_date = OLD.document_date
+                           AND NEW.description = OLD.description
+                           AND NEW.source = OLD.source
+                           AND NEW.external_reference IS NOT DISTINCT FROM OLD.external_reference
+                           AND NEW.fiscal_period_id = OLD.fiscal_period_id
+                           AND NEW.posted_at_utc = OLD.posted_at_utc
+                           AND NEW.reversal_of_journal_entry_id IS NOT DISTINCT FROM OLD.reversal_of_journal_entry_id
+                           AND NEW.created_at_utc = OLD.created_at_utc
+                           AND NEW.created_by_user_id IS NOT DISTINCT FROM OLD.created_by_user_id THEN
+                            RETURN NEW;
+                        END IF;
+
+                        RAISE EXCEPTION 'Posted journal entries are immutable';
+                    END IF;
+
+                    IF OLD.status = 'Reversed' THEN
+                        RAISE EXCEPTION 'Reversed journal entries are immutable';
+                    END IF;
+
+                    RETURN NEW;
+                END;
+                $$;
+
+                CREATE TRIGGER trg_journal_entries_immutability
+                BEFORE UPDATE OR DELETE ON accounting.journal_entries
+                FOR EACH ROW
+                EXECUTE FUNCTION accounting.enforce_journal_entry_immutability();
+
+                CREATE OR REPLACE FUNCTION accounting.enforce_journal_line_parent_draft()
+                RETURNS trigger
+                LANGUAGE plpgsql
+                AS $$
+                DECLARE
+                    parent_status text;
+                BEGIN
+                    IF TG_OP = 'INSERT' THEN
+                        SELECT status
+                        INTO parent_status
+                        FROM accounting.journal_entries
+                        WHERE id = NEW.journal_entry_id
+                          AND organization_id = NEW.organization_id;
+
+                        IF parent_status IS DISTINCT FROM 'Draft' THEN
+                            RAISE EXCEPTION 'Journal lines can only be inserted under draft entries';
+                        END IF;
+
+                        RETURN NEW;
+                    END IF;
+
+                    IF TG_OP = 'UPDATE' THEN
+                        SELECT status
+                        INTO parent_status
+                        FROM accounting.journal_entries
+                        WHERE id = OLD.journal_entry_id
+                          AND organization_id = OLD.organization_id;
+
+                        IF parent_status IS DISTINCT FROM 'Draft' THEN
+                            RAISE EXCEPTION 'Journal lines under posted or reversed entries are immutable';
+                        END IF;
+
+                        SELECT status
+                        INTO parent_status
+                        FROM accounting.journal_entries
+                        WHERE id = NEW.journal_entry_id
+                          AND organization_id = NEW.organization_id;
+
+                        IF parent_status IS DISTINCT FROM 'Draft' THEN
+                            RAISE EXCEPTION 'Journal lines can only be moved to draft entries';
+                        END IF;
+
+                        RETURN NEW;
+                    END IF;
+
+                    SELECT status
+                    INTO parent_status
+                    FROM accounting.journal_entries
+                    WHERE id = OLD.journal_entry_id
+                      AND organization_id = OLD.organization_id;
+
+                    IF parent_status IS DISTINCT FROM 'Draft' THEN
+                        RAISE EXCEPTION 'Journal lines under posted or reversed entries are immutable';
+                    END IF;
+
+                    RETURN OLD;
+                END;
+                $$;
+
+                CREATE TRIGGER trg_journal_lines_parent_draft
+                BEFORE INSERT OR UPDATE OR DELETE ON accounting.journal_lines
+                FOR EACH ROW
+                EXECUTE FUNCTION accounting.enforce_journal_line_parent_draft();
+                """);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.Sql(
+                """
+                DROP TRIGGER IF EXISTS trg_journal_lines_parent_draft
+                    ON accounting.journal_lines;
+
+                DROP FUNCTION IF EXISTS accounting.enforce_journal_line_parent_draft();
+
+                DROP TRIGGER IF EXISTS trg_journal_entries_immutability
+                    ON accounting.journal_entries;
+
+                DROP FUNCTION IF EXISTS accounting.enforce_journal_entry_immutability();
+                """);
+
             migrationBuilder.DropForeignKey(
                 name: "FK_journal_entries_journal_entries_reversal_of_journal_entry_i~",
                 schema: "accounting",
