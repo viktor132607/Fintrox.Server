@@ -8,6 +8,27 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
     /// <inheritdoc />
     public partial class FiscalCalendar : Migration
     {
+        private static readonly string[] FiscalYearPrincipalKeyColumns =
+            ["id", "organization_id"];
+
+        private static readonly string[] PeriodFiscalYearIndexColumns =
+            ["fiscal_year_id", "organization_id"];
+
+        private static readonly string[] PeriodOrganizationStatusIndexColumns =
+            ["organization_id", "status"];
+
+        private static readonly string[] PeriodYearRangeIndexColumns =
+            ["organization_id", "fiscal_year_id", "start_date", "end_date"];
+
+        private static readonly string[] PeriodYearNumberIndexColumns =
+            ["organization_id", "fiscal_year_id", "number"];
+
+        private static readonly string[] FiscalYearOrganizationRangeIndexColumns =
+            ["organization_id", "start_date", "end_date"];
+
+        private static readonly string[] FiscalYearOrganizationNameIndexColumns =
+            ["organization_id", "name"];
+
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -69,7 +90,7 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                         columns: x => new { x.fiscal_year_id, x.organization_id },
                         principalSchema: "accounting",
                         principalTable: "fiscal_years",
-                        principalColumns: new[] { "id", "organization_id" },
+                        principalColumns: FiscalYearPrincipalKeyColumns,
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -77,38 +98,38 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                 name: "IX_accounting_periods_fiscal_year_id_organization_id",
                 schema: "accounting",
                 table: "accounting_periods",
-                columns: new[] { "fiscal_year_id", "organization_id" });
+                columns: PeriodFiscalYearIndexColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ix_accounting_periods_organization_status",
                 schema: "accounting",
                 table: "accounting_periods",
-                columns: new[] { "organization_id", "status" });
+                columns: PeriodOrganizationStatusIndexColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ix_accounting_periods_year_range",
                 schema: "accounting",
                 table: "accounting_periods",
-                columns: new[] { "organization_id", "fiscal_year_id", "start_date", "end_date" });
+                columns: PeriodYearRangeIndexColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ux_accounting_periods_year_number",
                 schema: "accounting",
                 table: "accounting_periods",
-                columns: new[] { "organization_id", "fiscal_year_id", "number" },
+                columns: PeriodYearNumberIndexColumns,
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_fiscal_years_organization_range",
                 schema: "accounting",
                 table: "fiscal_years",
-                columns: new[] { "organization_id", "start_date", "end_date" });
+                columns: FiscalYearOrganizationRangeIndexColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ux_fiscal_years_organization_name",
                 schema: "accounting",
                 table: "fiscal_years",
-                columns: new[] { "organization_id", "name" },
+                columns: FiscalYearOrganizationNameIndexColumns,
                 unique: true);
         }
 
