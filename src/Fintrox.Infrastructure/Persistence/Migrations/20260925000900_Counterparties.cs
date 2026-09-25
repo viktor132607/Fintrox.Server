@@ -8,6 +8,21 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
     /// <inheritdoc />
     public partial class Counterparties : Migration
     {
+        private static readonly string[] OrganizationNameColumns =
+            ["organization_id", "name"];
+
+        private static readonly string[] OrganizationRolesActiveColumns =
+            ["organization_id", "is_active", "is_customer", "is_supplier"];
+
+        private static readonly string[] OrganizationCodeColumns =
+            ["organization_id", "code"];
+
+        private static readonly string[] OrganizationCountryRegistrationColumns =
+            ["organization_id", "country_code", "registration_number"];
+
+        private static readonly string[] OrganizationCountryVatColumns =
+            ["organization_id", "country_code", "vat_number"];
+
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -60,26 +75,26 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                 name: "ix_counterparties_organization_name",
                 schema: "core",
                 table: "counterparties",
-                columns: new[] { "organization_id", "name" });
+                columns: OrganizationNameColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ix_counterparties_organization_roles_active",
                 schema: "core",
                 table: "counterparties",
-                columns: new[] { "organization_id", "is_active", "is_customer", "is_supplier" });
+                columns: OrganizationRolesActiveColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ux_counterparties_organization_code",
                 schema: "core",
                 table: "counterparties",
-                columns: new[] { "organization_id", "code" },
+                columns: OrganizationCodeColumns,
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ux_counterparties_organization_country_registration",
                 schema: "core",
                 table: "counterparties",
-                columns: new[] { "organization_id", "country_code", "registration_number" },
+                columns: OrganizationCountryRegistrationColumns,
                 unique: true,
                 filter: "registration_number IS NOT NULL");
 
@@ -87,7 +102,7 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                 name: "ux_counterparties_organization_country_vat",
                 schema: "core",
                 table: "counterparties",
-                columns: new[] { "organization_id", "country_code", "vat_number" },
+                columns: OrganizationCountryVatColumns,
                 unique: true,
                 filter: "vat_number IS NOT NULL");
         }
