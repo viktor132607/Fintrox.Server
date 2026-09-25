@@ -125,4 +125,6 @@ Trial Balance and General Ledger are available over posted accounting history wi
 
 See [docs/accounting-reports.md](docs/accounting-reports.md).
 
+Roadmap status: phase 12/41 implemented.
+
 Next core phase: VAT codes, currencies and exchange rates.
