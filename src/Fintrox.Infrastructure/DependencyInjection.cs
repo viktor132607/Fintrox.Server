@@ -58,6 +58,7 @@ public static class DependencyInjection
             .AddEntityFrameworkStores<FintroxDbContext>();
 
         services.AddScoped<IAccountRepository, AccountRepository>();
+        services.AddScoped<IFiscalCalendarRepository, FiscalCalendarRepository>();
         services.AddScoped<IAuthenticationService, AuthenticationService>();
         services.AddScoped<IUserDirectory, UserDirectory>();
         services.AddScoped<IOrganizationRepository, OrganizationRepository>();
