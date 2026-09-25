@@ -1,9 +1,11 @@
 using Fintrox.Application.Accounting;
 using Fintrox.Application.Common.Interfaces;
+using Fintrox.Application.Counterparties;
 using Fintrox.Application.Identity;
 using Fintrox.Application.Organizations;
 using Fintrox.Infrastructure.Accounting;
 using Fintrox.Infrastructure.Audit;
+using Fintrox.Infrastructure.Counterparties;
 using Fintrox.Infrastructure.Identity;
 using Fintrox.Infrastructure.Organizations;
 using Fintrox.Infrastructure.Persistence;
@@ -62,6 +64,7 @@ public static class DependencyInjection
         services.AddScoped<IAccountRepository, AccountRepository>();
         services.AddScoped<IFiscalCalendarRepository, FiscalCalendarRepository>();
         services.AddScoped<IJournalRepository, JournalRepository>();
+        services.AddScoped<ICounterpartyRepository, CounterpartyRepository>();
         services.AddScoped<IAuthenticationService, AuthenticationService>();
         services.AddScoped<IUserDirectory, UserDirectory>();
         services.AddScoped<IOrganizationRepository, OrganizationRepository>();

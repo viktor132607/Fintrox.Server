@@ -1,6 +1,7 @@
 using Fintrox.Domain.Accounting;
 using Fintrox.Domain.Common;
 using Fintrox.Domain.Organizations;
+using Fintrox.Domain.Partners;
 using Fintrox.Infrastructure.Audit;
 using Fintrox.Infrastructure.Identity;
 using Fintrox.Infrastructure.Persistence.Models;
@@ -25,6 +26,8 @@ public sealed class FintroxDbContext(DbContextOptions<FintroxDbContext> options)
 
     public DbSet<JournalNumberSequence> JournalNumberSequences =>
         Set<JournalNumberSequence>();
+
+    public DbSet<Counterparty> Counterparties => Set<Counterparty>();
 
     public DbSet<Organization> Organizations => Set<Organization>();
 

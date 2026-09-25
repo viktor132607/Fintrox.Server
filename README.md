@@ -113,4 +113,10 @@ Balanced drafts can now be posted atomically with fiscal-year numbering, open-pe
 
 See [docs/posting-engine.md](docs/posting-engine.md).
 
-Next core phase: Trial Balance and General Ledger.
+## Counterparties
+
+Organization-scoped customer/supplier master data now includes registration/VAT identifiers, contact/address data, payment terms, role filtering, lifecycle controls and dedicated permissions.
+
+See [docs/counterparties.md](docs/counterparties.md).
+
+Roadmap phase 12 (Trial Balance + General Ledger) remains separate. The next selected phase after 13 is VAT codes, currencies and exchange rates.
