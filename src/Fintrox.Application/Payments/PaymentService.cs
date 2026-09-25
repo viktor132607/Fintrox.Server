@@ -552,6 +552,11 @@ public sealed class PaymentService(
 
                 draft.SetAllocatedAmount(totalPaymentAmount, now);
 
+                // Persist refreshed allocation snapshots while the parent payment
+                // is still Draft. This keeps database immutability triggers
+                // independent from EF update ordering.
+                await repository.SaveChangesAsync(ct);
+
                 var sequence = await repository.AllocatePaymentSequenceAsync(
                     organizationId,
                     draft.PaymentDate.Year,

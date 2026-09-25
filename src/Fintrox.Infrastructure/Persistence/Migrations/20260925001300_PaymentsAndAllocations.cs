@@ -8,6 +8,57 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
     /// <inheritdoc />
     public partial class PaymentsAndAllocations : Migration
     {
+        private static readonly string[] IdOrganizationColumns =
+            ["id", "organization_id"];
+
+        private static readonly string[] CounterpartyOrganizationColumns =
+            ["counterparty_id", "organization_id"];
+
+        private static readonly string[] CurrencyOrganizationColumns =
+            ["currency_id", "organization_id"];
+
+        private static readonly string[] BaseCurrencyOrganizationColumns =
+            ["base_currency_id", "organization_id"];
+
+        private static readonly string[] DocumentCurrencyOrganizationColumns =
+            ["document_currency_id", "organization_id"];
+
+        private static readonly string[] PurchaseDocumentOrganizationColumns =
+            ["purchase_document_id", "organization_id"];
+
+        private static readonly string[] SalesInvoiceOrganizationColumns =
+            ["sales_invoice_id", "organization_id"];
+
+        private static readonly string[] PaymentOrganizationColumns =
+            ["payment_id", "organization_id"];
+
+        private static readonly string[] OrganizationPurchaseDocumentColumns =
+            ["organization_id", "purchase_document_id"];
+
+        private static readonly string[] OrganizationSalesInvoiceColumns =
+            ["organization_id", "sales_invoice_id"];
+
+        private static readonly string[] OrganizationPaymentLineColumns =
+            ["organization_id", "payment_id", "line_number"];
+
+        private static readonly string[] OrganizationPaymentPurchaseColumns =
+            ["organization_id", "payment_id", "purchase_document_id"];
+
+        private static readonly string[] OrganizationPaymentSalesColumns =
+            ["organization_id", "payment_id", "sales_invoice_id"];
+
+        private static readonly string[] OrganizationCounterpartyDateColumns =
+            ["organization_id", "counterparty_id", "payment_date"];
+
+        private static readonly string[] OrganizationDateColumns =
+            ["organization_id", "payment_date"];
+
+        private static readonly string[] OrganizationStatusDateColumns =
+            ["organization_id", "status", "payment_date"];
+
+        private static readonly string[] OrganizationInternalNumberColumns =
+            ["organization_id", "internal_number"];
+
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -84,21 +135,21 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                         columns: x => new { x.counterparty_id, x.organization_id },
                         principalSchema: "core",
                         principalTable: "counterparties",
-                        principalColumns: new[] { "id", "organization_id" },
+                        principalColumns: IdOrganizationColumns,
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_payments_currencies_base_currency_id_organization_id",
                         columns: x => new { x.base_currency_id, x.organization_id },
                         principalSchema: "core",
                         principalTable: "currencies",
-                        principalColumns: new[] { "id", "organization_id" },
+                        principalColumns: IdOrganizationColumns,
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_payments_currencies_currency_id_organization_id",
                         columns: x => new { x.currency_id, x.organization_id },
                         principalSchema: "core",
                         principalTable: "currencies",
-                        principalColumns: new[] { "id", "organization_id" },
+                        principalColumns: IdOrganizationColumns,
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_payments_organizations_organization_id",
@@ -143,28 +194,28 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                         columns: x => new { x.document_currency_id, x.organization_id },
                         principalSchema: "core",
                         principalTable: "currencies",
-                        principalColumns: new[] { "id", "organization_id" },
+                        principalColumns: IdOrganizationColumns,
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_allocations_documents_purchase_document_id_organization_id",
                         columns: x => new { x.purchase_document_id, x.organization_id },
                         principalSchema: "purchases",
                         principalTable: "documents",
-                        principalColumns: new[] { "id", "organization_id" },
+                        principalColumns: IdOrganizationColumns,
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_allocations_invoices_sales_invoice_id_organization_id",
                         columns: x => new { x.sales_invoice_id, x.organization_id },
                         principalSchema: "sales",
                         principalTable: "invoices",
-                        principalColumns: new[] { "id", "organization_id" },
+                        principalColumns: IdOrganizationColumns,
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_allocations_payments_payment_id_organization_id",
                         columns: x => new { x.payment_id, x.organization_id },
                         principalSchema: "payments",
                         principalTable: "payments",
-                        principalColumns: new[] { "id", "organization_id" },
+                        principalColumns: IdOrganizationColumns,
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -172,50 +223,50 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                 name: "IX_allocations_document_currency_id_organization_id",
                 schema: "payments",
                 table: "allocations",
-                columns: new[] { "document_currency_id", "organization_id" });
+                columns: DocumentCurrencyOrganizationColumns);
 
             migrationBuilder.CreateIndex(
                 name: "IX_allocations_payment_id_organization_id",
                 schema: "payments",
                 table: "allocations",
-                columns: new[] { "payment_id", "organization_id" });
+                columns: PaymentOrganizationColumns);
 
             migrationBuilder.CreateIndex(
                 name: "IX_allocations_purchase_document_id_organization_id",
                 schema: "payments",
                 table: "allocations",
-                columns: new[] { "purchase_document_id", "organization_id" });
+                columns: PurchaseDocumentOrganizationColumns);
 
             migrationBuilder.CreateIndex(
                 name: "IX_allocations_sales_invoice_id_organization_id",
                 schema: "payments",
                 table: "allocations",
-                columns: new[] { "sales_invoice_id", "organization_id" });
+                columns: SalesInvoiceOrganizationColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ix_payment_allocations_purchase_document",
                 schema: "payments",
                 table: "allocations",
-                columns: new[] { "organization_id", "purchase_document_id" });
+                columns: OrganizationPurchaseDocumentColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ix_payment_allocations_sales_invoice",
                 schema: "payments",
                 table: "allocations",
-                columns: new[] { "organization_id", "sales_invoice_id" });
+                columns: OrganizationSalesInvoiceColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ux_payment_allocations_payment_line_number",
                 schema: "payments",
                 table: "allocations",
-                columns: new[] { "organization_id", "payment_id", "line_number" },
+                columns: OrganizationPaymentLineColumns,
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ux_payment_allocations_payment_purchase_document",
                 schema: "payments",
                 table: "allocations",
-                columns: new[] { "organization_id", "payment_id", "purchase_document_id" },
+                columns: OrganizationPaymentPurchaseColumns,
                 unique: true,
                 filter: "purchase_document_id IS NOT NULL");
 
@@ -223,7 +274,7 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                 name: "ux_payment_allocations_payment_sales_invoice",
                 schema: "payments",
                 table: "allocations",
-                columns: new[] { "organization_id", "payment_id", "sales_invoice_id" },
+                columns: OrganizationPaymentSalesColumns,
                 unique: true,
                 filter: "sales_invoice_id IS NOT NULL");
 
@@ -231,50 +282,192 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                 name: "IX_payments_base_currency_id_organization_id",
                 schema: "payments",
                 table: "payments",
-                columns: new[] { "base_currency_id", "organization_id" });
+                columns: BaseCurrencyOrganizationColumns);
 
             migrationBuilder.CreateIndex(
                 name: "IX_payments_counterparty_id_organization_id",
                 schema: "payments",
                 table: "payments",
-                columns: new[] { "counterparty_id", "organization_id" });
+                columns: CounterpartyOrganizationColumns);
 
             migrationBuilder.CreateIndex(
                 name: "IX_payments_currency_id_organization_id",
                 schema: "payments",
                 table: "payments",
-                columns: new[] { "currency_id", "organization_id" });
+                columns: CurrencyOrganizationColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ix_payments_organization_counterparty_date",
                 schema: "payments",
                 table: "payments",
-                columns: new[] { "organization_id", "counterparty_id", "payment_date" });
+                columns: OrganizationCounterpartyDateColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ix_payments_organization_date",
                 schema: "payments",
                 table: "payments",
-                columns: new[] { "organization_id", "payment_date" });
+                columns: OrganizationDateColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ix_payments_organization_status_date",
                 schema: "payments",
                 table: "payments",
-                columns: new[] { "organization_id", "status", "payment_date" });
+                columns: OrganizationStatusDateColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ux_payments_organization_internal_number",
                 schema: "payments",
                 table: "payments",
-                columns: new[] { "organization_id", "internal_number" },
+                columns: OrganizationInternalNumberColumns,
                 unique: true,
                 filter: "internal_number IS NOT NULL");
+
+            migrationBuilder.Sql(
+                """
+                CREATE OR REPLACE FUNCTION payments.enforce_payment_immutability()
+                RETURNS trigger
+                LANGUAGE plpgsql
+                AS $payment$
+                BEGIN
+                    IF TG_OP = 'DELETE' THEN
+                        IF OLD.status IN ('Confirmed', 'Cancelled') THEN
+                            RAISE EXCEPTION 'Confirmed or cancelled payments are immutable';
+                        END IF;
+
+                        RETURN OLD;
+                    END IF;
+
+                    IF NEW.id <> OLD.id
+                       OR NEW.organization_id <> OLD.organization_id THEN
+                        RAISE EXCEPTION 'Payment identity and organization are immutable';
+                    END IF;
+
+                    IF OLD.status = 'Draft' THEN
+                        IF NEW.status IN ('Draft', 'Confirmed') THEN
+                            RETURN NEW;
+                        END IF;
+
+                        RAISE EXCEPTION 'Invalid payment state transition from Draft';
+                    END IF;
+
+                    IF OLD.status = 'Confirmed' THEN
+                        IF NEW.status = 'Cancelled'
+                           AND (
+                               to_jsonb(NEW)
+                               - 'status'
+                               - 'cancelled_at_utc'
+                               - 'cancellation_reason'
+                               - 'updated_at_utc'
+                               - 'updated_by_user_id'
+                           ) = (
+                               to_jsonb(OLD)
+                               - 'status'
+                               - 'cancelled_at_utc'
+                               - 'cancellation_reason'
+                               - 'updated_at_utc'
+                               - 'updated_by_user_id'
+                           ) THEN
+                            RETURN NEW;
+                        END IF;
+
+                        RAISE EXCEPTION 'Confirmed payments are immutable';
+                    END IF;
+
+                    IF OLD.status = 'Cancelled' THEN
+                        RAISE EXCEPTION 'Cancelled payments are immutable';
+                    END IF;
+
+                    RETURN NEW;
+                END;
+                $payment$;
+
+                CREATE TRIGGER trg_payments_immutability
+                BEFORE UPDATE OR DELETE ON payments.payments
+                FOR EACH ROW
+                EXECUTE FUNCTION payments.enforce_payment_immutability();
+
+                CREATE OR REPLACE FUNCTION payments.enforce_allocation_parent_draft()
+                RETURNS trigger
+                LANGUAGE plpgsql
+                AS $allocation$
+                DECLARE
+                    parent_status text;
+                BEGIN
+                    IF TG_OP = 'INSERT' THEN
+                        SELECT status
+                        INTO parent_status
+                        FROM payments.payments
+                        WHERE id = NEW.payment_id
+                          AND organization_id = NEW.organization_id;
+
+                        IF parent_status IS DISTINCT FROM 'Draft' THEN
+                            RAISE EXCEPTION 'Allocations can only be inserted under draft payments';
+                        END IF;
+
+                        RETURN NEW;
+                    END IF;
+
+                    IF TG_OP = 'UPDATE' THEN
+                        SELECT status
+                        INTO parent_status
+                        FROM payments.payments
+                        WHERE id = OLD.payment_id
+                          AND organization_id = OLD.organization_id;
+
+                        IF parent_status IS DISTINCT FROM 'Draft' THEN
+                            RAISE EXCEPTION 'Allocations under confirmed or cancelled payments are immutable';
+                        END IF;
+
+                        SELECT status
+                        INTO parent_status
+                        FROM payments.payments
+                        WHERE id = NEW.payment_id
+                          AND organization_id = NEW.organization_id;
+
+                        IF parent_status IS DISTINCT FROM 'Draft' THEN
+                            RAISE EXCEPTION 'Allocations can only be moved to draft payments';
+                        END IF;
+
+                        RETURN NEW;
+                    END IF;
+
+                    SELECT status
+                    INTO parent_status
+                    FROM payments.payments
+                    WHERE id = OLD.payment_id
+                      AND organization_id = OLD.organization_id;
+
+                    IF parent_status IS DISTINCT FROM 'Draft' THEN
+                        RAISE EXCEPTION 'Allocations under confirmed or cancelled payments are immutable';
+                    END IF;
+
+                    RETURN OLD;
+                END;
+                $allocation$;
+
+                CREATE TRIGGER trg_payment_allocations_parent_draft
+                BEFORE INSERT OR UPDATE OR DELETE ON payments.allocations
+                FOR EACH ROW
+                EXECUTE FUNCTION payments.enforce_allocation_parent_draft();
+                """);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.Sql(
+                """
+                DROP TRIGGER IF EXISTS trg_payment_allocations_parent_draft
+                    ON payments.allocations;
+
+                DROP FUNCTION IF EXISTS payments.enforce_allocation_parent_draft();
+
+                DROP TRIGGER IF EXISTS trg_payments_immutability
+                    ON payments.payments;
+
+                DROP FUNCTION IF EXISTS payments.enforce_payment_immutability();
+                """);
+
             migrationBuilder.DropTable(
                 name: "allocations",
                 schema: "payments");
