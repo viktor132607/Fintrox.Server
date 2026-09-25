@@ -13,7 +13,7 @@ public sealed class PaymentTests
     private static readonly DateTimeOffset Now = new(2026, 9, 25, 20, 0, 0, TimeSpan.Zero);
 
     [TestMethod]
-    public void CreateDraft_NormalizesValuesAndStartsUnallocated()
+    public void CreateDraftNormalizesValuesAndStartsUnallocated()
     {
         var payment = CreateDraft();
 
@@ -30,13 +30,13 @@ public sealed class PaymentTests
     }
 
     [TestMethod]
-    public void CreateDraft_RejectsNonPositiveAmount()
+    public void CreateDraftRejectsNonPositiveAmount()
     {
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => CreateDraft(0m));
     }
 
     [TestMethod]
-    public void SetAllocatedAmount_RejectsOverAllocation()
+    public void SetAllocatedAmountRejectsOverAllocation()
     {
         var payment = CreateDraft();
 
@@ -47,7 +47,7 @@ public sealed class PaymentTests
     }
 
     [TestMethod]
-    public void UpdateDraft_RejectsAmountBelowAllocatedAmountWithoutMutation()
+    public void UpdateDraftRejectsAmountBelowAllocatedAmountWithoutMutation()
     {
         var payment = CreateDraft();
         payment.SetAllocatedAmount(80m, Now.AddMinutes(1));
@@ -75,7 +75,7 @@ public sealed class PaymentTests
     }
 
     [TestMethod]
-    public void UpdateDraft_InvalidCurrencyDoesNotPartiallyMutateAggregate()
+    public void UpdateDraftInvalidCurrencyDoesNotPartiallyMutateAggregate()
     {
         var payment = CreateDraft();
 
@@ -104,7 +104,7 @@ public sealed class PaymentTests
     }
 
     [TestMethod]
-    public void Confirm_SnapshotsValuesAndLocksDraftMutation()
+    public void ConfirmSnapshotsValuesAndLocksDraftMutation()
     {
         var payment = CreateDraft();
         payment.SetAllocatedAmount(40m, Now.AddMinutes(1));
@@ -132,7 +132,7 @@ public sealed class PaymentTests
     }
 
     [TestMethod]
-    public void Confirm_InvalidSnapshotDoesNotPartiallyConfirm()
+    public void ConfirmInvalidSnapshotDoesNotPartiallyConfirm()
     {
         var payment = CreateDraft();
 
@@ -155,7 +155,7 @@ public sealed class PaymentTests
     }
 
     [TestMethod]
-    public void Cancel_InvalidReasonDoesNotPartiallyCancel()
+    public void CancelInvalidReasonDoesNotPartiallyCancel()
     {
         var payment = CreateDraft();
         Confirm(payment);
@@ -169,7 +169,7 @@ public sealed class PaymentTests
     }
 
     [TestMethod]
-    public void Cancel_ConfirmedPaymentTransitionsOnce()
+    public void CancelConfirmedPaymentTransitionsOnce()
     {
         var payment = CreateDraft();
         Confirm(payment);

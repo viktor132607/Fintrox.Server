@@ -14,7 +14,7 @@ public sealed class PaymentAllocationTests
     private static readonly DateTimeOffset Now = new(2026, 9, 25, 20, 0, 0, TimeSpan.Zero);
 
     [TestMethod]
-    public void Create_SalesInvoiceAllocationNormalizesSnapshot()
+    public void CreateSalesInvoiceAllocationNormalizesSnapshot()
     {
         var allocation = CreateSalesAllocation();
 
@@ -28,7 +28,7 @@ public sealed class PaymentAllocationTests
     }
 
     [TestMethod]
-    public void Create_RejectsTargetMismatch()
+    public void CreateRejectsTargetMismatch()
     {
         Assert.ThrowsExactly<ArgumentException>(() =>
             PaymentAllocation.Create(
@@ -48,7 +48,7 @@ public sealed class PaymentAllocationTests
     }
 
     [TestMethod]
-    public void Create_RejectsNonPositiveAmounts()
+    public void CreateRejectsNonPositiveAmounts()
     {
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() =>
             PaymentAllocation.Create(
@@ -68,7 +68,7 @@ public sealed class PaymentAllocationTests
     }
 
     [TestMethod]
-    public void Update_CanSwitchTargetAtomically()
+    public void UpdateCanSwitchTargetAtomically()
     {
         var allocation = CreateSalesAllocation();
 
@@ -94,7 +94,7 @@ public sealed class PaymentAllocationTests
     }
 
     [TestMethod]
-    public void Update_InvalidCurrencyDoesNotPartiallyMutateAllocation()
+    public void UpdateInvalidCurrencyDoesNotPartiallyMutateAllocation()
     {
         var allocation = CreateSalesAllocation();
 
