@@ -18,6 +18,10 @@ public sealed class FintroxDbContext(DbContextOptions<FintroxDbContext> options)
 
     public DbSet<AccountingPeriod> AccountingPeriods => Set<AccountingPeriod>();
 
+    public DbSet<JournalEntry> JournalEntries => Set<JournalEntry>();
+
+    public DbSet<JournalLine> JournalLines => Set<JournalLine>();
+
     public DbSet<Organization> Organizations => Set<Organization>();
 
     public DbSet<OrganizationMembership> OrganizationMemberships =>

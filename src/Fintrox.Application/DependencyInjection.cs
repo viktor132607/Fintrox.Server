@@ -13,6 +13,7 @@ public static class DependencyInjection
 
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<IFiscalCalendarService, FiscalCalendarService>();
+        services.AddScoped<IJournalService, JournalService>();
         services.AddScoped<IOrganizationService, OrganizationService>();
         services.AddScoped<IOrganizationMemberService, OrganizationMemberService>();
         services.AddScoped<IOrganizationAccessService, OrganizationAccessService>();

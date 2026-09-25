@@ -25,6 +25,13 @@ public sealed class AccountingPeriodConfiguration
 
         builder.HasKey(period => period.Id);
 
+        builder.HasAlternateKey(period => new
+            {
+                period.Id,
+                period.OrganizationId
+            })
+            .HasName("ak_accounting_periods_id_organization");
+
         builder.Property(period => period.Id)
             .HasColumnName("id")
             .ValueGeneratedNever();
