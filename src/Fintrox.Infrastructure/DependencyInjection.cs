@@ -1,4 +1,5 @@
 using Fintrox.Application.Accounting;
+using Fintrox.Application.Common.Interfaces;
 using Fintrox.Application.Identity;
 using Fintrox.Application.Organizations;
 using Fintrox.Infrastructure.Accounting;
@@ -57,6 +58,7 @@ public static class DependencyInjection
             })
             .AddEntityFrameworkStores<FintroxDbContext>();
 
+        services.AddScoped<IAccountingTransactionRunner, EfAccountingTransactionRunner>();
         services.AddScoped<IAccountRepository, AccountRepository>();
         services.AddScoped<IFiscalCalendarRepository, FiscalCalendarRepository>();
         services.AddScoped<IJournalRepository, JournalRepository>();

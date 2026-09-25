@@ -3,6 +3,7 @@ using Fintrox.Domain.Common;
 using Fintrox.Domain.Organizations;
 using Fintrox.Infrastructure.Audit;
 using Fintrox.Infrastructure.Identity;
+using Fintrox.Infrastructure.Persistence.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,9 @@ public sealed class FintroxDbContext(DbContextOptions<FintroxDbContext> options)
     public DbSet<JournalEntry> JournalEntries => Set<JournalEntry>();
 
     public DbSet<JournalLine> JournalLines => Set<JournalLine>();
+
+    public DbSet<JournalNumberSequence> JournalNumberSequences =>
+        Set<JournalNumberSequence>();
 
     public DbSet<Organization> Organizations => Set<Organization>();
 

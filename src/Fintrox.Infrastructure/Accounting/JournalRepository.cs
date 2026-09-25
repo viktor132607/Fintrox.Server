@@ -119,6 +119,38 @@ public sealed class JournalRepository(
         return (maxLineNumber ?? 0) + 1;
     }
 
+    public async Task<long> AllocatePostingSequenceAsync(
+        Guid organizationId,
+        Guid fiscalYearId,
+        CancellationToken cancellationToken)
+    {
+        if (dbContext.Database.CurrentTransaction is null)
+        {
+            throw new InvalidOperationException(
+                "Journal posting numbers must be allocated inside a database transaction.");
+        }
+
+        await dbContext.Database.ExecuteSqlInterpolatedAsync(
+            $"""
+            INSERT INTO accounting.journal_number_sequences
+                (organization_id, fiscal_year_id, last_number)
+            VALUES
+                ({organizationId}, {fiscalYearId}, 1)
+            ON CONFLICT (organization_id, fiscal_year_id)
+            DO UPDATE SET
+                last_number = accounting.journal_number_sequences.last_number + 1
+            """,
+            cancellationToken);
+
+        return await dbContext.JournalNumberSequences
+            .AsNoTracking()
+            .Where(sequence =>
+                sequence.OrganizationId == organizationId &&
+                sequence.FiscalYearId == fiscalYearId)
+            .Select(sequence => sequence.LastNumber)
+            .SingleAsync(cancellationToken);
+    }
+
     public async Task AddEntryAsync(
         JournalEntry entry,
         CancellationToken cancellationToken)

@@ -107,4 +107,10 @@ The journal now uses separate debit/credit amounts per account line, organizatio
 
 See [docs/double-entry-journal.md](docs/double-entry-journal.md).
 
-Next core phase: posting engine, validation and reversal.
+## Posting engine
+
+Balanced drafts can now be posted atomically with fiscal-year numbering, open-period validation and database-enforced immutability. Posted entries are corrected through linked reversing entries rather than edits.
+
+See [docs/posting-engine.md](docs/posting-engine.md).
+
+Next core phase: Trial Balance and General Ledger.

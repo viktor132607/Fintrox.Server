@@ -181,6 +181,59 @@ public sealed class JournalController(IJournalService service) : ControllerBase
         }
     }
 
+    [HttpPost("{journalEntryId:guid}/post")]
+    [Authorize(Policy = Permissions.AccountingPost)]
+    public async Task<ActionResult<JournalEntryResponse>> Post(
+        Guid journalEntryId,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var entry = await service.PostAsync(
+                journalEntryId,
+                cancellationToken);
+
+            return entry is null ? NotFound() : Ok(entry);
+        }
+        catch (JournalConflictException exception)
+        {
+            return Conflict(ToProblem(
+                StatusCodes.Status409Conflict,
+                "Journal posting conflict",
+                exception.Message));
+        }
+    }
+
+    [HttpPost("{journalEntryId:guid}/reverse")]
+    [Authorize(Policy = Permissions.AccountingPost)]
+    public async Task<ActionResult<JournalEntryResponse>> Reverse(
+        Guid journalEntryId,
+        ReverseJournalEntryRequest request,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var reversal = await service.ReverseAsync(
+                journalEntryId,
+                request,
+                cancellationToken);
+
+            return reversal is null
+                ? NotFound()
+                : CreatedAtAction(
+                    nameof(Get),
+                    new { journalEntryId = reversal.Id },
+                    reversal);
+        }
+        catch (JournalConflictException exception)
+        {
+            return Conflict(ToProblem(
+                StatusCodes.Status409Conflict,
+                "Journal reversal conflict",
+                exception.Message));
+        }
+    }
+
     private static ProblemDetails ToProblem(
         int status,
         string title,

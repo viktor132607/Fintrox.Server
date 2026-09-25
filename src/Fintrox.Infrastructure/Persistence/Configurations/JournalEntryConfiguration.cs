@@ -9,7 +9,20 @@ public sealed class JournalEntryConfiguration
 {
     public void Configure(EntityTypeBuilder<JournalEntry> builder)
     {
-        builder.ToTable("journal_entries", DatabaseSchemas.Accounting);
+        builder.ToTable(
+            "journal_entries",
+            DatabaseSchemas.Accounting,
+            table =>
+            {
+                table.HasCheckConstraint(
+                    "ck_journal_entries_posting_state",
+                    "(status = 'Draft' AND number IS NULL AND posted_at_utc IS NULL) OR " +
+                    "(status IN ('Posted', 'Reversed') AND number IS NOT NULL AND posted_at_utc IS NOT NULL)");
+
+                table.HasCheckConstraint(
+                    "ck_journal_entries_reversed_link",
+                    "status <> 'Reversed' OR reversed_by_journal_entry_id IS NOT NULL");
+            });
 
         builder.HasKey(entry => entry.Id);
 
@@ -71,6 +84,12 @@ public sealed class JournalEntryConfiguration
             .HasColumnName("posted_at_utc")
             .HasColumnType("timestamp with time zone");
 
+        builder.Property(entry => entry.ReversalOfJournalEntryId)
+            .HasColumnName("reversal_of_journal_entry_id");
+
+        builder.Property(entry => entry.ReversedByJournalEntryId)
+            .HasColumnName("reversed_by_journal_entry_id");
+
         builder.Property(entry => entry.CreatedAtUtc)
             .HasColumnName("created_at_utc")
             .HasColumnType("timestamp with time zone")
@@ -86,6 +105,15 @@ public sealed class JournalEntryConfiguration
 
         builder.Property(entry => entry.UpdatedByUserId)
             .HasColumnName("updated_by_user_id");
+
+        builder.HasIndex(entry => new
+            {
+                entry.OrganizationId,
+                entry.Number
+            })
+            .IsUnique()
+            .HasFilter("number IS NOT NULL")
+            .HasDatabaseName("ux_journal_entries_organization_number");
 
         builder.HasIndex(entry => new
             {
@@ -109,6 +137,24 @@ public sealed class JournalEntryConfiguration
             })
             .HasDatabaseName("ix_journal_entries_organization_external_reference");
 
+        builder.HasIndex(entry => new
+            {
+                entry.OrganizationId,
+                entry.ReversalOfJournalEntryId
+            })
+            .IsUnique()
+            .HasFilter("reversal_of_journal_entry_id IS NOT NULL")
+            .HasDatabaseName("ux_journal_entries_reversal_of");
+
+        builder.HasIndex(entry => new
+            {
+                entry.OrganizationId,
+                entry.ReversedByJournalEntryId
+            })
+            .IsUnique()
+            .HasFilter("reversed_by_journal_entry_id IS NOT NULL")
+            .HasDatabaseName("ux_journal_entries_reversed_by");
+
         builder.HasOne<AccountingPeriod>()
             .WithMany()
             .HasForeignKey(entry => new
@@ -120,6 +166,34 @@ public sealed class JournalEntryConfiguration
             {
                 period.Id,
                 period.OrganizationId
+            })
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne<JournalEntry>()
+            .WithMany()
+            .HasForeignKey(entry => new
+            {
+                entry.ReversalOfJournalEntryId,
+                entry.OrganizationId
+            })
+            .HasPrincipalKey(entry => new
+            {
+                entry.Id,
+                entry.OrganizationId
+            })
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne<JournalEntry>()
+            .WithMany()
+            .HasForeignKey(entry => new
+            {
+                entry.ReversedByJournalEntryId,
+                entry.OrganizationId
+            })
+            .HasPrincipalKey(entry => new
+            {
+                entry.Id,
+                entry.OrganizationId
             })
             .OnDelete(DeleteBehavior.Restrict);
 

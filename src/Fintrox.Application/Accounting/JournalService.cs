@@ -1,3 +1,4 @@
+using System.Globalization;
 using Fintrox.Application.Common.Interfaces;
 using Fintrox.Contracts.Accounting;
 using Fintrox.Domain.Accounting;
@@ -8,6 +9,7 @@ public sealed class JournalService(
     IJournalRepository journalRepository,
     IAccountRepository accountRepository,
     IFiscalCalendarRepository fiscalCalendarRepository,
+    IAccountingTransactionRunner transactionRunner,
     ICurrentOrganization currentOrganization,
     TimeProvider timeProvider) : IJournalService
 {
@@ -292,6 +294,190 @@ public sealed class JournalService(
         return true;
     }
 
+    public async Task<JournalEntryResponse?> PostAsync(
+        Guid journalEntryId,
+        CancellationToken cancellationToken)
+    {
+        var organizationId = currentOrganization.RequireOrganizationId();
+
+        var postedEntry = await transactionRunner.ExecuteAsync(
+            async transactionCancellationToken =>
+            {
+                var entry = await journalRepository.GetEntryAsync(
+                    organizationId,
+                    journalEntryId,
+                    trackChanges: true,
+                    transactionCancellationToken);
+
+                if (entry is null)
+                {
+                    return null;
+                }
+
+                EnsureDraft(entry);
+
+                var (period, fiscalYear) = await ResolveOpenPostingContextAsync(
+                    organizationId,
+                    entry.PostingDate,
+                    entry.FiscalPeriodId,
+                    transactionCancellationToken);
+
+                var lines = await journalRepository.ListLinesAsync(
+                    organizationId,
+                    entry.Id,
+                    transactionCancellationToken);
+
+                await ValidatePostingLinesAsync(
+                    entry,
+                    lines,
+                    transactionCancellationToken);
+
+                var sequence =
+                    await journalRepository.AllocatePostingSequenceAsync(
+                        organizationId,
+                        period.FiscalYearId,
+                        transactionCancellationToken);
+
+                entry.Post(
+                    FormatJournalNumber(
+                        fiscalYear.StartDate,
+                        sequence),
+                    timeProvider.GetUtcNow());
+
+                await journalRepository.SaveChangesAsync(
+                    transactionCancellationToken);
+
+                return entry;
+            },
+            cancellationToken);
+
+        return postedEntry is null
+            ? null
+            : await BuildResponseAsync(postedEntry, cancellationToken);
+    }
+
+    public async Task<JournalEntryResponse?> ReverseAsync(
+        Guid journalEntryId,
+        ReverseJournalEntryRequest request,
+        CancellationToken cancellationToken)
+    {
+        var organizationId = currentOrganization.RequireOrganizationId();
+
+        var reversalEntry = await transactionRunner.ExecuteAsync(
+            async transactionCancellationToken =>
+            {
+                var original = await journalRepository.GetEntryAsync(
+                    organizationId,
+                    journalEntryId,
+                    trackChanges: true,
+                    transactionCancellationToken);
+
+                if (original is null)
+                {
+                    return null;
+                }
+
+                EnsureReversible(original);
+
+                var (period, fiscalYear) = await ResolveOpenPostingContextAsync(
+                    organizationId,
+                    request.PostingDate,
+                    expectedPeriodId: null,
+                    transactionCancellationToken);
+
+                var originalLines = await journalRepository.ListLinesAsync(
+                    organizationId,
+                    original.Id,
+                    transactionCancellationToken);
+
+                if (originalLines.Count < 2)
+                {
+                    throw new JournalConflictException(
+                        "The posted journal entry does not contain enough lines to reverse.");
+                }
+
+                var accountIds = originalLines
+                    .Select(line => line.AccountId)
+                    .Distinct()
+                    .ToArray();
+
+                var accounts = await accountRepository.ListByIdsAsync(
+                    organizationId,
+                    accountIds,
+                    transactionCancellationToken);
+
+                if (accounts.Count != accountIds.Length)
+                {
+                    throw new JournalConflictException(
+                        "The posted journal entry references an account that no longer exists.");
+                }
+
+                var now = timeProvider.GetUtcNow();
+                var reversal = JournalEntry.CreateReversalDraft(
+                    organizationId,
+                    period.Id,
+                    original.Id,
+                    request.PostingDate,
+                    BuildReversalDescription(
+                        original.Number,
+                        request.Reason),
+                    now);
+
+                await journalRepository.AddEntryAsync(
+                    reversal,
+                    transactionCancellationToken);
+
+                foreach (var originalLine in originalLines)
+                {
+                    var reversalLine = JournalLine.Create(
+                        organizationId,
+                        reversal.Id,
+                        originalLine.LineNumber,
+                        originalLine.AccountId,
+                        originalLine.Credit,
+                        originalLine.Debit,
+                        originalLine.Description,
+                        now);
+
+                    await journalRepository.AddLineAsync(
+                        reversalLine,
+                        transactionCancellationToken);
+                }
+
+                // Persist the reversal as a draft first so database-level
+                // immutability guards can verify that its lines are inserted
+                // only while the parent entry is editable.
+                await journalRepository.SaveChangesAsync(
+                    transactionCancellationToken);
+
+                var sequence =
+                    await journalRepository.AllocatePostingSequenceAsync(
+                        organizationId,
+                        period.FiscalYearId,
+                        transactionCancellationToken);
+
+                reversal.Post(
+                    FormatJournalNumber(
+                        fiscalYear.StartDate,
+                        sequence),
+                    now);
+
+                original.MarkReversed(reversal.Id, now);
+
+                await journalRepository.SaveChangesAsync(
+                    transactionCancellationToken);
+
+                return reversal;
+            },
+            cancellationToken);
+
+        return reversalEntry is null
+            ? null
+            : await BuildResponseAsync(
+                reversalEntry,
+                cancellationToken);
+    }
+
     private async Task<Account> ValidateManualLineAsync(
         Guid organizationId,
         Guid accountId,
@@ -332,6 +518,112 @@ public sealed class JournalService(
         }
 
         return account;
+    }
+
+    private async Task ValidatePostingLinesAsync(
+        JournalEntry entry,
+        IReadOnlyList<JournalLine> lines,
+        CancellationToken cancellationToken)
+    {
+        if (lines.Count < 2)
+        {
+            throw new JournalConflictException(
+                "A journal entry must contain at least two lines before posting.");
+        }
+
+        var debitTotal = lines.Sum(line => line.Debit);
+        var creditTotal = lines.Sum(line => line.Credit);
+
+        if (debitTotal <= 0m || debitTotal != creditTotal)
+        {
+            throw new JournalConflictException(
+                "The journal entry must be balanced before posting.");
+        }
+
+        var accountIds = lines
+            .Select(line => line.AccountId)
+            .Distinct()
+            .ToArray();
+
+        var accounts = await accountRepository.ListByIdsAsync(
+            entry.OrganizationId,
+            accountIds,
+            cancellationToken);
+
+        if (accounts.Count != accountIds.Length)
+        {
+            throw new JournalConflictException(
+                "A journal line references an account that does not exist.");
+        }
+
+        foreach (var account in accounts.Values)
+        {
+            if (!account.IsActive)
+            {
+                throw new JournalConflictException(
+                    $"Account '{account.Code}' is inactive.");
+            }
+
+            if (entry.Source == JournalEntrySource.Manual &&
+                !account.AllowManualPosting)
+            {
+                throw new JournalConflictException(
+                    $"Account '{account.Code}' does not allow manual posting.");
+            }
+        }
+    }
+
+    private async Task<(AccountingPeriod Period, FiscalYear FiscalYear)>
+        ResolveOpenPostingContextAsync(
+            Guid organizationId,
+            DateOnly postingDate,
+            Guid? expectedPeriodId,
+            CancellationToken cancellationToken)
+    {
+        var period = await fiscalCalendarRepository.FindPeriodByDateAsync(
+            organizationId,
+            postingDate,
+            trackChanges: false,
+            cancellationToken);
+
+        if (period is null)
+        {
+            throw new JournalConflictException(
+                "No accounting period contains the requested posting date.");
+        }
+
+        if (expectedPeriodId.HasValue &&
+            period.Id != expectedPeriodId.Value)
+        {
+            throw new JournalConflictException(
+                "The journal entry fiscal period does not match its posting date.");
+        }
+
+        if (period.Status != AccountingPeriodStatus.Open)
+        {
+            throw new JournalConflictException(
+                "Posting is allowed only in an open accounting period.");
+        }
+
+        var fiscalYear = await fiscalCalendarRepository.GetFiscalYearAsync(
+            organizationId,
+            period.FiscalYearId,
+            trackChanges: false,
+            cancellationToken);
+
+        if (fiscalYear is null)
+        {
+            throw new JournalConflictException(
+                "The accounting period does not belong to a valid fiscal year.");
+        }
+
+        if (fiscalYear.Status != FiscalYearStatus.Open)
+        {
+            throw new JournalConflictException(
+                "Posting is allowed only in an open fiscal year.");
+        }
+
+        return (period, fiscalYear);
     }
 
     private async Task<JournalEntryResponse> BuildResponseAsync(
@@ -382,6 +674,8 @@ public sealed class JournalService(
             entry.ExternalReference,
             entry.FiscalPeriodId,
             entry.PostedAtUtc,
+            entry.ReversalOfJournalEntryId,
+            entry.ReversedByJournalEntryId,
             debitTotal,
             creditTotal,
             lines.Count >= 2 &&
@@ -426,6 +720,8 @@ public sealed class JournalService(
             entry.ExternalReference,
             entry.FiscalPeriodId,
             entry.PostedAtUtc,
+            entry.ReversalOfJournalEntryId,
+            entry.ReversedByJournalEntryId,
             entry.CreatedAtUtc,
             entry.UpdatedAtUtc);
     }
@@ -479,6 +775,22 @@ public sealed class JournalService(
         }
     }
 
+    private static void EnsureReversible(JournalEntry entry)
+    {
+        if (entry.Status == JournalEntryStatus.Reversed ||
+            entry.ReversedByJournalEntryId is not null)
+        {
+            throw new JournalConflictException(
+                "This journal entry has already been reversed.");
+        }
+
+        if (entry.Status != JournalEntryStatus.Posted)
+        {
+            throw new JournalConflictException(
+                "Only a posted journal entry can be reversed.");
+        }
+    }
+
     private static void ValidateLineAmounts(decimal debit, decimal credit)
     {
         if (debit < 0m || credit < 0m)
@@ -500,5 +812,32 @@ public sealed class JournalService(
             throw new JournalConflictException(
                 "Journal amounts support at most four decimal places.");
         }
+    }
+
+    private static string FormatJournalNumber(
+        DateOnly fiscalYearStartDate,
+        long sequence)
+    {
+        if (sequence <= 0)
+        {
+            throw new InvalidOperationException(
+                "Journal posting sequence must be positive.");
+        }
+
+        return string.Create(
+            CultureInfo.InvariantCulture,
+            $"{fiscalYearStartDate:yyyyMMdd}-{sequence:D6}");
+    }
+
+    private static string BuildReversalDescription(
+        string? originalNumber,
+        string reason)
+    {
+        var normalizedReason = reason.Trim();
+        var sourceNumber = string.IsNullOrWhiteSpace(originalNumber)
+            ? "un-numbered entry"
+            : originalNumber;
+
+        return $"Reversal of {sourceNumber}: {normalizedReason}";
     }
 }
