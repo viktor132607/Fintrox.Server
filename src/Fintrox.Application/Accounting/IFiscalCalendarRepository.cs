@@ -48,7 +48,7 @@ public interface IFiscalCalendarRepository
 
     Task<AccountingPeriod?> FindPeriodByDateAsync(
         Guid organizationId,
-        DateOnly date,
+        DateOnly postingDate,
         bool trackChanges,
         CancellationToken cancellationToken);
 

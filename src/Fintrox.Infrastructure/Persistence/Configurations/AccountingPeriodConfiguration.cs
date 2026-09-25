@@ -16,11 +16,11 @@ public sealed class AccountingPeriodConfiguration
             {
                 table.HasCheckConstraint(
                     "ck_accounting_periods_date_range",
-                    ""end_date" >= "start_date"");
+                    "end_date >= start_date");
 
                 table.HasCheckConstraint(
                     "ck_accounting_periods_number",
-                    ""number" >= 1 AND "number" <= 99");
+                    "number >= 1 AND number <= 99");
             });
 
         builder.HasKey(period => period.Id);

@@ -13,7 +13,7 @@ public sealed class FiscalYearConfiguration : IEntityTypeConfiguration<FiscalYea
             DatabaseSchemas.Accounting,
             table => table.HasCheckConstraint(
                 "ck_fiscal_years_date_range",
-                ""end_date" >= "start_date""));
+                "end_date >= start_date"));
 
         builder.HasKey(year => year.Id);
 
