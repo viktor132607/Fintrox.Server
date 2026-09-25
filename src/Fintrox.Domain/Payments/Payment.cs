@@ -151,25 +151,32 @@ public sealed class Payment : OrganizationScopedAuditableEntity, IAggregateRoot
                 "Payment amount cannot be lower than the allocated amount.");
         }
 
+        var normalizedCurrencyCode = NormalizeCurrencyCode(currencyCode);
+        var normalizedCounterpartyName = NormalizeRequired(
+            counterpartyName,
+            nameof(counterpartyName),
+            200);
+        var normalizedRegistrationNumber = NormalizeOptional(
+            counterpartyRegistrationNumber,
+            64);
+        var normalizedVatNumber = NormalizeOptional(
+            counterpartyVatNumber,
+            64);
+        var normalizedReference = NormalizeOptional(reference, 120);
+        var normalizedNotes = NormalizeOptional(notes, 1000);
+
         Direction = direction;
         CounterpartyId = counterpartyId;
         PaymentDate = paymentDate;
         Method = method;
         CurrencyId = currencyId;
-        CurrencyCode = NormalizeCurrencyCode(currencyCode);
+        CurrencyCode = normalizedCurrencyCode;
         Amount = amount;
-        CounterpartyName = NormalizeRequired(
-            counterpartyName,
-            nameof(counterpartyName),
-            200);
-        CounterpartyRegistrationNumber = NormalizeOptional(
-            counterpartyRegistrationNumber,
-            64);
-        CounterpartyVatNumber = NormalizeOptional(
-            counterpartyVatNumber,
-            64);
-        Reference = NormalizeOptional(reference, 120);
-        Notes = NormalizeOptional(notes, 1000);
+        CounterpartyName = normalizedCounterpartyName;
+        CounterpartyRegistrationNumber = normalizedRegistrationNumber;
+        CounterpartyVatNumber = normalizedVatNumber;
+        Reference = normalizedReference;
+        Notes = normalizedNotes;
         Touch(now);
     }
 
@@ -233,20 +240,26 @@ public sealed class Payment : OrganizationScopedAuditableEntity, IAggregateRoot
                 "Allocated amount cannot exceed payment amount.");
         }
 
-        InternalNumber = normalizedNumber;
-        BaseCurrencyId = baseCurrencyId;
-        BaseCurrencyCode = NormalizeCurrencyCode(baseCurrencyCode);
-        CurrencyCode = NormalizeCurrencyCode(currencyCode);
-        CounterpartyName = NormalizeRequired(
+        var normalizedBaseCurrencyCode = NormalizeCurrencyCode(baseCurrencyCode);
+        var normalizedCurrencyCode = NormalizeCurrencyCode(currencyCode);
+        var normalizedCounterpartyName = NormalizeRequired(
             counterpartyName,
             nameof(counterpartyName),
             200);
-        CounterpartyRegistrationNumber = NormalizeOptional(
+        var normalizedRegistrationNumber = NormalizeOptional(
             counterpartyRegistrationNumber,
             64);
-        CounterpartyVatNumber = NormalizeOptional(
+        var normalizedVatNumber = NormalizeOptional(
             counterpartyVatNumber,
             64);
+
+        InternalNumber = normalizedNumber;
+        BaseCurrencyId = baseCurrencyId;
+        BaseCurrencyCode = normalizedBaseCurrencyCode;
+        CurrencyCode = normalizedCurrencyCode;
+        CounterpartyName = normalizedCounterpartyName;
+        CounterpartyRegistrationNumber = normalizedRegistrationNumber;
+        CounterpartyVatNumber = normalizedVatNumber;
         ExchangeRate = exchangeRate;
         Status = PaymentStatus.Confirmed;
         ConfirmedAtUtc = now;
@@ -263,11 +276,13 @@ public sealed class Payment : OrganizationScopedAuditableEntity, IAggregateRoot
                 "Only a confirmed payment can be cancelled.");
         }
 
-        Status = PaymentStatus.Cancelled;
-        CancellationReason = NormalizeRequired(
+        var normalizedReason = NormalizeRequired(
             reason,
             nameof(reason),
             500);
+
+        Status = PaymentStatus.Cancelled;
+        CancellationReason = normalizedReason;
         CancelledAtUtc = now;
         Touch(now);
     }

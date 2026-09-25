@@ -128,15 +128,18 @@ public sealed class PaymentAllocation : OrganizationScopedAuditableEntity
             documentAmount,
             paymentAmount);
 
-        TargetType = targetType;
-        SalesInvoiceId = salesInvoiceId;
-        PurchaseDocumentId = purchaseDocumentId;
-        DocumentNumber = NormalizeRequired(
+        var normalizedDocumentNumber = NormalizeRequired(
             documentNumber,
             nameof(documentNumber),
             80);
+        var normalizedCurrencyCode = NormalizeCurrencyCode(documentCurrencyCode);
+
+        TargetType = targetType;
+        SalesInvoiceId = salesInvoiceId;
+        PurchaseDocumentId = purchaseDocumentId;
+        DocumentNumber = normalizedDocumentNumber;
         DocumentCurrencyId = documentCurrencyId;
-        DocumentCurrencyCode = NormalizeCurrencyCode(documentCurrencyCode);
+        DocumentCurrencyCode = normalizedCurrencyCode;
         DocumentExchangeRate = documentExchangeRate;
         DocumentAmount = documentAmount;
         PaymentAmount = paymentAmount;
