@@ -127,4 +127,10 @@ See [docs/accounting-reports.md](docs/accounting-reports.md).
 
 Roadmap status: phase 12/41 implemented.
 
-Next core phase: VAT codes, currencies and exchange rates.
+## VAT and currencies
+
+Effective-dated VAT codes, organization currencies, single base-currency configuration and historical exchange rates are implemented.
+
+See [docs/vat-currencies-exchange-rates.md](docs/vat-currencies-exchange-rates.md).
+
+Next core phase: Sales invoices.
