@@ -4,6 +4,7 @@ using Fintrox.Application.Counterparties;
 using Fintrox.Application.Currencies;
 using Fintrox.Application.Organizations;
 using Fintrox.Application.Reports;
+using Fintrox.Application.Sales;
 using Fintrox.Application.Tax;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -22,6 +23,7 @@ public static class DependencyInjection
         services.AddScoped<ICurrencyService, CurrencyService>();
         services.AddScoped<IVatCodeService, VatCodeService>();
         services.AddScoped<IAccountingReportService, AccountingReportService>();
+        services.AddScoped<ISalesInvoiceService, SalesInvoiceService>();
         services.AddScoped<IOrganizationService, OrganizationService>();
         services.AddScoped<IOrganizationMemberService, OrganizationMemberService>();
         services.AddScoped<IOrganizationAccessService, OrganizationAccessService>();

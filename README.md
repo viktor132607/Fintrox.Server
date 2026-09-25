@@ -133,4 +133,10 @@ Effective-dated VAT codes, organization currencies, single base-currency configu
 
 See [docs/vat-currencies-exchange-rates.md](docs/vat-currencies-exchange-rates.md).
 
-Next core phase: Sales invoices.
+## Sales invoices
+
+Draft-to-issued sales invoices now include customer/VAT/currency snapshots, line calculations, annual numbering, cancellation and database-enforced immutability.
+
+See [docs/sales-invoices.md](docs/sales-invoices.md).
+
+Next core phase: Purchase invoices and expenses.
