@@ -2,6 +2,7 @@ using Fintrox.Domain.Accounting;
 using Fintrox.Domain.Common;
 using Fintrox.Domain.Organizations;
 using Fintrox.Domain.Partners;
+using Fintrox.Domain.Purchases;
 using Fintrox.Domain.Sales;
 using Fintrox.Domain.Tax;
 using Fintrox.Infrastructure.Audit;
@@ -44,6 +45,15 @@ public sealed class FintroxDbContext(DbContextOptions<FintroxDbContext> options)
 
     public DbSet<SalesInvoiceNumberSequence> SalesInvoiceNumberSequences =>
         Set<SalesInvoiceNumberSequence>();
+
+    public DbSet<PurchaseDocument> PurchaseDocuments =>
+        Set<PurchaseDocument>();
+
+    public DbSet<PurchaseDocumentLine> PurchaseDocumentLines =>
+        Set<PurchaseDocumentLine>();
+
+    public DbSet<PurchaseDocumentNumberSequence> PurchaseDocumentNumberSequences =>
+        Set<PurchaseDocumentNumberSequence>();
 
     public DbSet<Organization> Organizations => Set<Organization>();
 
