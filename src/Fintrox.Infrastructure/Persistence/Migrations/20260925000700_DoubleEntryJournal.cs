@@ -8,6 +8,33 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
     /// <inheritdoc />
     public partial class DoubleEntryJournal : Migration
     {
+        private static readonly string[] IdOrganizationColumns =
+            ["id", "organization_id"];
+
+        private static readonly string[] FiscalPeriodOrganizationColumns =
+            ["fiscal_period_id", "organization_id"];
+
+        private static readonly string[] AccountOrganizationColumns =
+            ["account_id", "organization_id"];
+
+        private static readonly string[] JournalEntryOrganizationColumns =
+            ["journal_entry_id", "organization_id"];
+
+        private static readonly string[] OrganizationExternalReferenceColumns =
+            ["organization_id", "external_reference"];
+
+        private static readonly string[] OrganizationPostingDateColumns =
+            ["organization_id", "posting_date"];
+
+        private static readonly string[] OrganizationStatusDateColumns =
+            ["organization_id", "status", "posting_date"];
+
+        private static readonly string[] OrganizationAccountColumns =
+            ["organization_id", "account_id"];
+
+        private static readonly string[] OrganizationEntryLineNumberColumns =
+            ["organization_id", "journal_entry_id", "line_number"];
+
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -15,13 +42,13 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                 name: "ak_accounts_id_organization",
                 schema: "accounting",
                 table: "accounts",
-                columns: new[] { "id", "organization_id" });
+                columns: IdOrganizationColumns);
 
             migrationBuilder.AddUniqueConstraint(
                 name: "ak_accounting_periods_id_organization",
                 schema: "accounting",
                 table: "accounting_periods",
-                columns: new[] { "id", "organization_id" });
+                columns: IdOrganizationColumns);
 
             migrationBuilder.CreateTable(
                 name: "journal_entries",
@@ -53,7 +80,7 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                         columns: x => new { x.fiscal_period_id, x.organization_id },
                         principalSchema: "accounting",
                         principalTable: "accounting_periods",
-                        principalColumns: new[] { "id", "organization_id" },
+                        principalColumns: IdOrganizationColumns,
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_journal_entries_organizations_organization_id",
@@ -91,14 +118,14 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                         columns: x => new { x.account_id, x.organization_id },
                         principalSchema: "accounting",
                         principalTable: "accounts",
-                        principalColumns: new[] { "id", "organization_id" },
+                        principalColumns: IdOrganizationColumns,
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_journal_lines_journal_entries_journal_entry_id_organization~",
                         columns: x => new { x.journal_entry_id, x.organization_id },
                         principalSchema: "accounting",
                         principalTable: "journal_entries",
-                        principalColumns: new[] { "id", "organization_id" },
+                        principalColumns: IdOrganizationColumns,
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -106,49 +133,49 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                 name: "IX_journal_entries_fiscal_period_id_organization_id",
                 schema: "accounting",
                 table: "journal_entries",
-                columns: new[] { "fiscal_period_id", "organization_id" });
+                columns: FiscalPeriodOrganizationColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ix_journal_entries_organization_external_reference",
                 schema: "accounting",
                 table: "journal_entries",
-                columns: new[] { "organization_id", "external_reference" });
+                columns: OrganizationExternalReferenceColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ix_journal_entries_organization_posting_date",
                 schema: "accounting",
                 table: "journal_entries",
-                columns: new[] { "organization_id", "posting_date" });
+                columns: OrganizationPostingDateColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ix_journal_entries_organization_status_date",
                 schema: "accounting",
                 table: "journal_entries",
-                columns: new[] { "organization_id", "status", "posting_date" });
+                columns: OrganizationStatusDateColumns);
 
             migrationBuilder.CreateIndex(
                 name: "IX_journal_lines_account_id_organization_id",
                 schema: "accounting",
                 table: "journal_lines",
-                columns: new[] { "account_id", "organization_id" });
+                columns: AccountOrganizationColumns);
 
             migrationBuilder.CreateIndex(
                 name: "IX_journal_lines_journal_entry_id_organization_id",
                 schema: "accounting",
                 table: "journal_lines",
-                columns: new[] { "journal_entry_id", "organization_id" });
+                columns: JournalEntryOrganizationColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ix_journal_lines_organization_account",
                 schema: "accounting",
                 table: "journal_lines",
-                columns: new[] { "organization_id", "account_id" });
+                columns: OrganizationAccountColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ux_journal_lines_entry_line_number",
                 schema: "accounting",
                 table: "journal_lines",
-                columns: new[] { "organization_id", "journal_entry_id", "line_number" },
+                columns: OrganizationEntryLineNumberColumns,
                 unique: true);
         }
 
