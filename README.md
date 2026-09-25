@@ -145,4 +145,10 @@ Supplier invoices and expense documents now include supplier/VAT/currency snapsh
 
 See [docs/purchase-documents.md](docs/purchase-documents.md).
 
-Next core phase: Payments and allocations.
+## Payments and allocations
+
+Incoming/outgoing payments now support draft/confirm/cancel lifecycle, cross-currency allocations, invoice/document settlement tracking and concurrency-safe outstanding validation.
+
+See [docs/payments-and-allocations.md](docs/payments-and-allocations.md).
+
+Next core phase: Accounting auto-posting rules.

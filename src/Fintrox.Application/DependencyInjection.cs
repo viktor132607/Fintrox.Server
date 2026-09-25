@@ -3,6 +3,7 @@ using Fintrox.Application.Authorization;
 using Fintrox.Application.Counterparties;
 using Fintrox.Application.Currencies;
 using Fintrox.Application.Organizations;
+using Fintrox.Application.Payments;
 using Fintrox.Application.Purchases;
 using Fintrox.Application.Reports;
 using Fintrox.Application.Sales;
@@ -26,6 +27,7 @@ public static class DependencyInjection
         services.AddScoped<IAccountingReportService, AccountingReportService>();
         services.AddScoped<ISalesInvoiceService, SalesInvoiceService>();
         services.AddScoped<IPurchaseDocumentService, PurchaseDocumentService>();
+        services.AddScoped<IPaymentService, PaymentService>();
         services.AddScoped<IOrganizationService, OrganizationService>();
         services.AddScoped<IOrganizationMemberService, OrganizationMemberService>();
         services.AddScoped<IOrganizationAccessService, OrganizationAccessService>();
