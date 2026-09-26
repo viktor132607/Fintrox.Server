@@ -169,6 +169,12 @@ Mutating machine-to-machine requests now use durable external-event keys, reques
 
 See [docs/idempotency-external-references.md](docs/idempotency-external-references.md).
 
-Roadmap status: phase 20/41 implemented.
+## Integration Inbox / Outbox
 
-Next core phase: phase 21/41.
+External business events can now be persisted, business-validated and processed into Fintrox documents/accounting through a durable inbox. Successful processing writes outbox events, fan-outs signed webhook deliveries and records retryable failures.
+
+See [docs/integration-inbox-outbox.md](docs/integration-inbox-outbox.md).
+
+Roadmap status: phase 21/41 implemented.
+
+Next core phase: External business event API (22/41).

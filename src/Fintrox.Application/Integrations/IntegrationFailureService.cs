@@ -62,9 +62,18 @@ public sealed class IntegrationFailureService(
         {
             case IntegrationFailureKind.InboxProcessing:
             {
+                var referenceId = failure.ReferenceId;
                 var inbox = await inboxService.RetryAsync(
-                    failure.ReferenceId,
+                    referenceId,
                     cancellationToken);
+
+                failure = await repository.GetFailureAsync(
+                    organizationId,
+                    failureId,
+                    trackChanges: true,
+                    cancellationToken)
+                    ?? throw new InvalidOperationException(
+                        "Integration failure disappeared during retry.");
 
                 if (inbox is not null &&
                     string.Equals(

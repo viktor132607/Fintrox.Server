@@ -36,6 +36,15 @@ public static class DependencyInjection
         services.AddScoped<IOrganizationAccessService, OrganizationAccessService>();
         services.AddScoped<IIntegrationClientService, IntegrationClientService>();
         services.AddScoped<IIntegrationRequestService, IntegrationRequestService>();
+        services.AddScoped<IIntegrationBusinessEventDispatcher, IntegrationBusinessEventDispatcher>();
+        services.AddScoped<IIntegrationBusinessEventHandler, SalesIntegrationBusinessEventHandler>();
+        services.AddScoped<IIntegrationBusinessEventHandler, PaymentIntegrationBusinessEventHandler>();
+        services.AddScoped<IIntegrationBusinessEventHandler, ExpenseIntegrationBusinessEventHandler>();
+        services.AddScoped<IIntegrationBusinessEventHandler, CounterpartyIntegrationBusinessEventHandler>();
+        services.AddScoped<IIntegrationOutboxService, IntegrationOutboxService>();
+        services.AddScoped<IIntegrationInboxService, IntegrationInboxService>();
+        services.AddScoped<IWebhookSubscriptionService, WebhookSubscriptionService>();
+        services.AddScoped<IIntegrationFailureService, IntegrationFailureService>();
 
         return services;
     }
