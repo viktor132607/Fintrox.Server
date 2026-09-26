@@ -1,0 +1,93 @@
+name: Generate Integration Clients Migration
+
+on:
+  push:
+    branches:
+      - phase19-integration-clients-scopes
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    name: Generate EF Integration Clients Migration
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    env:
+      ConnectionStrings__DefaultConnection: Host=localhost;Port=5432;Database=fintrox;Username=fintrox;Password=fintrox_ci
+      Jwt__Issuer: Fintrox
+      Jwt__Audience: Fintrox.Client
+      Jwt__SigningKey: fintrox-ci-signing-key-only-not-for-production-2026
+      Jwt__AccessTokenMinutes: 15
+      Jwt__IntegrationAccessTokenMinutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Stop when migration already exists
+        id: guard
+        shell: bash
+        run: |
+          if find src/Fintrox.Infrastructure/Persistence/Migrations -maxdepth 1 -type f -name '*_IntegrationClientsAndScopes.cs' | grep -q .; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup .NET
+        if: steps.guard.outputs.skip == 'false'
+        uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+
+      - name: Restore tools
+        if: steps.guard.outputs.skip == 'false'
+        run: dotnet tool restore
+
+      - name: Restore
+        if: steps.guard.outputs.skip == 'false'
+        run: dotnet restore Fintrox.Server.sln
+
+      - name: Build
+        if: steps.guard.outputs.skip == 'false'
+        run: dotnet build Fintrox.Server.sln --configuration Release --no-restore --warnaserror
+
+      - name: Generate migration
+        if: steps.guard.outputs.skip == 'false'
+        run: >
+          dotnet ef migrations add IntegrationClientsAndScopes
+          --project src/Fintrox.Infrastructure/Fintrox.Infrastructure.csproj
+          --startup-project src/Fintrox.Api/Fintrox.Api.csproj
+          --configuration Release
+          --no-build
+          --output-dir Persistence/Migrations
+
+      - name: Normalize migration ordering
+        if: steps.guard.outputs.skip == 'false'
+        shell: bash
+        run: |
+          migration_dir="src/Fintrox.Infrastructure/Persistence/Migrations"
+          generated="$(find "$migration_dir" -maxdepth 1 -type f -name '*_IntegrationClientsAndScopes.cs' ! -name '*.Designer.cs' | head -n 1)"
+          generated_designer="${generated%.cs}.Designer.cs"
+
+          mv "$generated" "$migration_dir/20260926001900_IntegrationClientsAndScopes.cs"
+          mv "$generated_designer" "$migration_dir/20260926001900_IntegrationClientsAndScopes.Designer.cs"
+
+          sed -i -E 's/[0-9]{14}_IntegrationClientsAndScopes/20260926001900_IntegrationClientsAndScopes/g'             "$migration_dir/20260926001900_IntegrationClientsAndScopes.Designer.cs"
+
+      - name: Remove one-time generator
+        if: steps.guard.outputs.skip == 'false'
+        run: rm .github/workflows/generate-integration-clients-migration.yml
+
+      - name: Commit generated migration
+        if: steps.guard.outputs.skip == 'false'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/Fintrox.Infrastructure/Persistence/Migrations .github/workflows/generate-integration-clients-migration.yml
+          git commit -m "chore: generate integration clients migration"
+          git push origin HEAD:phase19-integration-clients-scopes
