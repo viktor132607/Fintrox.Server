@@ -8,6 +8,18 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
     /// <inheritdoc />
     public partial class IntegrationIdempotencyExternalReferences : Migration
     {
+        private static readonly string[] IdOrganizationColumns =
+            ["id", "organization_id"];
+
+        private static readonly string[] IntegrationClientOrganizationColumns =
+            ["integration_client_id", "organization_id"];
+
+        private static readonly string[] OrganizationCreatedColumns =
+            ["organization_id", "created_at_utc"];
+
+        private static readonly string[] ExternalEventColumns =
+            ["organization_id", "source_system", "external_id", "event_type"];
+
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -41,7 +53,7 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                         columns: x => new { x.integration_client_id, x.organization_id },
                         principalSchema: "integration",
                         principalTable: "integration_clients",
-                        principalColumns: new[] { "id", "organization_id" },
+                        principalColumns: IdOrganizationColumns,
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -49,19 +61,19 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                 name: "IX_integration_requests_integration_client_id_organization_id",
                 schema: "integration",
                 table: "integration_requests",
-                columns: new[] { "integration_client_id", "organization_id" });
+                columns: IntegrationClientOrganizationColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ix_integration_requests_organization_created",
                 schema: "integration",
                 table: "integration_requests",
-                columns: new[] { "organization_id", "created_at_utc" });
+                columns: OrganizationCreatedColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ux_integration_requests_external_event",
                 schema: "integration",
                 table: "integration_requests",
-                columns: new[] { "organization_id", "source_system", "external_id", "event_type" },
+                columns: ExternalEventColumns,
                 unique: true);
         }
 
