@@ -51,6 +51,17 @@ public sealed class IntegrationIdempotencyMiddleware(
                     metadata,
                     async cancellationToken =>
                     {
+                        capture.SetLength(0);
+                        capture.Position = 0;
+
+                        if (context.Request.Body.CanSeek)
+                        {
+                            context.Request.Body.Position = 0;
+                        }
+
+                        context.Response.Clear();
+                        context.Response.Body = capture;
+
                         await next(context);
 
                         capture.Position = 0;
@@ -65,8 +76,7 @@ public sealed class IntegrationIdempotencyMiddleware(
                             cancellationToken);
 
                         var resourceReference =
-                            context.Response.Headers["Location"].FirstOrDefault()
-                            ?? context.Request.Path.Value;
+                            context.Response.Headers["Location"].FirstOrDefault();
 
                         return new IntegrationIdempotencyExecutionResult(
                             context.Response.StatusCode,
@@ -161,13 +171,16 @@ public sealed class IntegrationIdempotencyMiddleware(
 
         var sourceSystem = ReadHeader(
             context,
-            IntegrationIdempotencyHeaders.SourceSystem);
+            IntegrationIdempotencyHeaders.SourceSystem,
+            100);
         var externalId = ReadHeader(
             context,
-            IntegrationIdempotencyHeaders.ExternalId);
+            IntegrationIdempotencyHeaders.ExternalId,
+            200);
         var eventType = ReadHeader(
             context,
-            IntegrationIdempotencyHeaders.EventType);
+            IntegrationIdempotencyHeaders.EventType,
+            100);
 
         if (sourceSystem is null ||
             externalId is null ||
@@ -180,6 +193,11 @@ public sealed class IntegrationIdempotencyMiddleware(
             context.Request.PathBase.Value,
             context.Request.Path.Value,
             context.Request.QueryString.Value);
+
+        if (requestPath.Length > 2048)
+        {
+            return null;
+        }
 
         return new IntegrationIdempotencyRequest(
             organizationId.Value,
@@ -197,15 +215,20 @@ public sealed class IntegrationIdempotencyMiddleware(
 
     private static string? ReadHeader(
         HttpContext context,
-        string name)
+        string name,
+        int maxLength)
     {
         var value = context.Request.Headers[name]
             .FirstOrDefault()?
             .Trim();
 
-        return string.IsNullOrWhiteSpace(value)
-            ? null
-            : value;
+        if (string.IsNullOrWhiteSpace(value) ||
+            value.Length > maxLength)
+        {
+            return null;
+        }
+
+        return value;
     }
 
     private static async Task<string> ComputeRequestHashAsync(
