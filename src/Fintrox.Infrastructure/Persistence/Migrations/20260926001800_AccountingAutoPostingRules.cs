@@ -8,6 +8,21 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
     /// <inheritdoc />
     public partial class AccountingAutoPostingRules : Migration
     {
+        private static readonly string[] IdOrganizationColumns =
+            ["id", "organization_id"];
+
+        private static readonly string[] OrganizationSourceReferenceColumns =
+            ["organization_id", "source", "external_reference"];
+
+        private static readonly string[] AccountOrganizationColumns =
+            ["account_id", "organization_id"];
+
+        private static readonly string[] ActiveComponentColumns =
+            ["organization_id", "is_active", "component"];
+
+        private static readonly string[] ResolutionColumns =
+            ["organization_id", "component", "match_kind", "match_value"];
+
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -37,7 +52,7 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                         columns: x => new { x.account_id, x.organization_id },
                         principalSchema: "accounting",
                         principalTable: "accounts",
-                        principalColumns: new[] { "id", "organization_id" },
+                        principalColumns: IdOrganizationColumns,
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_auto_posting_rules_organizations_organization_id",
@@ -52,7 +67,7 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                 name: "ux_journal_entries_system_external_reference",
                 schema: "accounting",
                 table: "journal_entries",
-                columns: new[] { "organization_id", "source", "external_reference" },
+                columns: OrganizationSourceReferenceColumns,
                 unique: true,
                 filter: "source = 'System' AND external_reference IS NOT NULL");
 
@@ -60,19 +75,19 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                 name: "IX_auto_posting_rules_account_id_organization_id",
                 schema: "accounting",
                 table: "auto_posting_rules",
-                columns: new[] { "account_id", "organization_id" });
+                columns: AccountOrganizationColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ix_auto_posting_rules_active_component",
                 schema: "accounting",
                 table: "auto_posting_rules",
-                columns: new[] { "organization_id", "is_active", "component" });
+                columns: ActiveComponentColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ux_auto_posting_rules_resolution",
                 schema: "accounting",
                 table: "auto_posting_rules",
-                columns: new[] { "organization_id", "component", "match_kind", "match_value" },
+                columns: ResolutionColumns,
                 unique: true);
         }
 
