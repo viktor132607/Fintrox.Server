@@ -8,6 +8,7 @@ using Fintrox.Application;
 using Fintrox.Application.Authorization;
 using Fintrox.Application.Common.Interfaces;
 using Fintrox.Application.Identity;
+using Fintrox.Application.Integrations;
 using Fintrox.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -30,6 +31,11 @@ var jwtOptions = new JwtOptions
         builder.Configuration["Jwt:AccessTokenMinutes"],
         out var accessTokenMinutes)
         ? accessTokenMinutes
+        : 15,
+    IntegrationAccessTokenMinutes = int.TryParse(
+        builder.Configuration["Jwt:IntegrationAccessTokenMinutes"],
+        out var integrationAccessTokenMinutes)
+        ? integrationAccessTokenMinutes
         : 15
 };
 
@@ -41,6 +47,9 @@ if (jwtOptions.SigningKey.Length < 32)
 
 builder.Services.AddSingleton(jwtOptions);
 builder.Services.AddSingleton<IAccessTokenService, JwtAccessTokenService>();
+builder.Services.AddSingleton<
+    IIntegrationAccessTokenService,
+    JwtIntegrationAccessTokenService>();
 
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -63,6 +72,16 @@ builder.Services
 
 builder.Services.AddAuthorization(options =>
 {
+    options.DefaultPolicy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .RequireAssertion(context =>
+            !string.Equals(
+                context.User.FindFirst(
+                    IntegrationClaims.ActorType)?.Value,
+                IntegrationClaims.IntegrationActor,
+                StringComparison.Ordinal))
+        .Build();
+
     foreach (var permission in Permissions.All)
     {
         options.AddPolicy(
