@@ -72,6 +72,16 @@ builder.Services
 
 builder.Services.AddAuthorization(options =>
 {
+    options.DefaultPolicy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .RequireAssertion(context =>
+            !string.Equals(
+                context.User.FindFirst(
+                    IntegrationClaims.ActorType)?.Value,
+                IntegrationClaims.IntegrationActor,
+                StringComparison.Ordinal))
+        .Build();
+
     foreach (var permission in Permissions.All)
     {
         options.AddPolicy(
