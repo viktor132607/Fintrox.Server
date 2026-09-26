@@ -163,6 +163,12 @@ Other applications can now authenticate with organization-bound client credentia
 
 See [docs/integration-clients-scopes.md](docs/integration-clients-scopes.md).
 
-Roadmap status: phase 19/41 implemented.
+## Idempotency and external references
 
-Next core phase: phase 20/41.
+Mutating machine-to-machine requests now use durable external-event keys, request fingerprints and exact response replay to prevent duplicate accounting operations while preserving upstream identifiers for traceability.
+
+See [docs/idempotency-external-references.md](docs/idempotency-external-references.md).
+
+Roadmap status: phase 20/41 implemented.
+
+Next core phase: phase 21/41.
