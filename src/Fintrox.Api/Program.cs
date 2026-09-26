@@ -104,6 +104,13 @@ builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddProblemDetails();
+builder.Services.AddHttpClient(
+    "Fintrox.Webhooks",
+    client =>
+    {
+        client.Timeout = TimeSpan.FromSeconds(30);
+    });
+builder.Services.AddHostedService<WebhookDeliveryWorker>();
 
 builder.Services
     .AddHealthChecks()

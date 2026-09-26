@@ -73,6 +73,21 @@ public sealed class FintroxDbContext(DbContextOptions<FintroxDbContext> options)
     public DbSet<IntegrationRequestRecord> IntegrationRequests =>
         Set<IntegrationRequestRecord>();
 
+    public DbSet<IntegrationInbox> IntegrationInbox =>
+        Set<IntegrationInbox>();
+
+    public DbSet<IntegrationEvent> IntegrationEvents =>
+        Set<IntegrationEvent>();
+
+    public DbSet<IntegrationFailure> IntegrationFailures =>
+        Set<IntegrationFailure>();
+
+    public DbSet<WebhookSubscription> WebhookSubscriptions =>
+        Set<WebhookSubscription>();
+
+    public DbSet<WebhookDelivery> WebhookDeliveries =>
+        Set<WebhookDelivery>();
+
     public DbSet<Organization> Organizations => Set<Organization>();
 
     public DbSet<OrganizationMembership> OrganizationMemberships =>

@@ -98,6 +98,12 @@ public static class DependencyInjection
         services.AddScoped<
             IIntegrationIdempotencyExecutor,
             EfIntegrationIdempotencyExecutor>();
+        services.AddScoped<
+            IIntegrationWorkflowRepository,
+            IntegrationWorkflowRepository>();
+        services.AddSingleton<
+            IWebhookSecretProtector,
+            AesWebhookSecretProtector>();
         services.AddScoped<IOrganizationRepository, OrganizationRepository>();
         services.AddScoped<
             IOrganizationMembershipRepository,

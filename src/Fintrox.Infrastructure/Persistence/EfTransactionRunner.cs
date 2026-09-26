@@ -1,5 +1,6 @@
 using Fintrox.Application.Common.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Fintrox.Infrastructure.Persistence;
 
@@ -12,9 +13,14 @@ public sealed class EfTransactionRunner(
     {
         ArgumentNullException.ThrowIfNull(operation);
 
-        if (dbContext.Database.CurrentTransaction is not null)
+        var currentTransaction = dbContext.Database.CurrentTransaction;
+
+        if (currentTransaction is not null)
         {
-            return operation(cancellationToken);
+            return ExecuteWithSavepointAsync(
+                currentTransaction,
+                operation,
+                cancellationToken);
         }
 
         var strategy = dbContext.Database.CreateExecutionStrategy();
@@ -36,8 +42,53 @@ public sealed class EfTransactionRunner(
             catch
             {
                 await transaction.RollbackAsync(cancellationToken);
+                dbContext.ChangeTracker.Clear();
                 throw;
             }
         });
+    }
+
+    private async Task<T> ExecuteWithSavepointAsync<T>(
+        IDbContextTransaction transaction,
+        Func<CancellationToken, Task<T>> operation,
+        CancellationToken cancellationToken)
+    {
+        var savepointName =
+            $"fintrox_{Guid.NewGuid():N}";
+
+        await transaction.CreateSavepointAsync(
+            savepointName,
+            cancellationToken);
+
+        try
+        {
+            var result = await operation(cancellationToken);
+
+            await transaction.ReleaseSavepointAsync(
+                savepointName,
+                cancellationToken);
+
+            return result;
+        }
+        catch
+        {
+            await transaction.RollbackToSavepointAsync(
+                savepointName,
+                cancellationToken);
+            dbContext.ChangeTracker.Clear();
+
+            try
+            {
+                await transaction.ReleaseSavepointAsync(
+                    savepointName,
+                    cancellationToken);
+            }
+            catch (InvalidOperationException)
+            {
+                // The outer transaction remains authoritative.
+            }
+
+            throw;
+        }
     }
 }
