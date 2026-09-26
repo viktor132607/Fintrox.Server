@@ -18,6 +18,12 @@ public interface IJournalRepository
         bool trackChanges,
         CancellationToken cancellationToken);
 
+    Task<JournalEntry?> GetSystemEntryByExternalReferenceAsync(
+        Guid organizationId,
+        string externalReference,
+        bool trackChanges,
+        CancellationToken cancellationToken);
+
     Task<IReadOnlyList<JournalLine>> ListLinesAsync(
         Guid organizationId,
         Guid journalEntryId,

@@ -140,6 +140,16 @@ public sealed class JournalEntryConfiguration
         builder.HasIndex(entry => new
             {
                 entry.OrganizationId,
+                entry.Source,
+                entry.ExternalReference
+            })
+            .IsUnique()
+            .HasFilter("source = 'System' AND external_reference IS NOT NULL")
+            .HasDatabaseName("ux_journal_entries_system_external_reference");
+
+        builder.HasIndex(entry => new
+            {
+                entry.OrganizationId,
                 entry.ReversalOfJournalEntryId
             })
             .IsUnique()

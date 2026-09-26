@@ -20,6 +20,8 @@ public sealed class FintroxDbContext(DbContextOptions<FintroxDbContext> options)
 {
     public DbSet<Account> Accounts => Set<Account>();
 
+    public DbSet<AutoPostingRule> AutoPostingRules => Set<AutoPostingRule>();
+
     public DbSet<FiscalYear> FiscalYears => Set<FiscalYear>();
 
     public DbSet<AccountingPeriod> AccountingPeriods => Set<AccountingPeriod>();
