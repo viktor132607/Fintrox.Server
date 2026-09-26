@@ -13,6 +13,12 @@ public sealed class WebhookDeliveryWorker(
     ILogger<WebhookDeliveryWorker> logger) : BackgroundService
 {
     private const int MaxAttempts = 6;
+
+    private static readonly Action<ILogger, Exception?> LogBatchFailure =
+        LoggerMessage.Define(
+            LogLevel.Error,
+            new EventId(2101, nameof(WebhookDeliveryWorker)),
+            "Webhook delivery batch failed.");
     private static readonly TimeSpan[] RetryDelays =
     [
         TimeSpan.FromMinutes(1),
@@ -38,9 +44,9 @@ public sealed class WebhookDeliveryWorker(
             }
             catch (Exception exception)
             {
-                logger.LogError(
-                    exception,
-                    "Webhook delivery batch failed.");
+                LogBatchFailure(
+                    logger,
+                    exception);
             }
 
             await Task.Delay(

@@ -195,7 +195,7 @@ public sealed class WebhookSubscriptionService(
         return deliveries.Select(MapDelivery).ToArray();
     }
 
-    private static IReadOnlyList<string> NormalizeEventTypes(
+    private static string[] NormalizeEventTypes(
         IEnumerable<string>? eventTypes)
     {
         var normalized = (eventTypes ?? [])
@@ -229,7 +229,7 @@ public sealed class WebhookSubscriptionService(
         IEnumerable<string> eventTypes) =>
         string.Join(',', eventTypes);
 
-    private static IReadOnlyList<string> ParseEventTypes(string eventTypes) =>
+    private static string[] ParseEventTypes(string eventTypes) =>
         eventTypes
             .Split(',', StringSplitOptions.RemoveEmptyEntries |
                         StringSplitOptions.TrimEntries);

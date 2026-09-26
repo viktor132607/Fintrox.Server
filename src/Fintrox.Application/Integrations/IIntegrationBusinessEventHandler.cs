@@ -1,6 +1,6 @@
 namespace Fintrox.Application.Integrations;
 
-public interface IIntegrationBusinessEventHandler
+public interface IIntegrationBusinessEventProcessor
 {
     string Operation { get; }
 

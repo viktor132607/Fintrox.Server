@@ -4,9 +4,9 @@ using Fintrox.Contracts.Payments;
 
 namespace Fintrox.Application.Integrations;
 
-public sealed class PaymentIntegrationBusinessEventHandler(
+public sealed class PaymentIntegrationBusinessEventProcessor(
     IPaymentService payments,
-    IJournalRepository journals) : IIntegrationBusinessEventHandler
+    IJournalRepository journals) : IIntegrationBusinessEventProcessor
 {
     public string Operation => IntegrationBusinessOperations.Payment;
 

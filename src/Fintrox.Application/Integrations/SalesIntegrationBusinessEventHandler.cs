@@ -4,9 +4,9 @@ using Fintrox.Contracts.Sales;
 
 namespace Fintrox.Application.Integrations;
 
-public sealed class SalesIntegrationBusinessEventHandler(
+public sealed class SalesIntegrationBusinessEventProcessor(
     ISalesInvoiceService salesInvoices,
-    IJournalRepository journals) : IIntegrationBusinessEventHandler
+    IJournalRepository journals) : IIntegrationBusinessEventProcessor
 {
     public string Operation => IntegrationBusinessOperations.Sales;
 

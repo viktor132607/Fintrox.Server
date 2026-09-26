@@ -2,8 +2,8 @@ using Fintrox.Application.Counterparties;
 
 namespace Fintrox.Application.Integrations;
 
-public sealed class CounterpartyIntegrationBusinessEventHandler(
-    ICounterpartyService counterparties) : IIntegrationBusinessEventHandler
+public sealed class CounterpartyIntegrationBusinessEventProcessor(
+    ICounterpartyService counterparties) : IIntegrationBusinessEventProcessor
 {
     public string Operation => IntegrationBusinessOperations.Counterparty;
 

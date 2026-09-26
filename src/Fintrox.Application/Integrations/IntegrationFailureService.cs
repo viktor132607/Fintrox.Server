@@ -103,7 +103,10 @@ public sealed class IntegrationFailureService(
                 break;
             }
             default:
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException(
+                    nameof(failure.Kind),
+                    failure.Kind,
+                    "Unsupported integration failure kind.");
         }
 
         await repository.SaveChangesAsync(cancellationToken);

@@ -5,9 +5,9 @@ using Fintrox.Domain.Purchases;
 
 namespace Fintrox.Application.Integrations;
 
-public sealed class ExpenseIntegrationBusinessEventHandler(
+public sealed class ExpenseIntegrationBusinessEventProcessor(
     IPurchaseDocumentService purchaseDocuments,
-    IJournalRepository journals) : IIntegrationBusinessEventHandler
+    IJournalRepository journals) : IIntegrationBusinessEventProcessor
 {
     public string Operation => IntegrationBusinessOperations.Expense;
 

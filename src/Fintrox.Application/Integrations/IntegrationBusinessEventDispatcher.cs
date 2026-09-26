@@ -1,10 +1,10 @@
 namespace Fintrox.Application.Integrations;
 
 public sealed class IntegrationBusinessEventDispatcher(
-    IEnumerable<IIntegrationBusinessEventHandler> handlers)
+    IEnumerable<IIntegrationBusinessEventProcessor> handlers)
     : IIntegrationBusinessEventDispatcher
 {
-    private readonly IReadOnlyDictionary<string, IIntegrationBusinessEventHandler> _handlers =
+    private readonly Dictionary<string, IIntegrationBusinessEventProcessor> _handlers =
         handlers.ToDictionary(
             handler => handler.Operation,
             StringComparer.Ordinal);
