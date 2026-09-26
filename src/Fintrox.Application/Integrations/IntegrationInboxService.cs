@@ -192,7 +192,8 @@ public sealed class IntegrationInboxService(
                 inboxId,
                 trackChanges: true,
                 cancellationToken)
-                ?? throw;
+                ?? throw new InvalidOperationException(
+                    "Integration inbox item disappeared after processing failure.");
 
             var now = timeProvider.GetUtcNow();
             failed.Fail(
