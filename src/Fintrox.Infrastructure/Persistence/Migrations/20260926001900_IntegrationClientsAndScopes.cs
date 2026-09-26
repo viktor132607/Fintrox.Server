@@ -8,6 +8,9 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
     /// <inheritdoc />
     public partial class IntegrationClientsAndScopes : Migration
     {
+        private static readonly string[] OrganizationActiveNameColumns =
+            ["organization_id", "is_active", "name"];
+
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -51,7 +54,7 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                 name: "ix_integration_clients_organization_active_name",
                 schema: "integration",
                 table: "integration_clients",
-                columns: new[] { "organization_id", "is_active", "name" });
+                columns: OrganizationActiveNameColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ux_integration_clients_client_id",
