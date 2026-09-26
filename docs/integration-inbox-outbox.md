@@ -44,7 +44,7 @@ Sales, payment and expense handlers reuse the existing auto-posting engine, so s
 
 The inbox row is stored first.
 
-Processing then runs in a database transaction:
+Processing then runs in a database transaction. When phase-20 HTTP idempotency already owns the outer transaction, nested application operations use PostgreSQL savepoints so a failed document generation can roll back without losing the durable inbox/failure record.
 
 1. mark inbox item `Processing`;
 2. deserialize and business-validate the payload;

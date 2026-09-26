@@ -117,9 +117,12 @@ public sealed class WebhookDelivery
     public void Requeue(DateTimeOffset now)
     {
         Status = WebhookDeliveryStatus.Pending;
+        AttemptCount = 0;
         NextAttemptAtUtc = now;
+        LastAttemptAtUtc = null;
         LastError = null;
         LastStatusCode = null;
+        DeliveredAtUtc = null;
         Touch(now);
     }
 
