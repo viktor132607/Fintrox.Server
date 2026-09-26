@@ -151,4 +151,10 @@ Incoming/outgoing payments now support draft/confirm/cancel lifecycle, cross-cur
 
 See [docs/payments-and-allocations.md](docs/payments-and-allocations.md).
 
-Next core phase: Accounting auto-posting rules.
+## Accounting auto-posting rules
+
+Sales, purchases and payments now create balanced system journal entries through organization-scoped account mapping rules, including VAT, payment-method routing, advances, realized FX gain/loss and transactional cancellation reversals.
+
+See [docs/accounting-auto-posting-rules.md](docs/accounting-auto-posting-rules.md).
+
+Next core phase: Integration clients + scopes.
