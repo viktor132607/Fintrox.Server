@@ -1,5 +1,6 @@
 using Fintrox.Domain.Accounting;
 using Fintrox.Domain.Common;
+using Fintrox.Domain.Integrations;
 using Fintrox.Domain.Organizations;
 using Fintrox.Domain.Partners;
 using Fintrox.Domain.Payments;
@@ -65,6 +66,9 @@ public sealed class FintroxDbContext(DbContextOptions<FintroxDbContext> options)
 
     public DbSet<PaymentNumberSequence> PaymentNumberSequences =>
         Set<PaymentNumberSequence>();
+
+    public DbSet<IntegrationClient> IntegrationClients =>
+        Set<IntegrationClient>();
 
     public DbSet<Organization> Organizations => Set<Organization>();
 
