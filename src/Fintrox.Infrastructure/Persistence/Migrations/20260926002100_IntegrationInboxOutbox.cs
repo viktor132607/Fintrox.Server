@@ -8,6 +8,45 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
     /// <inheritdoc />
     public partial class IntegrationInboxOutbox : Migration
     {
+        private static readonly string[] IdOrganizationColumns =
+            ["id", "organization_id"];
+
+        private static readonly string[] InboxOrganizationColumns =
+            ["inbox_id", "organization_id"];
+
+        private static readonly string[] OrganizationTypeOccurredColumns =
+            ["organization_id", "event_type", "occurred_at_utc"];
+
+        private static readonly string[] OrganizationResolvedAttemptColumns =
+            ["organization_id", "is_resolved", "last_attempt_at_utc"];
+
+        private static readonly string[] OrganizationKindReferenceColumns =
+            ["organization_id", "kind", "reference_id"];
+
+        private static readonly string[] OrganizationStatusCreatedColumns =
+            ["organization_id", "status", "created_at_utc"];
+
+        private static readonly string[] ExternalEventColumns =
+            ["organization_id", "source_system", "external_id", "event_type"];
+
+        private static readonly string[] EventOrganizationColumns =
+            ["integration_event_id", "organization_id"];
+
+        private static readonly string[] StatusNextAttemptColumns =
+            ["status", "next_attempt_at_utc"];
+
+        private static readonly string[] SubscriptionCreatedColumns =
+            ["organization_id", "webhook_subscription_id", "created_at_utc"];
+
+        private static readonly string[] SubscriptionOrganizationColumns =
+            ["webhook_subscription_id", "organization_id"];
+
+        private static readonly string[] EventSubscriptionColumns =
+            ["integration_event_id", "webhook_subscription_id"];
+
+        private static readonly string[] OrganizationActiveNameColumns =
+            ["organization_id", "is_active", "name"];
+
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -121,7 +160,7 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                         columns: x => new { x.inbox_id, x.organization_id },
                         principalSchema: "integration",
                         principalTable: "integration_inbox",
-                        principalColumns: new[] { "id", "organization_id" },
+                        principalColumns: IdOrganizationColumns,
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -154,14 +193,14 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                         columns: x => new { x.integration_event_id, x.organization_id },
                         principalSchema: "integration",
                         principalTable: "integration_events",
-                        principalColumns: new[] { "id", "organization_id" },
+                        principalColumns: IdOrganizationColumns,
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_webhook_deliveries_webhook_subscriptions_webhook_subscripti~",
                         columns: x => new { x.webhook_subscription_id, x.organization_id },
                         principalSchema: "integration",
                         principalTable: "webhook_subscriptions",
-                        principalColumns: new[] { "id", "organization_id" },
+                        principalColumns: IdOrganizationColumns,
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -169,25 +208,25 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                 name: "IX_integration_events_inbox_id_organization_id",
                 schema: "integration",
                 table: "integration_events",
-                columns: new[] { "inbox_id", "organization_id" });
+                columns: InboxOrganizationColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ix_integration_events_organization_type_occurred",
                 schema: "integration",
                 table: "integration_events",
-                columns: new[] { "organization_id", "event_type", "occurred_at_utc" });
+                columns: OrganizationTypeOccurredColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ix_integration_failures_organization_resolved_attempt",
                 schema: "integration",
                 table: "integration_failures",
-                columns: new[] { "organization_id", "is_resolved", "last_attempt_at_utc" });
+                columns: OrganizationResolvedAttemptColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ux_integration_failures_open_reference",
                 schema: "integration",
                 table: "integration_failures",
-                columns: new[] { "organization_id", "kind", "reference_id" },
+                columns: OrganizationKindReferenceColumns,
                 unique: true,
                 filter: "is_resolved = FALSE");
 
@@ -195,51 +234,51 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                 name: "ix_integration_inbox_organization_status_created",
                 schema: "integration",
                 table: "integration_inbox",
-                columns: new[] { "organization_id", "status", "created_at_utc" });
+                columns: OrganizationStatusCreatedColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ux_integration_inbox_external_event",
                 schema: "integration",
                 table: "integration_inbox",
-                columns: new[] { "organization_id", "source_system", "external_id", "event_type" },
+                columns: ExternalEventColumns,
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_webhook_deliveries_integration_event_id_organization_id",
                 schema: "integration",
                 table: "webhook_deliveries",
-                columns: new[] { "integration_event_id", "organization_id" });
+                columns: EventOrganizationColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ix_webhook_deliveries_status_next_attempt",
                 schema: "integration",
                 table: "webhook_deliveries",
-                columns: new[] { "status", "next_attempt_at_utc" });
+                columns: StatusNextAttemptColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ix_webhook_deliveries_subscription_created",
                 schema: "integration",
                 table: "webhook_deliveries",
-                columns: new[] { "organization_id", "webhook_subscription_id", "created_at_utc" });
+                columns: SubscriptionCreatedColumns);
 
             migrationBuilder.CreateIndex(
                 name: "IX_webhook_deliveries_webhook_subscription_id_organization_id",
                 schema: "integration",
                 table: "webhook_deliveries",
-                columns: new[] { "webhook_subscription_id", "organization_id" });
+                columns: SubscriptionOrganizationColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ux_webhook_deliveries_event_subscription",
                 schema: "integration",
                 table: "webhook_deliveries",
-                columns: new[] { "integration_event_id", "webhook_subscription_id" },
+                columns: EventSubscriptionColumns,
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_webhook_subscriptions_organization_active_name",
                 schema: "integration",
                 table: "webhook_subscriptions",
-                columns: new[] { "organization_id", "is_active", "name" });
+                columns: OrganizationActiveNameColumns);
         }
 
         /// <inheritdoc />
