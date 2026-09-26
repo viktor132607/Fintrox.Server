@@ -12,6 +12,11 @@ public sealed class EfAccountingTransactionRunner(
     {
         ArgumentNullException.ThrowIfNull(operation);
 
+        if (dbContext.Database.CurrentTransaction is not null)
+        {
+            return operation(cancellationToken);
+        }
+
         var strategy = dbContext.Database.CreateExecutionStrategy();
 
         return strategy.ExecuteAsync(async () =>

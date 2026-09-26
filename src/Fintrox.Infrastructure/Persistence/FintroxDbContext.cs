@@ -70,6 +70,9 @@ public sealed class FintroxDbContext(DbContextOptions<FintroxDbContext> options)
     public DbSet<IntegrationClient> IntegrationClients =>
         Set<IntegrationClient>();
 
+    public DbSet<IntegrationRequestRecord> IntegrationRequests =>
+        Set<IntegrationRequestRecord>();
+
     public DbSet<Organization> Organizations => Set<Organization>();
 
     public DbSet<OrganizationMembership> OrganizationMemberships =>

@@ -130,11 +130,7 @@ public sealed class EfIntegrationIdempotencyExecutor(
         }
         catch
         {
-            if (transaction.GetDbTransaction().Connection is not null)
-            {
-                await transaction.RollbackAsync(cancellationToken);
-            }
-
+            await transaction.RollbackAsync(cancellationToken);
             dbContext.ChangeTracker.Clear();
             throw;
         }

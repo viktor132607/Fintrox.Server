@@ -23,7 +23,7 @@ public sealed class IntegrationIdempotencyMiddleware(
             return;
         }
 
-        var metadata = TryCreateMetadata(
+        var metadata = await TryCreateMetadataAsync(
             context,
             currentOrganization.OrganizationId);
 
@@ -58,13 +58,14 @@ public sealed class IntegrationIdempotencyMiddleware(
                             capture,
                             Encoding.UTF8,
                             detectEncodingFromByteOrderMarks: true,
+                            bufferSize: 1024,
                             leaveOpen: true);
 
                         var body = await reader.ReadToEndAsync(
                             cancellationToken);
 
                         var resourceReference =
-                            context.Response.Headers.Location.FirstOrDefault()
+                            context.Response.Headers["Location"].FirstOrDefault()
                             ?? context.Request.Path.Value;
 
                         return new IntegrationIdempotencyExecutionResult(
@@ -96,7 +97,7 @@ public sealed class IntegrationIdempotencyMiddleware(
 
             if (!string.IsNullOrWhiteSpace(outcome.ResourceReference))
             {
-                context.Response.Headers.Location =
+                context.Response.Headers["Location"] =
                     outcome.ResourceReference;
             }
 
@@ -139,7 +140,7 @@ public sealed class IntegrationIdempotencyMiddleware(
                !HttpMethods.IsTrace(context.Request.Method);
     }
 
-    private static IntegrationIdempotencyRequest? TryCreateMetadata(
+    private static async Task<IntegrationIdempotencyRequest?> TryCreateMetadataAsync(
         HttpContext context,
         Guid? organizationId)
     {
@@ -188,9 +189,10 @@ public sealed class IntegrationIdempotencyMiddleware(
             eventType,
             context.Request.Method,
             requestPath,
-            ComputeRequestHash(
+            await ComputeRequestHashAsync(
                 context.Request,
-                requestPath));
+                requestPath,
+                context.RequestAborted));
     }
 
     private static string? ReadHeader(
@@ -206,9 +208,10 @@ public sealed class IntegrationIdempotencyMiddleware(
             : value;
     }
 
-    private static string ComputeRequestHash(
+    private static async Task<string> ComputeRequestHashAsync(
         HttpRequest request,
-        string requestPath)
+        string requestPath,
+        CancellationToken cancellationToken)
     {
         request.EnableBuffering();
 
@@ -221,12 +224,17 @@ public sealed class IntegrationIdempotencyMiddleware(
 
         request.Body.Position = 0;
 
-        Span<byte> buffer = stackalloc byte[8192];
+        var buffer = new byte[8192];
         int read;
 
-        while ((read = request.Body.Read(buffer)) > 0)
+        while ((read = await request.Body.ReadAsync(
+                    buffer,
+                    cancellationToken)) > 0)
         {
-            hash.AppendData(buffer[..read]);
+            hash.AppendData(
+                buffer,
+                0,
+                read);
         }
 
         request.Body.Position = 0;

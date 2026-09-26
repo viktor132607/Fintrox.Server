@@ -35,6 +35,7 @@ public static class DependencyInjection
         services.AddScoped<IOrganizationMemberService, OrganizationMemberService>();
         services.AddScoped<IOrganizationAccessService, OrganizationAccessService>();
         services.AddScoped<IIntegrationClientService, IntegrationClientService>();
+        services.AddScoped<IIntegrationRequestService, IntegrationRequestService>();
 
         return services;
     }
