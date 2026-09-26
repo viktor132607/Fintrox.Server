@@ -36,6 +36,7 @@ public sealed class EfAccountingTransactionRunner(
             catch
             {
                 await transaction.RollbackAsync(cancellationToken);
+                dbContext.ChangeTracker.Clear();
                 throw;
             }
         });
