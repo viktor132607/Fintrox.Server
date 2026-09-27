@@ -11,5 +11,7 @@ public sealed record JournalEntrySummaryResponse(
     string? ExternalReference,
     Guid FiscalPeriodId,
     DateTimeOffset? PostedAtUtc,
+    Guid? ReversalOfJournalEntryId,
+    Guid? ReversedByJournalEntryId,
     DateTimeOffset CreatedAtUtc,
     DateTimeOffset UpdatedAtUtc);

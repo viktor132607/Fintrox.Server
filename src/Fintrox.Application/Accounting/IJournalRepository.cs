@@ -35,6 +35,11 @@ public interface IJournalRepository
         Guid journalEntryId,
         CancellationToken cancellationToken);
 
+    Task<long> AllocatePostingSequenceAsync(
+        Guid organizationId,
+        Guid fiscalYearId,
+        CancellationToken cancellationToken);
+
     Task AddEntryAsync(
         JournalEntry entry,
         CancellationToken cancellationToken);

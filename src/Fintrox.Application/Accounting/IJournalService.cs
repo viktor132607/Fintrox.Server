@@ -39,4 +39,13 @@ public interface IJournalService
         Guid journalEntryId,
         Guid journalLineId,
         CancellationToken cancellationToken);
+
+    Task<JournalEntryResponse?> PostAsync(
+        Guid journalEntryId,
+        CancellationToken cancellationToken);
+
+    Task<JournalEntryResponse?> ReverseAsync(
+        Guid journalEntryId,
+        ReverseJournalEntryRequest request,
+        CancellationToken cancellationToken);
 }

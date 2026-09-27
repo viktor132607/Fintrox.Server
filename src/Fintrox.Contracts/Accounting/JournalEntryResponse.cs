@@ -12,6 +12,8 @@ public sealed record JournalEntryResponse(
     string? ExternalReference,
     Guid FiscalPeriodId,
     DateTimeOffset? PostedAtUtc,
+    Guid? ReversalOfJournalEntryId,
+    Guid? ReversedByJournalEntryId,
     decimal DebitTotal,
     decimal CreditTotal,
     bool IsBalanced,
