@@ -13,4 +13,48 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Modules/Identity/Fintrox.Modules.Identity.Infrastructure/Fintrox.Modules.Identity.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/Identity/Fintrox.Modules.Identity.Presentation/Fintrox.Modules.Identity.Presentation.csproj" />
+    <ProjectReference Include="../Modules/Organizations/Fintrox.Modules.Organizations.Infrastructure/Fintrox.Modules.Organizations.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/Organizations/Fintrox.Modules.Organizations.Presentation/Fintrox.Modules.Organizations.Presentation.csproj" />
+    <ProjectReference Include="../Modules/Accounting/Fintrox.Modules.Accounting.Infrastructure/Fintrox.Modules.Accounting.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/Accounting/Fintrox.Modules.Accounting.Presentation/Fintrox.Modules.Accounting.Presentation.csproj" />
+    <ProjectReference Include="../Modules/Counterparties/Fintrox.Modules.Counterparties.Infrastructure/Fintrox.Modules.Counterparties.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/Counterparties/Fintrox.Modules.Counterparties.Presentation/Fintrox.Modules.Counterparties.Presentation.csproj" />
+    <ProjectReference Include="../Modules/Sales/Fintrox.Modules.Sales.Infrastructure/Fintrox.Modules.Sales.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/Sales/Fintrox.Modules.Sales.Presentation/Fintrox.Modules.Sales.Presentation.csproj" />
+    <ProjectReference Include="../Modules/Purchases/Fintrox.Modules.Purchases.Infrastructure/Fintrox.Modules.Purchases.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/Purchases/Fintrox.Modules.Purchases.Presentation/Fintrox.Modules.Purchases.Presentation.csproj" />
+    <ProjectReference Include="../Modules/Payments/Fintrox.Modules.Payments.Infrastructure/Fintrox.Modules.Payments.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/Payments/Fintrox.Modules.Payments.Presentation/Fintrox.Modules.Payments.Presentation.csproj" />
+    <ProjectReference Include="../Modules/Banking/Fintrox.Modules.Banking.Infrastructure/Fintrox.Modules.Banking.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/Banking/Fintrox.Modules.Banking.Presentation/Fintrox.Modules.Banking.Presentation.csproj" />
+    <ProjectReference Include="../Modules/Tax/Fintrox.Modules.Tax.Infrastructure/Fintrox.Modules.Tax.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/Tax/Fintrox.Modules.Tax.Presentation/Fintrox.Modules.Tax.Presentation.csproj" />
+    <ProjectReference Include="../Modules/Currencies/Fintrox.Modules.Currencies.Infrastructure/Fintrox.Modules.Currencies.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/Currencies/Fintrox.Modules.Currencies.Presentation/Fintrox.Modules.Currencies.Presentation.csproj" />
+    <ProjectReference Include="../Modules/Inventory/Fintrox.Modules.Inventory.Infrastructure/Fintrox.Modules.Inventory.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/Inventory/Fintrox.Modules.Inventory.Presentation/Fintrox.Modules.Inventory.Presentation.csproj" />
+    <ProjectReference Include="../Modules/FixedAssets/Fintrox.Modules.FixedAssets.Infrastructure/Fintrox.Modules.FixedAssets.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/FixedAssets/Fintrox.Modules.FixedAssets.Presentation/Fintrox.Modules.FixedAssets.Presentation.csproj" />
+    <ProjectReference Include="../Modules/Projects/Fintrox.Modules.Projects.Infrastructure/Fintrox.Modules.Projects.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/Projects/Fintrox.Modules.Projects.Presentation/Fintrox.Modules.Projects.Presentation.csproj" />
+    <ProjectReference Include="../Modules/Budgeting/Fintrox.Modules.Budgeting.Infrastructure/Fintrox.Modules.Budgeting.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/Budgeting/Fintrox.Modules.Budgeting.Presentation/Fintrox.Modules.Budgeting.Presentation.csproj" />
+    <ProjectReference Include="../Modules/Consolidation/Fintrox.Modules.Consolidation.Infrastructure/Fintrox.Modules.Consolidation.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/Consolidation/Fintrox.Modules.Consolidation.Presentation/Fintrox.Modules.Consolidation.Presentation.csproj" />
+    <ProjectReference Include="../Modules/Payroll/Fintrox.Modules.Payroll.Infrastructure/Fintrox.Modules.Payroll.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/Payroll/Fintrox.Modules.Payroll.Presentation/Fintrox.Modules.Payroll.Presentation.csproj" />
+    <ProjectReference Include="../Modules/Reporting/Fintrox.Modules.Reporting.Infrastructure/Fintrox.Modules.Reporting.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/Reporting/Fintrox.Modules.Reporting.Presentation/Fintrox.Modules.Reporting.Presentation.csproj" />
+    <ProjectReference Include="../Modules/Documents/Fintrox.Modules.Documents.Infrastructure/Fintrox.Modules.Documents.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/Documents/Fintrox.Modules.Documents.Presentation/Fintrox.Modules.Documents.Presentation.csproj" />
+    <ProjectReference Include="../Modules/Workflows/Fintrox.Modules.Workflows.Infrastructure/Fintrox.Modules.Workflows.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/Workflows/Fintrox.Modules.Workflows.Presentation/Fintrox.Modules.Workflows.Presentation.csproj" />
+    <ProjectReference Include="../Modules/Integrations/Fintrox.Modules.Integrations.Infrastructure/Fintrox.Modules.Integrations.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/Integrations/Fintrox.Modules.Integrations.Presentation/Fintrox.Modules.Integrations.Presentation.csproj" />
+    <ProjectReference Include="../Modules/Audit/Fintrox.Modules.Audit.Infrastructure/Fintrox.Modules.Audit.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/Audit/Fintrox.Modules.Audit.Presentation/Fintrox.Modules.Audit.Presentation.csproj" />
+  </ItemGroup>
 </Project>

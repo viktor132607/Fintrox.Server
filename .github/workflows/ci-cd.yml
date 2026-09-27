@@ -48,6 +48,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
+      - name: Check module boundaries
+        run: python3 scripts/check_architecture.py
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v6
         with:

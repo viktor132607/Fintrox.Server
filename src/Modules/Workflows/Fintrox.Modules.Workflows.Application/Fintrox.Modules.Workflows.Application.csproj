@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <DisableTransitiveProjectReferences>true</DisableTransitiveProjectReferences>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Fintrox.Modules.Workflows.Domain/Fintrox.Modules.Workflows.Domain.csproj" />
+    <ProjectReference Include="../Fintrox.Modules.Workflows.Contracts/Fintrox.Modules.Workflows.Contracts.csproj" />
+  </ItemGroup>
+</Project>
