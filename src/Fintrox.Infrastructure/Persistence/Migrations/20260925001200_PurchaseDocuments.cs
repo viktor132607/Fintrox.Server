@@ -8,6 +8,45 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
     /// <inheritdoc />
     public partial class PurchaseDocuments : Migration
     {
+        private static readonly string[] IdOrganizationColumns =
+            ["id", "organization_id"];
+
+        private static readonly string[] CounterpartyOrganizationColumns =
+            ["counterparty_id", "organization_id"];
+
+        private static readonly string[] CurrencyOrganizationColumns =
+            ["currency_id", "organization_id"];
+
+        private static readonly string[] BaseCurrencyOrganizationColumns =
+            ["base_currency_id", "organization_id"];
+
+        private static readonly string[] DocumentOrganizationColumns =
+            ["purchase_document_id", "organization_id"];
+
+        private static readonly string[] VatCodeOrganizationColumns =
+            ["vat_code_id", "organization_id"];
+
+        private static readonly string[] OrganizationVatCodeColumns =
+            ["organization_id", "vat_code_id"];
+
+        private static readonly string[] OrganizationDocumentLineColumns =
+            ["organization_id", "purchase_document_id", "line_number"];
+
+        private static readonly string[] OrganizationDateColumns =
+            ["organization_id", "document_date"];
+
+        private static readonly string[] OrganizationStatusDateColumns =
+            ["organization_id", "status", "document_date"];
+
+        private static readonly string[] OrganizationTypeDateColumns =
+            ["organization_id", "type", "document_date"];
+
+        private static readonly string[] OrganizationInternalNumberColumns =
+            ["organization_id", "internal_number"];
+
+        private static readonly string[] SupplierDocumentNumberColumns =
+            ["organization_id", "counterparty_id", "supplier_document_number"];
+
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -70,21 +109,21 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                         columns: x => new { x.counterparty_id, x.organization_id },
                         principalSchema: "core",
                         principalTable: "counterparties",
-                        principalColumns: new[] { "id", "organization_id" },
+                        principalColumns: IdOrganizationColumns,
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_documents_currencies_base_currency_id_organization_id",
                         columns: x => new { x.base_currency_id, x.organization_id },
                         principalSchema: "core",
                         principalTable: "currencies",
-                        principalColumns: new[] { "id", "organization_id" },
+                        principalColumns: IdOrganizationColumns,
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_documents_currencies_currency_id_organization_id",
                         columns: x => new { x.currency_id, x.organization_id },
                         principalSchema: "core",
                         principalTable: "currencies",
-                        principalColumns: new[] { "id", "organization_id" },
+                        principalColumns: IdOrganizationColumns,
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_documents_organizations_organization_id",
@@ -161,14 +200,14 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                         columns: x => new { x.purchase_document_id, x.organization_id },
                         principalSchema: "purchases",
                         principalTable: "documents",
-                        principalColumns: new[] { "id", "organization_id" },
+                        principalColumns: IdOrganizationColumns,
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_document_lines_vat_codes_vat_code_id_organization_id",
                         columns: x => new { x.vat_code_id, x.organization_id },
                         principalSchema: "tax",
                         principalTable: "vat_codes",
-                        principalColumns: new[] { "id", "organization_id" },
+                        principalColumns: IdOrganizationColumns,
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -176,68 +215,68 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                 name: "IX_document_lines_purchase_document_id_organization_id",
                 schema: "purchases",
                 table: "document_lines",
-                columns: new[] { "purchase_document_id", "organization_id" });
+                columns: DocumentOrganizationColumns);
 
             migrationBuilder.CreateIndex(
                 name: "IX_document_lines_vat_code_id_organization_id",
                 schema: "purchases",
                 table: "document_lines",
-                columns: new[] { "vat_code_id", "organization_id" });
+                columns: VatCodeOrganizationColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ix_purchase_document_lines_organization_vat_code",
                 schema: "purchases",
                 table: "document_lines",
-                columns: new[] { "organization_id", "vat_code_id" });
+                columns: OrganizationVatCodeColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ux_purchase_document_lines_document_line_number",
                 schema: "purchases",
                 table: "document_lines",
-                columns: new[] { "organization_id", "purchase_document_id", "line_number" },
+                columns: OrganizationDocumentLineColumns,
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_documents_base_currency_id_organization_id",
                 schema: "purchases",
                 table: "documents",
-                columns: new[] { "base_currency_id", "organization_id" });
+                columns: BaseCurrencyOrganizationColumns);
 
             migrationBuilder.CreateIndex(
                 name: "IX_documents_counterparty_id_organization_id",
                 schema: "purchases",
                 table: "documents",
-                columns: new[] { "counterparty_id", "organization_id" });
+                columns: CounterpartyOrganizationColumns);
 
             migrationBuilder.CreateIndex(
                 name: "IX_documents_currency_id_organization_id",
                 schema: "purchases",
                 table: "documents",
-                columns: new[] { "currency_id", "organization_id" });
+                columns: CurrencyOrganizationColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ix_purchase_documents_organization_date",
                 schema: "purchases",
                 table: "documents",
-                columns: new[] { "organization_id", "document_date" });
+                columns: OrganizationDateColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ix_purchase_documents_organization_status_date",
                 schema: "purchases",
                 table: "documents",
-                columns: new[] { "organization_id", "status", "document_date" });
+                columns: OrganizationStatusDateColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ix_purchase_documents_organization_type_date",
                 schema: "purchases",
                 table: "documents",
-                columns: new[] { "organization_id", "type", "document_date" });
+                columns: OrganizationTypeDateColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ux_purchase_documents_organization_internal_number",
                 schema: "purchases",
                 table: "documents",
-                columns: new[] { "organization_id", "internal_number" },
+                columns: OrganizationInternalNumberColumns,
                 unique: true,
                 filter: "internal_number IS NOT NULL");
 
@@ -245,14 +284,156 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                 name: "ux_purchase_documents_supplier_document_number",
                 schema: "purchases",
                 table: "documents",
-                columns: new[] { "organization_id", "counterparty_id", "supplier_document_number" },
+                columns: SupplierDocumentNumberColumns,
                 unique: true,
                 filter: "supplier_document_number IS NOT NULL");
+
+            migrationBuilder.Sql(
+                """
+                CREATE OR REPLACE FUNCTION purchases.enforce_document_immutability()
+                RETURNS trigger
+                LANGUAGE plpgsql
+                AS $$
+                BEGIN
+                    IF TG_OP = 'DELETE' THEN
+                        IF OLD.status IN ('Received', 'Cancelled') THEN
+                            RAISE EXCEPTION 'Received or cancelled purchase documents are immutable';
+                        END IF;
+
+                        RETURN OLD;
+                    END IF;
+
+                    IF NEW.id <> OLD.id
+                       OR NEW.organization_id <> OLD.organization_id THEN
+                        RAISE EXCEPTION 'Purchase document identity and organization are immutable';
+                    END IF;
+
+                    IF OLD.status = 'Draft' THEN
+                        IF NEW.status IN ('Draft', 'Received') THEN
+                            RETURN NEW;
+                        END IF;
+
+                        RAISE EXCEPTION 'Invalid purchase document state transition from Draft';
+                    END IF;
+
+                    IF OLD.status = 'Received' THEN
+                        IF NEW.status = 'Cancelled'
+                           AND (
+                               to_jsonb(NEW)
+                               - 'status'
+                               - 'cancelled_at_utc'
+                               - 'cancellation_reason'
+                               - 'updated_at_utc'
+                               - 'updated_by_user_id'
+                           ) = (
+                               to_jsonb(OLD)
+                               - 'status'
+                               - 'cancelled_at_utc'
+                               - 'cancellation_reason'
+                               - 'updated_at_utc'
+                               - 'updated_by_user_id'
+                           ) THEN
+                            RETURN NEW;
+                        END IF;
+
+                        RAISE EXCEPTION 'Received purchase documents are immutable';
+                    END IF;
+
+                    IF OLD.status = 'Cancelled' THEN
+                        RAISE EXCEPTION 'Cancelled purchase documents are immutable';
+                    END IF;
+
+                    RETURN NEW;
+                END;
+                $$;
+
+                CREATE TRIGGER trg_purchase_documents_immutability
+                BEFORE UPDATE OR DELETE ON purchases.documents
+                FOR EACH ROW
+                EXECUTE FUNCTION purchases.enforce_document_immutability();
+
+                CREATE OR REPLACE FUNCTION purchases.enforce_document_line_parent_draft()
+                RETURNS trigger
+                LANGUAGE plpgsql
+                AS $$
+                DECLARE
+                    parent_status text;
+                BEGIN
+                    IF TG_OP = 'INSERT' THEN
+                        SELECT status
+                        INTO parent_status
+                        FROM purchases.documents
+                        WHERE id = NEW.purchase_document_id
+                          AND organization_id = NEW.organization_id;
+
+                        IF parent_status IS DISTINCT FROM 'Draft' THEN
+                            RAISE EXCEPTION 'Purchase document lines can only be inserted under draft documents';
+                        END IF;
+
+                        RETURN NEW;
+                    END IF;
+
+                    IF TG_OP = 'UPDATE' THEN
+                        SELECT status
+                        INTO parent_status
+                        FROM purchases.documents
+                        WHERE id = OLD.purchase_document_id
+                          AND organization_id = OLD.organization_id;
+
+                        IF parent_status IS DISTINCT FROM 'Draft' THEN
+                            RAISE EXCEPTION 'Lines under received or cancelled purchase documents are immutable';
+                        END IF;
+
+                        SELECT status
+                        INTO parent_status
+                        FROM purchases.documents
+                        WHERE id = NEW.purchase_document_id
+                          AND organization_id = NEW.organization_id;
+
+                        IF parent_status IS DISTINCT FROM 'Draft' THEN
+                            RAISE EXCEPTION 'Purchase document lines can only be moved to draft documents';
+                        END IF;
+
+                        RETURN NEW;
+                    END IF;
+
+                    SELECT status
+                    INTO parent_status
+                    FROM purchases.documents
+                    WHERE id = OLD.purchase_document_id
+                      AND organization_id = OLD.organization_id;
+
+                    IF parent_status IS DISTINCT FROM 'Draft' THEN
+                        RAISE EXCEPTION 'Lines under received or cancelled purchase documents are immutable';
+                    END IF;
+
+                    RETURN OLD;
+                END;
+                $$;
+
+                CREATE TRIGGER trg_purchase_document_lines_parent_draft
+                BEFORE INSERT OR UPDATE OR DELETE ON purchases.document_lines
+                FOR EACH ROW
+                EXECUTE FUNCTION purchases.enforce_document_line_parent_draft();
+                """);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.Sql(
+                """
+                DROP TRIGGER IF EXISTS trg_purchase_document_lines_parent_draft
+                    ON purchases.document_lines;
+
+                DROP FUNCTION IF EXISTS purchases.enforce_document_line_parent_draft();
+
+                DROP TRIGGER IF EXISTS trg_purchase_documents_immutability
+                    ON purchases.documents;
+
+                DROP FUNCTION IF EXISTS purchases.enforce_document_immutability();
+                """);
+
             migrationBuilder.DropTable(
                 name: "document_lines",
                 schema: "purchases");
