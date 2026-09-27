@@ -1,0 +1,257 @@
+{
+  "version": 1,
+  "modules": [
+    {
+      "name": "Identity",
+      "slug": "identity",
+      "schema": "identity",
+      "features": [
+        "Users",
+        "Sessions",
+        "Roles",
+        "Permissions"
+      ],
+      "legacy": "Identity, Authentication, Authorization"
+    },
+    {
+      "name": "Organizations",
+      "slug": "organizations",
+      "schema": "organizations",
+      "features": [
+        "Companies",
+        "Memberships",
+        "Settings",
+        "Branches"
+      ],
+      "legacy": "Organizations; core schema"
+    },
+    {
+      "name": "Accounting",
+      "slug": "accounting",
+      "schema": "accounting",
+      "features": [
+        "ChartOfAccounts",
+        "FiscalCalendar",
+        "Journals",
+        "Posting",
+        "PeriodClosing"
+      ],
+      "legacy": "Accounting; ledger consistency boundary"
+    },
+    {
+      "name": "Counterparties",
+      "slug": "counterparties",
+      "schema": "counterparties",
+      "features": [
+        "Customers",
+        "Suppliers",
+        "Contacts",
+        "PaymentTerms"
+      ],
+      "legacy": "Counterparties; Domain/Partners; core schema"
+    },
+    {
+      "name": "Sales",
+      "slug": "sales",
+      "schema": "sales",
+      "features": [
+        "Quotes",
+        "Orders",
+        "Invoices",
+        "CreditNotes",
+        "Receivables"
+      ],
+      "legacy": "Sales"
+    },
+    {
+      "name": "Purchases",
+      "slug": "purchases",
+      "schema": "purchases",
+      "features": [
+        "Orders",
+        "SupplierInvoices",
+        "Expenses",
+        "CreditNotes",
+        "Payables"
+      ],
+      "legacy": "Purchases"
+    },
+    {
+      "name": "Payments",
+      "slug": "payments",
+      "schema": "payments",
+      "features": [
+        "Receipts",
+        "Disbursements",
+        "Allocations",
+        "Advances"
+      ],
+      "legacy": "Payments"
+    },
+    {
+      "name": "Banking",
+      "slug": "banking",
+      "schema": "banking",
+      "features": [
+        "BankAccounts",
+        "Statements",
+        "Reconciliation",
+        "CashManagement"
+      ],
+      "legacy": "Not implemented"
+    },
+    {
+      "name": "Tax",
+      "slug": "tax",
+      "schema": "tax",
+      "features": [
+        "VatCodes",
+        "TaxDetermination",
+        "TaxReturns",
+        "Localizations"
+      ],
+      "legacy": "Tax"
+    },
+    {
+      "name": "Currencies",
+      "slug": "currencies",
+      "schema": "currencies",
+      "features": [
+        "Currencies",
+        "ExchangeRates",
+        "Revaluation"
+      ],
+      "legacy": "Currencies; Domain/Tax; tax schema"
+    },
+    {
+      "name": "Inventory",
+      "slug": "inventory",
+      "schema": "inventory",
+      "features": [
+        "Catalog",
+        "Warehouses",
+        "StockMovements",
+        "Valuation"
+      ],
+      "legacy": "Not implemented"
+    },
+    {
+      "name": "FixedAssets",
+      "slug": "fixed-assets",
+      "schema": "fixed_assets",
+      "features": [
+        "AssetRegister",
+        "Depreciation",
+        "Disposals"
+      ],
+      "legacy": "Not implemented"
+    },
+    {
+      "name": "Projects",
+      "slug": "projects",
+      "schema": "projects",
+      "features": [
+        "Projects",
+        "CostCenters",
+        "TimeEntries",
+        "CostAllocation"
+      ],
+      "legacy": "Not implemented"
+    },
+    {
+      "name": "Budgeting",
+      "slug": "budgeting",
+      "schema": "budgeting",
+      "features": [
+        "Budgets",
+        "Forecasts",
+        "VarianceAnalysis"
+      ],
+      "legacy": "Not implemented"
+    },
+    {
+      "name": "Consolidation",
+      "slug": "consolidation",
+      "schema": "consolidation",
+      "features": [
+        "Groups",
+        "Intercompany",
+        "Eliminations",
+        "ConsolidatedStatements"
+      ],
+      "legacy": "Not implemented"
+    },
+    {
+      "name": "Payroll",
+      "slug": "payroll",
+      "schema": "payroll",
+      "features": [
+        "Employees",
+        "PayRuns",
+        "Contributions",
+        "Localizations"
+      ],
+      "legacy": "Not implemented; optional future module"
+    },
+    {
+      "name": "Reporting",
+      "slug": "reporting",
+      "schema": "reporting",
+      "features": [
+        "FinancialStatements",
+        "LedgerReports",
+        "ManagementReports",
+        "Exports"
+      ],
+      "legacy": "Reports; direct accounting reads require migration"
+    },
+    {
+      "name": "Documents",
+      "slug": "documents",
+      "schema": "documents",
+      "features": [
+        "Attachments",
+        "Templates",
+        "Imports",
+        "Retention"
+      ],
+      "legacy": "Not implemented"
+    },
+    {
+      "name": "Workflows",
+      "slug": "workflows",
+      "schema": "workflows",
+      "features": [
+        "Approvals",
+        "Tasks",
+        "Notifications"
+      ],
+      "legacy": "Not implemented"
+    },
+    {
+      "name": "Integrations",
+      "slug": "integrations",
+      "schema": "integrations",
+      "features": [
+        "ApiClients",
+        "ExternalEvents",
+        "Idempotency",
+        "Inbox",
+        "Outbox",
+        "Webhooks"
+      ],
+      "legacy": "Integrations; integration schema"
+    },
+    {
+      "name": "Audit",
+      "slug": "audit",
+      "schema": "audit",
+      "features": [
+        "AuditTrail",
+        "AccessHistory",
+        "Export"
+      ],
+      "legacy": "Audit; transaction-local auditing requires migration"
+    }
+  ]
+}

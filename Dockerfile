@@ -10,6 +10,8 @@ COPY src/Fintrox.Application/Fintrox.Application.csproj src/Fintrox.Application/
 COPY src/Fintrox.Infrastructure/Fintrox.Infrastructure.csproj src/Fintrox.Infrastructure/
 COPY src/Fintrox.Api/Fintrox.Api.csproj src/Fintrox.Api/
 
+COPY src/Modules/ src/Modules/
+
 RUN dotnet restore src/Fintrox.Api/Fintrox.Api.csproj
 
 COPY src/ src/
