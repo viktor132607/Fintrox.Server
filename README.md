@@ -157,4 +157,12 @@ Sales, purchases and payments now create balanced system journal entries through
 
 See [docs/accounting-auto-posting-rules.md](docs/accounting-auto-posting-rules.md).
 
-Next core phase: Integration clients + scopes.
+## Integration clients and scopes
+
+Other applications can now authenticate with organization-bound client credentials and short-lived JWTs carrying explicit business scopes. Secrets are returned only on create/rotation and stored only as hashes.
+
+See [docs/integration-clients-scopes.md](docs/integration-clients-scopes.md).
+
+Roadmap status: phase 19/41 implemented.
+
+Next core phase: phase 20/41.

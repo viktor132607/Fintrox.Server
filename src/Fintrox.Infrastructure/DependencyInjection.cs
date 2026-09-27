@@ -3,6 +3,7 @@ using Fintrox.Application.Common.Interfaces;
 using Fintrox.Application.Counterparties;
 using Fintrox.Application.Currencies;
 using Fintrox.Application.Identity;
+using Fintrox.Application.Integrations;
 using Fintrox.Application.Organizations;
 using Fintrox.Application.Payments;
 using Fintrox.Application.Purchases;
@@ -14,6 +15,7 @@ using Fintrox.Infrastructure.Audit;
 using Fintrox.Infrastructure.Counterparties;
 using Fintrox.Infrastructure.Currencies;
 using Fintrox.Infrastructure.Identity;
+using Fintrox.Infrastructure.Integrations;
 using Fintrox.Infrastructure.Organizations;
 using Fintrox.Infrastructure.Payments;
 using Fintrox.Infrastructure.Persistence;
@@ -87,6 +89,9 @@ public static class DependencyInjection
         services.AddScoped<IPaymentRepository, PaymentRepository>();
         services.AddScoped<IAuthenticationService, AuthenticationService>();
         services.AddScoped<IUserDirectory, UserDirectory>();
+        services.AddScoped<
+            IIntegrationClientRepository,
+            IntegrationClientRepository>();
         services.AddScoped<IOrganizationRepository, OrganizationRepository>();
         services.AddScoped<
             IOrganizationMembershipRepository,
