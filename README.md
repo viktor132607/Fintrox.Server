@@ -139,4 +139,10 @@ Draft-to-issued sales invoices now include customer/VAT/currency snapshots, line
 
 See [docs/sales-invoices.md](docs/sales-invoices.md).
 
-Next core phase: Purchase invoices and expenses.
+## Purchase invoices and expenses
+
+Supplier invoices and expense documents now include supplier/VAT/currency snapshots, recoverable VAT, internal numbering, receive/cancel lifecycle and database-enforced immutability.
+
+See [docs/purchase-documents.md](docs/purchase-documents.md).
+
+Next core phase: Payments and allocations.
