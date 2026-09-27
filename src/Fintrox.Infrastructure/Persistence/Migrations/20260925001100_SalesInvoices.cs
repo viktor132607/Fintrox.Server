@@ -8,6 +8,42 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
     /// <inheritdoc />
     public partial class SalesInvoices : Migration
     {
+        private static readonly string[] IdOrganizationColumns =
+            ["id", "organization_id"];
+
+        private static readonly string[] CounterpartyOrganizationColumns =
+            ["counterparty_id", "organization_id"];
+
+        private static readonly string[] CurrencyOrganizationColumns =
+            ["currency_id", "organization_id"];
+
+        private static readonly string[] BaseCurrencyOrganizationColumns =
+            ["base_currency_id", "organization_id"];
+
+        private static readonly string[] InvoiceOrganizationColumns =
+            ["sales_invoice_id", "organization_id"];
+
+        private static readonly string[] VatCodeOrganizationColumns =
+            ["vat_code_id", "organization_id"];
+
+        private static readonly string[] OrganizationVatCodeColumns =
+            ["organization_id", "vat_code_id"];
+
+        private static readonly string[] OrganizationInvoiceLineColumns =
+            ["organization_id", "sales_invoice_id", "line_number"];
+
+        private static readonly string[] OrganizationCustomerDateColumns =
+            ["organization_id", "counterparty_id", "invoice_date"];
+
+        private static readonly string[] OrganizationDateColumns =
+            ["organization_id", "invoice_date"];
+
+        private static readonly string[] OrganizationStatusDateColumns =
+            ["organization_id", "status", "invoice_date"];
+
+        private static readonly string[] OrganizationNumberColumns =
+            ["organization_id", "number"];
+
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -65,21 +101,21 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                         columns: x => new { x.counterparty_id, x.organization_id },
                         principalSchema: "core",
                         principalTable: "counterparties",
-                        principalColumns: new[] { "id", "organization_id" },
+                        principalColumns: IdOrganizationColumns,
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_invoices_currencies_base_currency_id_organization_id",
                         columns: x => new { x.base_currency_id, x.organization_id },
                         principalSchema: "core",
                         principalTable: "currencies",
-                        principalColumns: new[] { "id", "organization_id" },
+                        principalColumns: IdOrganizationColumns,
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_invoices_currencies_currency_id_organization_id",
                         columns: x => new { x.currency_id, x.organization_id },
                         principalSchema: "core",
                         principalTable: "currencies",
-                        principalColumns: new[] { "id", "organization_id" },
+                        principalColumns: IdOrganizationColumns,
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_invoices_organizations_organization_id",
@@ -152,14 +188,14 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                         columns: x => new { x.sales_invoice_id, x.organization_id },
                         principalSchema: "sales",
                         principalTable: "invoices",
-                        principalColumns: new[] { "id", "organization_id" },
+                        principalColumns: IdOrganizationColumns,
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_invoice_lines_vat_codes_vat_code_id_organization_id",
                         columns: x => new { x.vat_code_id, x.organization_id },
                         principalSchema: "tax",
                         principalTable: "vat_codes",
-                        principalColumns: new[] { "id", "organization_id" },
+                        principalColumns: IdOrganizationColumns,
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -167,75 +203,217 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                 name: "IX_invoice_lines_sales_invoice_id_organization_id",
                 schema: "sales",
                 table: "invoice_lines",
-                columns: new[] { "sales_invoice_id", "organization_id" });
+                columns: InvoiceOrganizationColumns);
 
             migrationBuilder.CreateIndex(
                 name: "IX_invoice_lines_vat_code_id_organization_id",
                 schema: "sales",
                 table: "invoice_lines",
-                columns: new[] { "vat_code_id", "organization_id" });
+                columns: VatCodeOrganizationColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ix_sales_invoice_lines_organization_vat_code",
                 schema: "sales",
                 table: "invoice_lines",
-                columns: new[] { "organization_id", "vat_code_id" });
+                columns: OrganizationVatCodeColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ux_sales_invoice_lines_invoice_line_number",
                 schema: "sales",
                 table: "invoice_lines",
-                columns: new[] { "organization_id", "sales_invoice_id", "line_number" },
+                columns: OrganizationInvoiceLineColumns,
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_invoices_base_currency_id_organization_id",
                 schema: "sales",
                 table: "invoices",
-                columns: new[] { "base_currency_id", "organization_id" });
+                columns: BaseCurrencyOrganizationColumns);
 
             migrationBuilder.CreateIndex(
                 name: "IX_invoices_counterparty_id_organization_id",
                 schema: "sales",
                 table: "invoices",
-                columns: new[] { "counterparty_id", "organization_id" });
+                columns: CounterpartyOrganizationColumns);
 
             migrationBuilder.CreateIndex(
                 name: "IX_invoices_currency_id_organization_id",
                 schema: "sales",
                 table: "invoices",
-                columns: new[] { "currency_id", "organization_id" });
+                columns: CurrencyOrganizationColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ix_sales_invoices_organization_customer_date",
                 schema: "sales",
                 table: "invoices",
-                columns: new[] { "organization_id", "counterparty_id", "invoice_date" });
+                columns: OrganizationCustomerDateColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ix_sales_invoices_organization_date",
                 schema: "sales",
                 table: "invoices",
-                columns: new[] { "organization_id", "invoice_date" });
+                columns: OrganizationDateColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ix_sales_invoices_organization_status_date",
                 schema: "sales",
                 table: "invoices",
-                columns: new[] { "organization_id", "status", "invoice_date" });
+                columns: OrganizationStatusDateColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ux_sales_invoices_organization_number",
                 schema: "sales",
                 table: "invoices",
-                columns: new[] { "organization_id", "number" },
+                columns: OrganizationNumberColumns,
                 unique: true,
                 filter: "number IS NOT NULL");
+
+            migrationBuilder.Sql(
+                """
+                CREATE OR REPLACE FUNCTION sales.enforce_invoice_immutability()
+                RETURNS trigger
+                LANGUAGE plpgsql
+                AS $$
+                BEGIN
+                    IF TG_OP = 'DELETE' THEN
+                        IF OLD.status IN ('Issued', 'Cancelled') THEN
+                            RAISE EXCEPTION 'Issued or cancelled sales invoices are immutable';
+                        END IF;
+
+                        RETURN OLD;
+                    END IF;
+
+                    IF NEW.id <> OLD.id
+                       OR NEW.organization_id <> OLD.organization_id THEN
+                        RAISE EXCEPTION 'Sales invoice identity and organization are immutable';
+                    END IF;
+
+                    IF OLD.status = 'Draft' THEN
+                        IF NEW.status IN ('Draft', 'Issued') THEN
+                            RETURN NEW;
+                        END IF;
+
+                        RAISE EXCEPTION 'Invalid sales invoice state transition from Draft';
+                    END IF;
+
+                    IF OLD.status = 'Issued' THEN
+                        IF NEW.status = 'Cancelled'
+                           AND (
+                               to_jsonb(NEW)
+                               - 'status'
+                               - 'cancelled_at_utc'
+                               - 'cancellation_reason'
+                               - 'updated_at_utc'
+                               - 'updated_by_user_id'
+                           ) = (
+                               to_jsonb(OLD)
+                               - 'status'
+                               - 'cancelled_at_utc'
+                               - 'cancellation_reason'
+                               - 'updated_at_utc'
+                               - 'updated_by_user_id'
+                           ) THEN
+                            RETURN NEW;
+                        END IF;
+
+                        RAISE EXCEPTION 'Issued sales invoices are immutable';
+                    END IF;
+
+                    IF OLD.status = 'Cancelled' THEN
+                        RAISE EXCEPTION 'Cancelled sales invoices are immutable';
+                    END IF;
+
+                    RETURN NEW;
+                END;
+                $$;
+
+                CREATE TRIGGER trg_sales_invoices_immutability
+                BEFORE UPDATE OR DELETE ON sales.invoices
+                FOR EACH ROW
+                EXECUTE FUNCTION sales.enforce_invoice_immutability();
+
+                CREATE OR REPLACE FUNCTION sales.enforce_invoice_line_parent_draft()
+                RETURNS trigger
+                LANGUAGE plpgsql
+                AS $$
+                DECLARE
+                    parent_status text;
+                BEGIN
+                    IF TG_OP = 'INSERT' THEN
+                        SELECT status
+                        INTO parent_status
+                        FROM sales.invoices
+                        WHERE id = NEW.sales_invoice_id
+                          AND organization_id = NEW.organization_id;
+
+                        IF parent_status IS DISTINCT FROM 'Draft' THEN
+                            RAISE EXCEPTION 'Sales invoice lines can only be inserted under draft invoices';
+                        END IF;
+
+                        RETURN NEW;
+                    END IF;
+
+                    IF TG_OP = 'UPDATE' THEN
+                        SELECT status
+                        INTO parent_status
+                        FROM sales.invoices
+                        WHERE id = OLD.sales_invoice_id
+                          AND organization_id = OLD.organization_id;
+
+                        IF parent_status IS DISTINCT FROM 'Draft' THEN
+                            RAISE EXCEPTION 'Lines under issued or cancelled sales invoices are immutable';
+                        END IF;
+
+                        SELECT status
+                        INTO parent_status
+                        FROM sales.invoices
+                        WHERE id = NEW.sales_invoice_id
+                          AND organization_id = NEW.organization_id;
+
+                        IF parent_status IS DISTINCT FROM 'Draft' THEN
+                            RAISE EXCEPTION 'Sales invoice lines can only be moved to draft invoices';
+                        END IF;
+
+                        RETURN NEW;
+                    END IF;
+
+                    SELECT status
+                    INTO parent_status
+                    FROM sales.invoices
+                    WHERE id = OLD.sales_invoice_id
+                      AND organization_id = OLD.organization_id;
+
+                    IF parent_status IS DISTINCT FROM 'Draft' THEN
+                        RAISE EXCEPTION 'Lines under issued or cancelled sales invoices are immutable';
+                    END IF;
+
+                    RETURN OLD;
+                END;
+                $$;
+
+                CREATE TRIGGER trg_sales_invoice_lines_parent_draft
+                BEFORE INSERT OR UPDATE OR DELETE ON sales.invoice_lines
+                FOR EACH ROW
+                EXECUTE FUNCTION sales.enforce_invoice_line_parent_draft();
+                """);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.Sql(
+                """
+                DROP TRIGGER IF EXISTS trg_sales_invoice_lines_parent_draft
+                    ON sales.invoice_lines;
+
+                DROP FUNCTION IF EXISTS sales.enforce_invoice_line_parent_draft();
+
+                DROP TRIGGER IF EXISTS trg_sales_invoices_immutability
+                    ON sales.invoices;
+
+                DROP FUNCTION IF EXISTS sales.enforce_invoice_immutability();
+                """);
+
             migrationBuilder.DropTable(
                 name: "invoice_lines",
                 schema: "sales");
