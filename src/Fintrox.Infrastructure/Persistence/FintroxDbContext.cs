@@ -2,6 +2,7 @@ using Fintrox.Domain.Accounting;
 using Fintrox.Domain.Common;
 using Fintrox.Domain.Organizations;
 using Fintrox.Domain.Partners;
+using Fintrox.Domain.Tax;
 using Fintrox.Infrastructure.Audit;
 using Fintrox.Infrastructure.Identity;
 using Fintrox.Infrastructure.Persistence.Models;
@@ -28,6 +29,12 @@ public sealed class FintroxDbContext(DbContextOptions<FintroxDbContext> options)
         Set<JournalNumberSequence>();
 
     public DbSet<Counterparty> Counterparties => Set<Counterparty>();
+
+    public DbSet<Currency> Currencies => Set<Currency>();
+
+    public DbSet<ExchangeRate> ExchangeRates => Set<ExchangeRate>();
+
+    public DbSet<VatCode> VatCodes => Set<VatCode>();
 
     public DbSet<Organization> Organizations => Set<Organization>();
 
