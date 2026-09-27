@@ -1,8 +1,9 @@
 using System.Text.RegularExpressions;
+using Fintrox.Domain.Common;
 
 namespace Fintrox.Domain.Organizations;
 
-public sealed partial class Organization
+public sealed partial class Organization : AuditableEntity, IAggregateRoot
 {
     private Organization()
     {
@@ -18,9 +19,8 @@ public sealed partial class Organization
         string timeZoneId,
         string? registrationNumber,
         string? vatNumber,
-        DateTimeOffset createdAtUtc)
+        DateTimeOffset now) : base(id, now)
     {
-        Id = id;
         Name = name;
         LegalName = legalName;
         Slug = slug;
@@ -30,11 +30,7 @@ public sealed partial class Organization
         RegistrationNumber = registrationNumber;
         VatNumber = vatNumber;
         IsActive = true;
-        CreatedAtUtc = createdAtUtc;
-        UpdatedAtUtc = createdAtUtc;
     }
-
-    public Guid Id { get; private set; }
 
     public string Name { get; private set; } = null!;
 
@@ -53,10 +49,6 @@ public sealed partial class Organization
     public string? VatNumber { get; private set; }
 
     public bool IsActive { get; private set; }
-
-    public DateTimeOffset CreatedAtUtc { get; private set; }
-
-    public DateTimeOffset UpdatedAtUtc { get; private set; }
 
     public static Organization Create(
         string name,
@@ -99,7 +91,7 @@ public sealed partial class Organization
         TimeZoneId = NormalizeRequired(timeZoneId, nameof(timeZoneId), 64);
         RegistrationNumber = NormalizeOptional(registrationNumber, 64);
         VatNumber = NormalizeOptional(vatNumber, 64);
-        UpdatedAtUtc = now;
+        Touch(now);
     }
 
     public void Deactivate(DateTimeOffset now)
@@ -110,7 +102,7 @@ public sealed partial class Organization
         }
 
         IsActive = false;
-        UpdatedAtUtc = now;
+        Touch(now);
     }
 
     public void Activate(DateTimeOffset now)
@@ -121,10 +113,13 @@ public sealed partial class Organization
         }
 
         IsActive = true;
-        UpdatedAtUtc = now;
+        Touch(now);
     }
 
-    private static string NormalizeRequired(string value, string parameterName, int maxLength)
+    private static string NormalizeRequired(
+        string value,
+        string parameterName,
+        int maxLength)
     {
         var normalized = value?.Trim();
 
@@ -135,7 +130,9 @@ public sealed partial class Organization
 
         if (normalized.Length > maxLength)
         {
-            throw new ArgumentException($"Value cannot exceed {maxLength} characters.", parameterName);
+            throw new ArgumentException(
+                $"Value cannot exceed {maxLength} characters.",
+                parameterName);
         }
 
         return normalized;
@@ -152,15 +149,23 @@ public sealed partial class Organization
 
         if (normalized.Length > maxLength)
         {
-            throw new ArgumentException($"Value cannot exceed {maxLength} characters.", nameof(value));
+            throw new ArgumentException(
+                $"Value cannot exceed {maxLength} characters.",
+                nameof(value));
         }
 
         return normalized;
     }
 
-    private static string NormalizeCode(string value, string parameterName, int length)
+    private static string NormalizeCode(
+        string value,
+        string parameterName,
+        int length)
     {
-        var normalized = NormalizeRequired(value, parameterName, length).ToUpperInvariant();
+        var normalized = NormalizeRequired(
+            value,
+            parameterName,
+            length).ToUpperInvariant();
 
         if (normalized.Length != length || !normalized.All(char.IsAsciiLetter))
         {
@@ -174,7 +179,10 @@ public sealed partial class Organization
 
     private static string NormalizeSlug(string value)
     {
-        var normalized = NormalizeRequired(value, nameof(value), 80).ToLowerInvariant();
+        var normalized = NormalizeRequired(
+            value,
+            nameof(value),
+            80).ToLowerInvariant();
 
         if (!SlugRegex().IsMatch(normalized))
         {
@@ -186,6 +194,8 @@ public sealed partial class Organization
         return normalized;
     }
 
-    [GeneratedRegex("^[a-z0-9]+(?:-[a-z0-9]+)*$", RegexOptions.CultureInvariant)]
+    [GeneratedRegex(
+        "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+        RegexOptions.CultureInvariant)]
     private static partial Regex SlugRegex();
 }

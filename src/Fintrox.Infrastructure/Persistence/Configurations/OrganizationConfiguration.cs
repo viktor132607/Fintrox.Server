@@ -62,10 +62,16 @@ public sealed class OrganizationConfiguration : IEntityTypeConfiguration<Organiz
             .HasColumnType("timestamp with time zone")
             .IsRequired();
 
+        builder.Property(organization => organization.CreatedByUserId)
+            .HasColumnName("created_by_user_id");
+
         builder.Property(organization => organization.UpdatedAtUtc)
             .HasColumnName("updated_at_utc")
             .HasColumnType("timestamp with time zone")
             .IsRequired();
+
+        builder.Property(organization => organization.UpdatedByUserId)
+            .HasColumnName("updated_by_user_id");
 
         builder.HasIndex(organization => organization.Slug)
             .IsUnique()
