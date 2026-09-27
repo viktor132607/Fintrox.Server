@@ -126,7 +126,7 @@ public sealed class FiscalCalendarRepository(
 
     public async Task<AccountingPeriod?> FindPeriodByDateAsync(
         Guid organizationId,
-        DateOnly date,
+        DateOnly postingDate,
         bool trackChanges,
         CancellationToken cancellationToken)
     {
@@ -140,8 +140,8 @@ public sealed class FiscalCalendarRepository(
         return await query.SingleOrDefaultAsync(
             period =>
                 period.OrganizationId == organizationId &&
-                period.StartDate <= date &&
-                period.EndDate >= date,
+                period.StartDate <= postingDate &&
+                period.EndDate >= postingDate,
             cancellationToken);
     }
 
