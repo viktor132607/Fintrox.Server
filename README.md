@@ -119,4 +119,10 @@ Organization-scoped customer/supplier master data now includes registration/VAT 
 
 See [docs/counterparties.md](docs/counterparties.md).
 
-Roadmap phase 12 (Trial Balance + General Ledger) remains separate. The next selected phase after 13 is VAT codes, currencies and exchange rates.
+## Accounting reports
+
+Trial Balance and General Ledger are available over posted accounting history with opening balances, period turnover, closing balances and running ledger balances.
+
+See [docs/accounting-reports.md](docs/accounting-reports.md).
+
+Next core phase: VAT codes, currencies and exchange rates.
