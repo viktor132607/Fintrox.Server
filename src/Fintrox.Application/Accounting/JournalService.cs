@@ -9,7 +9,7 @@ public sealed class JournalService(
     IJournalRepository journalRepository,
     IAccountRepository accountRepository,
     IFiscalCalendarRepository fiscalCalendarRepository,
-    IAccountingTransactionRunner transactionRunner,
+    ITransactionRunner transactionRunner,
     ICurrentOrganization currentOrganization,
     TimeProvider timeProvider) : IJournalService
 {

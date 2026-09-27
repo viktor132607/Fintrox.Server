@@ -2,6 +2,7 @@ using Fintrox.Domain.Accounting;
 using Fintrox.Domain.Common;
 using Fintrox.Domain.Organizations;
 using Fintrox.Domain.Partners;
+using Fintrox.Domain.Sales;
 using Fintrox.Domain.Tax;
 using Fintrox.Infrastructure.Audit;
 using Fintrox.Infrastructure.Identity;
@@ -35,6 +36,14 @@ public sealed class FintroxDbContext(DbContextOptions<FintroxDbContext> options)
     public DbSet<ExchangeRate> ExchangeRates => Set<ExchangeRate>();
 
     public DbSet<VatCode> VatCodes => Set<VatCode>();
+
+    public DbSet<SalesInvoice> SalesInvoices => Set<SalesInvoice>();
+
+    public DbSet<SalesInvoiceLine> SalesInvoiceLines =>
+        Set<SalesInvoiceLine>();
+
+    public DbSet<SalesInvoiceNumberSequence> SalesInvoiceNumberSequences =>
+        Set<SalesInvoiceNumberSequence>();
 
     public DbSet<Organization> Organizations => Set<Organization>();
 

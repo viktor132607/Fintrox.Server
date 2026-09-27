@@ -5,6 +5,7 @@ using Fintrox.Application.Currencies;
 using Fintrox.Application.Identity;
 using Fintrox.Application.Organizations;
 using Fintrox.Application.Reports;
+using Fintrox.Application.Sales;
 using Fintrox.Application.Tax;
 using Fintrox.Infrastructure.Accounting;
 using Fintrox.Infrastructure.Audit;
@@ -14,6 +15,7 @@ using Fintrox.Infrastructure.Identity;
 using Fintrox.Infrastructure.Organizations;
 using Fintrox.Infrastructure.Persistence;
 using Fintrox.Infrastructure.Reports;
+using Fintrox.Infrastructure.Sales;
 using Fintrox.Infrastructure.Tax;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -67,6 +69,7 @@ public static class DependencyInjection
             .AddEntityFrameworkStores<FintroxDbContext>();
 
         services.AddScoped<IAccountingTransactionRunner, EfAccountingTransactionRunner>();
+        services.AddScoped<ITransactionRunner, EfTransactionRunner>();
         services.AddScoped<IAccountRepository, AccountRepository>();
         services.AddScoped<IFiscalCalendarRepository, FiscalCalendarRepository>();
         services.AddScoped<IJournalRepository, JournalRepository>();
@@ -74,6 +77,7 @@ public static class DependencyInjection
         services.AddScoped<ICurrencyRepository, CurrencyRepository>();
         services.AddScoped<IVatCodeRepository, VatCodeRepository>();
         services.AddScoped<IAccountingReportRepository, AccountingReportRepository>();
+        services.AddScoped<ISalesInvoiceRepository, SalesInvoiceRepository>();
         services.AddScoped<IAuthenticationService, AuthenticationService>();
         services.AddScoped<IUserDirectory, UserDirectory>();
         services.AddScoped<IOrganizationRepository, OrganizationRepository>();
