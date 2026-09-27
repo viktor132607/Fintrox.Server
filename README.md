@@ -15,25 +15,41 @@ src/
 └── Fintrox.Infrastructure/
 ```
 
-Dependency rules are documented in [docs/architecture.md](docs/architecture.md).
+See [docs/architecture.md](docs/architecture.md).
 
 ## Runtime
 
 - .NET 10 / C# 14
 - ASP.NET Core Web API
+- ASP.NET Core Identity
+- JWT bearer authentication
 - Entity Framework Core 10
 - Npgsql / PostgreSQL 18
 - OpenAPI
 - Problem Details
 - health checks
 
+## Authentication and authorization
+
+Implemented:
+
+- user registration and login;
+- short-lived JWT access tokens;
+- rotating refresh tokens stored as hashes;
+- session listing and revocation;
+- account lockout;
+- organization-scoped roles;
+- permission policies;
+- organization member management;
+- automatic Owner membership when an organization is created.
+
+See [docs/authentication.md](docs/authentication.md).
+
 ## Multi-tenancy
 
-Fintrox is organization-scoped. Organization management and the `X-Organization-Id` request context are implemented.
+Fintrox is organization-scoped. Business requests use `X-Organization-Id`, while authorization verifies the authenticated user's membership and permissions.
 
 See [docs/multi-tenancy.md](docs/multi-tenancy.md).
-
-Authentication/membership authorization is the next phase.
 
 ## Persistence
 
@@ -64,3 +80,5 @@ dotnet run --project src/Fintrox.Api/Fintrox.Api.csproj
 GitHub Actions validates build, tests, EF model/migrations against PostgreSQL and the Docker image before publishing to GHCR.
 
 See [docs/ci-cd.md](docs/ci-cd.md).
+
+Next core phase: common domain entities and auditing foundation.
