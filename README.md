@@ -89,4 +89,10 @@ GitHub Actions validates build, tests, EF model/migrations against PostgreSQL an
 
 See [docs/ci-cd.md](docs/ci-cd.md).
 
-Next core phase: Chart of Accounts.
+## Chart of Accounts
+
+Organization-scoped account hierarchy, account types, activation rules and accounting read/write authorization are implemented.
+
+See [docs/chart-of-accounts.md](docs/chart-of-accounts.md).
+
+Next core phase: fiscal years and accounting periods.

@@ -1,5 +1,7 @@
+using Fintrox.Application.Accounting;
 using Fintrox.Application.Identity;
 using Fintrox.Application.Organizations;
+using Fintrox.Infrastructure.Accounting;
 using Fintrox.Infrastructure.Audit;
 using Fintrox.Infrastructure.Identity;
 using Fintrox.Infrastructure.Organizations;
@@ -55,6 +57,7 @@ public static class DependencyInjection
             })
             .AddEntityFrameworkStores<FintroxDbContext>();
 
+        services.AddScoped<IAccountRepository, AccountRepository>();
         services.AddScoped<IAuthenticationService, AuthenticationService>();
         services.AddScoped<IUserDirectory, UserDirectory>();
         services.AddScoped<IOrganizationRepository, OrganizationRepository>();
