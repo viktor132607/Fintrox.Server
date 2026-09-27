@@ -51,6 +51,14 @@ Fintrox is organization-scoped. Business requests use `X-Organization-Id`, while
 
 See [docs/multi-tenancy.md](docs/multi-tenancy.md).
 
+## Common domain and auditing
+
+Business entities now share common entity/auditing base classes.
+
+Auditable business changes are written automatically to append-only `audit.audit_log` records in the same transaction as the underlying change.
+
+See [docs/auditing.md](docs/auditing.md).
+
 ## Persistence
 
 ```bash
@@ -81,4 +89,4 @@ GitHub Actions validates build, tests, EF model/migrations against PostgreSQL an
 
 See [docs/ci-cd.md](docs/ci-cd.md).
 
-Next core phase: common domain entities and auditing foundation.
+Next core phase: Chart of Accounts.
