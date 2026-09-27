@@ -9,6 +9,12 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
     /// <inheritdoc />
     public partial class IdentityAndAuthorizationFoundation : Migration
     {
+        private static readonly string[] OrganizationMembershipIndexColumns =
+            ["organization_id", "user_id"];
+
+        private static readonly string[] RefreshTokenUserExpiryIndexColumns =
+            ["user_id", "expires_at_utc"];
+
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -183,14 +189,14 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                 name: "ux_organization_memberships_organization_user",
                 schema: "identity",
                 table: "organization_memberships",
-                columns: new[] { "organization_id", "user_id" },
+                columns: OrganizationMembershipIndexColumns,
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_refresh_tokens_user_expiry",
                 schema: "identity",
                 table: "refresh_tokens",
-                columns: new[] { "user_id", "expires_at_utc" });
+                columns: RefreshTokenUserExpiryIndexColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ux_refresh_tokens_token_hash",
