@@ -1,4 +1,5 @@
 using System.Globalization;
+using Fintrox.Application.Accounting;
 using Fintrox.Application.Common.Interfaces;
 using Fintrox.Application.Counterparties;
 using Fintrox.Application.Currencies;
@@ -19,6 +20,7 @@ public sealed class PaymentService(
     ICurrencyRepository currencyRepository,
     ISalesInvoiceRepository salesInvoiceRepository,
     IPurchaseDocumentRepository purchaseDocumentRepository,
+    IAutoPostingEngine autoPostingEngine,
     ITransactionRunner transactionRunner,
     ICurrentOrganization currentOrganization,
     TimeProvider timeProvider) : IPaymentService
@@ -577,6 +579,19 @@ public sealed class PaymentService(
                     paymentExchangeRate,
                     now);
 
+                try
+                {
+                    await autoPostingEngine.PostPaymentAsync(
+                        draft,
+                        allocations,
+                        ct);
+                }
+                catch (AutoPostingException exception)
+                {
+                    throw new PaymentConflictException(
+                        $"Accounting auto-posting failed: {exception.Message}");
+                }
+
                 await repository.SaveChangesAsync(ct);
                 return draft;
             },
@@ -617,6 +632,19 @@ public sealed class PaymentService(
                 existing.Cancel(
                     request.Reason,
                     timeProvider.GetUtcNow());
+
+                try
+                {
+                    await autoPostingEngine.ReversePaymentAsync(
+                        existing,
+                        request.Reason,
+                        ct);
+                }
+                catch (AutoPostingException exception)
+                {
+                    throw new PaymentConflictException(
+                        $"Accounting reversal failed: {exception.Message}");
+                }
 
                 await repository.SaveChangesAsync(ct);
                 return existing;

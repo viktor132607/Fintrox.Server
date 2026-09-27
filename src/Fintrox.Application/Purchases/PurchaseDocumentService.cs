@@ -1,4 +1,5 @@
 using System.Globalization;
+using Fintrox.Application.Accounting;
 using Fintrox.Application.Common.Interfaces;
 using Fintrox.Application.Counterparties;
 using Fintrox.Application.Currencies;
@@ -16,6 +17,7 @@ public sealed class PurchaseDocumentService(
     ICounterpartyRepository counterpartyRepository,
     ICurrencyRepository currencyRepository,
     IVatCodeRepository vatCodeRepository,
+    IAutoPostingEngine autoPostingEngine,
     ITransactionRunner transactionRunner,
     ICurrentOrganization currentOrganization,
     TimeProvider timeProvider) : IPurchaseDocumentService
@@ -603,6 +605,19 @@ public sealed class PurchaseDocumentService(
                     exchangeRate,
                     timeProvider.GetUtcNow());
 
+                try
+                {
+                    await autoPostingEngine.PostPurchaseDocumentAsync(
+                        draft,
+                        lines,
+                        ct);
+                }
+                catch (AutoPostingException exception)
+                {
+                    throw new PurchaseDocumentConflictException(
+                        $"Accounting auto-posting failed: {exception.Message}");
+                }
+
                 await repository.SaveChangesAsync(ct);
                 return draft;
             },
@@ -643,6 +658,19 @@ public sealed class PurchaseDocumentService(
                 existing.Cancel(
                     request.Reason,
                     timeProvider.GetUtcNow());
+
+                try
+                {
+                    await autoPostingEngine.ReversePurchaseDocumentAsync(
+                        existing,
+                        request.Reason,
+                        ct);
+                }
+                catch (AutoPostingException exception)
+                {
+                    throw new PurchaseDocumentConflictException(
+                        $"Accounting reversal failed: {exception.Message}");
+                }
 
                 await repository.SaveChangesAsync(ct);
                 return existing;

@@ -1,4 +1,5 @@
 using System.Globalization;
+using Fintrox.Application.Accounting;
 using Fintrox.Application.Common.Interfaces;
 using Fintrox.Application.Counterparties;
 using Fintrox.Application.Currencies;
@@ -16,6 +17,7 @@ public sealed class SalesInvoiceService(
     ICounterpartyRepository counterpartyRepository,
     ICurrencyRepository currencyRepository,
     IVatCodeRepository vatCodeRepository,
+    IAutoPostingEngine autoPostingEngine,
     ITransactionRunner transactionRunner,
     ICurrentOrganization currentOrganization,
     TimeProvider timeProvider) : ISalesInvoiceService
@@ -604,6 +606,19 @@ public sealed class SalesInvoiceService(
                     exchangeRate,
                     timeProvider.GetUtcNow());
 
+                try
+                {
+                    await autoPostingEngine.PostSalesInvoiceAsync(
+                        draft,
+                        lines,
+                        transactionCancellationToken);
+                }
+                catch (AutoPostingException exception)
+                {
+                    throw new SalesInvoiceConflictException(
+                        $"Accounting auto-posting failed: {exception.Message}");
+                }
+
                 await repository.SaveChangesAsync(
                     transactionCancellationToken);
 
@@ -646,6 +661,19 @@ public sealed class SalesInvoiceService(
                 existing.Cancel(
                     request.Reason,
                     timeProvider.GetUtcNow());
+
+                try
+                {
+                    await autoPostingEngine.ReverseSalesInvoiceAsync(
+                        existing,
+                        request.Reason,
+                        transactionCancellationToken);
+                }
+                catch (AutoPostingException exception)
+                {
+                    throw new SalesInvoiceConflictException(
+                        $"Accounting reversal failed: {exception.Message}");
+                }
 
                 await repository.SaveChangesAsync(
                     transactionCancellationToken);

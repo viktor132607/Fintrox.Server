@@ -68,6 +68,27 @@ public sealed class JournalRepository(
             cancellationToken);
     }
 
+    public async Task<JournalEntry?> GetSystemEntryByExternalReferenceAsync(
+        Guid organizationId,
+        string externalReference,
+        bool trackChanges,
+        CancellationToken cancellationToken)
+    {
+        IQueryable<JournalEntry> query = dbContext.JournalEntries;
+
+        if (!trackChanges)
+        {
+            query = query.AsNoTracking();
+        }
+
+        return await query.SingleOrDefaultAsync(
+            entry =>
+                entry.OrganizationId == organizationId &&
+                entry.Source == JournalEntrySource.System &&
+                entry.ExternalReference == externalReference,
+            cancellationToken);
+    }
+
     public async Task<IReadOnlyList<JournalLine>> ListLinesAsync(
         Guid organizationId,
         Guid journalEntryId,
