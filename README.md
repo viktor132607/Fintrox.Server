@@ -95,4 +95,10 @@ Organization-scoped account hierarchy, account types, activation rules and accou
 
 See [docs/chart-of-accounts.md](docs/chart-of-accounts.md).
 
-Next core phase: fiscal years and accounting periods.
+## Fiscal calendar
+
+Organization-scoped fiscal years and accounting periods are implemented with explicit `Open / SoftClosed / Closed` lifecycle rules and overlap protection.
+
+See [docs/fiscal-calendar.md](docs/fiscal-calendar.md).
+
+Next core phase: double-entry Journal.

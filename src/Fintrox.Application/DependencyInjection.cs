@@ -12,6 +12,7 @@ public static class DependencyInjection
         services.AddSingleton(TimeProvider.System);
 
         services.AddScoped<IAccountService, AccountService>();
+        services.AddScoped<IFiscalCalendarService, FiscalCalendarService>();
         services.AddScoped<IOrganizationService, OrganizationService>();
         services.AddScoped<IOrganizationMemberService, OrganizationMemberService>();
         services.AddScoped<IOrganizationAccessService, OrganizationAccessService>();
