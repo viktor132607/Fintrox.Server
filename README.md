@@ -2,7 +2,7 @@
 
 ## Structural foundation (current task)
 
-The new module-first skeleton is in `src/Modules`: 21 business boundaries with independent Domain, Application, Contracts, Infrastructure and Presentation projects. See [architecture](docs/architecture.md) and [module catalog](architecture/modules.json).
+The new module-first skeleton is in `src/Modules`: 23 business boundaries with independent Domain, Application, Contracts, Infrastructure and Presentation projects. See [architecture](docs/architecture.md) and [module catalog](architecture/modules.json).
 
 This is a structure-only stage. The implemented features listed below remain in their existing horizontal projects; they have not been migrated to the new module assemblies. PostgreSQL migration history and behavior are unchanged. Feature implementation is paused pending module-by-module work.
 
@@ -185,3 +185,7 @@ See [docs/integration-inbox-outbox.md](docs/integration-inbox-outbox.md).
 Roadmap status: phase 21/41 implemented.
 
 Remaining roadmap: External business event API (22/41), deferred while the modular structure is established.
+
+## Activatable integrations and experience structure
+
+See [ownership and lifecycle](docs/activation-experience.md). Capabilities and Experience are new structural boundaries; Integrations owns external app installations. Simple / Accountant / Expert are customizable UI presets, independent of permissions. No activation or layout behavior is implemented.

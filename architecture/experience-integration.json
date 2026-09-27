@@ -1,0 +1,697 @@
+{
+  "version": 1,
+  "status": "structure-only",
+  "capabilities": [
+    {
+      "id": "identity.users",
+      "module": "Identity",
+      "feature": "Users",
+      "status": "reserved"
+    },
+    {
+      "id": "identity.sessions",
+      "module": "Identity",
+      "feature": "Sessions",
+      "status": "reserved"
+    },
+    {
+      "id": "identity.roles",
+      "module": "Identity",
+      "feature": "Roles",
+      "status": "reserved"
+    },
+    {
+      "id": "identity.permissions",
+      "module": "Identity",
+      "feature": "Permissions",
+      "status": "reserved"
+    },
+    {
+      "id": "organizations.companies",
+      "module": "Organizations",
+      "feature": "Companies",
+      "status": "reserved"
+    },
+    {
+      "id": "organizations.memberships",
+      "module": "Organizations",
+      "feature": "Memberships",
+      "status": "reserved"
+    },
+    {
+      "id": "organizations.settings",
+      "module": "Organizations",
+      "feature": "Settings",
+      "status": "reserved"
+    },
+    {
+      "id": "organizations.branches",
+      "module": "Organizations",
+      "feature": "Branches",
+      "status": "reserved"
+    },
+    {
+      "id": "accounting.chart-of-accounts",
+      "module": "Accounting",
+      "feature": "ChartOfAccounts",
+      "status": "reserved"
+    },
+    {
+      "id": "accounting.fiscal-calendar",
+      "module": "Accounting",
+      "feature": "FiscalCalendar",
+      "status": "reserved"
+    },
+    {
+      "id": "accounting.journals",
+      "module": "Accounting",
+      "feature": "Journals",
+      "status": "reserved"
+    },
+    {
+      "id": "accounting.posting",
+      "module": "Accounting",
+      "feature": "Posting",
+      "status": "reserved"
+    },
+    {
+      "id": "accounting.period-closing",
+      "module": "Accounting",
+      "feature": "PeriodClosing",
+      "status": "reserved"
+    },
+    {
+      "id": "counterparties.customers",
+      "module": "Counterparties",
+      "feature": "Customers",
+      "status": "reserved"
+    },
+    {
+      "id": "counterparties.suppliers",
+      "module": "Counterparties",
+      "feature": "Suppliers",
+      "status": "reserved"
+    },
+    {
+      "id": "counterparties.contacts",
+      "module": "Counterparties",
+      "feature": "Contacts",
+      "status": "reserved"
+    },
+    {
+      "id": "counterparties.payment-terms",
+      "module": "Counterparties",
+      "feature": "PaymentTerms",
+      "status": "reserved"
+    },
+    {
+      "id": "sales.quotes",
+      "module": "Sales",
+      "feature": "Quotes",
+      "status": "reserved"
+    },
+    {
+      "id": "sales.orders",
+      "module": "Sales",
+      "feature": "Orders",
+      "status": "reserved"
+    },
+    {
+      "id": "sales.invoices",
+      "module": "Sales",
+      "feature": "Invoices",
+      "status": "reserved"
+    },
+    {
+      "id": "sales.credit-notes",
+      "module": "Sales",
+      "feature": "CreditNotes",
+      "status": "reserved"
+    },
+    {
+      "id": "sales.receivables",
+      "module": "Sales",
+      "feature": "Receivables",
+      "status": "reserved"
+    },
+    {
+      "id": "purchases.orders",
+      "module": "Purchases",
+      "feature": "Orders",
+      "status": "reserved"
+    },
+    {
+      "id": "purchases.supplier-invoices",
+      "module": "Purchases",
+      "feature": "SupplierInvoices",
+      "status": "reserved"
+    },
+    {
+      "id": "purchases.expenses",
+      "module": "Purchases",
+      "feature": "Expenses",
+      "status": "reserved"
+    },
+    {
+      "id": "purchases.credit-notes",
+      "module": "Purchases",
+      "feature": "CreditNotes",
+      "status": "reserved"
+    },
+    {
+      "id": "purchases.payables",
+      "module": "Purchases",
+      "feature": "Payables",
+      "status": "reserved"
+    },
+    {
+      "id": "payments.receipts",
+      "module": "Payments",
+      "feature": "Receipts",
+      "status": "reserved"
+    },
+    {
+      "id": "payments.disbursements",
+      "module": "Payments",
+      "feature": "Disbursements",
+      "status": "reserved"
+    },
+    {
+      "id": "payments.allocations",
+      "module": "Payments",
+      "feature": "Allocations",
+      "status": "reserved"
+    },
+    {
+      "id": "payments.advances",
+      "module": "Payments",
+      "feature": "Advances",
+      "status": "reserved"
+    },
+    {
+      "id": "banking.bank-accounts",
+      "module": "Banking",
+      "feature": "BankAccounts",
+      "status": "reserved"
+    },
+    {
+      "id": "banking.statements",
+      "module": "Banking",
+      "feature": "Statements",
+      "status": "reserved"
+    },
+    {
+      "id": "banking.reconciliation",
+      "module": "Banking",
+      "feature": "Reconciliation",
+      "status": "reserved"
+    },
+    {
+      "id": "banking.cash-management",
+      "module": "Banking",
+      "feature": "CashManagement",
+      "status": "reserved"
+    },
+    {
+      "id": "tax.vat-codes",
+      "module": "Tax",
+      "feature": "VatCodes",
+      "status": "reserved"
+    },
+    {
+      "id": "tax.tax-determination",
+      "module": "Tax",
+      "feature": "TaxDetermination",
+      "status": "reserved"
+    },
+    {
+      "id": "tax.tax-returns",
+      "module": "Tax",
+      "feature": "TaxReturns",
+      "status": "reserved"
+    },
+    {
+      "id": "tax.localizations",
+      "module": "Tax",
+      "feature": "Localizations",
+      "status": "reserved"
+    },
+    {
+      "id": "currencies.currencies",
+      "module": "Currencies",
+      "feature": "Currencies",
+      "status": "reserved"
+    },
+    {
+      "id": "currencies.exchange-rates",
+      "module": "Currencies",
+      "feature": "ExchangeRates",
+      "status": "reserved"
+    },
+    {
+      "id": "currencies.revaluation",
+      "module": "Currencies",
+      "feature": "Revaluation",
+      "status": "reserved"
+    },
+    {
+      "id": "inventory.catalog",
+      "module": "Inventory",
+      "feature": "Catalog",
+      "status": "reserved"
+    },
+    {
+      "id": "inventory.warehouses",
+      "module": "Inventory",
+      "feature": "Warehouses",
+      "status": "reserved"
+    },
+    {
+      "id": "inventory.stock-movements",
+      "module": "Inventory",
+      "feature": "StockMovements",
+      "status": "reserved"
+    },
+    {
+      "id": "inventory.valuation",
+      "module": "Inventory",
+      "feature": "Valuation",
+      "status": "reserved"
+    },
+    {
+      "id": "fixed-assets.asset-register",
+      "module": "FixedAssets",
+      "feature": "AssetRegister",
+      "status": "reserved"
+    },
+    {
+      "id": "fixed-assets.depreciation",
+      "module": "FixedAssets",
+      "feature": "Depreciation",
+      "status": "reserved"
+    },
+    {
+      "id": "fixed-assets.disposals",
+      "module": "FixedAssets",
+      "feature": "Disposals",
+      "status": "reserved"
+    },
+    {
+      "id": "projects.projects",
+      "module": "Projects",
+      "feature": "Projects",
+      "status": "reserved"
+    },
+    {
+      "id": "projects.cost-centers",
+      "module": "Projects",
+      "feature": "CostCenters",
+      "status": "reserved"
+    },
+    {
+      "id": "projects.time-entries",
+      "module": "Projects",
+      "feature": "TimeEntries",
+      "status": "reserved"
+    },
+    {
+      "id": "projects.cost-allocation",
+      "module": "Projects",
+      "feature": "CostAllocation",
+      "status": "reserved"
+    },
+    {
+      "id": "budgeting.budgets",
+      "module": "Budgeting",
+      "feature": "Budgets",
+      "status": "reserved"
+    },
+    {
+      "id": "budgeting.forecasts",
+      "module": "Budgeting",
+      "feature": "Forecasts",
+      "status": "reserved"
+    },
+    {
+      "id": "budgeting.variance-analysis",
+      "module": "Budgeting",
+      "feature": "VarianceAnalysis",
+      "status": "reserved"
+    },
+    {
+      "id": "consolidation.groups",
+      "module": "Consolidation",
+      "feature": "Groups",
+      "status": "reserved"
+    },
+    {
+      "id": "consolidation.intercompany",
+      "module": "Consolidation",
+      "feature": "Intercompany",
+      "status": "reserved"
+    },
+    {
+      "id": "consolidation.eliminations",
+      "module": "Consolidation",
+      "feature": "Eliminations",
+      "status": "reserved"
+    },
+    {
+      "id": "consolidation.consolidated-statements",
+      "module": "Consolidation",
+      "feature": "ConsolidatedStatements",
+      "status": "reserved"
+    },
+    {
+      "id": "payroll.employees",
+      "module": "Payroll",
+      "feature": "Employees",
+      "status": "reserved"
+    },
+    {
+      "id": "payroll.pay-runs",
+      "module": "Payroll",
+      "feature": "PayRuns",
+      "status": "reserved"
+    },
+    {
+      "id": "payroll.contributions",
+      "module": "Payroll",
+      "feature": "Contributions",
+      "status": "reserved"
+    },
+    {
+      "id": "payroll.localizations",
+      "module": "Payroll",
+      "feature": "Localizations",
+      "status": "reserved"
+    },
+    {
+      "id": "reporting.financial-statements",
+      "module": "Reporting",
+      "feature": "FinancialStatements",
+      "status": "reserved"
+    },
+    {
+      "id": "reporting.ledger-reports",
+      "module": "Reporting",
+      "feature": "LedgerReports",
+      "status": "reserved"
+    },
+    {
+      "id": "reporting.management-reports",
+      "module": "Reporting",
+      "feature": "ManagementReports",
+      "status": "reserved"
+    },
+    {
+      "id": "reporting.exports",
+      "module": "Reporting",
+      "feature": "Exports",
+      "status": "reserved"
+    },
+    {
+      "id": "documents.attachments",
+      "module": "Documents",
+      "feature": "Attachments",
+      "status": "reserved"
+    },
+    {
+      "id": "documents.templates",
+      "module": "Documents",
+      "feature": "Templates",
+      "status": "reserved"
+    },
+    {
+      "id": "documents.imports",
+      "module": "Documents",
+      "feature": "Imports",
+      "status": "reserved"
+    },
+    {
+      "id": "documents.retention",
+      "module": "Documents",
+      "feature": "Retention",
+      "status": "reserved"
+    },
+    {
+      "id": "workflows.approvals",
+      "module": "Workflows",
+      "feature": "Approvals",
+      "status": "reserved"
+    },
+    {
+      "id": "workflows.tasks",
+      "module": "Workflows",
+      "feature": "Tasks",
+      "status": "reserved"
+    },
+    {
+      "id": "workflows.notifications",
+      "module": "Workflows",
+      "feature": "Notifications",
+      "status": "reserved"
+    },
+    {
+      "id": "integrations.api-clients",
+      "module": "Integrations",
+      "feature": "ApiClients",
+      "status": "reserved"
+    },
+    {
+      "id": "integrations.external-events",
+      "module": "Integrations",
+      "feature": "ExternalEvents",
+      "status": "reserved"
+    },
+    {
+      "id": "integrations.idempotency",
+      "module": "Integrations",
+      "feature": "Idempotency",
+      "status": "reserved"
+    },
+    {
+      "id": "integrations.inbox",
+      "module": "Integrations",
+      "feature": "Inbox",
+      "status": "reserved"
+    },
+    {
+      "id": "integrations.outbox",
+      "module": "Integrations",
+      "feature": "Outbox",
+      "status": "reserved"
+    },
+    {
+      "id": "integrations.webhooks",
+      "module": "Integrations",
+      "feature": "Webhooks",
+      "status": "reserved"
+    },
+    {
+      "id": "integrations.app-registry",
+      "module": "Integrations",
+      "feature": "AppRegistry",
+      "status": "reserved"
+    },
+    {
+      "id": "integrations.installations",
+      "module": "Integrations",
+      "feature": "Installations",
+      "status": "reserved"
+    },
+    {
+      "id": "integrations.organization-mappings",
+      "module": "Integrations",
+      "feature": "OrganizationMappings",
+      "status": "reserved"
+    },
+    {
+      "id": "integrations.activation",
+      "module": "Integrations",
+      "feature": "Activation",
+      "status": "reserved"
+    },
+    {
+      "id": "integrations.connection-configuration",
+      "module": "Integrations",
+      "feature": "ConnectionConfiguration",
+      "status": "reserved"
+    },
+    {
+      "id": "integrations.credential-lifecycle",
+      "module": "Integrations",
+      "feature": "CredentialLifecycle",
+      "status": "reserved"
+    },
+    {
+      "id": "integrations.connector-management",
+      "module": "Integrations",
+      "feature": "ConnectorManagement",
+      "status": "reserved"
+    },
+    {
+      "id": "audit.audit-trail",
+      "module": "Audit",
+      "feature": "AuditTrail",
+      "status": "reserved"
+    },
+    {
+      "id": "audit.access-history",
+      "module": "Audit",
+      "feature": "AccessHistory",
+      "status": "reserved"
+    },
+    {
+      "id": "audit.export",
+      "module": "Audit",
+      "feature": "Export",
+      "status": "reserved"
+    },
+    {
+      "id": "capabilities.registry",
+      "module": "Capabilities",
+      "feature": "Registry",
+      "status": "reserved"
+    },
+    {
+      "id": "capabilities.dependencies",
+      "module": "Capabilities",
+      "feature": "Dependencies",
+      "status": "reserved"
+    },
+    {
+      "id": "capabilities.module-activation",
+      "module": "Capabilities",
+      "feature": "ModuleActivation",
+      "status": "reserved"
+    },
+    {
+      "id": "capabilities.capability-activation",
+      "module": "Capabilities",
+      "feature": "CapabilityActivation",
+      "status": "reserved"
+    },
+    {
+      "id": "capabilities.configuration",
+      "module": "Capabilities",
+      "feature": "Configuration",
+      "status": "reserved"
+    },
+    {
+      "id": "capabilities.availability",
+      "module": "Capabilities",
+      "feature": "Availability",
+      "status": "reserved"
+    },
+    {
+      "id": "experience.profiles",
+      "module": "Experience",
+      "feature": "Profiles",
+      "status": "reserved"
+    },
+    {
+      "id": "experience.layout-templates",
+      "module": "Experience",
+      "feature": "LayoutTemplates",
+      "status": "reserved"
+    },
+    {
+      "id": "experience.user-layouts",
+      "module": "Experience",
+      "feature": "UserLayouts",
+      "status": "reserved"
+    },
+    {
+      "id": "experience.widget-catalog",
+      "module": "Experience",
+      "feature": "WidgetCatalog",
+      "status": "reserved"
+    },
+    {
+      "id": "experience.navigation",
+      "module": "Experience",
+      "feature": "Navigation",
+      "status": "reserved"
+    },
+    {
+      "id": "experience.preferences",
+      "module": "Experience",
+      "feature": "Preferences",
+      "status": "reserved"
+    },
+    {
+      "id": "experience.configuration-versions",
+      "module": "Experience",
+      "feature": "ConfigurationVersions",
+      "status": "reserved"
+    }
+  ],
+  "profiles": [
+    {
+      "id": "simple",
+      "customizable": true,
+      "defaultWidgetIds": []
+    },
+    {
+      "id": "accountant",
+      "customizable": true,
+      "defaultWidgetIds": []
+    },
+    {
+      "id": "expert",
+      "customizable": true,
+      "defaultWidgetIds": []
+    }
+  ],
+  "widgets": [],
+  "ownership": {
+    "activation": "Capabilities",
+    "appInstallations": "Integrations",
+    "preferences": "Experience",
+    "authorization": "Identity"
+  },
+  "requiredDirectories": {
+    "server": [
+      "src/Modules/Integrations/Fintrox.Modules.Integrations.Application/AppRegistry",
+      "src/Modules/Integrations/Fintrox.Modules.Integrations.Application/Installations",
+      "src/Modules/Integrations/Fintrox.Modules.Integrations.Application/OrganizationMappings",
+      "src/Modules/Integrations/Fintrox.Modules.Integrations.Application/Activation",
+      "src/Modules/Integrations/Fintrox.Modules.Integrations.Application/ConnectionConfiguration",
+      "src/Modules/Integrations/Fintrox.Modules.Integrations.Application/CredentialLifecycle",
+      "src/Modules/Integrations/Fintrox.Modules.Integrations.Application/ConnectorManagement",
+      "sdk/dotnet",
+      "sdk/typescript"
+    ],
+    "client": [
+      "apps/web/src/experience/profiles/simple",
+      "apps/web/src/experience/profiles/accountant",
+      "apps/web/src/experience/profiles/expert",
+      "apps/web/src/experience/layouts/templates",
+      "apps/web/src/experience/layouts/personalization",
+      "apps/web/src/experience/layouts/versioning",
+      "apps/web/src/experience/widgets/registry",
+      "apps/web/src/experience/widgets/renderer",
+      "apps/web/src/experience/navigation",
+      "apps/web/src/experience/preferences",
+      "apps/web/src/composition/experience",
+      "apps/web/src/modules/integrations/components/app-registry",
+      "apps/web/src/modules/integrations/components/installations",
+      "apps/web/src/modules/integrations/api/connectors"
+    ]
+  },
+  "scopeKeys": {
+    "installation": [
+      "organizationId",
+      "externalAppId",
+      "installationId"
+    ],
+    "layout": [
+      "organizationId",
+      "userId",
+      "profileId",
+      "layoutId",
+      "version"
+    ]
+  }
+}

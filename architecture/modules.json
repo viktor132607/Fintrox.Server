@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "modules": [
     {
       "name": "Identity",
@@ -238,7 +238,14 @@
         "Idempotency",
         "Inbox",
         "Outbox",
-        "Webhooks"
+        "Webhooks",
+        "AppRegistry",
+        "Installations",
+        "OrganizationMappings",
+        "Activation",
+        "ConnectionConfiguration",
+        "CredentialLifecycle",
+        "ConnectorManagement"
       ],
       "legacy": "Integrations; integration schema"
     },
@@ -252,6 +259,35 @@
         "Export"
       ],
       "legacy": "Audit; transaction-local auditing requires migration"
+    },
+    {
+      "name": "Capabilities",
+      "slug": "capabilities",
+      "schema": "capabilities",
+      "features": [
+        "Registry",
+        "Dependencies",
+        "ModuleActivation",
+        "CapabilityActivation",
+        "Configuration",
+        "Availability"
+      ],
+      "legacy": "New platform boundary; structure only"
+    },
+    {
+      "name": "Experience",
+      "slug": "experience",
+      "schema": "experience",
+      "features": [
+        "Profiles",
+        "LayoutTemplates",
+        "UserLayouts",
+        "WidgetCatalog",
+        "Navigation",
+        "Preferences",
+        "ConfigurationVersions"
+      ],
+      "legacy": "New presentation-preferences boundary; structure only"
     }
   ]
 }

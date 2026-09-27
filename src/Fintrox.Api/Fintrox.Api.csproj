@@ -57,4 +57,10 @@
     <ProjectReference Include="../Modules/Audit/Fintrox.Modules.Audit.Infrastructure/Fintrox.Modules.Audit.Infrastructure.csproj" />
     <ProjectReference Include="../Modules/Audit/Fintrox.Modules.Audit.Presentation/Fintrox.Modules.Audit.Presentation.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Modules/Capabilities/Fintrox.Modules.Capabilities.Infrastructure/Fintrox.Modules.Capabilities.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/Capabilities/Fintrox.Modules.Capabilities.Presentation/Fintrox.Modules.Capabilities.Presentation.csproj" />
+    <ProjectReference Include="../Modules/Experience/Fintrox.Modules.Experience.Infrastructure/Fintrox.Modules.Experience.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/Experience/Fintrox.Modules.Experience.Presentation/Fintrox.Modules.Experience.Presentation.csproj" />
+  </ItemGroup>
 </Project>

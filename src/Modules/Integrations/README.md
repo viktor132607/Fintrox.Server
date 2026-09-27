@@ -2,7 +2,7 @@
 
 Status: structural skeleton only; no registered services, endpoints, tables or business rules.
 
-Owns: ApiClients, ExternalEvents, Idempotency, Inbox, Outbox, Webhooks.
+Owns: ApiClients, ExternalEvents, Idempotency, Inbox, Outbox, Webhooks, AppRegistry, Installations, OrganizationMappings, Activation, ConnectionConfiguration, CredentialLifecycle, ConnectorManagement.
 Reserved PostgreSQL schema: `integrations` (not created).
 Existing implementation/reference: Integrations; integration schema.
 

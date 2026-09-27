@@ -133,3 +133,7 @@ dotnet test Fintrox.Server.sln --configuration Release --no-build
 Existing CI still validates EF migrations and the Docker image. Reserved module test
 folders will contain unit, PostgreSQL integration and public-contract tests when behavior
 is introduced. No meaningless empty business tests are generated for the skeleton.
+
+## Platform extension
+
+The catalog now contains 23 modules: the original 21 plus Capabilities and Experience. See [activation and experience](activation-experience.md). The shared architecture/experience-integration.json manifest is design metadata only. Its reserved entries do not enable a feature, grant permission or represent a working widget.

@@ -83,6 +83,21 @@ def validate(root=ROOT):
         errors.append('Unexpected or missing module project')
     if len(solution_projects) != len(solution_paths):
         errors.append('Duplicate solution project entries')
+    manifest = json.loads((root / 'architecture/experience-integration.json').read_text())
+    capabilities = manifest['capabilities']
+    if len({c['id'] for c in capabilities}) != len(capabilities):
+        errors.append('Duplicate capability ID')
+    expected_features = {(m['name'], f) for m in catalog for f in m['features']}
+    if {(c['module'], c['feature']) for c in capabilities} != expected_features or len(capabilities) != len(expected_features):
+        errors.append('Capability catalog does not cover every feature exactly once')
+    profiles = [p['id'] for p in manifest['profiles']]
+    if sorted(profiles) != ['accountant', 'expert', 'simple']:
+        errors.append('Expected exactly three base experience profiles')
+    if manifest['ownership'] != {'activation': 'Capabilities', 'appInstallations': 'Integrations', 'preferences': 'Experience', 'authorization': 'Identity'}:
+        errors.append('Platform ownership changed without architecture review')
+    for directory in manifest['requiredDirectories']['server']:
+        if not (root / directory).is_dir():
+            errors.append(f'Missing platform directory: {directory}')
     return errors
 
 
@@ -91,4 +106,5 @@ if __name__ == '__main__':
     if violations:
         print('\n'.join(violations), file=sys.stderr)
         sys.exit(1)
-    print('Architecture passed: 21 module boundaries, 105 projects; solution and host wired.')
+    count = len(json.loads((ROOT / 'architecture/modules.json').read_text())['modules'])
+    print(f'Architecture passed: {count} module boundaries, {count * len(LAYERS)} projects; activation/experience structure checked.')

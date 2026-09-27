@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <DisableTransitiveProjectReferences>true</DisableTransitiveProjectReferences>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Fintrox.Modules.Capabilities.Application/Fintrox.Modules.Capabilities.Application.csproj" />
+    <ProjectReference Include="../Fintrox.Modules.Capabilities.Contracts/Fintrox.Modules.Capabilities.Contracts.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+</Project>

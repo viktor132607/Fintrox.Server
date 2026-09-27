@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <DisableTransitiveProjectReferences>true</DisableTransitiveProjectReferences>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Fintrox.Modules.Capabilities.Domain/Fintrox.Modules.Capabilities.Domain.csproj" />
+    <ProjectReference Include="../Fintrox.Modules.Capabilities.Contracts/Fintrox.Modules.Capabilities.Contracts.csproj" />
+  </ItemGroup>
+</Project>

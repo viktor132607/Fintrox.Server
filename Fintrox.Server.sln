@@ -224,12 +224,72 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fintrox.Modules.Audit.Infra
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fintrox.Modules.Audit.Presentation", "src\Modules\Audit\Fintrox.Modules.Audit.Presentation\Fintrox.Modules.Audit.Presentation.csproj", "{E2CE2254-07CA-5089-9525-2ECCFF895619}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fintrox.Modules.Capabilities.Domain", "src\Modules\Capabilities\Fintrox.Modules.Capabilities.Domain\Fintrox.Modules.Capabilities.Domain.csproj", "{E666B12A-5231-535F-971F-26E9F94E6020}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fintrox.Modules.Capabilities.Contracts", "src\Modules\Capabilities\Fintrox.Modules.Capabilities.Contracts\Fintrox.Modules.Capabilities.Contracts.csproj", "{F0387492-FB46-5183-AD81-0834331FF4DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fintrox.Modules.Capabilities.Application", "src\Modules\Capabilities\Fintrox.Modules.Capabilities.Application\Fintrox.Modules.Capabilities.Application.csproj", "{7D50CC52-3E72-59AA-A6EB-F392CF5568EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fintrox.Modules.Capabilities.Infrastructure", "src\Modules\Capabilities\Fintrox.Modules.Capabilities.Infrastructure\Fintrox.Modules.Capabilities.Infrastructure.csproj", "{7E0E5E6E-72C4-5D06-B47C-014115B1994D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fintrox.Modules.Capabilities.Presentation", "src\Modules\Capabilities\Fintrox.Modules.Capabilities.Presentation\Fintrox.Modules.Capabilities.Presentation.csproj", "{C831ADB5-F3AA-5143-A598-7FA06225F402}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fintrox.Modules.Experience.Domain", "src\Modules\Experience\Fintrox.Modules.Experience.Domain\Fintrox.Modules.Experience.Domain.csproj", "{8C9A9485-9644-5D9C-91D7-BF9F73D841BC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fintrox.Modules.Experience.Contracts", "src\Modules\Experience\Fintrox.Modules.Experience.Contracts\Fintrox.Modules.Experience.Contracts.csproj", "{6E385159-AC40-5E01-A094-13FF989DCBEA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fintrox.Modules.Experience.Application", "src\Modules\Experience\Fintrox.Modules.Experience.Application\Fintrox.Modules.Experience.Application.csproj", "{1A6C241A-C713-5AA7-9E6A-6250A7532011}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fintrox.Modules.Experience.Infrastructure", "src\Modules\Experience\Fintrox.Modules.Experience.Infrastructure\Fintrox.Modules.Experience.Infrastructure.csproj", "{3FA6A3E6-D11F-5C66-872B-7BEEAC223358}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fintrox.Modules.Experience.Presentation", "src\Modules\Experience\Fintrox.Modules.Experience.Presentation\Fintrox.Modules.Experience.Presentation.csproj", "{904A48DE-E6FB-57E5-9BCF-64BB2E45C5F2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E666B12A-5231-535F-971F-26E9F94E6020}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E666B12A-5231-535F-971F-26E9F94E6020}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E666B12A-5231-535F-971F-26E9F94E6020}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E666B12A-5231-535F-971F-26E9F94E6020}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0387492-FB46-5183-AD81-0834331FF4DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0387492-FB46-5183-AD81-0834331FF4DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0387492-FB46-5183-AD81-0834331FF4DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0387492-FB46-5183-AD81-0834331FF4DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D50CC52-3E72-59AA-A6EB-F392CF5568EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D50CC52-3E72-59AA-A6EB-F392CF5568EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D50CC52-3E72-59AA-A6EB-F392CF5568EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D50CC52-3E72-59AA-A6EB-F392CF5568EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E0E5E6E-72C4-5D06-B47C-014115B1994D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E0E5E6E-72C4-5D06-B47C-014115B1994D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E0E5E6E-72C4-5D06-B47C-014115B1994D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E0E5E6E-72C4-5D06-B47C-014115B1994D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C831ADB5-F3AA-5143-A598-7FA06225F402}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C831ADB5-F3AA-5143-A598-7FA06225F402}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C831ADB5-F3AA-5143-A598-7FA06225F402}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C831ADB5-F3AA-5143-A598-7FA06225F402}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C9A9485-9644-5D9C-91D7-BF9F73D841BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C9A9485-9644-5D9C-91D7-BF9F73D841BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C9A9485-9644-5D9C-91D7-BF9F73D841BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C9A9485-9644-5D9C-91D7-BF9F73D841BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E385159-AC40-5E01-A094-13FF989DCBEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E385159-AC40-5E01-A094-13FF989DCBEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E385159-AC40-5E01-A094-13FF989DCBEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E385159-AC40-5E01-A094-13FF989DCBEA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A6C241A-C713-5AA7-9E6A-6250A7532011}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A6C241A-C713-5AA7-9E6A-6250A7532011}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A6C241A-C713-5AA7-9E6A-6250A7532011}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A6C241A-C713-5AA7-9E6A-6250A7532011}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FA6A3E6-D11F-5C66-872B-7BEEAC223358}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FA6A3E6-D11F-5C66-872B-7BEEAC223358}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FA6A3E6-D11F-5C66-872B-7BEEAC223358}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FA6A3E6-D11F-5C66-872B-7BEEAC223358}.Release|Any CPU.Build.0 = Release|Any CPU
+		{904A48DE-E6FB-57E5-9BCF-64BB2E45C5F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{904A48DE-E6FB-57E5-9BCF-64BB2E45C5F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{904A48DE-E6FB-57E5-9BCF-64BB2E45C5F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{904A48DE-E6FB-57E5-9BCF-64BB2E45C5F2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CFE41282-0EC0-5CEF-9A4B-2FAF15C2585C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CFE41282-0EC0-5CEF-9A4B-2FAF15C2585C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CFE41282-0EC0-5CEF-9A4B-2FAF15C2585C}.Release|Any CPU.ActiveCfg = Release|Any CPU
