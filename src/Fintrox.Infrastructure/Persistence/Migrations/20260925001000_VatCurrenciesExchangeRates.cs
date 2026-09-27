@@ -8,6 +8,33 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
     /// <inheritdoc />
     public partial class VatCurrenciesExchangeRates : Migration
     {
+        private static readonly string[] IdOrganizationColumns =
+            ["id", "organization_id"];
+
+        private static readonly string[] OrganizationActiveColumns =
+            ["organization_id", "is_active"];
+
+        private static readonly string[] OrganizationCodeColumns =
+            ["organization_id", "code"];
+
+        private static readonly string[] BaseCurrencyOrganizationColumns =
+            ["base_currency_id", "organization_id"];
+
+        private static readonly string[] OrganizationDateColumns =
+            ["organization_id", "effective_date"];
+
+        private static readonly string[] QuoteCurrencyOrganizationColumns =
+            ["quote_currency_id", "organization_id"];
+
+        private static readonly string[] ExchangeRatePairDateColumns =
+            ["organization_id", "base_currency_id", "quote_currency_id", "effective_date"];
+
+        private static readonly string[] VatValidityColumns =
+            ["organization_id", "is_active", "valid_from", "valid_to"];
+
+        private static readonly string[] VatCodeValidFromColumns =
+            ["organization_id", "code", "valid_from"];
+
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -112,14 +139,14 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                         columns: x => new { x.base_currency_id, x.organization_id },
                         principalSchema: "core",
                         principalTable: "currencies",
-                        principalColumns: new[] { "id", "organization_id" },
+                        principalColumns: IdOrganizationColumns,
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_exchange_rates_currencies_quote_currency_id_organization_id",
                         columns: x => new { x.quote_currency_id, x.organization_id },
                         principalSchema: "core",
                         principalTable: "currencies",
-                        principalColumns: new[] { "id", "organization_id" },
+                        principalColumns: IdOrganizationColumns,
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_exchange_rates_organizations_organization_id",
@@ -134,7 +161,7 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                 name: "ix_currencies_organization_active",
                 schema: "core",
                 table: "currencies",
-                columns: new[] { "organization_id", "is_active" });
+                columns: OrganizationActiveColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ux_currencies_organization_base",
@@ -148,45 +175,45 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                 name: "ux_currencies_organization_code",
                 schema: "core",
                 table: "currencies",
-                columns: new[] { "organization_id", "code" },
+                columns: OrganizationCodeColumns,
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_exchange_rates_base_currency_id_organization_id",
                 schema: "accounting",
                 table: "exchange_rates",
-                columns: new[] { "base_currency_id", "organization_id" });
+                columns: BaseCurrencyOrganizationColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ix_exchange_rates_organization_date",
                 schema: "accounting",
                 table: "exchange_rates",
-                columns: new[] { "organization_id", "effective_date" });
+                columns: OrganizationDateColumns);
 
             migrationBuilder.CreateIndex(
                 name: "IX_exchange_rates_quote_currency_id_organization_id",
                 schema: "accounting",
                 table: "exchange_rates",
-                columns: new[] { "quote_currency_id", "organization_id" });
+                columns: QuoteCurrencyOrganizationColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ux_exchange_rates_pair_date",
                 schema: "accounting",
                 table: "exchange_rates",
-                columns: new[] { "organization_id", "base_currency_id", "quote_currency_id", "effective_date" },
+                columns: ExchangeRatePairDateColumns,
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_vat_codes_organization_validity",
                 schema: "tax",
                 table: "vat_codes",
-                columns: new[] { "organization_id", "is_active", "valid_from", "valid_to" });
+                columns: VatValidityColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ux_vat_codes_organization_code_valid_from",
                 schema: "tax",
                 table: "vat_codes",
-                columns: new[] { "organization_id", "code", "valid_from" },
+                columns: VatCodeValidFromColumns,
                 unique: true);
         }
 
