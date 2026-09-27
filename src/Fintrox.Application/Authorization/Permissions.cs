@@ -10,6 +10,9 @@ public static class Permissions
     public const string AccountingWrite = "accounting.write";
     public const string AccountingPost = "accounting.post";
 
+    public const string CounterpartiesRead = "counterparties.read";
+    public const string CounterpartiesWrite = "counterparties.write";
+
     public const string SalesRead = "sales.read";
     public const string SalesWrite = "sales.write";
 
@@ -30,6 +33,8 @@ public static class Permissions
         AccountingRead,
         AccountingWrite,
         AccountingPost,
+        CounterpartiesRead,
+        CounterpartiesWrite,
         SalesRead,
         SalesWrite,
         PurchasesRead,

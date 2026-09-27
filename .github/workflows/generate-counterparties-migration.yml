@@ -1,0 +1,74 @@
+name: Generate Counterparties Migration
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    name: Generate EF Counterparties Migration
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    env:
+      ConnectionStrings__DefaultConnection: Host=localhost;Port=5432;Database=fintrox;Username=fintrox;Password=fintrox_ci
+      Jwt__Issuer: Fintrox
+      Jwt__Audience: Fintrox.Client
+      Jwt__SigningKey: fintrox-ci-signing-key-only-not-for-production-2026
+      Jwt__AccessTokenMinutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+
+      - name: Restore tools
+        run: dotnet tool restore
+
+      - name: Restore
+        run: dotnet restore Fintrox.Server.sln
+
+      - name: Build
+        run: dotnet build Fintrox.Server.sln --configuration Release --no-restore --warnaserror
+
+      - name: Generate migration
+        run: >
+          dotnet ef migrations add Counterparties
+          --project src/Fintrox.Infrastructure/Fintrox.Infrastructure.csproj
+          --startup-project src/Fintrox.Api/Fintrox.Api.csproj
+          --configuration Release
+          --no-build
+          --output-dir Persistence/Migrations
+
+      - name: Normalize migration ordering
+        shell: bash
+        run: |
+          migration_dir="src/Fintrox.Infrastructure/Persistence/Migrations"
+          generated="$(find "$migration_dir" -maxdepth 1 -type f -name '*_Counterparties.cs' ! -name '*.Designer.cs' | head -n 1)"
+          generated_designer="${generated%.cs}.Designer.cs"
+
+          mv "$generated" "$migration_dir/20260925000900_Counterparties.cs"
+          mv "$generated_designer" "$migration_dir/20260925000900_Counterparties.Designer.cs"
+
+          sed -i -E 's/[0-9]{14}_Counterparties/20260925000900_Counterparties/g'             "$migration_dir/20260925000900_Counterparties.Designer.cs"
+
+      - name: Remove one-time generator
+        run: rm .github/workflows/generate-counterparties-migration.yml
+
+      - name: Commit generated migration
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/Fintrox.Infrastructure/Persistence/Migrations .github/workflows/generate-counterparties-migration.yml
+          git commit -m "chore: generate counterparties migration"
+          git push origin HEAD:main

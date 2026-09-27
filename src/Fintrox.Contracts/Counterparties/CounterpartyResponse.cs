@@ -1,0 +1,28 @@
+namespace Fintrox.Contracts.Counterparties;
+
+public sealed record CounterpartyResponse(
+    Guid Id,
+    Guid OrganizationId,
+    string Code,
+    string Name,
+    string? LegalName,
+    string CountryCode,
+    string? RegistrationNumber,
+    string? VatNumber,
+    bool IsCustomer,
+    bool IsSupplier,
+    int PaymentTermDays,
+    string? ContactPerson,
+    string? Email,
+    string? Phone,
+    string? AddressLine1,
+    string? AddressLine2,
+    string? City,
+    string? PostalCode,
+    string? Website,
+    string? Notes,
+    bool IsActive,
+    DateTimeOffset CreatedAtUtc,
+    Guid? CreatedByUserId,
+    DateTimeOffset UpdatedAtUtc,
+    Guid? UpdatedByUserId);
