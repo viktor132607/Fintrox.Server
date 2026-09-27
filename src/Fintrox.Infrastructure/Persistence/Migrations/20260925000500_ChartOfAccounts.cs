@@ -8,6 +8,15 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
     /// <inheritdoc />
     public partial class ChartOfAccounts : Migration
     {
+        private static readonly string[] OrganizationParentIndexColumns =
+            ["organization_id", "parent_account_id"];
+
+        private static readonly string[] OrganizationTypeActiveIndexColumns =
+            ["organization_id", "type", "is_active"];
+
+        private static readonly string[] OrganizationCodeIndexColumns =
+            ["organization_id", "code"];
+
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -56,13 +65,13 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                 name: "ix_accounts_organization_parent",
                 schema: "accounting",
                 table: "accounts",
-                columns: new[] { "organization_id", "parent_account_id" });
+                columns: OrganizationParentIndexColumns);
 
             migrationBuilder.CreateIndex(
                 name: "ix_accounts_organization_type_active",
                 schema: "accounting",
                 table: "accounts",
-                columns: new[] { "organization_id", "type", "is_active" });
+                columns: OrganizationTypeActiveIndexColumns);
 
             migrationBuilder.CreateIndex(
                 name: "IX_accounts_parent_account_id",
@@ -74,7 +83,7 @@ namespace Fintrox.Infrastructure.Persistence.Migrations
                 name: "ux_accounts_organization_code",
                 schema: "accounting",
                 table: "accounts",
-                columns: new[] { "organization_id", "code" },
+                columns: OrganizationCodeIndexColumns,
                 unique: true);
         }
 

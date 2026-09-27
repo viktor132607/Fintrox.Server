@@ -336,14 +336,12 @@ public sealed class AccountService(
                 "The account hierarchy contains a cycle.");
         }
 
-        var nextAncestors = new HashSet<Guid>(ancestors);
-
         var children = childrenByParent.TryGetValue(account.Id, out var directChildren)
             ? directChildren
                 .Select(child => BuildTreeNode(
                     child,
                     childrenByParent,
-                    nextAncestors))
+                    new HashSet<Guid>(ancestors)))
                 .ToArray()
             : [];
 
