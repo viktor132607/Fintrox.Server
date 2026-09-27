@@ -12,6 +12,13 @@ public sealed class AccountConfiguration : IEntityTypeConfiguration<Account>
 
         builder.HasKey(account => account.Id);
 
+        builder.HasAlternateKey(account => new
+            {
+                account.Id,
+                account.OrganizationId
+            })
+            .HasName("ak_accounts_id_organization");
+
         builder.Property(account => account.Id)
             .HasColumnName("id")
             .ValueGeneratedNever();

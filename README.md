@@ -101,4 +101,10 @@ Organization-scoped fiscal years and accounting periods are implemented with exp
 
 See [docs/fiscal-calendar.md](docs/fiscal-calendar.md).
 
-Next core phase: double-entry Journal.
+## Double-entry Journal
+
+The journal now uses separate debit/credit amounts per account line, organization-safe account/period references and a full draft editing API.
+
+See [docs/double-entry-journal.md](docs/double-entry-journal.md).
+
+Next core phase: posting engine, validation and reversal.

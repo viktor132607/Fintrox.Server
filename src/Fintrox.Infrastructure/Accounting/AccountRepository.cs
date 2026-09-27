@@ -46,6 +46,26 @@ public sealed class AccountRepository(FintroxDbContext dbContext) : IAccountRepo
             cancellationToken);
     }
 
+    public async Task<IReadOnlyDictionary<Guid, Account>> ListByIdsAsync(
+        Guid organizationId,
+        IReadOnlyCollection<Guid> accountIds,
+        CancellationToken cancellationToken)
+    {
+        if (accountIds.Count == 0)
+        {
+            return new Dictionary<Guid, Account>();
+        }
+
+        var accounts = await dbContext.Accounts
+            .AsNoTracking()
+            .Where(account =>
+                account.OrganizationId == organizationId &&
+                accountIds.Contains(account.Id))
+            .ToArrayAsync(cancellationToken);
+
+        return accounts.ToDictionary(account => account.Id);
+    }
+
     public Task<bool> CodeExistsAsync(
         Guid organizationId,
         string code,

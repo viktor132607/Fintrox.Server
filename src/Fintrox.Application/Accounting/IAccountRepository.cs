@@ -15,6 +15,11 @@ public interface IAccountRepository
         bool trackChanges,
         CancellationToken cancellationToken);
 
+    Task<IReadOnlyDictionary<Guid, Account>> ListByIdsAsync(
+        Guid organizationId,
+        IReadOnlyCollection<Guid> accountIds,
+        CancellationToken cancellationToken);
+
     Task<bool> CodeExistsAsync(
         Guid organizationId,
         string code,
