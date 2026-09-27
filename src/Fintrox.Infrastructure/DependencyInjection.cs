@@ -92,6 +92,12 @@ public static class DependencyInjection
         services.AddScoped<
             IIntegrationClientRepository,
             IntegrationClientRepository>();
+        services.AddScoped<
+            IIntegrationRequestRepository,
+            IntegrationRequestRepository>();
+        services.AddScoped<
+            IIntegrationIdempotencyExecutor,
+            EfIntegrationIdempotencyExecutor>();
         services.AddScoped<IOrganizationRepository, OrganizationRepository>();
         services.AddScoped<
             IOrganizationMembershipRepository,

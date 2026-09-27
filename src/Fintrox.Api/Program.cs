@@ -3,6 +3,7 @@ using Fintrox.Api.Audit;
 using Fintrox.Api.Authentication;
 using Fintrox.Api.Authorization;
 using Fintrox.Api.Health;
+using Fintrox.Api.Integrations;
 using Fintrox.Api.Organizations;
 using Fintrox.Application;
 using Fintrox.Application.Authorization;
@@ -127,6 +128,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware<IntegrationIdempotencyMiddleware>();
 
 app.MapControllers();
 
