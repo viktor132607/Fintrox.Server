@@ -125,9 +125,9 @@ These are rules for implementation, not claims that all controls are present tod
 
 ```bash
 python3 scripts/check_architecture.py
-dotnet restore Fintrox.Server.sln
-dotnet build Fintrox.Server.sln --configuration Release --no-restore
-dotnet test Fintrox.Server.sln --configuration Release --no-build
+dotnet restore Fintrox.Server.slnx
+dotnet build Fintrox.Server.slnx --configuration Release --no-restore
+dotnet test Fintrox.Server.slnx --configuration Release --no-build
 ```
 
 Existing CI still validates EF migrations and the Docker image. Reserved module test
@@ -136,4 +136,26 @@ is introduced. No meaningless empty business tests are generated for the skeleto
 
 ## Platform extension
 
-The catalog now contains 23 modules: the original 21 plus Capabilities and Experience. See [activation and experience](activation-experience.md). The shared architecture/experience-integration.json manifest is design metadata only. Its reserved entries do not enable a feature, grant permission or represent a working widget.
+The catalog now contains 36 modules: the original 23 plus the 13 ERP extensions below. See [activation and experience](activation-experience.md). The shared architecture/experience-integration.json manifest is design metadata only. Its reserved entries do not enable a feature, grant permission or represent a working widget.
+
+## ERP architecture expansion
+
+186 solution projects: 180 module, 5 core and 1 test. New modules remain scaffold-only.
+
+| Module | Reserved schema | Planned features |
+|---|---|---|
+| CRM | `crm` | Leads, Opportunities, Activities, Customer360, SalesPipeline |
+| Manufacturing | `manufacturing` | BillOfMaterials, WorkOrders, Routings, ProductionPlanning, ProductionCosting |
+| SupplyChain | `supply_chain` | DemandPlanning, SupplyPlanning, ProcurementPlanning, Replenishment, SupplierCollaboration |
+| WarehouseManagement | `warehouse_management` | Receiving, Putaway, Picking, Packing, Shipping, CycleCounting |
+| OrderManagement | `order_management` | OrderOrchestration, Fulfillment, Backorders, Returns, OrderRouting |
+| RevenueManagement | `revenue_management` | RecognitionRules, RevenueSchedules, DeferredRevenue, RevenueContracts, Adjustments |
+| SubscriptionBilling | `subscription_billing` | Plans, Subscriptions, BillingCycles, UsageBilling, Renewals, Proration |
+| HumanResources | `human_resources` | Recruitment, Onboarding, EmployeeRecords, LeaveManagement, PerformanceManagement |
+| QualityManagement | `quality_management` | Inspections, QualityControl, Nonconformities, CorrectiveActions, Traceability |
+| ServiceManagement | `service_management` | SupportTickets, ServiceLevels, FieldService, Maintenance, CustomerSupport |
+| Commerce | `commerce` | Catalog, Pricing, Promotions, CommerceOrders, StorefrontIntegrations, PointOfSale |
+| ResourceManagement | `resource_management` | ResourceScheduling, CapacityPlanning, Utilization, ResourceAllocation, Timesheets |
+| ContractManagement | `contract_management` | CustomerContracts, SupplierContracts, ContractTerms, Renewals, Obligations |
+
+The server capability manifest now reserves all new features. The Client still has its original 23 module shells; matching frontend expansion is pending. Its manifest is an older design snapshot, not a runtime activation source. See docs/ai/MASTER_ROADMAP.md.

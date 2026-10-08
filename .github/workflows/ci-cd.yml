@@ -60,10 +60,10 @@ jobs:
         run: dotnet tool restore
 
       - name: Restore
-        run: dotnet restore Fintrox.Server.sln
+        run: dotnet restore Fintrox.Server.slnx
 
       - name: Build
-        run: dotnet build Fintrox.Server.sln --configuration Release --no-restore --warnaserror
+        run: dotnet build Fintrox.Server.slnx --configuration Release --no-restore --warnaserror
 
       - name: Test
         shell: bash

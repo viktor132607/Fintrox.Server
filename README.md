@@ -2,7 +2,7 @@
 
 ## Structural foundation (current task)
 
-The new module-first skeleton is in `src/Modules`: 23 business boundaries with independent Domain, Application, Contracts, Infrastructure and Presentation projects. See [architecture](docs/architecture.md) and [module catalog](architecture/modules.json).
+The new module-first skeleton is in `src/Modules`: 36 business boundaries (180 module projects; 186 solution projects total) with independent Domain, Application, Contracts, Infrastructure and Presentation projects. See [architecture](docs/architecture.md) and [module catalog](architecture/modules.json).
 
 This is a structure-only stage. The implemented features listed below remain in their existing horizontal projects; they have not been migrated to the new module assemblies. PostgreSQL migration history and behavior are unchanged. Feature implementation is paused pending module-by-module work.
 
@@ -81,7 +81,7 @@ See [docs/persistence.md](docs/persistence.md).
 ## Run locally
 
 ```bash
-dotnet restore Fintrox.Server.sln
+dotnet restore Fintrox.Server.slnx
 dotnet run --project src/Fintrox.Api/Fintrox.Api.csproj
 ```
 
@@ -189,3 +189,7 @@ Remaining roadmap: External business event API (22/41), deferred while the modul
 ## Activatable integrations and experience structure
 
 See [ownership and lifecycle](docs/activation-experience.md). Capabilities and Experience are new structural boundaries; Integrations owns external app installations. Simple / Accountant / Expert are customizable UI presets, independent of permissions. No activation or layout behavior is implemented.
+
+## Session continuity
+
+Start with [session handoff](docs/ai/SESSION_HANDOFF.md). The full supplied specification is preserved in [master prompt](docs/ai/MASTER_PROMPT.md).

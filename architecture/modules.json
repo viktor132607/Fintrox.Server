@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "modules": [
     {
       "name": "Identity",
@@ -288,6 +288,178 @@
         "ConfigurationVersions"
       ],
       "legacy": "New presentation-preferences boundary; structure only"
+    },
+    {
+      "name": "CRM",
+      "slug": "crm",
+      "schema": "crm",
+      "features": [
+        "Leads",
+        "Opportunities",
+        "Activities",
+        "Customer360",
+        "SalesPipeline"
+      ],
+      "legacy": "Not implemented; scaffold only"
+    },
+    {
+      "name": "Manufacturing",
+      "slug": "manufacturing",
+      "schema": "manufacturing",
+      "features": [
+        "BillOfMaterials",
+        "WorkOrders",
+        "Routings",
+        "ProductionPlanning",
+        "ProductionCosting"
+      ],
+      "legacy": "Not implemented; scaffold only"
+    },
+    {
+      "name": "SupplyChain",
+      "slug": "supply-chain",
+      "schema": "supply_chain",
+      "features": [
+        "DemandPlanning",
+        "SupplyPlanning",
+        "ProcurementPlanning",
+        "Replenishment",
+        "SupplierCollaboration"
+      ],
+      "legacy": "Not implemented; scaffold only"
+    },
+    {
+      "name": "WarehouseManagement",
+      "slug": "warehouse-management",
+      "schema": "warehouse_management",
+      "features": [
+        "Receiving",
+        "Putaway",
+        "Picking",
+        "Packing",
+        "Shipping",
+        "CycleCounting"
+      ],
+      "legacy": "Not implemented; scaffold only"
+    },
+    {
+      "name": "OrderManagement",
+      "slug": "order-management",
+      "schema": "order_management",
+      "features": [
+        "OrderOrchestration",
+        "Fulfillment",
+        "Backorders",
+        "Returns",
+        "OrderRouting"
+      ],
+      "legacy": "Not implemented; scaffold only"
+    },
+    {
+      "name": "RevenueManagement",
+      "slug": "revenue-management",
+      "schema": "revenue_management",
+      "features": [
+        "RecognitionRules",
+        "RevenueSchedules",
+        "DeferredRevenue",
+        "RevenueContracts",
+        "Adjustments"
+      ],
+      "legacy": "Not implemented; scaffold only"
+    },
+    {
+      "name": "SubscriptionBilling",
+      "slug": "subscription-billing",
+      "schema": "subscription_billing",
+      "features": [
+        "Plans",
+        "Subscriptions",
+        "BillingCycles",
+        "UsageBilling",
+        "Renewals",
+        "Proration"
+      ],
+      "legacy": "Not implemented; scaffold only"
+    },
+    {
+      "name": "HumanResources",
+      "slug": "human-resources",
+      "schema": "human_resources",
+      "features": [
+        "Recruitment",
+        "Onboarding",
+        "EmployeeRecords",
+        "LeaveManagement",
+        "PerformanceManagement"
+      ],
+      "legacy": "Not implemented; scaffold only"
+    },
+    {
+      "name": "QualityManagement",
+      "slug": "quality-management",
+      "schema": "quality_management",
+      "features": [
+        "Inspections",
+        "QualityControl",
+        "Nonconformities",
+        "CorrectiveActions",
+        "Traceability"
+      ],
+      "legacy": "Not implemented; scaffold only"
+    },
+    {
+      "name": "ServiceManagement",
+      "slug": "service-management",
+      "schema": "service_management",
+      "features": [
+        "SupportTickets",
+        "ServiceLevels",
+        "FieldService",
+        "Maintenance",
+        "CustomerSupport"
+      ],
+      "legacy": "Not implemented; scaffold only"
+    },
+    {
+      "name": "Commerce",
+      "slug": "commerce",
+      "schema": "commerce",
+      "features": [
+        "Catalog",
+        "Pricing",
+        "Promotions",
+        "CommerceOrders",
+        "StorefrontIntegrations",
+        "PointOfSale"
+      ],
+      "legacy": "Not implemented; scaffold only"
+    },
+    {
+      "name": "ResourceManagement",
+      "slug": "resource-management",
+      "schema": "resource_management",
+      "features": [
+        "ResourceScheduling",
+        "CapacityPlanning",
+        "Utilization",
+        "ResourceAllocation",
+        "Timesheets"
+      ],
+      "legacy": "Not implemented; scaffold only"
+    },
+    {
+      "name": "ContractManagement",
+      "slug": "contract-management",
+      "schema": "contract_management",
+      "features": [
+        "CustomerContracts",
+        "SupplierContracts",
+        "ContractTerms",
+        "Renewals",
+        "Obligations"
+      ],
+      "legacy": "Not implemented; scaffold only"
     }
   ]
 }

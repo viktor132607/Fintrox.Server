@@ -625,6 +625,414 @@
       "module": "Experience",
       "feature": "ConfigurationVersions",
       "status": "reserved"
+    },
+    {
+      "id": "crm.leads",
+      "module": "CRM",
+      "feature": "Leads",
+      "status": "reserved"
+    },
+    {
+      "id": "crm.opportunities",
+      "module": "CRM",
+      "feature": "Opportunities",
+      "status": "reserved"
+    },
+    {
+      "id": "crm.activities",
+      "module": "CRM",
+      "feature": "Activities",
+      "status": "reserved"
+    },
+    {
+      "id": "crm.customer360",
+      "module": "CRM",
+      "feature": "Customer360",
+      "status": "reserved"
+    },
+    {
+      "id": "crm.sales-pipeline",
+      "module": "CRM",
+      "feature": "SalesPipeline",
+      "status": "reserved"
+    },
+    {
+      "id": "manufacturing.bill-of-materials",
+      "module": "Manufacturing",
+      "feature": "BillOfMaterials",
+      "status": "reserved"
+    },
+    {
+      "id": "manufacturing.work-orders",
+      "module": "Manufacturing",
+      "feature": "WorkOrders",
+      "status": "reserved"
+    },
+    {
+      "id": "manufacturing.routings",
+      "module": "Manufacturing",
+      "feature": "Routings",
+      "status": "reserved"
+    },
+    {
+      "id": "manufacturing.production-planning",
+      "module": "Manufacturing",
+      "feature": "ProductionPlanning",
+      "status": "reserved"
+    },
+    {
+      "id": "manufacturing.production-costing",
+      "module": "Manufacturing",
+      "feature": "ProductionCosting",
+      "status": "reserved"
+    },
+    {
+      "id": "supply-chain.demand-planning",
+      "module": "SupplyChain",
+      "feature": "DemandPlanning",
+      "status": "reserved"
+    },
+    {
+      "id": "supply-chain.supply-planning",
+      "module": "SupplyChain",
+      "feature": "SupplyPlanning",
+      "status": "reserved"
+    },
+    {
+      "id": "supply-chain.procurement-planning",
+      "module": "SupplyChain",
+      "feature": "ProcurementPlanning",
+      "status": "reserved"
+    },
+    {
+      "id": "supply-chain.replenishment",
+      "module": "SupplyChain",
+      "feature": "Replenishment",
+      "status": "reserved"
+    },
+    {
+      "id": "supply-chain.supplier-collaboration",
+      "module": "SupplyChain",
+      "feature": "SupplierCollaboration",
+      "status": "reserved"
+    },
+    {
+      "id": "warehouse-management.receiving",
+      "module": "WarehouseManagement",
+      "feature": "Receiving",
+      "status": "reserved"
+    },
+    {
+      "id": "warehouse-management.putaway",
+      "module": "WarehouseManagement",
+      "feature": "Putaway",
+      "status": "reserved"
+    },
+    {
+      "id": "warehouse-management.picking",
+      "module": "WarehouseManagement",
+      "feature": "Picking",
+      "status": "reserved"
+    },
+    {
+      "id": "warehouse-management.packing",
+      "module": "WarehouseManagement",
+      "feature": "Packing",
+      "status": "reserved"
+    },
+    {
+      "id": "warehouse-management.shipping",
+      "module": "WarehouseManagement",
+      "feature": "Shipping",
+      "status": "reserved"
+    },
+    {
+      "id": "warehouse-management.cycle-counting",
+      "module": "WarehouseManagement",
+      "feature": "CycleCounting",
+      "status": "reserved"
+    },
+    {
+      "id": "order-management.order-orchestration",
+      "module": "OrderManagement",
+      "feature": "OrderOrchestration",
+      "status": "reserved"
+    },
+    {
+      "id": "order-management.fulfillment",
+      "module": "OrderManagement",
+      "feature": "Fulfillment",
+      "status": "reserved"
+    },
+    {
+      "id": "order-management.backorders",
+      "module": "OrderManagement",
+      "feature": "Backorders",
+      "status": "reserved"
+    },
+    {
+      "id": "order-management.returns",
+      "module": "OrderManagement",
+      "feature": "Returns",
+      "status": "reserved"
+    },
+    {
+      "id": "order-management.order-routing",
+      "module": "OrderManagement",
+      "feature": "OrderRouting",
+      "status": "reserved"
+    },
+    {
+      "id": "revenue-management.recognition-rules",
+      "module": "RevenueManagement",
+      "feature": "RecognitionRules",
+      "status": "reserved"
+    },
+    {
+      "id": "revenue-management.revenue-schedules",
+      "module": "RevenueManagement",
+      "feature": "RevenueSchedules",
+      "status": "reserved"
+    },
+    {
+      "id": "revenue-management.deferred-revenue",
+      "module": "RevenueManagement",
+      "feature": "DeferredRevenue",
+      "status": "reserved"
+    },
+    {
+      "id": "revenue-management.revenue-contracts",
+      "module": "RevenueManagement",
+      "feature": "RevenueContracts",
+      "status": "reserved"
+    },
+    {
+      "id": "revenue-management.adjustments",
+      "module": "RevenueManagement",
+      "feature": "Adjustments",
+      "status": "reserved"
+    },
+    {
+      "id": "subscription-billing.plans",
+      "module": "SubscriptionBilling",
+      "feature": "Plans",
+      "status": "reserved"
+    },
+    {
+      "id": "subscription-billing.subscriptions",
+      "module": "SubscriptionBilling",
+      "feature": "Subscriptions",
+      "status": "reserved"
+    },
+    {
+      "id": "subscription-billing.billing-cycles",
+      "module": "SubscriptionBilling",
+      "feature": "BillingCycles",
+      "status": "reserved"
+    },
+    {
+      "id": "subscription-billing.usage-billing",
+      "module": "SubscriptionBilling",
+      "feature": "UsageBilling",
+      "status": "reserved"
+    },
+    {
+      "id": "subscription-billing.renewals",
+      "module": "SubscriptionBilling",
+      "feature": "Renewals",
+      "status": "reserved"
+    },
+    {
+      "id": "subscription-billing.proration",
+      "module": "SubscriptionBilling",
+      "feature": "Proration",
+      "status": "reserved"
+    },
+    {
+      "id": "human-resources.recruitment",
+      "module": "HumanResources",
+      "feature": "Recruitment",
+      "status": "reserved"
+    },
+    {
+      "id": "human-resources.onboarding",
+      "module": "HumanResources",
+      "feature": "Onboarding",
+      "status": "reserved"
+    },
+    {
+      "id": "human-resources.employee-records",
+      "module": "HumanResources",
+      "feature": "EmployeeRecords",
+      "status": "reserved"
+    },
+    {
+      "id": "human-resources.leave-management",
+      "module": "HumanResources",
+      "feature": "LeaveManagement",
+      "status": "reserved"
+    },
+    {
+      "id": "human-resources.performance-management",
+      "module": "HumanResources",
+      "feature": "PerformanceManagement",
+      "status": "reserved"
+    },
+    {
+      "id": "quality-management.inspections",
+      "module": "QualityManagement",
+      "feature": "Inspections",
+      "status": "reserved"
+    },
+    {
+      "id": "quality-management.quality-control",
+      "module": "QualityManagement",
+      "feature": "QualityControl",
+      "status": "reserved"
+    },
+    {
+      "id": "quality-management.nonconformities",
+      "module": "QualityManagement",
+      "feature": "Nonconformities",
+      "status": "reserved"
+    },
+    {
+      "id": "quality-management.corrective-actions",
+      "module": "QualityManagement",
+      "feature": "CorrectiveActions",
+      "status": "reserved"
+    },
+    {
+      "id": "quality-management.traceability",
+      "module": "QualityManagement",
+      "feature": "Traceability",
+      "status": "reserved"
+    },
+    {
+      "id": "service-management.support-tickets",
+      "module": "ServiceManagement",
+      "feature": "SupportTickets",
+      "status": "reserved"
+    },
+    {
+      "id": "service-management.service-levels",
+      "module": "ServiceManagement",
+      "feature": "ServiceLevels",
+      "status": "reserved"
+    },
+    {
+      "id": "service-management.field-service",
+      "module": "ServiceManagement",
+      "feature": "FieldService",
+      "status": "reserved"
+    },
+    {
+      "id": "service-management.maintenance",
+      "module": "ServiceManagement",
+      "feature": "Maintenance",
+      "status": "reserved"
+    },
+    {
+      "id": "service-management.customer-support",
+      "module": "ServiceManagement",
+      "feature": "CustomerSupport",
+      "status": "reserved"
+    },
+    {
+      "id": "commerce.catalog",
+      "module": "Commerce",
+      "feature": "Catalog",
+      "status": "reserved"
+    },
+    {
+      "id": "commerce.pricing",
+      "module": "Commerce",
+      "feature": "Pricing",
+      "status": "reserved"
+    },
+    {
+      "id": "commerce.promotions",
+      "module": "Commerce",
+      "feature": "Promotions",
+      "status": "reserved"
+    },
+    {
+      "id": "commerce.commerce-orders",
+      "module": "Commerce",
+      "feature": "CommerceOrders",
+      "status": "reserved"
+    },
+    {
+      "id": "commerce.storefront-integrations",
+      "module": "Commerce",
+      "feature": "StorefrontIntegrations",
+      "status": "reserved"
+    },
+    {
+      "id": "commerce.point-of-sale",
+      "module": "Commerce",
+      "feature": "PointOfSale",
+      "status": "reserved"
+    },
+    {
+      "id": "resource-management.resource-scheduling",
+      "module": "ResourceManagement",
+      "feature": "ResourceScheduling",
+      "status": "reserved"
+    },
+    {
+      "id": "resource-management.capacity-planning",
+      "module": "ResourceManagement",
+      "feature": "CapacityPlanning",
+      "status": "reserved"
+    },
+    {
+      "id": "resource-management.utilization",
+      "module": "ResourceManagement",
+      "feature": "Utilization",
+      "status": "reserved"
+    },
+    {
+      "id": "resource-management.resource-allocation",
+      "module": "ResourceManagement",
+      "feature": "ResourceAllocation",
+      "status": "reserved"
+    },
+    {
+      "id": "resource-management.timesheets",
+      "module": "ResourceManagement",
+      "feature": "Timesheets",
+      "status": "reserved"
+    },
+    {
+      "id": "contract-management.customer-contracts",
+      "module": "ContractManagement",
+      "feature": "CustomerContracts",
+      "status": "reserved"
+    },
+    {
+      "id": "contract-management.supplier-contracts",
+      "module": "ContractManagement",
+      "feature": "SupplierContracts",
+      "status": "reserved"
+    },
+    {
+      "id": "contract-management.contract-terms",
+      "module": "ContractManagement",
+      "feature": "ContractTerms",
+      "status": "reserved"
+    },
+    {
+      "id": "contract-management.renewals",
+      "module": "ContractManagement",
+      "feature": "Renewals",
+      "status": "reserved"
+    },
+    {
+      "id": "contract-management.obligations",
+      "module": "ContractManagement",
+      "feature": "Obligations",
+      "status": "reserved"
     }
   ],
   "profiles": [

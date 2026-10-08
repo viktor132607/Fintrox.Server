@@ -63,4 +63,32 @@
     <ProjectReference Include="../Modules/Experience/Fintrox.Modules.Experience.Infrastructure/Fintrox.Modules.Experience.Infrastructure.csproj" />
     <ProjectReference Include="../Modules/Experience/Fintrox.Modules.Experience.Presentation/Fintrox.Modules.Experience.Presentation.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Modules/CRM/Fintrox.Modules.CRM.Infrastructure/Fintrox.Modules.CRM.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/CRM/Fintrox.Modules.CRM.Presentation/Fintrox.Modules.CRM.Presentation.csproj" />
+    <ProjectReference Include="../Modules/Manufacturing/Fintrox.Modules.Manufacturing.Infrastructure/Fintrox.Modules.Manufacturing.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/Manufacturing/Fintrox.Modules.Manufacturing.Presentation/Fintrox.Modules.Manufacturing.Presentation.csproj" />
+    <ProjectReference Include="../Modules/SupplyChain/Fintrox.Modules.SupplyChain.Infrastructure/Fintrox.Modules.SupplyChain.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/SupplyChain/Fintrox.Modules.SupplyChain.Presentation/Fintrox.Modules.SupplyChain.Presentation.csproj" />
+    <ProjectReference Include="../Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Infrastructure/Fintrox.Modules.WarehouseManagement.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Presentation/Fintrox.Modules.WarehouseManagement.Presentation.csproj" />
+    <ProjectReference Include="../Modules/OrderManagement/Fintrox.Modules.OrderManagement.Infrastructure/Fintrox.Modules.OrderManagement.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/OrderManagement/Fintrox.Modules.OrderManagement.Presentation/Fintrox.Modules.OrderManagement.Presentation.csproj" />
+    <ProjectReference Include="../Modules/RevenueManagement/Fintrox.Modules.RevenueManagement.Infrastructure/Fintrox.Modules.RevenueManagement.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/RevenueManagement/Fintrox.Modules.RevenueManagement.Presentation/Fintrox.Modules.RevenueManagement.Presentation.csproj" />
+    <ProjectReference Include="../Modules/SubscriptionBilling/Fintrox.Modules.SubscriptionBilling.Infrastructure/Fintrox.Modules.SubscriptionBilling.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/SubscriptionBilling/Fintrox.Modules.SubscriptionBilling.Presentation/Fintrox.Modules.SubscriptionBilling.Presentation.csproj" />
+    <ProjectReference Include="../Modules/HumanResources/Fintrox.Modules.HumanResources.Infrastructure/Fintrox.Modules.HumanResources.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/HumanResources/Fintrox.Modules.HumanResources.Presentation/Fintrox.Modules.HumanResources.Presentation.csproj" />
+    <ProjectReference Include="../Modules/QualityManagement/Fintrox.Modules.QualityManagement.Infrastructure/Fintrox.Modules.QualityManagement.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/QualityManagement/Fintrox.Modules.QualityManagement.Presentation/Fintrox.Modules.QualityManagement.Presentation.csproj" />
+    <ProjectReference Include="../Modules/ServiceManagement/Fintrox.Modules.ServiceManagement.Infrastructure/Fintrox.Modules.ServiceManagement.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/ServiceManagement/Fintrox.Modules.ServiceManagement.Presentation/Fintrox.Modules.ServiceManagement.Presentation.csproj" />
+    <ProjectReference Include="../Modules/Commerce/Fintrox.Modules.Commerce.Infrastructure/Fintrox.Modules.Commerce.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/Commerce/Fintrox.Modules.Commerce.Presentation/Fintrox.Modules.Commerce.Presentation.csproj" />
+    <ProjectReference Include="../Modules/ResourceManagement/Fintrox.Modules.ResourceManagement.Infrastructure/Fintrox.Modules.ResourceManagement.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/ResourceManagement/Fintrox.Modules.ResourceManagement.Presentation/Fintrox.Modules.ResourceManagement.Presentation.csproj" />
+    <ProjectReference Include="../Modules/ContractManagement/Fintrox.Modules.ContractManagement.Infrastructure/Fintrox.Modules.ContractManagement.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/ContractManagement/Fintrox.Modules.ContractManagement.Presentation/Fintrox.Modules.ContractManagement.Presentation.csproj" />
+  </ItemGroup>
 </Project>

@@ -26,9 +26,44 @@ def validate(root=ROOT):
     actual = {p.name for p in modules.iterdir() if p.is_dir()}
     if actual != set(names):
         errors.append(f'Module folders/catalog mismatch: {actual ^ set(names)}')
-    sln = (root / 'Fintrox.Server.sln').read_text()
-    solution_paths = re.findall(r'^Project\([^\n]+ = "[^"]+", "([^"]+\.csproj)"', sln, re.M)
+    solution = ET.parse(root / 'Fintrox.Server.slnx')
+    solution_paths = [p.attrib['Path'] for p in solution.iter('Project')]
     solution_projects = {(root / p.replace('\\', '/')).resolve() for p in solution_paths}
+    all_projects = {p.resolve() for parent in ['src', 'tests']
+                    for p in (root / parent).rglob('*.csproj')
+                    if not {'obj', 'bin'} & set(p.relative_to(root).parts)}
+    if solution_projects != all_projects:
+        errors.append('Solution must register every source/test project exactly once')
+    for project in solution_projects:
+        if not project.is_file():
+            errors.append(f'Missing solution project: {project.relative_to(root)}')
+    # Validate all project references, including legacy/core assemblies, for cycles.
+    graph = {}
+    for project in all_projects:
+        refs = [(project.parent / e.attrib['Include'].replace('\\', '/')).resolve()
+                for e in ET.parse(project).iter('ProjectReference')]
+        graph[project] = refs
+        if len(refs) != len(set(refs)):
+            errors.append(f'Duplicate project reference: {project.relative_to(root)}')
+        for target in refs:
+            if target not in all_projects:
+                errors.append(f'Missing or unregistered reference: {target}')
+    visited, active = set(), set()
+
+    def visit(project):
+        if project in active:
+            errors.append(f'Project dependency cycle: {project.relative_to(root)}')
+            return
+        if project in visited:
+            return
+        active.add(project)
+        for target in graph.get(project, []):
+            visit(target)
+        active.remove(project)
+        visited.add(project)
+
+    for project in graph:
+        visit(project)
     host = root / 'src/Fintrox.Api/Fintrox.Api.csproj'
     host_refs = {(host.parent / e.attrib['Include'].replace('\\', '/')).resolve()
                  for e in ET.parse(host).iter('ProjectReference')}
@@ -65,6 +100,16 @@ def validate(root=ROOT):
                 for feature in module['features']:
                     if not (project.parent / feature).is_dir():
                         errors.append(f'{assembly}: missing feature {feature}')
+            required = {
+                'Domain': ['Entities', 'ValueObjects', 'Events'],
+                'Application': ['Abstractions'],
+                'Contracts': ['Api/V1', 'Events/V1'],
+                'Infrastructure': ['Persistence/Configurations', 'Persistence/Migrations', 'Messaging', 'Adapters'],
+                'Presentation': ['Endpoints', 'Mapping'],
+            }
+            for directory in required[layer]:
+                if not (project.parent / directory).is_dir():
+                    errors.append(f'{assembly}: missing scaffold directory {directory}')
             if project.resolve() not in solution_projects:
                 errors.append(f'{assembly}: absent from primary solution')
             if layer in {'Infrastructure', 'Presentation'} and project.resolve() not in host_refs:

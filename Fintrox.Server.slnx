@@ -41,6 +41,13 @@
     <Project Path="src/Modules/Capabilities/Fintrox.Modules.Capabilities.Infrastructure/Fintrox.Modules.Capabilities.Infrastructure.csproj" />
     <Project Path="src/Modules/Capabilities/Fintrox.Modules.Capabilities.Presentation/Fintrox.Modules.Capabilities.Presentation.csproj" />
   </Folder>
+  <Folder Name="/Modules/Commerce/">
+    <Project Path="src/Modules/Commerce/Fintrox.Modules.Commerce.Application/Fintrox.Modules.Commerce.Application.csproj" />
+    <Project Path="src/Modules/Commerce/Fintrox.Modules.Commerce.Contracts/Fintrox.Modules.Commerce.Contracts.csproj" />
+    <Project Path="src/Modules/Commerce/Fintrox.Modules.Commerce.Domain/Fintrox.Modules.Commerce.Domain.csproj" />
+    <Project Path="src/Modules/Commerce/Fintrox.Modules.Commerce.Infrastructure/Fintrox.Modules.Commerce.Infrastructure.csproj" />
+    <Project Path="src/Modules/Commerce/Fintrox.Modules.Commerce.Presentation/Fintrox.Modules.Commerce.Presentation.csproj" />
+  </Folder>
   <Folder Name="/Modules/Consolidation/">
     <Project Path="src/Modules/Consolidation/Fintrox.Modules.Consolidation.Application/Fintrox.Modules.Consolidation.Application.csproj" />
     <Project Path="src/Modules/Consolidation/Fintrox.Modules.Consolidation.Contracts/Fintrox.Modules.Consolidation.Contracts.csproj" />
@@ -48,12 +55,26 @@
     <Project Path="src/Modules/Consolidation/Fintrox.Modules.Consolidation.Infrastructure/Fintrox.Modules.Consolidation.Infrastructure.csproj" />
     <Project Path="src/Modules/Consolidation/Fintrox.Modules.Consolidation.Presentation/Fintrox.Modules.Consolidation.Presentation.csproj" />
   </Folder>
+  <Folder Name="/Modules/ContractManagement/">
+    <Project Path="src/Modules/ContractManagement/Fintrox.Modules.ContractManagement.Application/Fintrox.Modules.ContractManagement.Application.csproj" />
+    <Project Path="src/Modules/ContractManagement/Fintrox.Modules.ContractManagement.Contracts/Fintrox.Modules.ContractManagement.Contracts.csproj" />
+    <Project Path="src/Modules/ContractManagement/Fintrox.Modules.ContractManagement.Domain/Fintrox.Modules.ContractManagement.Domain.csproj" />
+    <Project Path="src/Modules/ContractManagement/Fintrox.Modules.ContractManagement.Infrastructure/Fintrox.Modules.ContractManagement.Infrastructure.csproj" />
+    <Project Path="src/Modules/ContractManagement/Fintrox.Modules.ContractManagement.Presentation/Fintrox.Modules.ContractManagement.Presentation.csproj" />
+  </Folder>
   <Folder Name="/Modules/Counterparties/">
     <Project Path="src/Modules/Counterparties/Fintrox.Modules.Counterparties.Application/Fintrox.Modules.Counterparties.Application.csproj" />
     <Project Path="src/Modules/Counterparties/Fintrox.Modules.Counterparties.Contracts/Fintrox.Modules.Counterparties.Contracts.csproj" />
     <Project Path="src/Modules/Counterparties/Fintrox.Modules.Counterparties.Domain/Fintrox.Modules.Counterparties.Domain.csproj" />
     <Project Path="src/Modules/Counterparties/Fintrox.Modules.Counterparties.Infrastructure/Fintrox.Modules.Counterparties.Infrastructure.csproj" />
     <Project Path="src/Modules/Counterparties/Fintrox.Modules.Counterparties.Presentation/Fintrox.Modules.Counterparties.Presentation.csproj" />
+  </Folder>
+  <Folder Name="/Modules/CRM/">
+    <Project Path="src/Modules/CRM/Fintrox.Modules.CRM.Application/Fintrox.Modules.CRM.Application.csproj" />
+    <Project Path="src/Modules/CRM/Fintrox.Modules.CRM.Contracts/Fintrox.Modules.CRM.Contracts.csproj" />
+    <Project Path="src/Modules/CRM/Fintrox.Modules.CRM.Domain/Fintrox.Modules.CRM.Domain.csproj" />
+    <Project Path="src/Modules/CRM/Fintrox.Modules.CRM.Infrastructure/Fintrox.Modules.CRM.Infrastructure.csproj" />
+    <Project Path="src/Modules/CRM/Fintrox.Modules.CRM.Presentation/Fintrox.Modules.CRM.Presentation.csproj" />
   </Folder>
   <Folder Name="/Modules/Currencies/">
     <Project Path="src/Modules/Currencies/Fintrox.Modules.Currencies.Application/Fintrox.Modules.Currencies.Application.csproj" />
@@ -83,6 +104,13 @@
     <Project Path="src/Modules/FixedAssets/Fintrox.Modules.FixedAssets.Infrastructure/Fintrox.Modules.FixedAssets.Infrastructure.csproj" />
     <Project Path="src/Modules/FixedAssets/Fintrox.Modules.FixedAssets.Presentation/Fintrox.Modules.FixedAssets.Presentation.csproj" />
   </Folder>
+  <Folder Name="/Modules/HumanResources/">
+    <Project Path="src/Modules/HumanResources/Fintrox.Modules.HumanResources.Application/Fintrox.Modules.HumanResources.Application.csproj" />
+    <Project Path="src/Modules/HumanResources/Fintrox.Modules.HumanResources.Contracts/Fintrox.Modules.HumanResources.Contracts.csproj" />
+    <Project Path="src/Modules/HumanResources/Fintrox.Modules.HumanResources.Domain/Fintrox.Modules.HumanResources.Domain.csproj" />
+    <Project Path="src/Modules/HumanResources/Fintrox.Modules.HumanResources.Infrastructure/Fintrox.Modules.HumanResources.Infrastructure.csproj" />
+    <Project Path="src/Modules/HumanResources/Fintrox.Modules.HumanResources.Presentation/Fintrox.Modules.HumanResources.Presentation.csproj" />
+  </Folder>
   <Folder Name="/Modules/Identity/">
     <Project Path="src/Modules/Identity/Fintrox.Modules.Identity.Application/Fintrox.Modules.Identity.Application.csproj" />
     <Project Path="src/Modules/Identity/Fintrox.Modules.Identity.Contracts/Fintrox.Modules.Identity.Contracts.csproj" />
@@ -103,6 +131,20 @@
     <Project Path="src/Modules/Inventory/Fintrox.Modules.Inventory.Domain/Fintrox.Modules.Inventory.Domain.csproj" />
     <Project Path="src/Modules/Inventory/Fintrox.Modules.Inventory.Infrastructure/Fintrox.Modules.Inventory.Infrastructure.csproj" />
     <Project Path="src/Modules/Inventory/Fintrox.Modules.Inventory.Presentation/Fintrox.Modules.Inventory.Presentation.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Manufacturing/">
+    <Project Path="src/Modules/Manufacturing/Fintrox.Modules.Manufacturing.Application/Fintrox.Modules.Manufacturing.Application.csproj" />
+    <Project Path="src/Modules/Manufacturing/Fintrox.Modules.Manufacturing.Contracts/Fintrox.Modules.Manufacturing.Contracts.csproj" />
+    <Project Path="src/Modules/Manufacturing/Fintrox.Modules.Manufacturing.Domain/Fintrox.Modules.Manufacturing.Domain.csproj" />
+    <Project Path="src/Modules/Manufacturing/Fintrox.Modules.Manufacturing.Infrastructure/Fintrox.Modules.Manufacturing.Infrastructure.csproj" />
+    <Project Path="src/Modules/Manufacturing/Fintrox.Modules.Manufacturing.Presentation/Fintrox.Modules.Manufacturing.Presentation.csproj" />
+  </Folder>
+  <Folder Name="/Modules/OrderManagement/">
+    <Project Path="src/Modules/OrderManagement/Fintrox.Modules.OrderManagement.Application/Fintrox.Modules.OrderManagement.Application.csproj" />
+    <Project Path="src/Modules/OrderManagement/Fintrox.Modules.OrderManagement.Contracts/Fintrox.Modules.OrderManagement.Contracts.csproj" />
+    <Project Path="src/Modules/OrderManagement/Fintrox.Modules.OrderManagement.Domain/Fintrox.Modules.OrderManagement.Domain.csproj" />
+    <Project Path="src/Modules/OrderManagement/Fintrox.Modules.OrderManagement.Infrastructure/Fintrox.Modules.OrderManagement.Infrastructure.csproj" />
+    <Project Path="src/Modules/OrderManagement/Fintrox.Modules.OrderManagement.Presentation/Fintrox.Modules.OrderManagement.Presentation.csproj" />
   </Folder>
   <Folder Name="/Modules/Organizations/">
     <Project Path="src/Modules/Organizations/Fintrox.Modules.Organizations.Application/Fintrox.Modules.Organizations.Application.csproj" />
@@ -139,12 +181,33 @@
     <Project Path="src/Modules/Purchases/Fintrox.Modules.Purchases.Infrastructure/Fintrox.Modules.Purchases.Infrastructure.csproj" />
     <Project Path="src/Modules/Purchases/Fintrox.Modules.Purchases.Presentation/Fintrox.Modules.Purchases.Presentation.csproj" />
   </Folder>
+  <Folder Name="/Modules/QualityManagement/">
+    <Project Path="src/Modules/QualityManagement/Fintrox.Modules.QualityManagement.Application/Fintrox.Modules.QualityManagement.Application.csproj" />
+    <Project Path="src/Modules/QualityManagement/Fintrox.Modules.QualityManagement.Contracts/Fintrox.Modules.QualityManagement.Contracts.csproj" />
+    <Project Path="src/Modules/QualityManagement/Fintrox.Modules.QualityManagement.Domain/Fintrox.Modules.QualityManagement.Domain.csproj" />
+    <Project Path="src/Modules/QualityManagement/Fintrox.Modules.QualityManagement.Infrastructure/Fintrox.Modules.QualityManagement.Infrastructure.csproj" />
+    <Project Path="src/Modules/QualityManagement/Fintrox.Modules.QualityManagement.Presentation/Fintrox.Modules.QualityManagement.Presentation.csproj" />
+  </Folder>
   <Folder Name="/Modules/Reporting/">
     <Project Path="src/Modules/Reporting/Fintrox.Modules.Reporting.Application/Fintrox.Modules.Reporting.Application.csproj" />
     <Project Path="src/Modules/Reporting/Fintrox.Modules.Reporting.Contracts/Fintrox.Modules.Reporting.Contracts.csproj" />
     <Project Path="src/Modules/Reporting/Fintrox.Modules.Reporting.Domain/Fintrox.Modules.Reporting.Domain.csproj" />
     <Project Path="src/Modules/Reporting/Fintrox.Modules.Reporting.Infrastructure/Fintrox.Modules.Reporting.Infrastructure.csproj" />
     <Project Path="src/Modules/Reporting/Fintrox.Modules.Reporting.Presentation/Fintrox.Modules.Reporting.Presentation.csproj" />
+  </Folder>
+  <Folder Name="/Modules/ResourceManagement/">
+    <Project Path="src/Modules/ResourceManagement/Fintrox.Modules.ResourceManagement.Application/Fintrox.Modules.ResourceManagement.Application.csproj" />
+    <Project Path="src/Modules/ResourceManagement/Fintrox.Modules.ResourceManagement.Contracts/Fintrox.Modules.ResourceManagement.Contracts.csproj" />
+    <Project Path="src/Modules/ResourceManagement/Fintrox.Modules.ResourceManagement.Domain/Fintrox.Modules.ResourceManagement.Domain.csproj" />
+    <Project Path="src/Modules/ResourceManagement/Fintrox.Modules.ResourceManagement.Infrastructure/Fintrox.Modules.ResourceManagement.Infrastructure.csproj" />
+    <Project Path="src/Modules/ResourceManagement/Fintrox.Modules.ResourceManagement.Presentation/Fintrox.Modules.ResourceManagement.Presentation.csproj" />
+  </Folder>
+  <Folder Name="/Modules/RevenueManagement/">
+    <Project Path="src/Modules/RevenueManagement/Fintrox.Modules.RevenueManagement.Application/Fintrox.Modules.RevenueManagement.Application.csproj" />
+    <Project Path="src/Modules/RevenueManagement/Fintrox.Modules.RevenueManagement.Contracts/Fintrox.Modules.RevenueManagement.Contracts.csproj" />
+    <Project Path="src/Modules/RevenueManagement/Fintrox.Modules.RevenueManagement.Domain/Fintrox.Modules.RevenueManagement.Domain.csproj" />
+    <Project Path="src/Modules/RevenueManagement/Fintrox.Modules.RevenueManagement.Infrastructure/Fintrox.Modules.RevenueManagement.Infrastructure.csproj" />
+    <Project Path="src/Modules/RevenueManagement/Fintrox.Modules.RevenueManagement.Presentation/Fintrox.Modules.RevenueManagement.Presentation.csproj" />
   </Folder>
   <Folder Name="/Modules/Sales/">
     <Project Path="src/Modules/Sales/Fintrox.Modules.Sales.Application/Fintrox.Modules.Sales.Application.csproj" />
@@ -153,12 +216,40 @@
     <Project Path="src/Modules/Sales/Fintrox.Modules.Sales.Infrastructure/Fintrox.Modules.Sales.Infrastructure.csproj" />
     <Project Path="src/Modules/Sales/Fintrox.Modules.Sales.Presentation/Fintrox.Modules.Sales.Presentation.csproj" />
   </Folder>
+  <Folder Name="/Modules/ServiceManagement/">
+    <Project Path="src/Modules/ServiceManagement/Fintrox.Modules.ServiceManagement.Application/Fintrox.Modules.ServiceManagement.Application.csproj" />
+    <Project Path="src/Modules/ServiceManagement/Fintrox.Modules.ServiceManagement.Contracts/Fintrox.Modules.ServiceManagement.Contracts.csproj" />
+    <Project Path="src/Modules/ServiceManagement/Fintrox.Modules.ServiceManagement.Domain/Fintrox.Modules.ServiceManagement.Domain.csproj" />
+    <Project Path="src/Modules/ServiceManagement/Fintrox.Modules.ServiceManagement.Infrastructure/Fintrox.Modules.ServiceManagement.Infrastructure.csproj" />
+    <Project Path="src/Modules/ServiceManagement/Fintrox.Modules.ServiceManagement.Presentation/Fintrox.Modules.ServiceManagement.Presentation.csproj" />
+  </Folder>
+  <Folder Name="/Modules/SubscriptionBilling/">
+    <Project Path="src/Modules/SubscriptionBilling/Fintrox.Modules.SubscriptionBilling.Application/Fintrox.Modules.SubscriptionBilling.Application.csproj" />
+    <Project Path="src/Modules/SubscriptionBilling/Fintrox.Modules.SubscriptionBilling.Contracts/Fintrox.Modules.SubscriptionBilling.Contracts.csproj" />
+    <Project Path="src/Modules/SubscriptionBilling/Fintrox.Modules.SubscriptionBilling.Domain/Fintrox.Modules.SubscriptionBilling.Domain.csproj" />
+    <Project Path="src/Modules/SubscriptionBilling/Fintrox.Modules.SubscriptionBilling.Infrastructure/Fintrox.Modules.SubscriptionBilling.Infrastructure.csproj" />
+    <Project Path="src/Modules/SubscriptionBilling/Fintrox.Modules.SubscriptionBilling.Presentation/Fintrox.Modules.SubscriptionBilling.Presentation.csproj" />
+  </Folder>
+  <Folder Name="/Modules/SupplyChain/">
+    <Project Path="src/Modules/SupplyChain/Fintrox.Modules.SupplyChain.Application/Fintrox.Modules.SupplyChain.Application.csproj" />
+    <Project Path="src/Modules/SupplyChain/Fintrox.Modules.SupplyChain.Contracts/Fintrox.Modules.SupplyChain.Contracts.csproj" />
+    <Project Path="src/Modules/SupplyChain/Fintrox.Modules.SupplyChain.Domain/Fintrox.Modules.SupplyChain.Domain.csproj" />
+    <Project Path="src/Modules/SupplyChain/Fintrox.Modules.SupplyChain.Infrastructure/Fintrox.Modules.SupplyChain.Infrastructure.csproj" />
+    <Project Path="src/Modules/SupplyChain/Fintrox.Modules.SupplyChain.Presentation/Fintrox.Modules.SupplyChain.Presentation.csproj" />
+  </Folder>
   <Folder Name="/Modules/Tax/">
     <Project Path="src/Modules/Tax/Fintrox.Modules.Tax.Application/Fintrox.Modules.Tax.Application.csproj" />
     <Project Path="src/Modules/Tax/Fintrox.Modules.Tax.Contracts/Fintrox.Modules.Tax.Contracts.csproj" />
     <Project Path="src/Modules/Tax/Fintrox.Modules.Tax.Domain/Fintrox.Modules.Tax.Domain.csproj" />
     <Project Path="src/Modules/Tax/Fintrox.Modules.Tax.Infrastructure/Fintrox.Modules.Tax.Infrastructure.csproj" />
     <Project Path="src/Modules/Tax/Fintrox.Modules.Tax.Presentation/Fintrox.Modules.Tax.Presentation.csproj" />
+  </Folder>
+  <Folder Name="/Modules/WarehouseManagement/">
+    <Project Path="src/Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Application/Fintrox.Modules.WarehouseManagement.Application.csproj" />
+    <Project Path="src/Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Contracts/Fintrox.Modules.WarehouseManagement.Contracts.csproj" />
+    <Project Path="src/Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Domain/Fintrox.Modules.WarehouseManagement.Domain.csproj" />
+    <Project Path="src/Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Infrastructure/Fintrox.Modules.WarehouseManagement.Infrastructure.csproj" />
+    <Project Path="src/Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Presentation/Fintrox.Modules.WarehouseManagement.Presentation.csproj" />
   </Folder>
   <Folder Name="/Modules/Workflows/">
     <Project Path="src/Modules/Workflows/Fintrox.Modules.Workflows.Application/Fintrox.Modules.Workflows.Application.csproj" />
