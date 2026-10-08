@@ -2,7 +2,8 @@
 
 ## Last Verified Commit
 Baseline Server main: 0671415e16c9741367ba478efa71e0f5d5e16bcc.
-Architecture commit: recorded in the follow-up handoff commit after publication.
+Architecture commit (published to main, entire tree verified): c3f0ebfb1f2f4dc547cbaa1286bee61ae21de395.
+Client documentation commit: 3b49bd197212d822677eba995bdf2aa519d17cea.
 Baseline Client main: 6d68ba2946c7e07faa502acd8ebb8d14ac9875b2.
 
 ## Current Milestone
@@ -21,7 +22,8 @@ architecture/{modules,experience-integration}.json; scripts/check_architecture.p
 .github/workflows/ci-cd.yml; README.md; docs/architecture.md; docs/ai/**.
 
 ## Validation
-Python architecture and structural acceptance checks passed. All original 121 projects retained.
+Python architecture and structural acceptance checks passed.
+All 362 architecture-commit files verified by Git blob hash after publication; all other original files unchanged. All original 121 projects retained.
 Restore/build/test NOT RUN: dotnet command not found. See VALIDATION.md.
 No Visual Studio, deployment or production verification.
 

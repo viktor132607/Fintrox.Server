@@ -22,3 +22,8 @@ dotnet test Fintrox.Server.slnx --no-restore
 ```
 SDK requirement: global.json requests 10.0.401 with latestFeature roll-forward.
 Post-publication verification and actual commit SHA are recorded in SESSION_HANDOFF.md.
+
+## Published commit verification
+Architecture commit: c3f0ebfb1f2f4dc547cbaa1286bee61ae21de395 (main updated with expected-head check).
+All 362 written files verified against GitHub Git blob hashes; all untouched baseline files retain their original hashes.
+186 .csproj files confirmed in the published tree. No runtime verification performed.
