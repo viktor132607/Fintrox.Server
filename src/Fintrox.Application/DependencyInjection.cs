@@ -3,6 +3,7 @@ using Fintrox.Application.Authorization;
 using Fintrox.Application.Counterparties;
 using Fintrox.Application.Currencies;
 using Fintrox.Application.Integrations;
+using Fintrox.Application.Identity;
 using Fintrox.Application.Organizations;
 using Fintrox.Application.Payments;
 using Fintrox.Application.Purchases;
@@ -18,6 +19,7 @@ public static class DependencyInjection
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services.AddSingleton(TimeProvider.System);
+        services.AddScoped<IAccessTokenValidator, AccessTokenValidator>();
 
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<IFiscalCalendarService, FiscalCalendarService>();

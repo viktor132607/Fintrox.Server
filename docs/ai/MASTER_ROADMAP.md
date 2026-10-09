@@ -1,8 +1,8 @@
 # Master roadmap
 
-Phase 0: scaffold implementation COMPLETE; SDK verification BLOCKED, no runtime success claimed.
-Phases 1–10: pending audit; existing legacy functionality must be assessed before adding replacements.
-Current session stops after architecture at user request. Detailed business specification: MASTER_PROMPT.md.
+Phase 0 COMPLETE: scaffold plus successful CI restore/build/33 tests/EF snapshot/PostgreSQL migrations.
+Phase 1 active: AUDIT-001 completed; AUTH-001 security repair under validation. Phases 2–10 pending; see AUDIT.md for existing legacy functionality.
+The user authorized continuation after the model switch. Detailed business specification: MASTER_PROMPT.md.
 
 След архитектурното разширение изпълнявай следните фази.
 

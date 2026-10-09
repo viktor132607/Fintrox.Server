@@ -2,13 +2,20 @@
 
 | Task ID | Title | Module | Priority | Dependencies | Status | Acceptance Criteria |
 |---|---|---|---|---|---|---|
-| ARCH-001 | Scaffold 13 additional ERP modules | Platform | P0 | Baseline inspection | COMPLETE | 36 modules; 186 unique projects; original 121 preserved; static architecture passes; GitHub commit |
-| VERIFY-001 | Restore, build and test with .NET SDK | Platform | P0 | ARCH-001; SDK 10.0.401 | BLOCKED | All three .slnx commands pass; actual results and SHA recorded |
-| AUDIT-001 | Audit existing Server and Client implementation | All | P0 | VERIFY-001 or documented blocker | PENDING | Per-feature real status; identify first incomplete foundation; preserve existing behavior |
-| FOUNDATION-001 | Stabilize foundation | Identity/Organizations/Platform | P0 | AUDIT-001 | PENDING | Scope from audit; security/tenancy and regression checks pass |
-| ACCOUNTING-001 | Complete accounting foundation | Accounting/Tax/Currencies/Counterparties | P1 | FOUNDATION-001 | PENDING | Audited gaps implemented with financial invariants and meaningful tests |
-| ERP-001 | Implement operational and new modules incrementally | Business modules | P2 | Financial foundation; per-module collaborators | PENDING | Contracts/domain/persistence/API/auth/tests complete per use case |
-| FE-001 | Expand frontend module shells and align manifests | Client | P2 | Architecture; frontend scope | PENDING | 36 TypeScript module shells; manifests aligned; architecture/typecheck/build pass |
-| ENTERPRISE-001 | Enterprise capabilities and hardening | All | P3 | Core ERP | PENDING | See MASTER_ROADMAP phases 9–10 |
+| ARCH-001 | 13 new module scaffolds | Platform | P0 | Baseline | COMPLETE | 36 modules, 186 projects, architecture passes |
+| VERIFY-001 | Verify baseline restore/build/tests | Platform | P0 | ARCH-001 | COMPLETE | CI 37860035722: restore/build/33 tests/migrations pass |
+| AUDIT-001 | Audit Server and Client | All | P0 | VERIFY-001 | COMPLETE | AUDIT.md covers all modules, layers, frontend and concrete gaps |
+| AUTH-001 | Revalidate issued bearer tokens against current state | Identity/Integrations | P0 | AUDIT-001 | IN PROGRESS | User/client deactivation and scope revocation rejected; regression suite/build pass |
+| AUTH-002 | Atomic single-use refresh-token rotation | Identity | P0 | AUTH-001 | PENDING | Concurrent refresh consumes token once; loser unauthorized; relational race tests |
+| INT-001 | Webhook SSRF prevention | Integrations | P0 | AUDIT-001 | PENDING | Private/loopback/metadata targets and redirect/DNS bypass rejected; safe public delivery tested |
+| ORG-001 | Concurrent last-owner protection | Organizations | P1 | AUDIT-001 | PENDING | Simultaneous removal/demotion cannot leave no active owner |
+| ORG-002 | Inactive-tenant business access policy | Organizations | P1 | AUDIT-001 | PENDING | Deny inactive tenant business operations while preserving authorized reactivation |
+| TEST-001 | Financial/tenant/HTTP regression coverage | Accounting/Platform | P1 | AUDIT-001 | PENDING | Real PostgreSQL posting/reversal, balance/period and cross-tenant isolation tests |
+| INT-002 | Durable multi-worker webhook claim/recovery | Integrations | P1 | INT-001 | PENDING | Atomic claims, expired-lease recovery, retry/duplicate-delivery tests |
+| API-001 | Configured CORS and endpoint throttling | API | P1 | Authentication hardening | PENDING | Explicit origins, preflight and auth endpoint rate tests |
+| ACCOUNTING-001 | Complete audited accounting gaps | Accounting/Tax/Currencies | P1 | Foundation/tests | PENDING | See AUDIT.md and MASTER_ROADMAP phases 2–3 |
+| FE-001 | Align 36 frontend shells/manifests | Client | P2 | ARCH-001 | PENDING | Module parity and TS architecture/typecheck/build |
+| ERP-001 | Operational/new module business implementation | All | P2 | Accounting foundation | PENDING | Incremental use cases with auth/persistence/API/tests |
+| ENTERPRISE-001 | Enterprise/hardening | All | P3 | Core ERP | PENDING | MASTER_ROADMAP phases 9–10 |
 
-No business implementation was authorized in this turn beyond scaffolding. Await the user's model switch.
+The user authorized continuation after the model switch; the previous stop-after-scaffold instruction is fulfilled.

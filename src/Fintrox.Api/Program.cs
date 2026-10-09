@@ -57,6 +57,22 @@ builder.Services
     .AddJwtBearer(options =>
     {
         options.MapInboundClaims = false;
+        options.Events = new JwtBearerEvents
+        {
+            OnTokenValidated = async context =>
+            {
+                var validator = context.HttpContext.RequestServices
+                    .GetRequiredService<IAccessTokenValidator>();
+
+                if (context.Principal is null ||
+                    !await validator.IsActiveAsync(
+                        context.Principal,
+                        context.HttpContext.RequestAborted))
+                {
+                    context.Fail("The access token is no longer authorized.");
+                }
+            }
+        };
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,

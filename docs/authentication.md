@@ -90,3 +90,9 @@ DELETE /api/v1/organizations/{organizationId}/members/{userId}
 ```
 
 Creating an organization automatically creates an Owner membership for the authenticated creator.
+
+## Current-state bearer validation
+
+After normal JWT signature/issuer/audience/lifetime validation, every bearer request verifies that the user still exists and is active. Integration tokens additionally require the exact client/organization identity, an active client and organization, and scopes that are still granted. Deactivation or scope removal therefore affects the next request without waiting for token expiry. Added scopes do not elevate old tokens. Database failures fail the request rather than authorizing from stale state.
+
+This does not introduce access-token session IDs or immediate per-session logout revocation: existing access tokens for an active user retain their normal lifetime after refresh-session revocation. Refresh rotation concurrency is tracked as AUTH-002.

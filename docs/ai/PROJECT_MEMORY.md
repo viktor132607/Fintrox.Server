@@ -29,4 +29,4 @@ Do not mistake README descriptions, reserved capabilities or empty test folders 
 Read SESSION_HANDOFF.md, CURRENT_STATE.md and TASK_QUEUE.md first.
 Read MASTER_PROMPT.md only for relevant detailed requirements; MASTER_ROADMAP.md indexes phases.
 Reuse verified findings and inspect changed files only until the explicitly scheduled full audit.
-Update concise project memory after each milestone; stop this session after architecture per user request.
+Update concise project memory after each milestone; continue from the next verified foundation task; the user authorized continuation after the model switch.
