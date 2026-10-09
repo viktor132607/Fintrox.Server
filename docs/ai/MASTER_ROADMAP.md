@@ -1,7 +1,7 @@
 # Master roadmap
 
 Phase 0 COMPLETE: scaffold plus successful CI restore/build/33 tests/EF snapshot/PostgreSQL migrations.
-Phase 1 active: AUDIT-001 completed; AUTH-001 security repair under validation. Phases 2–10 pending; see AUDIT.md for existing legacy functionality.
+Phase 1 active: AUDIT-001 and AUTH-001 completed and validated; AUTH-002 is next. Phases 2–10 pending; see AUDIT.md for existing legacy functionality.
 The user authorized continuation after the model switch. Detailed business specification: MASTER_PROMPT.md.
 
 След архитектурното разширение изпълнявай следните фази.

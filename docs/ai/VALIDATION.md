@@ -1,4 +1,13 @@
-# Architecture validation — 2026-10-09
+# Validation history — 2026-10-09
+
+## Current verified state
+Code commit: 79ee090e2e50ff64d3b3fb11d01e7fda31eb5b50.
+CI run 37900969688, job 113723180801: restore, Release build with warnings as errors (0 warnings/errors), 46/46 tests, EF model snapshot and PostgreSQL migration application/listing all PASSED.
+Local architecture check, package restore, full Release build (0 warnings/errors) and 46/46 tests PASSED with SDK 10.0.401.
+No schema migration added. No manual HTTP/end-to-end or production verification claimed.
+The historical scaffold-only NOT RUN entries below are superseded by this CI evidence.
+
+## Initial scaffold checks (historical)
 
 - PASS: 36 module directories, 180 module projects, 5 core projects, 1 test project.
 - PASS: 186 unique .slnx paths; every project exists; original 121 retained.
