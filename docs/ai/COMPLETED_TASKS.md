@@ -22,3 +22,10 @@ CI: https://github.com/viktor132607/Fintrox.Server/actions/runs/37900969688
 Job 113723180801: restore, Release warnings-as-errors build, 46/46 tests, EF snapshot and PostgreSQL migrations PASSED.
 Local restore, static architecture and 46/46 tests also passed. No production or manual HTTP verification claimed.
 Next task: AUTH-002, atomic single-use refresh-token rotation with relational concurrency tests.
+
+## 2026-10-10 — AUTH-002
+- Atomic conditional refresh consumption and replacement insertion in one retry-aware transaction.
+- Conditional revoke/session-revoke preserves rotation metadata and ownership semantics.
+- Added five PostgreSQL concurrency/rollback/revocation tests; no new project or schema.
+- Code: 422cc38dd2a20200ca3a5e1ee91a8c6c78d876dd. CI run 38012762635 / job 114096261806: Release build 0 warnings/errors, 51/51 tests, EF snapshot and PostgreSQL migrations passed.
+- Client handoff synchronized at ec7ccf7; no frontend source changes. Next: INT-001.

@@ -1,11 +1,13 @@
 # Validation history — 2026-10-09
 
 ## Current verified state
-Code commit: 79ee090e2e50ff64d3b3fb11d01e7fda31eb5b50.
-CI run 37900969688, job 113723180801: restore, Release build with warnings as errors (0 warnings/errors), 46/46 tests, EF model snapshot and PostgreSQL migration application/listing all PASSED.
-Local architecture check, package restore, full Release build (0 warnings/errors) and 46/46 tests PASSED with SDK 10.0.401.
-No schema migration added. No manual HTTP/end-to-end or production verification claimed.
-The historical scaffold-only NOT RUN entries below are superseded by this CI evidence.
+Code commit: 422cc38dd2a20200ca3a5e1ee91a8c6c78d876dd (AUTH-002).
+CI run 38012762635, job 114096261806: restore, Release build with warnings as errors (0 warnings/errors), 51/51 tests (0 skipped), EF snapshot and PostgreSQL migration application/listing PASSED.
+Five PostgreSQL tests cover simultaneous refresh, revoke winning during refresh read, revocation after rotation, failed replacement-save rollback/same-context retry, and session ownership/revocation.
+Local affected-project Release build and 46 unit tests passed; five relational tests explicitly skipped locally (PostgreSQL unavailable), then all five passed in CI.
+Architecture check passes. No new migration/project or production verification.
+Previous AUTH-001 code 79ee090 also passed full build, 46/46 tests and migrations (CI 37900969688).
+Historical scaffold-only NOT RUN entries below are superseded by CI evidence.
 
 ## Initial scaffold checks (historical)
 

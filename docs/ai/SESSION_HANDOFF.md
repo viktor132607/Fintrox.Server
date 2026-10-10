@@ -1,36 +1,27 @@
-# Fintrox Session Handoff
+# Fintrox Session Handoff — 2026-10-10
 
-## Last Verified Commit
-Server code/audit: 79ee090e2e50ff64d3b3fb11d01e7fda31eb5b50 (main).
-Client source: 3b49bd197212d822677eba995bdf2aa519d17cea; no frontend code changes in this milestone.
+## Last verified code
+Server: 422cc38dd2a20200ca3a5e1ee91a8c6c78d876dd (main), AUTH-002.
+Client memory: ec7ccf75d091819c3aa67b674b4ed49be1cf9cad; frontend source unchanged.
 
-## Current Milestone
-Phase 1 foundation security; architecture expansion is complete.
-
-## Last Completed Task
-VERIFY-001, AUDIT-001 and AUTH-001: current-state bearer validation plus 13 regression tests.
-
-## Active Task
-AUTH-002 — implemented; PostgreSQL regression tests and CI verification pending.
+## Completed milestone
+ARCH-001: 13 modules added; total 36 modules / 186 projects.
+VERIFY-001, AUDIT-001, AUTH-001: baseline verification, inventory/audit and current-state JWT checks complete.
+AUTH-002: atomic single-use refresh rotation, conditional revocation and five PostgreSQL regressions complete.
 
 ## Validation
-CI run 37900969688, job 113723180801: restore, Release build (0 warnings/errors), 46/46 tests, EF model snapshot and PostgreSQL migrations PASSED.
-Local package restore, full Release build (0 warnings/errors), architecture checks and 46/46 tests also passed.
-36 modules / 186 projects preserved. No financial-code, schema or frontend changes.
+CI run 38012762635, job 114096261806: restore, Release build (0 warnings/errors), 51/51 tests (0 skipped), EF model snapshot and PostgreSQL migration application/listing PASSED.
+Local affected-project build and 46 unit tests passed; 5 PostgreSQL tests explicitly skipped locally because no PostgreSQL server. All 5 ran and passed in CI.
+Architecture check passes. No schema/financial/frontend source changes or new projects.
 No manual HTTP/end-to-end or production verification claimed.
 
-## Files Changed
-Api/Program.cs; Application/Identity/{IAccessTokenValidator,AccessTokenValidator}.cs;
-Application/DependencyInjection.cs; existing test project + Identity/AccessTokenValidatorTests.cs;
-docs/authentication.md; docs/ai audit, state, queue, decisions and validation.
+## Behavior and limits
+Refresh uses a conditional consume update plus replacement insertion in one transaction inside the EF execution strategy. Only one simultaneous request succeeds. Failed insertion rolls back consumption; its tracked replacement is detached for retry.
+Revoke and session-revoke use conditional updates preserving committed rotation metadata.
+If rotation commits before old-token revocation, the replacement remains valid. Token-family logout and immediate per-session JWT revocation are not implemented. Ambiguous commit failure may require login again; it never permits a second replacement.
+Tests create/drop random fintrox_auth_test_ databases on FINTROX_TEST_POSTGRES; CI config supplies a disposable PostgreSQL server. Never point tests at production.
 
-## Next Exact Action
-Verify AUTH-002 build and five PostgreSQL tests (FINTROX_TEST_POSTGRES in CI). Conditional consumption and replacement insertion share a retry-aware transaction; revoke paths use conditional updates. After green CI, mark AUTH-002 complete and proceed to INT-001 webhook SSRF prevention.
-
-## Important Decisions / Known Gaps
-AUTH-001 repairs the active legacy bearer boundary; target module migration stays separate.
-Bearer validation reads current actor state per request, rejects removed scopes and never grants new scopes to old tokens.
-Session/logout revocation still follows existing access-token expiry behavior; it is not immediate per-session JWT revocation.
-Other P0: webhook SSRF prevention. Other gaps and source evidence: AUDIT.md / TASK_QUEUE.md.
-Client remains 23 module shells. Do not recreate scaffolds or repeat the full audit.
-Local /tmp was cleared between turns; SDK and NuGet cache were restored under scratch. Do not assume a previous process/log still exists.
+## Next exact action
+INT-001 — not implemented: inspect Domain/Integrations/WebhookSubscription.NormalizeUrl, webhook worker, HTTP client registration and delivery tests. Implement SSRF prevention covering private/loopback/link-local/metadata destinations, IPv4/IPv6, DNS rebinding and redirects, with safe-public delivery tests. Preserve existing signed payloads and retry semantics; do not combine with INT-002 worker lease redesign.
+Read TASK_QUEUE.md and AUDIT.md for remaining tasks. Do not recreate scaffolds or repeat the full audit.
+Client remains 23 module shells; FE-001 is queued.

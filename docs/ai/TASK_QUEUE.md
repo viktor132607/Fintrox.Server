@@ -6,7 +6,7 @@
 | VERIFY-001 | Verify baseline restore/build/tests | Platform | P0 | ARCH-001 | COMPLETE | CI 37860035722: restore/build/33 tests/migrations pass |
 | AUDIT-001 | Audit Server and Client | All | P0 | VERIFY-001 | COMPLETE | AUDIT.md covers all modules, layers, frontend and concrete gaps |
 | AUTH-001 | Revalidate issued bearer tokens against current state | Identity/Integrations | P0 | AUDIT-001 | COMPLETE | Commit 79ee090; CI build, 46 tests and PostgreSQL migrations pass |
-| AUTH-002 | Atomic single-use refresh-token rotation | Identity | P0 | AUTH-001 | IMPLEMENTED — CI PENDING | Concurrent refresh consumes token once; loser unauthorized; relational race tests |
+| AUTH-002 | Atomic single-use refresh-token rotation | Identity | P0 | AUTH-001 | COMPLETE | 422cc38: one winner, revoke ordering, rollback; CI 51/51 tests and migrations pass |
 | INT-001 | Webhook SSRF prevention | Integrations | P0 | AUDIT-001 | PENDING | Private/loopback/metadata targets and redirect/DNS bypass rejected; safe public delivery tested |
 | ORG-001 | Concurrent last-owner protection | Organizations | P1 | AUDIT-001 | PENDING | Simultaneous removal/demotion cannot leave no active owner |
 | ORG-002 | Inactive-tenant business access policy | Organizations | P1 | AUDIT-001 | PENDING | Deny inactive tenant business operations while preserving authorized reactivation |
