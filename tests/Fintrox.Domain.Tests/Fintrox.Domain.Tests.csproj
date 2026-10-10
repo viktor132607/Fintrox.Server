@@ -12,5 +12,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Fintrox.Domain\Fintrox.Domain.csproj" />
     <ProjectReference Include="..\..\src\Fintrox.Application\Fintrox.Application.csproj" />
+    <ProjectReference Include="../../src/Fintrox.Infrastructure/Fintrox.Infrastructure.csproj" />
   </ItemGroup>
 </Project>

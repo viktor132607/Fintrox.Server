@@ -11,7 +11,7 @@ Phase 1 foundation security; architecture expansion is complete.
 VERIFY-001, AUDIT-001 and AUTH-001: current-state bearer validation plus 13 regression tests.
 
 ## Active Task
-AUTH-002 — next, not yet implemented: atomic single-use refresh-token rotation.
+AUTH-002 — implemented; PostgreSQL regression tests and CI verification pending.
 
 ## Validation
 CI run 37900969688, job 113723180801: restore, Release build (0 warnings/errors), 46/46 tests, EF model snapshot and PostgreSQL migrations PASSED.
@@ -25,8 +25,7 @@ Application/DependencyInjection.cs; existing test project + Identity/AccessToken
 docs/authentication.md; docs/ai audit, state, queue, decisions and validation.
 
 ## Next Exact Action
-Read Infrastructure/Identity/AuthenticationService.RefreshAsync and RefreshTokenConfiguration.
-Replace read-then-revoke with atomic conditional consumption inside the EF execution-strategy transaction; persist the replacement in that same transaction. Test concurrent refresh (one winner), refresh/revoke races and rollback on replacement-save failure against PostgreSQL. No speculative domain migration.
+Verify AUTH-002 build and five PostgreSQL tests (FINTROX_TEST_POSTGRES in CI). Conditional consumption and replacement insertion share a retry-aware transaction; revoke paths use conditional updates. After green CI, mark AUTH-002 complete and proceed to INT-001 webhook SSRF prevention.
 
 ## Important Decisions / Known Gaps
 AUTH-001 repairs the active legacy bearer boundary; target module migration stays separate.

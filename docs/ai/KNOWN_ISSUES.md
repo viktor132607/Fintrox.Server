@@ -3,7 +3,7 @@
 | ID | Problem | Impact | Evidence / reproduction | Proposed resolution | Status |
 |---|---|---|---|---|---|
 | AUTH-001 | Issued tokens outlive actor/scope deactivation | Revoked actors retain temporary access | Baseline bearer handler checks only signature/lifetime | Current-state validator + 13 regression tests, validated at 79ee090 | RESOLVED |
-| AUTH-002 | Refresh read/update lacks atomic consumption | Concurrent refresh can create two replacements | AuthenticationService.RefreshAsync + RefreshTokenConfiguration | Conditional update/transaction and relational race tests | PENDING |
+| AUTH-002 | Refresh read/update lacks atomic consumption | Concurrent refresh can create two replacements | AuthenticationService.RefreshAsync + RefreshTokenConfiguration | Conditional update/transaction and relational race tests | IMPLEMENTED — CI PENDING |
 | INT-001 | Webhook URL accepts arbitrary HTTP(S) destinations | Requests may target internal resources | Domain/Integrations/WebhookSubscription.NormalizeUrl; worker default HTTP client | DNS/connect/redirect-safe destination policy | PENDING |
 | ORG-001 | Last-owner count and update not serialized | Concurrent demotions can remove every owner | OrganizationMemberService.EnsureNotLastOwnerAsync | Serialize and test concurrent changes | PENDING |
 | ORG-002 | General organization permissions do not check organization activity | Inactive tenant may still accept business requests | OrganizationAccessService checks active membership only | Define lifecycle policy preserving reactivation; add use-case tests | PENDING |

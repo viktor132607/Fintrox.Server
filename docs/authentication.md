@@ -96,3 +96,9 @@ Creating an organization automatically creates an Owner membership for the authe
 After normal JWT signature/issuer/audience/lifetime validation, every bearer request verifies that the user still exists and is active. Integration tokens additionally require the exact client/organization identity, an active client and organization, and scopes that are still granted. Deactivation or scope removal therefore affects the next request without waiting for token expiry. Added scopes do not elevate old tokens. Database failures fail the request rather than authorizing from stale state.
 
 This does not introduce access-token session IDs or immediate per-session logout revocation: existing access tokens for an active user retain their normal lifetime after refresh-session revocation. Refresh rotation concurrency is tracked as AUTH-002.
+
+## Atomic refresh rotation
+
+Refresh consumption uses a conditional database update in the same transaction as the replacement insertion. Concurrent use of the same token has one winner; the loser receives the existing authentication error. A failed insertion rolls back consumption. Revocation uses conditional updates so a stale revoke cannot overwrite rotation metadata. If refresh commits before revocation of the old token, the replacement remains valid; logout does not revoke the entire token family or immediately revoke an issued access token.
+
+PostgreSQL regression tests use `FINTROX_TEST_POSTGRES`, pointing to a disposable server with CREATE DATABASE permission. Each test creates and drops its own random `fintrox_auth_test_` database; it never resets the supplied database. CI sets this variable. Without it, the five database tests are explicitly inconclusive.

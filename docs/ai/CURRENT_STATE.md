@@ -8,3 +8,5 @@
 - Local SDK 10.0.401 was restored under the scratch workspace after /tmp was cleared. Package restore, complete Release build (0 warnings/errors) and 46/46 tests passed locally and in CI at the exact code commit above.
 - Client still has 23 TypeScript module shells. No operational business screens exist.
 - Next P0 items: refresh-token atomic rotation and webhook SSRF policy (see TASK_QUEUE.md).
+
+- AUTH-002 implemented pending CI: transactional conditional refresh consumption, atomic revocation updates and five PostgreSQL regression tests. No migration or new project.

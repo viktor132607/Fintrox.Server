@@ -103,48 +103,61 @@ public sealed class AuthenticationService(
         string? userAgent,
         CancellationToken cancellationToken)
     {
-        var now = timeProvider.GetUtcNow();
         var hash = HashToken(request.RefreshToken);
+        var strategy = dbContext.Database.CreateExecutionStrategy();
 
-        var existing = await dbContext.RefreshTokens.SingleOrDefaultAsync(
-            token => token.TokenHash == hash,
-            cancellationToken);
-
-        if (existing is null || !existing.IsActive(now))
+        return await strategy.ExecuteAsync(async () =>
         {
-            throw new AuthenticationException("Invalid or expired refresh token.");
-        }
+            var now = timeProvider.GetUtcNow();
+            await using var transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
+            var existing = await dbContext.RefreshTokens.AsNoTracking().SingleOrDefaultAsync(
+                token => token.TokenHash == hash,
+                cancellationToken);
 
-        var user = await userManager.FindByIdAsync(existing.UserId.ToString());
+            if (existing is null || !existing.IsActive(now))
+            {
+                throw new AuthenticationException("Invalid or expired refresh token.");
+            }
 
-        if (user is null || !user.IsActive)
-        {
-            throw new AuthenticationException("The user account is not available.");
-        }
+            var user = await userManager.FindByIdAsync(existing.UserId.ToString());
+            if (user is null || !user.IsActive)
+            {
+                throw new AuthenticationException("The user account is not available.");
+            }
 
-        var accessToken = accessTokenService.Create(
-            user.Id,
-            user.Email ?? string.Empty,
-            user.DisplayName);
+            var (rawRefreshToken, replacement) = CreateRefreshToken(user.Id, ipAddress, userAgent, now);
+            var revokedByIp = NormalizeMetadata(ipAddress, 64);
 
-        var (rawRefreshToken, replacement) = CreateRefreshToken(
-            user.Id,
-            ipAddress,
-            userAgent,
-            now);
+            // The predicate is rechecked by PostgreSQL after a competing writer commits.
+            // Only the request that consumes this row may insert a replacement.
+            var consumed = await dbContext.RefreshTokens
+                .Where(token => token.Id == existing.Id && token.RevokedAtUtc == null && token.ExpiresAtUtc > now)
+                .ExecuteUpdateAsync(setters => setters
+                    .SetProperty(token => token.RevokedAtUtc, (DateTimeOffset?)now)
+                    .SetProperty(token => token.RevokedByIp, revokedByIp)
+                    .SetProperty(token => token.ReplacedByTokenId, (Guid?)replacement.Id), cancellationToken);
 
-        existing.RevokedAtUtc = now;
-        existing.RevokedByIp = NormalizeMetadata(ipAddress, 64);
-        existing.ReplacedByTokenId = replacement.Id;
+            if (consumed != 1)
+            {
+                throw new AuthenticationException("Invalid or expired refresh token.");
+            }
 
-        dbContext.RefreshTokens.Add(replacement);
-        await dbContext.SaveChangesAsync(cancellationToken);
+            dbContext.RefreshTokens.Add(replacement);
+            try
+            {
+                await dbContext.SaveChangesAsync(cancellationToken);
+                var accessToken = accessTokenService.Create(user.Id, user.Email ?? string.Empty, user.DisplayName);
+                await transaction.CommitAsync(cancellationToken);
 
-        return new AuthTokenResponse(
-            accessToken.Value,
-            accessToken.ExpiresAtUtc,
-            rawRefreshToken,
-            replacement.ExpiresAtUtc);
+                return new AuthTokenResponse(accessToken.Value, accessToken.ExpiresAtUtc,
+                    rawRefreshToken, replacement.ExpiresAtUtc);
+            }
+            finally
+            {
+                // A rolled-back attempt must not leave an Added replacement for a retry.
+                dbContext.Entry(replacement).State = EntityState.Detached;
+            }
+        });
     }
 
     public async Task RevokeAsync(
@@ -153,20 +166,13 @@ public sealed class AuthenticationService(
         CancellationToken cancellationToken)
     {
         var hash = HashToken(request.RefreshToken);
-
-        var token = await dbContext.RefreshTokens.SingleOrDefaultAsync(
-            refreshToken => refreshToken.TokenHash == hash,
-            cancellationToken);
-
-        if (token is null || token.RevokedAtUtc is not null)
-        {
-            return;
-        }
-
-        token.RevokedAtUtc = timeProvider.GetUtcNow();
-        token.RevokedByIp = NormalizeMetadata(ipAddress, 64);
-
-        await dbContext.SaveChangesAsync(cancellationToken);
+        var now = timeProvider.GetUtcNow();
+        var revokedByIp = NormalizeMetadata(ipAddress, 64);
+        await dbContext.RefreshTokens
+            .Where(token => token.TokenHash == hash && token.RevokedAtUtc == null)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(token => token.RevokedAtUtc, (DateTimeOffset?)now)
+                .SetProperty(token => token.RevokedByIp, revokedByIp), cancellationToken);
     }
 
     public async Task<CurrentUserResponse> GetCurrentUserAsync(
@@ -239,23 +245,16 @@ public sealed class AuthenticationService(
         string? ipAddress,
         CancellationToken cancellationToken)
     {
-        var token = await dbContext.RefreshTokens.SingleOrDefaultAsync(
-            x => x.Id == sessionId && x.UserId == userId,
-            cancellationToken);
+        var now = timeProvider.GetUtcNow();
+        var revokedByIp = NormalizeMetadata(ipAddress, 64);
+        var changed = await dbContext.RefreshTokens
+            .Where(token => token.Id == sessionId && token.UserId == userId && token.RevokedAtUtc == null)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(token => token.RevokedAtUtc, (DateTimeOffset?)now)
+                .SetProperty(token => token.RevokedByIp, revokedByIp), cancellationToken);
 
-        if (token is null)
-        {
-            return false;
-        }
-
-        if (token.RevokedAtUtc is null)
-        {
-            token.RevokedAtUtc = timeProvider.GetUtcNow();
-            token.RevokedByIp = NormalizeMetadata(ipAddress, 64);
-            await dbContext.SaveChangesAsync(cancellationToken);
-        }
-
-        return true;
+        return changed == 1 || await dbContext.RefreshTokens.AsNoTracking()
+            .AnyAsync(token => token.Id == sessionId && token.UserId == userId, cancellationToken);
     }
 
     private async Task<AuthTokenResponse> IssueTokensAsync(
