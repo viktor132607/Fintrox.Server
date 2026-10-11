@@ -52,6 +52,9 @@ jobs:
       - name: Check module boundaries
         run: python3 scripts/check_architecture.py
 
+      - name: Check domain entity inventory
+        run: python3 scripts/check_domain_entities.py
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v6
         with:

@@ -140,7 +140,7 @@ The catalog now contains 36 modules: the original 23 plus the 13 ERP extensions 
 
 ## ERP architecture expansion
 
-186 solution projects: 180 module, 5 core and 1 test. New modules remain scaffold-only.
+186 solution projects: 180 module, 5 core and 1 test. All module Domain projects now contain constructor-validated entity foundations; other layers remain scaffold-only. See docs/ai/MODULE_STATUS.md.
 
 | Module | Reserved schema | Planned features |
 |---|---|---|

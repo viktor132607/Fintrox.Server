@@ -2,6 +2,8 @@
 
 | Task ID | Title | Module | Priority | Dependencies | Status | Acceptance Criteria |
 |---|---|---|---|---|---|---|
+| ENTITIES-001 | Module entity foundation | All 36 | P0 user-directed | ARCH-001 | IMPLEMENTED — CI PENDING | 180 named types, all module boundaries preserved, invariant tests, per-module progress |
+| ENTITIES-002 | Integrate entity persistence and use cases | Incremental modules | P1 | ENTITIES-001 | PENDING | EF constraints, authorization, contracts, lifecycle behavior, PostgreSQL and HTTP tests per capability |
 | ARCH-001 | 13 new module scaffolds | Platform | P0 | Baseline | COMPLETE | 36 modules, 186 projects, architecture passes |
 | VERIFY-001 | Verify baseline restore/build/tests | Platform | P0 | ARCH-001 | COMPLETE | CI 37860035722: restore/build/33 tests/migrations pass |
 | AUDIT-001 | Audit Server and Client | All | P0 | VERIFY-001 | COMPLETE | AUDIT.md covers all modules, layers, frontend and concrete gaps |

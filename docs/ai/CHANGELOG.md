@@ -20,3 +20,9 @@
 - Added five PostgreSQL concurrency/rollback/revocation tests; no new project or schema.
 - Code: 422cc38dd2a20200ca3a5e1ee91a8c6c78d876dd. CI run 38012762635 / job 114096261806: Release build 0 warnings/errors, 51/51 tests, EF snapshot and PostgreSQL migrations passed.
 - Client handoff synchronized at ec7ccf7; no frontend source changes. Next: INT-001.
+
+## 2026-10-11 — ENTITIES-001
+- User-prioritized entity foundation: 180 classes across all 36 Domain projects, with explicit fields, immutable organization ownership and constructor validation.
+- Preserved existing runtime entities/financial engines/migrations. Other module layers and persistence remain pending.
+- Added complete machine inventory, CI inventory check and 558 new test cases. Local Release affected graph build passed; 604 tests passed, 5 PostgreSQL tests skipped pending CI.
+- Per-module names and pending work recorded in MODULE_STATUS.md.

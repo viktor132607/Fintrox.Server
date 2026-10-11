@@ -1,0 +1,3769 @@
+{
+  "status": "DOMAIN_FOUNDATION",
+  "entities": [
+    {
+      "module": "Accounting",
+      "entity": "AccountGroup",
+      "path": "src/Modules/Accounting/Fintrox.Modules.Accounting.Domain/Entities/AccountGroup.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Accounting",
+      "entity": "AccountingDimension",
+      "path": "src/Modules/Accounting/Fintrox.Modules.Accounting.Domain/Entities/AccountingDimension.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Accounting",
+      "entity": "AccountingDimensionValue",
+      "path": "src/Modules/Accounting/Fintrox.Modules.Accounting.Domain/Entities/AccountingDimensionValue.cs",
+      "fields": [
+        {
+          "name": "DimensionId",
+          "rule": "id"
+        },
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Accounting",
+      "entity": "AccountingBook",
+      "path": "src/Modules/Accounting/Fintrox.Modules.Accounting.Domain/Entities/AccountingBook.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Accounting",
+      "entity": "RecurringJournal",
+      "path": "src/Modules/Accounting/Fintrox.Modules.Accounting.Domain/Entities/RecurringJournal.cs",
+      "fields": [
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "SourceJournalId",
+          "rule": "id"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "IntervalMonths",
+          "rule": "positiveInt"
+        }
+      ]
+    },
+    {
+      "module": "Audit",
+      "entity": "AuditRetentionPolicy",
+      "path": "src/Modules/Audit/Fintrox.Modules.Audit.Domain/Entities/AuditRetentionPolicy.cs",
+      "fields": [
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "RetentionDays",
+          "rule": "positiveInt"
+        }
+      ]
+    },
+    {
+      "module": "Audit",
+      "entity": "AuditExportRequest",
+      "path": "src/Modules/Audit/Fintrox.Modules.Audit.Domain/Entities/AuditExportRequest.cs",
+      "fields": [
+        {
+          "name": "RequestedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "FromUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "ToUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Banking",
+      "entity": "BankAccount",
+      "path": "src/Modules/Banking/Fintrox.Modules.Banking.Domain/Entities/BankAccount.cs",
+      "fields": [
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "AccountIdentifier",
+          "rule": "text"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Banking",
+      "entity": "BankStatement",
+      "path": "src/Modules/Banking/Fintrox.Modules.Banking.Domain/Entities/BankStatement.cs",
+      "fields": [
+        {
+          "name": "BankAccountId",
+          "rule": "id"
+        },
+        {
+          "name": "Reference",
+          "rule": "text"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "OpeningBalance",
+          "rule": "decimal"
+        },
+        {
+          "name": "ClosingBalance",
+          "rule": "decimal"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Banking",
+      "entity": "BankStatementLine",
+      "path": "src/Modules/Banking/Fintrox.Modules.Banking.Domain/Entities/BankStatementLine.cs",
+      "fields": [
+        {
+          "name": "StatementId",
+          "rule": "id"
+        },
+        {
+          "name": "BookedOn",
+          "rule": "date"
+        },
+        {
+          "name": "Reference",
+          "rule": "text"
+        },
+        {
+          "name": "Amount",
+          "rule": "nonzero"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Banking",
+      "entity": "BankReconciliationMatch",
+      "path": "src/Modules/Banking/Fintrox.Modules.Banking.Domain/Entities/BankReconciliationMatch.cs",
+      "fields": [
+        {
+          "name": "StatementLineId",
+          "rule": "id"
+        },
+        {
+          "name": "PaymentId",
+          "rule": "id"
+        },
+        {
+          "name": "Amount",
+          "rule": "positive"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Budgeting",
+      "entity": "Budget",
+      "path": "src/Modules/Budgeting/Fintrox.Modules.Budgeting.Domain/Entities/Budget.cs",
+      "fields": [
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Budgeting",
+      "entity": "BudgetVersion",
+      "path": "src/Modules/Budgeting/Fintrox.Modules.Budgeting.Domain/Entities/BudgetVersion.cs",
+      "fields": [
+        {
+          "name": "BudgetId",
+          "rule": "id"
+        },
+        {
+          "name": "VersionNumber",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Budgeting",
+      "entity": "BudgetLine",
+      "path": "src/Modules/Budgeting/Fintrox.Modules.Budgeting.Domain/Entities/BudgetLine.cs",
+      "fields": [
+        {
+          "name": "BudgetVersionId",
+          "rule": "id"
+        },
+        {
+          "name": "AccountId",
+          "rule": "id"
+        },
+        {
+          "name": "PeriodStartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "PeriodEndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "Amount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Budgeting",
+      "entity": "Forecast",
+      "path": "src/Modules/Budgeting/Fintrox.Modules.Budgeting.Domain/Entities/Forecast.cs",
+      "fields": [
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "CRM",
+      "entity": "Lead",
+      "path": "src/Modules/CRM/Fintrox.Modules.CRM.Domain/Entities/Lead.cs",
+      "fields": [
+        {
+          "name": "Subject",
+          "rule": "text"
+        },
+        {
+          "name": "ContactName",
+          "rule": "text"
+        },
+        {
+          "name": "Email",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "CRM",
+      "entity": "Opportunity",
+      "path": "src/Modules/CRM/Fintrox.Modules.CRM.Domain/Entities/Opportunity.cs",
+      "fields": [
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "ExpectedValue",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "ExpectedCloseOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "CRM",
+      "entity": "CrmActivity",
+      "path": "src/Modules/CRM/Fintrox.Modules.CRM.Domain/Entities/CrmActivity.cs",
+      "fields": [
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "Subject",
+          "rule": "text"
+        },
+        {
+          "name": "ScheduledAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "CRM",
+      "entity": "SalesPipeline",
+      "path": "src/Modules/CRM/Fintrox.Modules.CRM.Domain/Entities/SalesPipeline.cs",
+      "fields": [
+        {
+          "name": "Name",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "CRM",
+      "entity": "PipelineStage",
+      "path": "src/Modules/CRM/Fintrox.Modules.CRM.Domain/Entities/PipelineStage.cs",
+      "fields": [
+        {
+          "name": "PipelineId",
+          "rule": "id"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "Position",
+          "rule": "nonnegativeInt"
+        },
+        {
+          "name": "ProbabilityPercent",
+          "rule": "percent"
+        }
+      ]
+    },
+    {
+      "module": "CRM",
+      "entity": "MarketingCampaign",
+      "path": "src/Modules/CRM/Fintrox.Modules.CRM.Domain/Entities/MarketingCampaign.cs",
+      "fields": [
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Capabilities",
+      "entity": "CapabilityDefinition",
+      "path": "src/Modules/Capabilities/Fintrox.Modules.Capabilities.Domain/Entities/CapabilityDefinition.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "ModuleCode",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Capabilities",
+      "entity": "CapabilityDependency",
+      "path": "src/Modules/Capabilities/Fintrox.Modules.Capabilities.Domain/Entities/CapabilityDependency.cs",
+      "fields": [
+        {
+          "name": "CapabilityId",
+          "rule": "id"
+        },
+        {
+          "name": "RequiredCapabilityId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "Capabilities",
+      "entity": "OrganizationModuleInstallation",
+      "path": "src/Modules/Capabilities/Fintrox.Modules.Capabilities.Domain/Entities/OrganizationModuleInstallation.cs",
+      "fields": [
+        {
+          "name": "ModuleCode",
+          "rule": "text"
+        },
+        {
+          "name": "Version",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Capabilities",
+      "entity": "OrganizationCapabilityActivation",
+      "path": "src/Modules/Capabilities/Fintrox.Modules.Capabilities.Domain/Entities/OrganizationCapabilityActivation.cs",
+      "fields": [
+        {
+          "name": "CapabilityCode",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Capabilities",
+      "entity": "UserCapabilityEntitlement",
+      "path": "src/Modules/Capabilities/Fintrox.Modules.Capabilities.Domain/Entities/UserCapabilityEntitlement.cs",
+      "fields": [
+        {
+          "name": "UserId",
+          "rule": "id"
+        },
+        {
+          "name": "CapabilityCode",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Commerce",
+      "entity": "CatalogListing",
+      "path": "src/Modules/Commerce/Fintrox.Modules.Commerce.Domain/Entities/CatalogListing.cs",
+      "fields": [
+        {
+          "name": "ItemId",
+          "rule": "id"
+        },
+        {
+          "name": "StorefrontId",
+          "rule": "id"
+        },
+        {
+          "name": "ExternalSku",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Commerce",
+      "entity": "Storefront",
+      "path": "src/Modules/Commerce/Fintrox.Modules.Commerce.Domain/Entities/Storefront.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Commerce",
+      "entity": "PriceList",
+      "path": "src/Modules/Commerce/Fintrox.Modules.Commerce.Domain/Entities/PriceList.cs",
+      "fields": [
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Commerce",
+      "entity": "PriceListEntry",
+      "path": "src/Modules/Commerce/Fintrox.Modules.Commerce.Domain/Entities/PriceListEntry.cs",
+      "fields": [
+        {
+          "name": "PriceListId",
+          "rule": "id"
+        },
+        {
+          "name": "ItemId",
+          "rule": "id"
+        },
+        {
+          "name": "UnitPrice",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Commerce",
+      "entity": "Promotion",
+      "path": "src/Modules/Commerce/Fintrox.Modules.Commerce.Domain/Entities/Promotion.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "DiscountPercent",
+          "rule": "percent"
+        }
+      ]
+    },
+    {
+      "module": "Commerce",
+      "entity": "CommerceOrder",
+      "path": "src/Modules/Commerce/Fintrox.Modules.Commerce.Domain/Entities/CommerceOrder.cs",
+      "fields": [
+        {
+          "name": "StorefrontId",
+          "rule": "id"
+        },
+        {
+          "name": "ExternalOrderId",
+          "rule": "text"
+        },
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Commerce",
+      "entity": "CommerceOrderLine",
+      "path": "src/Modules/Commerce/Fintrox.Modules.Commerce.Domain/Entities/CommerceOrderLine.cs",
+      "fields": [
+        {
+          "name": "CommerceOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "ItemId",
+          "rule": "id"
+        },
+        {
+          "name": "Quantity",
+          "rule": "positive"
+        },
+        {
+          "name": "UnitPrice",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Consolidation",
+      "entity": "CompanyGroup",
+      "path": "src/Modules/Consolidation/Fintrox.Modules.Consolidation.Domain/Entities/CompanyGroup.cs",
+      "fields": [
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "ReportingCurrency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Consolidation",
+      "entity": "GroupCompany",
+      "path": "src/Modules/Consolidation/Fintrox.Modules.Consolidation.Domain/Entities/GroupCompany.cs",
+      "fields": [
+        {
+          "name": "CompanyGroupId",
+          "rule": "id"
+        },
+        {
+          "name": "MemberOrganizationId",
+          "rule": "id"
+        },
+        {
+          "name": "OwnershipPercent",
+          "rule": "percent"
+        }
+      ]
+    },
+    {
+      "module": "Consolidation",
+      "entity": "ConsolidationPeriod",
+      "path": "src/Modules/Consolidation/Fintrox.Modules.Consolidation.Domain/Entities/ConsolidationPeriod.cs",
+      "fields": [
+        {
+          "name": "CompanyGroupId",
+          "rule": "id"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Consolidation",
+      "entity": "EliminationEntry",
+      "path": "src/Modules/Consolidation/Fintrox.Modules.Consolidation.Domain/Entities/EliminationEntry.cs",
+      "fields": [
+        {
+          "name": "ConsolidationPeriodId",
+          "rule": "id"
+        },
+        {
+          "name": "SourceOrganizationId",
+          "rule": "id"
+        },
+        {
+          "name": "TargetOrganizationId",
+          "rule": "id"
+        },
+        {
+          "name": "SourceJournalId",
+          "rule": "id"
+        },
+        {
+          "name": "Amount",
+          "rule": "nonzero"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "ContractManagement",
+      "entity": "BusinessContract",
+      "path": "src/Modules/ContractManagement/Fintrox.Modules.ContractManagement.Domain/Entities/BusinessContract.cs",
+      "fields": [
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "Reference",
+          "rule": "text"
+        },
+        {
+          "name": "Kind",
+          "rule": "ContractKind"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "ContractManagement",
+      "entity": "ContractVersion",
+      "path": "src/Modules/ContractManagement/Fintrox.Modules.ContractManagement.Domain/Entities/ContractVersion.cs",
+      "fields": [
+        {
+          "name": "ContractId",
+          "rule": "id"
+        },
+        {
+          "name": "VersionNumber",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "Terms",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "ContractManagement",
+      "entity": "ContractObligation",
+      "path": "src/Modules/ContractManagement/Fintrox.Modules.ContractManagement.Domain/Entities/ContractObligation.cs",
+      "fields": [
+        {
+          "name": "ContractId",
+          "rule": "id"
+        },
+        {
+          "name": "Description",
+          "rule": "text"
+        },
+        {
+          "name": "DueOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "ContractManagement",
+      "entity": "ContractMilestone",
+      "path": "src/Modules/ContractManagement/Fintrox.Modules.ContractManagement.Domain/Entities/ContractMilestone.cs",
+      "fields": [
+        {
+          "name": "ContractId",
+          "rule": "id"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "DueOn",
+          "rule": "date"
+        },
+        {
+          "name": "Amount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "ContractManagement",
+      "entity": "ContractRenewal",
+      "path": "src/Modules/ContractManagement/Fintrox.Modules.ContractManagement.Domain/Entities/ContractRenewal.cs",
+      "fields": [
+        {
+          "name": "ContractId",
+          "rule": "id"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Counterparties",
+      "entity": "CounterpartyContact",
+      "path": "src/Modules/Counterparties/Fintrox.Modules.Counterparties.Domain/Entities/CounterpartyContact.cs",
+      "fields": [
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "Email",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Counterparties",
+      "entity": "CounterpartyAddress",
+      "path": "src/Modules/Counterparties/Fintrox.Modules.Counterparties.Domain/Entities/CounterpartyAddress.cs",
+      "fields": [
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "AddressLine",
+          "rule": "text"
+        },
+        {
+          "name": "City",
+          "rule": "text"
+        },
+        {
+          "name": "PostalCode",
+          "rule": "text"
+        },
+        {
+          "name": "CountryCode",
+          "rule": "country"
+        }
+      ]
+    },
+    {
+      "module": "Counterparties",
+      "entity": "CounterpartyBankAccount",
+      "path": "src/Modules/Counterparties/Fintrox.Modules.Counterparties.Domain/Entities/CounterpartyBankAccount.cs",
+      "fields": [
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "AccountIdentifier",
+          "rule": "text"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Counterparties",
+      "entity": "PaymentTerm",
+      "path": "src/Modules/Counterparties/Fintrox.Modules.Counterparties.Domain/Entities/PaymentTerm.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "DueDays",
+          "rule": "nonnegativeInt"
+        }
+      ]
+    },
+    {
+      "module": "Counterparties",
+      "entity": "CounterpartyGroup",
+      "path": "src/Modules/Counterparties/Fintrox.Modules.Counterparties.Domain/Entities/CounterpartyGroup.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Currencies",
+      "entity": "ExchangeRateProvider",
+      "path": "src/Modules/Currencies/Fintrox.Modules.Currencies.Domain/Entities/ExchangeRateProvider.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Currencies",
+      "entity": "CurrencyRoundingPolicy",
+      "path": "src/Modules/Currencies/Fintrox.Modules.Currencies.Domain/Entities/CurrencyRoundingPolicy.cs",
+      "fields": [
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "DecimalPlaces",
+          "rule": "scale"
+        }
+      ]
+    },
+    {
+      "module": "Currencies",
+      "entity": "CurrencyRevaluation",
+      "path": "src/Modules/Currencies/Fintrox.Modules.Currencies.Domain/Entities/CurrencyRevaluation.cs",
+      "fields": [
+        {
+          "name": "AsOfDate",
+          "rule": "date"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "Rate",
+          "rule": "positive"
+        },
+        {
+          "name": "Source",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Documents",
+      "entity": "StoredDocument",
+      "path": "src/Modules/Documents/Fintrox.Modules.Documents.Domain/Entities/StoredDocument.cs",
+      "fields": [
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "ContentType",
+          "rule": "text"
+        },
+        {
+          "name": "StorageKey",
+          "rule": "text"
+        },
+        {
+          "name": "SizeBytes",
+          "rule": "nonnegativeLong"
+        },
+        {
+          "name": "Sha256",
+          "rule": "sha256"
+        }
+      ]
+    },
+    {
+      "module": "Documents",
+      "entity": "DocumentVersion",
+      "path": "src/Modules/Documents/Fintrox.Modules.Documents.Domain/Entities/DocumentVersion.cs",
+      "fields": [
+        {
+          "name": "DocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "VersionNumber",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "StorageKey",
+          "rule": "text"
+        },
+        {
+          "name": "Sha256",
+          "rule": "sha256"
+        }
+      ]
+    },
+    {
+      "module": "Documents",
+      "entity": "DocumentLink",
+      "path": "src/Modules/Documents/Fintrox.Modules.Documents.Domain/Entities/DocumentLink.cs",
+      "fields": [
+        {
+          "name": "DocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "ResourceType",
+          "rule": "text"
+        },
+        {
+          "name": "ResourceId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "Documents",
+      "entity": "DocumentTemplate",
+      "path": "src/Modules/Documents/Fintrox.Modules.Documents.Domain/Entities/DocumentTemplate.cs",
+      "fields": [
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "ContentType",
+          "rule": "text"
+        },
+        {
+          "name": "StorageKey",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Experience",
+      "entity": "ExperienceProfile",
+      "path": "src/Modules/Experience/Fintrox.Modules.Experience.Domain/Entities/ExperienceProfile.cs",
+      "fields": [
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "Mode",
+          "rule": "ExperienceMode"
+        }
+      ]
+    },
+    {
+      "module": "Experience",
+      "entity": "UserExperiencePreference",
+      "path": "src/Modules/Experience/Fintrox.Modules.Experience.Domain/Entities/UserExperiencePreference.cs",
+      "fields": [
+        {
+          "name": "UserId",
+          "rule": "id"
+        },
+        {
+          "name": "ProfileId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "Experience",
+      "entity": "DashboardWidget",
+      "path": "src/Modules/Experience/Fintrox.Modules.Experience.Domain/Entities/DashboardWidget.cs",
+      "fields": [
+        {
+          "name": "ProfileId",
+          "rule": "id"
+        },
+        {
+          "name": "WidgetCode",
+          "rule": "text"
+        },
+        {
+          "name": "Position",
+          "rule": "nonnegativeInt"
+        }
+      ]
+    },
+    {
+      "module": "Experience",
+      "entity": "SavedView",
+      "path": "src/Modules/Experience/Fintrox.Modules.Experience.Domain/Entities/SavedView.cs",
+      "fields": [
+        {
+          "name": "UserId",
+          "rule": "id"
+        },
+        {
+          "name": "ResourceType",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "DefinitionJson",
+          "rule": "json"
+        }
+      ]
+    },
+    {
+      "module": "Experience",
+      "entity": "NavigationPreference",
+      "path": "src/Modules/Experience/Fintrox.Modules.Experience.Domain/Entities/NavigationPreference.cs",
+      "fields": [
+        {
+          "name": "UserId",
+          "rule": "id"
+        },
+        {
+          "name": "CapabilityCode",
+          "rule": "text"
+        },
+        {
+          "name": "Position",
+          "rule": "nonnegativeInt"
+        },
+        {
+          "name": "Visible",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "FixedAssets",
+      "entity": "AssetCategory",
+      "path": "src/Modules/FixedAssets/Fintrox.Modules.FixedAssets.Domain/Entities/AssetCategory.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "UsefulLifeMonths",
+          "rule": "positiveInt"
+        }
+      ]
+    },
+    {
+      "module": "FixedAssets",
+      "entity": "FixedAsset",
+      "path": "src/Modules/FixedAssets/Fintrox.Modules.FixedAssets.Domain/Entities/FixedAsset.cs",
+      "fields": [
+        {
+          "name": "CategoryId",
+          "rule": "id"
+        },
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "AcquiredOn",
+          "rule": "date"
+        },
+        {
+          "name": "AcquisitionCost",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "ResidualValue",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "FixedAssets",
+      "entity": "DepreciationScheduleLine",
+      "path": "src/Modules/FixedAssets/Fintrox.Modules.FixedAssets.Domain/Entities/DepreciationScheduleLine.cs",
+      "fields": [
+        {
+          "name": "AssetId",
+          "rule": "id"
+        },
+        {
+          "name": "PeriodStartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "PeriodEndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "Amount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "FixedAssets",
+      "entity": "AssetDisposal",
+      "path": "src/Modules/FixedAssets/Fintrox.Modules.FixedAssets.Domain/Entities/AssetDisposal.cs",
+      "fields": [
+        {
+          "name": "AssetId",
+          "rule": "id"
+        },
+        {
+          "name": "DisposedOn",
+          "rule": "date"
+        },
+        {
+          "name": "Proceeds",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "HumanResources",
+      "entity": "Employee",
+      "path": "src/Modules/HumanResources/Fintrox.Modules.HumanResources.Domain/Entities/Employee.cs",
+      "fields": [
+        {
+          "name": "EmployeeNumber",
+          "rule": "text"
+        },
+        {
+          "name": "GivenName",
+          "rule": "text"
+        },
+        {
+          "name": "FamilyName",
+          "rule": "text"
+        },
+        {
+          "name": "HiredOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "HumanResources",
+      "entity": "JobOpening",
+      "path": "src/Modules/HumanResources/Fintrox.Modules.HumanResources.Domain/Entities/JobOpening.cs",
+      "fields": [
+        {
+          "name": "Title",
+          "rule": "text"
+        },
+        {
+          "name": "DepartmentId",
+          "rule": "id"
+        },
+        {
+          "name": "OpensOn",
+          "rule": "date"
+        },
+        {
+          "name": "ClosesOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "HumanResources",
+      "entity": "JobApplication",
+      "path": "src/Modules/HumanResources/Fintrox.Modules.HumanResources.Domain/Entities/JobApplication.cs",
+      "fields": [
+        {
+          "name": "JobOpeningId",
+          "rule": "id"
+        },
+        {
+          "name": "ApplicantName",
+          "rule": "text"
+        },
+        {
+          "name": "Email",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "HumanResources",
+      "entity": "OnboardingTask",
+      "path": "src/Modules/HumanResources/Fintrox.Modules.HumanResources.Domain/Entities/OnboardingTask.cs",
+      "fields": [
+        {
+          "name": "EmployeeId",
+          "rule": "id"
+        },
+        {
+          "name": "Description",
+          "rule": "text"
+        },
+        {
+          "name": "DueOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "HumanResources",
+      "entity": "LeaveRequest",
+      "path": "src/Modules/HumanResources/Fintrox.Modules.HumanResources.Domain/Entities/LeaveRequest.cs",
+      "fields": [
+        {
+          "name": "EmployeeId",
+          "rule": "id"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "LeaveType",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "HumanResources",
+      "entity": "PerformanceReview",
+      "path": "src/Modules/HumanResources/Fintrox.Modules.HumanResources.Domain/Entities/PerformanceReview.cs",
+      "fields": [
+        {
+          "name": "EmployeeId",
+          "rule": "id"
+        },
+        {
+          "name": "ReviewerUserId",
+          "rule": "id"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Identity",
+      "entity": "OrganizationInvitation",
+      "path": "src/Modules/Identity/Fintrox.Modules.Identity.Domain/Entities/OrganizationInvitation.cs",
+      "fields": [
+        {
+          "name": "Email",
+          "rule": "text"
+        },
+        {
+          "name": "InvitedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "ExpiresAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "TokenHash",
+          "rule": "sha256"
+        }
+      ]
+    },
+    {
+      "module": "Identity",
+      "entity": "RoleDefinition",
+      "path": "src/Modules/Identity/Fintrox.Modules.Identity.Domain/Entities/RoleDefinition.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Identity",
+      "entity": "PermissionDefinition",
+      "path": "src/Modules/Identity/Fintrox.Modules.Identity.Domain/Entities/PermissionDefinition.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Description",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Identity",
+      "entity": "RolePermissionGrant",
+      "path": "src/Modules/Identity/Fintrox.Modules.Identity.Domain/Entities/RolePermissionGrant.cs",
+      "fields": [
+        {
+          "name": "RoleId",
+          "rule": "id"
+        },
+        {
+          "name": "PermissionId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "Identity",
+      "entity": "ServiceAccount",
+      "path": "src/Modules/Identity/Fintrox.Modules.Identity.Domain/Entities/ServiceAccount.cs",
+      "fields": [
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "OwnerUserId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "Integrations",
+      "entity": "AppRegistration",
+      "path": "src/Modules/Integrations/Fintrox.Modules.Integrations.Domain/Entities/AppRegistration.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "OwnerUserId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "Integrations",
+      "entity": "AppVersion",
+      "path": "src/Modules/Integrations/Fintrox.Modules.Integrations.Domain/Entities/AppVersion.cs",
+      "fields": [
+        {
+          "name": "AppId",
+          "rule": "id"
+        },
+        {
+          "name": "Version",
+          "rule": "text"
+        },
+        {
+          "name": "ManifestJson",
+          "rule": "json"
+        }
+      ]
+    },
+    {
+      "module": "Integrations",
+      "entity": "AppInstallation",
+      "path": "src/Modules/Integrations/Fintrox.Modules.Integrations.Domain/Entities/AppInstallation.cs",
+      "fields": [
+        {
+          "name": "AppId",
+          "rule": "id"
+        },
+        {
+          "name": "AppVersionId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "Integrations",
+      "entity": "ExternalReferenceMapping",
+      "path": "src/Modules/Integrations/Fintrox.Modules.Integrations.Domain/Entities/ExternalReferenceMapping.cs",
+      "fields": [
+        {
+          "name": "AppInstallationId",
+          "rule": "id"
+        },
+        {
+          "name": "ExternalType",
+          "rule": "text"
+        },
+        {
+          "name": "ExternalId",
+          "rule": "text"
+        },
+        {
+          "name": "ResourceType",
+          "rule": "text"
+        },
+        {
+          "name": "ResourceId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "Inventory",
+      "entity": "InventoryItem",
+      "path": "src/Modules/Inventory/Fintrox.Modules.Inventory.Domain/Entities/InventoryItem.cs",
+      "fields": [
+        {
+          "name": "Sku",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "UnitOfMeasureId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "Inventory",
+      "entity": "UnitOfMeasure",
+      "path": "src/Modules/Inventory/Fintrox.Modules.Inventory.Domain/Entities/UnitOfMeasure.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Inventory",
+      "entity": "ItemCategory",
+      "path": "src/Modules/Inventory/Fintrox.Modules.Inventory.Domain/Entities/ItemCategory.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Inventory",
+      "entity": "Warehouse",
+      "path": "src/Modules/Inventory/Fintrox.Modules.Inventory.Domain/Entities/Warehouse.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Inventory",
+      "entity": "StockMovement",
+      "path": "src/Modules/Inventory/Fintrox.Modules.Inventory.Domain/Entities/StockMovement.cs",
+      "fields": [
+        {
+          "name": "ItemId",
+          "rule": "id"
+        },
+        {
+          "name": "WarehouseId",
+          "rule": "id"
+        },
+        {
+          "name": "Kind",
+          "rule": "StockMovementKind"
+        },
+        {
+          "name": "Quantity",
+          "rule": "positive"
+        },
+        {
+          "name": "OccurredAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "SourceDocumentId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "Inventory",
+      "entity": "StockReservation",
+      "path": "src/Modules/Inventory/Fintrox.Modules.Inventory.Domain/Entities/StockReservation.cs",
+      "fields": [
+        {
+          "name": "ItemId",
+          "rule": "id"
+        },
+        {
+          "name": "WarehouseId",
+          "rule": "id"
+        },
+        {
+          "name": "OrderLineId",
+          "rule": "id"
+        },
+        {
+          "name": "Quantity",
+          "rule": "positive"
+        },
+        {
+          "name": "ExpiresAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Inventory",
+      "entity": "InventoryLot",
+      "path": "src/Modules/Inventory/Fintrox.Modules.Inventory.Domain/Entities/InventoryLot.cs",
+      "fields": [
+        {
+          "name": "ItemId",
+          "rule": "id"
+        },
+        {
+          "name": "LotNumber",
+          "rule": "text"
+        },
+        {
+          "name": "ExpiresOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Inventory",
+      "entity": "InventorySerial",
+      "path": "src/Modules/Inventory/Fintrox.Modules.Inventory.Domain/Entities/InventorySerial.cs",
+      "fields": [
+        {
+          "name": "ItemId",
+          "rule": "id"
+        },
+        {
+          "name": "SerialNumber",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Manufacturing",
+      "entity": "BillOfMaterials",
+      "path": "src/Modules/Manufacturing/Fintrox.Modules.Manufacturing.Domain/Entities/BillOfMaterials.cs",
+      "fields": [
+        {
+          "name": "ItemId",
+          "rule": "id"
+        },
+        {
+          "name": "Revision",
+          "rule": "text"
+        },
+        {
+          "name": "OutputQuantity",
+          "rule": "positive"
+        }
+      ]
+    },
+    {
+      "module": "Manufacturing",
+      "entity": "BillOfMaterialsLine",
+      "path": "src/Modules/Manufacturing/Fintrox.Modules.Manufacturing.Domain/Entities/BillOfMaterialsLine.cs",
+      "fields": [
+        {
+          "name": "BillOfMaterialsId",
+          "rule": "id"
+        },
+        {
+          "name": "ComponentItemId",
+          "rule": "id"
+        },
+        {
+          "name": "Quantity",
+          "rule": "positive"
+        }
+      ]
+    },
+    {
+      "module": "Manufacturing",
+      "entity": "ProductionRouting",
+      "path": "src/Modules/Manufacturing/Fintrox.Modules.Manufacturing.Domain/Entities/ProductionRouting.cs",
+      "fields": [
+        {
+          "name": "ItemId",
+          "rule": "id"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Manufacturing",
+      "entity": "RoutingOperation",
+      "path": "src/Modules/Manufacturing/Fintrox.Modules.Manufacturing.Domain/Entities/RoutingOperation.cs",
+      "fields": [
+        {
+          "name": "RoutingId",
+          "rule": "id"
+        },
+        {
+          "name": "Sequence",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "WorkCenterId",
+          "rule": "id"
+        },
+        {
+          "name": "DurationMinutes",
+          "rule": "positive"
+        }
+      ]
+    },
+    {
+      "module": "Manufacturing",
+      "entity": "WorkCenter",
+      "path": "src/Modules/Manufacturing/Fintrox.Modules.Manufacturing.Domain/Entities/WorkCenter.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "CapacityHoursPerDay",
+          "rule": "hours"
+        }
+      ]
+    },
+    {
+      "module": "Manufacturing",
+      "entity": "WorkOrder",
+      "path": "src/Modules/Manufacturing/Fintrox.Modules.Manufacturing.Domain/Entities/WorkOrder.cs",
+      "fields": [
+        {
+          "name": "BillOfMaterialsId",
+          "rule": "id"
+        },
+        {
+          "name": "RoutingId",
+          "rule": "id"
+        },
+        {
+          "name": "Quantity",
+          "rule": "positive"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Manufacturing",
+      "entity": "ProductionOutput",
+      "path": "src/Modules/Manufacturing/Fintrox.Modules.Manufacturing.Domain/Entities/ProductionOutput.cs",
+      "fields": [
+        {
+          "name": "WorkOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "ItemId",
+          "rule": "id"
+        },
+        {
+          "name": "GoodQuantity",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "ScrapQuantity",
+          "rule": "nonnegative"
+        }
+      ]
+    },
+    {
+      "module": "OrderManagement",
+      "entity": "FulfillmentOrder",
+      "path": "src/Modules/OrderManagement/Fintrox.Modules.OrderManagement.Domain/Entities/FulfillmentOrder.cs",
+      "fields": [
+        {
+          "name": "SalesOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "Reference",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "OrderManagement",
+      "entity": "FulfillmentLine",
+      "path": "src/Modules/OrderManagement/Fintrox.Modules.OrderManagement.Domain/Entities/FulfillmentLine.cs",
+      "fields": [
+        {
+          "name": "FulfillmentOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "SalesOrderLineId",
+          "rule": "id"
+        },
+        {
+          "name": "WarehouseId",
+          "rule": "id"
+        },
+        {
+          "name": "Quantity",
+          "rule": "positive"
+        }
+      ]
+    },
+    {
+      "module": "OrderManagement",
+      "entity": "Backorder",
+      "path": "src/Modules/OrderManagement/Fintrox.Modules.OrderManagement.Domain/Entities/Backorder.cs",
+      "fields": [
+        {
+          "name": "SalesOrderLineId",
+          "rule": "id"
+        },
+        {
+          "name": "Quantity",
+          "rule": "positive"
+        },
+        {
+          "name": "ExpectedOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "OrderManagement",
+      "entity": "ReturnAuthorization",
+      "path": "src/Modules/OrderManagement/Fintrox.Modules.OrderManagement.Domain/Entities/ReturnAuthorization.cs",
+      "fields": [
+        {
+          "name": "SalesOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "Reference",
+          "rule": "text"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "OrderManagement",
+      "entity": "ReturnLine",
+      "path": "src/Modules/OrderManagement/Fintrox.Modules.OrderManagement.Domain/Entities/ReturnLine.cs",
+      "fields": [
+        {
+          "name": "ReturnAuthorizationId",
+          "rule": "id"
+        },
+        {
+          "name": "SalesOrderLineId",
+          "rule": "id"
+        },
+        {
+          "name": "Quantity",
+          "rule": "positive"
+        }
+      ]
+    },
+    {
+      "module": "Organizations",
+      "entity": "Branch",
+      "path": "src/Modules/Organizations/Fintrox.Modules.Organizations.Domain/Entities/Branch.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Organizations",
+      "entity": "Department",
+      "path": "src/Modules/Organizations/Fintrox.Modules.Organizations.Domain/Entities/Department.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Organizations",
+      "entity": "BusinessUnit",
+      "path": "src/Modules/Organizations/Fintrox.Modules.Organizations.Domain/Entities/BusinessUnit.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Organizations",
+      "entity": "CompanyAccountingPolicy",
+      "path": "src/Modules/Organizations/Fintrox.Modules.Organizations.Domain/Entities/CompanyAccountingPolicy.cs",
+      "fields": [
+        {
+          "name": "EffectiveFrom",
+          "rule": "date"
+        },
+        {
+          "name": "AccountingStandard",
+          "rule": "text"
+        },
+        {
+          "name": "FunctionalCurrency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Organizations",
+      "entity": "TaxRegistration",
+      "path": "src/Modules/Organizations/Fintrox.Modules.Organizations.Domain/Entities/TaxRegistration.cs",
+      "fields": [
+        {
+          "name": "CountryCode",
+          "rule": "country"
+        },
+        {
+          "name": "RegistrationNumber",
+          "rule": "text"
+        },
+        {
+          "name": "EffectiveFrom",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Payments",
+      "entity": "PaymentRefund",
+      "path": "src/Modules/Payments/Fintrox.Modules.Payments.Domain/Entities/PaymentRefund.cs",
+      "fields": [
+        {
+          "name": "OriginalPaymentId",
+          "rule": "id"
+        },
+        {
+          "name": "Reference",
+          "rule": "text"
+        },
+        {
+          "name": "Amount",
+          "rule": "positive"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Payments",
+      "entity": "PaymentAdvance",
+      "path": "src/Modules/Payments/Fintrox.Modules.Payments.Domain/Entities/PaymentAdvance.cs",
+      "fields": [
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "PaymentId",
+          "rule": "id"
+        },
+        {
+          "name": "Amount",
+          "rule": "positive"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Payroll",
+      "entity": "EmployeeCompensation",
+      "path": "src/Modules/Payroll/Fintrox.Modules.Payroll.Domain/Entities/EmployeeCompensation.cs",
+      "fields": [
+        {
+          "name": "EmployeeId",
+          "rule": "id"
+        },
+        {
+          "name": "EffectiveFrom",
+          "rule": "date"
+        },
+        {
+          "name": "Amount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Payroll",
+      "entity": "PayrollPeriod",
+      "path": "src/Modules/Payroll/Fintrox.Modules.Payroll.Domain/Entities/PayrollPeriod.cs",
+      "fields": [
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "PayDate",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Payroll",
+      "entity": "PayRun",
+      "path": "src/Modules/Payroll/Fintrox.Modules.Payroll.Domain/Entities/PayRun.cs",
+      "fields": [
+        {
+          "name": "PayrollPeriodId",
+          "rule": "id"
+        },
+        {
+          "name": "Reference",
+          "rule": "text"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Payroll",
+      "entity": "Payslip",
+      "path": "src/Modules/Payroll/Fintrox.Modules.Payroll.Domain/Entities/Payslip.cs",
+      "fields": [
+        {
+          "name": "PayRunId",
+          "rule": "id"
+        },
+        {
+          "name": "EmployeeId",
+          "rule": "id"
+        },
+        {
+          "name": "GrossPay",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Deductions",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Payroll",
+      "entity": "PayrollComponent",
+      "path": "src/Modules/Payroll/Fintrox.Modules.Payroll.Domain/Entities/PayrollComponent.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "Kind",
+          "rule": "PayrollComponentKind"
+        }
+      ]
+    },
+    {
+      "module": "Projects",
+      "entity": "Project",
+      "path": "src/Modules/Projects/Fintrox.Modules.Projects.Domain/Entities/Project.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Projects",
+      "entity": "ProjectTask",
+      "path": "src/Modules/Projects/Fintrox.Modules.Projects.Domain/Entities/ProjectTask.cs",
+      "fields": [
+        {
+          "name": "ProjectId",
+          "rule": "id"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "DueOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Projects",
+      "entity": "ProjectExpense",
+      "path": "src/Modules/Projects/Fintrox.Modules.Projects.Domain/Entities/ProjectExpense.cs",
+      "fields": [
+        {
+          "name": "ProjectId",
+          "rule": "id"
+        },
+        {
+          "name": "SourceDocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "Amount",
+          "rule": "positive"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Projects",
+      "entity": "ProjectMilestone",
+      "path": "src/Modules/Projects/Fintrox.Modules.Projects.Domain/Entities/ProjectMilestone.cs",
+      "fields": [
+        {
+          "name": "ProjectId",
+          "rule": "id"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "DueOn",
+          "rule": "date"
+        },
+        {
+          "name": "Amount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Projects",
+      "entity": "CostCenter",
+      "path": "src/Modules/Projects/Fintrox.Modules.Projects.Domain/Entities/CostCenter.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Purchases",
+      "entity": "PurchaseRequisition",
+      "path": "src/Modules/Purchases/Fintrox.Modules.Purchases.Domain/Entities/PurchaseRequisition.cs",
+      "fields": [
+        {
+          "name": "Reference",
+          "rule": "text"
+        },
+        {
+          "name": "RequestedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "RequiredOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Purchases",
+      "entity": "PurchaseRequisitionLine",
+      "path": "src/Modules/Purchases/Fintrox.Modules.Purchases.Domain/Entities/PurchaseRequisitionLine.cs",
+      "fields": [
+        {
+          "name": "RequisitionId",
+          "rule": "id"
+        },
+        {
+          "name": "ItemId",
+          "rule": "id"
+        },
+        {
+          "name": "Quantity",
+          "rule": "positive"
+        }
+      ]
+    },
+    {
+      "module": "Purchases",
+      "entity": "PurchaseOrder",
+      "path": "src/Modules/Purchases/Fintrox.Modules.Purchases.Domain/Entities/PurchaseOrder.cs",
+      "fields": [
+        {
+          "name": "SupplierId",
+          "rule": "id"
+        },
+        {
+          "name": "Reference",
+          "rule": "text"
+        },
+        {
+          "name": "OrderedOn",
+          "rule": "date"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Purchases",
+      "entity": "PurchaseOrderLine",
+      "path": "src/Modules/Purchases/Fintrox.Modules.Purchases.Domain/Entities/PurchaseOrderLine.cs",
+      "fields": [
+        {
+          "name": "PurchaseOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "ItemId",
+          "rule": "id"
+        },
+        {
+          "name": "Quantity",
+          "rule": "positive"
+        },
+        {
+          "name": "UnitPrice",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Purchases",
+      "entity": "GoodsReceipt",
+      "path": "src/Modules/Purchases/Fintrox.Modules.Purchases.Domain/Entities/GoodsReceipt.cs",
+      "fields": [
+        {
+          "name": "PurchaseOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "WarehouseId",
+          "rule": "id"
+        },
+        {
+          "name": "Reference",
+          "rule": "text"
+        },
+        {
+          "name": "ReceivedOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Purchases",
+      "entity": "GoodsReceiptLine",
+      "path": "src/Modules/Purchases/Fintrox.Modules.Purchases.Domain/Entities/GoodsReceiptLine.cs",
+      "fields": [
+        {
+          "name": "GoodsReceiptId",
+          "rule": "id"
+        },
+        {
+          "name": "PurchaseOrderLineId",
+          "rule": "id"
+        },
+        {
+          "name": "Quantity",
+          "rule": "positive"
+        }
+      ]
+    },
+    {
+      "module": "QualityManagement",
+      "entity": "InspectionPlan",
+      "path": "src/Modules/QualityManagement/Fintrox.Modules.QualityManagement.Domain/Entities/InspectionPlan.cs",
+      "fields": [
+        {
+          "name": "ItemId",
+          "rule": "id"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "QualityManagement",
+      "entity": "InspectionCriterion",
+      "path": "src/Modules/QualityManagement/Fintrox.Modules.QualityManagement.Domain/Entities/InspectionCriterion.cs",
+      "fields": [
+        {
+          "name": "InspectionPlanId",
+          "rule": "id"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "Minimum",
+          "rule": "decimal"
+        },
+        {
+          "name": "Maximum",
+          "rule": "decimal"
+        }
+      ]
+    },
+    {
+      "module": "QualityManagement",
+      "entity": "QualityInspection",
+      "path": "src/Modules/QualityManagement/Fintrox.Modules.QualityManagement.Domain/Entities/QualityInspection.cs",
+      "fields": [
+        {
+          "name": "InspectionPlanId",
+          "rule": "id"
+        },
+        {
+          "name": "SourceDocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "InspectedOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "QualityManagement",
+      "entity": "InspectionResult",
+      "path": "src/Modules/QualityManagement/Fintrox.Modules.QualityManagement.Domain/Entities/InspectionResult.cs",
+      "fields": [
+        {
+          "name": "InspectionId",
+          "rule": "id"
+        },
+        {
+          "name": "CriterionId",
+          "rule": "id"
+        },
+        {
+          "name": "MeasuredValue",
+          "rule": "decimal"
+        }
+      ]
+    },
+    {
+      "module": "QualityManagement",
+      "entity": "Nonconformity",
+      "path": "src/Modules/QualityManagement/Fintrox.Modules.QualityManagement.Domain/Entities/Nonconformity.cs",
+      "fields": [
+        {
+          "name": "InspectionId",
+          "rule": "id"
+        },
+        {
+          "name": "Description",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "QualityManagement",
+      "entity": "CorrectiveAction",
+      "path": "src/Modules/QualityManagement/Fintrox.Modules.QualityManagement.Domain/Entities/CorrectiveAction.cs",
+      "fields": [
+        {
+          "name": "NonconformityId",
+          "rule": "id"
+        },
+        {
+          "name": "Description",
+          "rule": "text"
+        },
+        {
+          "name": "DueOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "QualityManagement",
+      "entity": "QualityHold",
+      "path": "src/Modules/QualityManagement/Fintrox.Modules.QualityManagement.Domain/Entities/QualityHold.cs",
+      "fields": [
+        {
+          "name": "ItemId",
+          "rule": "id"
+        },
+        {
+          "name": "LotId",
+          "rule": "id"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Reporting",
+      "entity": "ReportDefinition",
+      "path": "src/Modules/Reporting/Fintrox.Modules.Reporting.Domain/Entities/ReportDefinition.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "DefinitionJson",
+          "rule": "json"
+        }
+      ]
+    },
+    {
+      "module": "Reporting",
+      "entity": "SavedSearch",
+      "path": "src/Modules/Reporting/Fintrox.Modules.Reporting.Domain/Entities/SavedSearch.cs",
+      "fields": [
+        {
+          "name": "OwnerUserId",
+          "rule": "id"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "ResourceType",
+          "rule": "text"
+        },
+        {
+          "name": "FilterJson",
+          "rule": "json"
+        }
+      ]
+    },
+    {
+      "module": "Reporting",
+      "entity": "ReportSchedule",
+      "path": "src/Modules/Reporting/Fintrox.Modules.Reporting.Domain/Entities/ReportSchedule.cs",
+      "fields": [
+        {
+          "name": "ReportDefinitionId",
+          "rule": "id"
+        },
+        {
+          "name": "RequestedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "NextRunAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "IntervalMinutes",
+          "rule": "positiveInt"
+        }
+      ]
+    },
+    {
+      "module": "Reporting",
+      "entity": "KpiDefinition",
+      "path": "src/Modules/Reporting/Fintrox.Modules.Reporting.Domain/Entities/KpiDefinition.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "MetricCode",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "ResourceManagement",
+      "entity": "Resource",
+      "path": "src/Modules/ResourceManagement/Fintrox.Modules.ResourceManagement.Domain/Entities/Resource.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "CapacityHoursPerDay",
+          "rule": "hours"
+        }
+      ]
+    },
+    {
+      "module": "ResourceManagement",
+      "entity": "ResourceSkill",
+      "path": "src/Modules/ResourceManagement/Fintrox.Modules.ResourceManagement.Domain/Entities/ResourceSkill.cs",
+      "fields": [
+        {
+          "name": "ResourceId",
+          "rule": "id"
+        },
+        {
+          "name": "SkillCode",
+          "rule": "text"
+        },
+        {
+          "name": "ProficiencyLevel",
+          "rule": "level"
+        }
+      ]
+    },
+    {
+      "module": "ResourceManagement",
+      "entity": "ResourceAllocation",
+      "path": "src/Modules/ResourceManagement/Fintrox.Modules.ResourceManagement.Domain/Entities/ResourceAllocation.cs",
+      "fields": [
+        {
+          "name": "ResourceId",
+          "rule": "id"
+        },
+        {
+          "name": "ProjectId",
+          "rule": "id"
+        },
+        {
+          "name": "StartsAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "EndsAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "AllocationPercent",
+          "rule": "percent"
+        }
+      ]
+    },
+    {
+      "module": "ResourceManagement",
+      "entity": "ResourceAvailability",
+      "path": "src/Modules/ResourceManagement/Fintrox.Modules.ResourceManagement.Domain/Entities/ResourceAvailability.cs",
+      "fields": [
+        {
+          "name": "ResourceId",
+          "rule": "id"
+        },
+        {
+          "name": "StartsAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "EndsAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "ResourceManagement",
+      "entity": "Timesheet",
+      "path": "src/Modules/ResourceManagement/Fintrox.Modules.ResourceManagement.Domain/Entities/Timesheet.cs",
+      "fields": [
+        {
+          "name": "ResourceId",
+          "rule": "id"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "ResourceManagement",
+      "entity": "TimesheetEntry",
+      "path": "src/Modules/ResourceManagement/Fintrox.Modules.ResourceManagement.Domain/Entities/TimesheetEntry.cs",
+      "fields": [
+        {
+          "name": "TimesheetId",
+          "rule": "id"
+        },
+        {
+          "name": "ProjectId",
+          "rule": "id"
+        },
+        {
+          "name": "WorkDate",
+          "rule": "date"
+        },
+        {
+          "name": "Hours",
+          "rule": "hours"
+        }
+      ]
+    },
+    {
+      "module": "RevenueManagement",
+      "entity": "RevenueRecognitionRule",
+      "path": "src/Modules/RevenueManagement/Fintrox.Modules.RevenueManagement.Domain/Entities/RevenueRecognitionRule.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "Method",
+          "rule": "RecognitionMethod"
+        }
+      ]
+    },
+    {
+      "module": "RevenueManagement",
+      "entity": "RevenueContract",
+      "path": "src/Modules/RevenueManagement/Fintrox.Modules.RevenueManagement.Domain/Entities/RevenueContract.cs",
+      "fields": [
+        {
+          "name": "BusinessContractId",
+          "rule": "id"
+        },
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "TotalAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "RevenueManagement",
+      "entity": "PerformanceObligation",
+      "path": "src/Modules/RevenueManagement/Fintrox.Modules.RevenueManagement.Domain/Entities/PerformanceObligation.cs",
+      "fields": [
+        {
+          "name": "RevenueContractId",
+          "rule": "id"
+        },
+        {
+          "name": "Description",
+          "rule": "text"
+        },
+        {
+          "name": "AllocatedAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "RevenueManagement",
+      "entity": "RevenueScheduleLine",
+      "path": "src/Modules/RevenueManagement/Fintrox.Modules.RevenueManagement.Domain/Entities/RevenueScheduleLine.cs",
+      "fields": [
+        {
+          "name": "PerformanceObligationId",
+          "rule": "id"
+        },
+        {
+          "name": "RecognitionRuleId",
+          "rule": "id"
+        },
+        {
+          "name": "RecognitionDate",
+          "rule": "date"
+        },
+        {
+          "name": "Amount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "RevenueManagement",
+      "entity": "RevenueAdjustment",
+      "path": "src/Modules/RevenueManagement/Fintrox.Modules.RevenueManagement.Domain/Entities/RevenueAdjustment.cs",
+      "fields": [
+        {
+          "name": "ScheduleLineId",
+          "rule": "id"
+        },
+        {
+          "name": "Amount",
+          "rule": "nonzero"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Sales",
+      "entity": "SalesQuotation",
+      "path": "src/Modules/Sales/Fintrox.Modules.Sales.Domain/Entities/SalesQuotation.cs",
+      "fields": [
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "Reference",
+          "rule": "text"
+        },
+        {
+          "name": "ValidUntil",
+          "rule": "date"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Sales",
+      "entity": "SalesQuotationLine",
+      "path": "src/Modules/Sales/Fintrox.Modules.Sales.Domain/Entities/SalesQuotationLine.cs",
+      "fields": [
+        {
+          "name": "QuotationId",
+          "rule": "id"
+        },
+        {
+          "name": "ItemId",
+          "rule": "id"
+        },
+        {
+          "name": "Quantity",
+          "rule": "positive"
+        },
+        {
+          "name": "UnitPrice",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Sales",
+      "entity": "SalesOrder",
+      "path": "src/Modules/Sales/Fintrox.Modules.Sales.Domain/Entities/SalesOrder.cs",
+      "fields": [
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "Reference",
+          "rule": "text"
+        },
+        {
+          "name": "OrderedOn",
+          "rule": "date"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Sales",
+      "entity": "SalesOrderLine",
+      "path": "src/Modules/Sales/Fintrox.Modules.Sales.Domain/Entities/SalesOrderLine.cs",
+      "fields": [
+        {
+          "name": "SalesOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "ItemId",
+          "rule": "id"
+        },
+        {
+          "name": "Quantity",
+          "rule": "positive"
+        },
+        {
+          "name": "UnitPrice",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Sales",
+      "entity": "SalesCreditNote",
+      "path": "src/Modules/Sales/Fintrox.Modules.Sales.Domain/Entities/SalesCreditNote.cs",
+      "fields": [
+        {
+          "name": "OriginalInvoiceId",
+          "rule": "id"
+        },
+        {
+          "name": "Reference",
+          "rule": "text"
+        },
+        {
+          "name": "Amount",
+          "rule": "positive"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "ServiceManagement",
+      "entity": "SupportTicket",
+      "path": "src/Modules/ServiceManagement/Fintrox.Modules.ServiceManagement.Domain/Entities/SupportTicket.cs",
+      "fields": [
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "Subject",
+          "rule": "text"
+        },
+        {
+          "name": "Description",
+          "rule": "text"
+        },
+        {
+          "name": "Priority",
+          "rule": "TicketPriority"
+        }
+      ]
+    },
+    {
+      "module": "ServiceManagement",
+      "entity": "ServiceLevelAgreement",
+      "path": "src/Modules/ServiceManagement/Fintrox.Modules.ServiceManagement.Domain/Entities/ServiceLevelAgreement.cs",
+      "fields": [
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "ResponseMinutes",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "ResolutionMinutes",
+          "rule": "positiveInt"
+        }
+      ]
+    },
+    {
+      "module": "ServiceManagement",
+      "entity": "FieldServiceOrder",
+      "path": "src/Modules/ServiceManagement/Fintrox.Modules.ServiceManagement.Domain/Entities/FieldServiceOrder.cs",
+      "fields": [
+        {
+          "name": "TicketId",
+          "rule": "id"
+        },
+        {
+          "name": "AssignedResourceId",
+          "rule": "id"
+        },
+        {
+          "name": "ScheduledAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "ServiceManagement",
+      "entity": "MaintenancePlan",
+      "path": "src/Modules/ServiceManagement/Fintrox.Modules.ServiceManagement.Domain/Entities/MaintenancePlan.cs",
+      "fields": [
+        {
+          "name": "AssetId",
+          "rule": "id"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "IntervalDays",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "NextDueOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "SubscriptionBilling",
+      "entity": "SubscriptionPlan",
+      "path": "src/Modules/SubscriptionBilling/Fintrox.Modules.SubscriptionBilling.Domain/Entities/SubscriptionPlan.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "BillingIntervalMonths",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "UnitPrice",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "SubscriptionBilling",
+      "entity": "Subscription",
+      "path": "src/Modules/SubscriptionBilling/Fintrox.Modules.SubscriptionBilling.Domain/Entities/Subscription.cs",
+      "fields": [
+        {
+          "name": "PlanId",
+          "rule": "id"
+        },
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "Quantity",
+          "rule": "positive"
+        }
+      ]
+    },
+    {
+      "module": "SubscriptionBilling",
+      "entity": "BillingCycle",
+      "path": "src/Modules/SubscriptionBilling/Fintrox.Modules.SubscriptionBilling.Domain/Entities/BillingCycle.cs",
+      "fields": [
+        {
+          "name": "SubscriptionId",
+          "rule": "id"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "DueOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "SubscriptionBilling",
+      "entity": "UsageRecord",
+      "path": "src/Modules/SubscriptionBilling/Fintrox.Modules.SubscriptionBilling.Domain/Entities/UsageRecord.cs",
+      "fields": [
+        {
+          "name": "SubscriptionId",
+          "rule": "id"
+        },
+        {
+          "name": "MeterCode",
+          "rule": "text"
+        },
+        {
+          "name": "Quantity",
+          "rule": "positive"
+        },
+        {
+          "name": "OccurredAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "ExternalReference",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "SubscriptionBilling",
+      "entity": "SubscriptionRenewal",
+      "path": "src/Modules/SubscriptionBilling/Fintrox.Modules.SubscriptionBilling.Domain/Entities/SubscriptionRenewal.cs",
+      "fields": [
+        {
+          "name": "SubscriptionId",
+          "rule": "id"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "SupplyChain",
+      "entity": "DemandForecast",
+      "path": "src/Modules/SupplyChain/Fintrox.Modules.SupplyChain.Domain/Entities/DemandForecast.cs",
+      "fields": [
+        {
+          "name": "ItemId",
+          "rule": "id"
+        },
+        {
+          "name": "WarehouseId",
+          "rule": "id"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "Quantity",
+          "rule": "nonnegative"
+        }
+      ]
+    },
+    {
+      "module": "SupplyChain",
+      "entity": "SupplyPlan",
+      "path": "src/Modules/SupplyChain/Fintrox.Modules.SupplyChain.Domain/Entities/SupplyPlan.cs",
+      "fields": [
+        {
+          "name": "ItemId",
+          "rule": "id"
+        },
+        {
+          "name": "WarehouseId",
+          "rule": "id"
+        },
+        {
+          "name": "RequiredOn",
+          "rule": "date"
+        },
+        {
+          "name": "Quantity",
+          "rule": "positive"
+        }
+      ]
+    },
+    {
+      "module": "SupplyChain",
+      "entity": "ProcurementPlan",
+      "path": "src/Modules/SupplyChain/Fintrox.Modules.SupplyChain.Domain/Entities/ProcurementPlan.cs",
+      "fields": [
+        {
+          "name": "SupplierId",
+          "rule": "id"
+        },
+        {
+          "name": "ItemId",
+          "rule": "id"
+        },
+        {
+          "name": "RequiredOn",
+          "rule": "date"
+        },
+        {
+          "name": "Quantity",
+          "rule": "positive"
+        }
+      ]
+    },
+    {
+      "module": "SupplyChain",
+      "entity": "ReplenishmentPolicy",
+      "path": "src/Modules/SupplyChain/Fintrox.Modules.SupplyChain.Domain/Entities/ReplenishmentPolicy.cs",
+      "fields": [
+        {
+          "name": "ItemId",
+          "rule": "id"
+        },
+        {
+          "name": "WarehouseId",
+          "rule": "id"
+        },
+        {
+          "name": "ReorderPoint",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "TargetQuantity",
+          "rule": "positive"
+        },
+        {
+          "name": "LeadTimeDays",
+          "rule": "nonnegativeInt"
+        }
+      ]
+    },
+    {
+      "module": "SupplyChain",
+      "entity": "SupplierCommitment",
+      "path": "src/Modules/SupplyChain/Fintrox.Modules.SupplyChain.Domain/Entities/SupplierCommitment.cs",
+      "fields": [
+        {
+          "name": "SupplierId",
+          "rule": "id"
+        },
+        {
+          "name": "PurchaseOrderLineId",
+          "rule": "id"
+        },
+        {
+          "name": "PromisedOn",
+          "rule": "date"
+        },
+        {
+          "name": "Quantity",
+          "rule": "positive"
+        }
+      ]
+    },
+    {
+      "module": "Tax",
+      "entity": "TaxJurisdiction",
+      "path": "src/Modules/Tax/Fintrox.Modules.Tax.Domain/Entities/TaxJurisdiction.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "CountryCode",
+          "rule": "country"
+        }
+      ]
+    },
+    {
+      "module": "Tax",
+      "entity": "TaxCategory",
+      "path": "src/Modules/Tax/Fintrox.Modules.Tax.Domain/Entities/TaxCategory.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Tax",
+      "entity": "TaxRate",
+      "path": "src/Modules/Tax/Fintrox.Modules.Tax.Domain/Entities/TaxRate.cs",
+      "fields": [
+        {
+          "name": "JurisdictionId",
+          "rule": "id"
+        },
+        {
+          "name": "CategoryId",
+          "rule": "id"
+        },
+        {
+          "name": "RatePercent",
+          "rule": "percent"
+        },
+        {
+          "name": "EffectiveFrom",
+          "rule": "date"
+        },
+        {
+          "name": "EffectiveTo",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Tax",
+      "entity": "VatReturnPeriod",
+      "path": "src/Modules/Tax/Fintrox.Modules.Tax.Domain/Entities/VatReturnPeriod.cs",
+      "fields": [
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "DueOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Tax",
+      "entity": "VatRegisterEntry",
+      "path": "src/Modules/Tax/Fintrox.Modules.Tax.Domain/Entities/VatRegisterEntry.cs",
+      "fields": [
+        {
+          "name": "PeriodId",
+          "rule": "id"
+        },
+        {
+          "name": "SourceDocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "Kind",
+          "rule": "VatRegisterKind"
+        },
+        {
+          "name": "TaxableAmount",
+          "rule": "decimal"
+        },
+        {
+          "name": "TaxAmount",
+          "rule": "decimal"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "WarehouseManagement",
+      "entity": "BinLocation",
+      "path": "src/Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Domain/Entities/BinLocation.cs",
+      "fields": [
+        {
+          "name": "WarehouseId",
+          "rule": "id"
+        },
+        {
+          "name": "Code",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "WarehouseManagement",
+      "entity": "ReceivingTask",
+      "path": "src/Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Domain/Entities/ReceivingTask.cs",
+      "fields": [
+        {
+          "name": "WarehouseId",
+          "rule": "id"
+        },
+        {
+          "name": "PurchaseOrderLineId",
+          "rule": "id"
+        },
+        {
+          "name": "Quantity",
+          "rule": "positive"
+        }
+      ]
+    },
+    {
+      "module": "WarehouseManagement",
+      "entity": "PutawayTask",
+      "path": "src/Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Domain/Entities/PutawayTask.cs",
+      "fields": [
+        {
+          "name": "WarehouseId",
+          "rule": "id"
+        },
+        {
+          "name": "BinLocationId",
+          "rule": "id"
+        },
+        {
+          "name": "ItemId",
+          "rule": "id"
+        },
+        {
+          "name": "Quantity",
+          "rule": "positive"
+        }
+      ]
+    },
+    {
+      "module": "WarehouseManagement",
+      "entity": "PickingTask",
+      "path": "src/Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Domain/Entities/PickingTask.cs",
+      "fields": [
+        {
+          "name": "WarehouseId",
+          "rule": "id"
+        },
+        {
+          "name": "BinLocationId",
+          "rule": "id"
+        },
+        {
+          "name": "FulfillmentLineId",
+          "rule": "id"
+        },
+        {
+          "name": "Quantity",
+          "rule": "positive"
+        }
+      ]
+    },
+    {
+      "module": "WarehouseManagement",
+      "entity": "Shipment",
+      "path": "src/Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Domain/Entities/Shipment.cs",
+      "fields": [
+        {
+          "name": "WarehouseId",
+          "rule": "id"
+        },
+        {
+          "name": "FulfillmentOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "Reference",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "WarehouseManagement",
+      "entity": "ShipmentPackage",
+      "path": "src/Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Domain/Entities/ShipmentPackage.cs",
+      "fields": [
+        {
+          "name": "ShipmentId",
+          "rule": "id"
+        },
+        {
+          "name": "PackageNumber",
+          "rule": "text"
+        },
+        {
+          "name": "WeightKg",
+          "rule": "positive"
+        }
+      ]
+    },
+    {
+      "module": "WarehouseManagement",
+      "entity": "CycleCount",
+      "path": "src/Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Domain/Entities/CycleCount.cs",
+      "fields": [
+        {
+          "name": "WarehouseId",
+          "rule": "id"
+        },
+        {
+          "name": "BinLocationId",
+          "rule": "id"
+        },
+        {
+          "name": "ScheduledOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "WarehouseManagement",
+      "entity": "CycleCountLine",
+      "path": "src/Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Domain/Entities/CycleCountLine.cs",
+      "fields": [
+        {
+          "name": "CycleCountId",
+          "rule": "id"
+        },
+        {
+          "name": "ItemId",
+          "rule": "id"
+        },
+        {
+          "name": "CountedQuantity",
+          "rule": "nonnegative"
+        }
+      ]
+    },
+    {
+      "module": "Workflows",
+      "entity": "WorkflowDefinition",
+      "path": "src/Modules/Workflows/Fintrox.Modules.Workflows.Domain/Entities/WorkflowDefinition.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "VersionNumber",
+          "rule": "positiveInt"
+        }
+      ]
+    },
+    {
+      "module": "Workflows",
+      "entity": "ApprovalStep",
+      "path": "src/Modules/Workflows/Fintrox.Modules.Workflows.Domain/Entities/ApprovalStep.cs",
+      "fields": [
+        {
+          "name": "WorkflowDefinitionId",
+          "rule": "id"
+        },
+        {
+          "name": "Sequence",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "ApproverRoleId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "Workflows",
+      "entity": "WorkflowInstance",
+      "path": "src/Modules/Workflows/Fintrox.Modules.Workflows.Domain/Entities/WorkflowInstance.cs",
+      "fields": [
+        {
+          "name": "WorkflowDefinitionId",
+          "rule": "id"
+        },
+        {
+          "name": "ResourceType",
+          "rule": "text"
+        },
+        {
+          "name": "ResourceId",
+          "rule": "id"
+        },
+        {
+          "name": "RequestedByUserId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "Workflows",
+      "entity": "ApprovalDecision",
+      "path": "src/Modules/Workflows/Fintrox.Modules.Workflows.Domain/Entities/ApprovalDecision.cs",
+      "fields": [
+        {
+          "name": "WorkflowInstanceId",
+          "rule": "id"
+        },
+        {
+          "name": "ApprovalStepId",
+          "rule": "id"
+        },
+        {
+          "name": "DecidedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "Approved",
+          "rule": "bool"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Workflows",
+      "entity": "ApprovalDelegation",
+      "path": "src/Modules/Workflows/Fintrox.Modules.Workflows.Domain/Entities/ApprovalDelegation.cs",
+      "fields": [
+        {
+          "name": "FromUserId",
+          "rule": "id"
+        },
+        {
+          "name": "ToUserId",
+          "rule": "id"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        }
+      ]
+    }
+  ]
+}

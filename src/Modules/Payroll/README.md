@@ -1,6 +1,6 @@
 # Payroll
 
-Status: structural skeleton only; no registered services, endpoints, tables or business rules.
+Status: PARTIAL — Domain entity foundation implemented; persistence, application use cases and API pending.
 
 Owns: Employees, PayRuns, Contributions, Localizations.
 Reserved PostgreSQL schema: `payroll` (not created).
@@ -18,3 +18,9 @@ Existing implementation/reference: Not implemented; optional future module.
 Foreign data is referenced by identifiers/snapshots and accessed through approved Contracts.
 No cross-module DbContext, repositories, entity navigations, SQL joins, foreign keys or shared transactions in the target architecture.
 See [architecture](../../../docs/architecture.md) for the current legacy exceptions and migration gates.
+
+## Implemented entity foundation
+
+`EmployeeCompensation`, `PayrollPeriod`, `PayRun`, `Payslip`, `PayrollComponent`.
+
+Models live in this module Domain/Entities directory; foreign objects are referenced by IDs. These are domain types, not registered database tables or endpoints. Existing legacy workflows remain in core projects. See [module progress](../../../docs/ai/MODULE_STATUS.md) for inventory and remaining work.

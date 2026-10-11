@@ -1,6 +1,6 @@
 # HumanResources
 
-Status: SCAFFOLD — Architecture created; business logic not implemented.
+Status: PARTIAL — Domain entity foundation implemented; persistence, application use cases and API pending.
 
 ## Purpose
 Manage the employee lifecycle.
@@ -17,7 +17,7 @@ Employee records, recruitment, leave and performance; Organizations owns company
 
 ## Domain Ownership
 Employee records, recruitment, leave and performance; Organizations owns company membership and Payroll owns pay calculations.
-Reserved PostgreSQL schema: `human_resources` (not created). No entities or migrations exist yet.
+Reserved PostgreSQL schema: `human_resources` (not created). Entity types exist; module migrations are not implemented.
 
 ## Dependencies
 Planned logical collaborators: Organizations, Payroll.
@@ -39,8 +39,7 @@ Foreign data uses IDs/snapshots and approved versioned contracts; no cross-modul
 - `human-resources.performance-management` — reserved, not enabled.
 
 ## Implementation Status
-Five real .NET projects and feature folders exist. Business rules, DTOs, services,
-endpoints, migrations and tests remain unimplemented. Test folders are placeholders.
+Five .NET projects and feature folders exist. Domain constructors validate their inputs and are covered by the shared executable test project. DTOs, services, endpoints and migrations remain unimplemented.
 Framework/compiler settings inherit from the repository Directory.Build.props.
 
 ## Roadmap
@@ -50,3 +49,9 @@ Framework/compiler settings inherit from the repository Directory.Build.props.
 4. Verify unit, PostgreSQL integration and contract tests before activation or frontend integration.
 
 See [architecture](../../../docs/architecture.md) and [master roadmap](../../../docs/ai/MASTER_ROADMAP.md).
+
+## Implemented entity foundation
+
+`Employee`, `JobOpening`, `JobApplication`, `OnboardingTask`, `LeaveRequest`, `PerformanceReview`.
+
+Models live in this module Domain/Entities directory; foreign objects are referenced by IDs. These are domain types, not registered database tables or endpoints. Existing legacy workflows remain in core projects. See [module progress](../../../docs/ai/MODULE_STATUS.md) for inventory and remaining work.

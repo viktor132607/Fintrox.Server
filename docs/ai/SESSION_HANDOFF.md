@@ -1,27 +1,19 @@
-# Fintrox Session Handoff — 2026-10-10
+# Fintrox Session Handoff — 2026-10-11
 
-## Last verified code
-Server: 422cc38dd2a20200ca3a5e1ee91a8c6c78d876dd (main), AUTH-002.
-Client memory: ec7ccf75d091819c3aa67b674b4ed49be1cf9cad; frontend source unchanged.
+## Current milestone
+ENTITIES-001 — user explicitly prioritized adding entity classes in module projects and recording progress in repo files.
 
-## Completed milestone
-ARCH-001: 13 modules added; total 36 modules / 186 projects.
-VERIFY-001, AUDIT-001, AUTH-001: baseline verification, inventory/audit and current-state JWT checks complete.
-AUTH-002: atomic single-use refresh rotation, conditional revocation and five PostgreSQL regressions complete.
+## Changes
+180 new domain entity classes across all 36 modules, 36 module-local identity/tenant bases and validation helpers, typed enums, executable invariant tests, machine-readable inventory and CI completeness check. Full list: MODULE_STATUS.md / architecture/domain-entities.json.
+Existing 32 legacy entity/persistence types, financial runtime behavior and migrations preserved. No extra projects or cross-module references.
 
 ## Validation
-CI run 38012762635, job 114096261806: restore, Release build (0 warnings/errors), 51/51 tests (0 skipped), EF model snapshot and PostgreSQL migration application/listing PASSED.
-Local affected-project build and 46 unit tests passed; 5 PostgreSQL tests explicitly skipped locally because no PostgreSQL server. All 5 ran and passed in CI.
-Architecture check passes. No schema/financial/frontend source changes or new projects.
-No manual HTTP/end-to-end or production verification claimed.
+Local affected-graph Release build and 604 tests passed; 5 PostgreSQL tests skipped locally. Architecture and inventory checks passed. CI verification pending; see VALIDATION.md. Previously verified AUTH-002: 422cc38, CI 38012762635, 51/51 tests and migration gates passed.
 
-## Behavior and limits
-Refresh uses a conditional consume update plus replacement insertion in one transaction inside the EF execution strategy. Only one simultaneous request succeeds. Failed insertion rolls back consumption; its tracked replacement is detached for retry.
-Revoke and session-revoke use conditional updates preserving committed rotation metadata.
-If rotation commits before old-token revocation, the replacement remains valid. Token-family logout and immediate per-session JWT revocation are not implemented. Ambiguous commit failure may require login again; it never permits a second replacement.
-Tests create/drop random fintrox_auth_test_ databases on FINTROX_TEST_POSTGRES; CI config supplies a disposable PostgreSQL server. Never point tests at production.
+## Scope
+Entity foundation only. New types are not yet EF tables, services, DTOs, endpoints or frontend screens. Domain constructor validation is not tenant authorization or reference existence validation. No complete ERP module claimed.
 
 ## Next exact action
-INT-001 — not implemented: inspect Domain/Integrations/WebhookSubscription.NormalizeUrl, webhook worker, HTTP client registration and delivery tests. Implement SSRF prevention covering private/loopback/link-local/metadata destinations, IPv4/IPv6, DNS rebinding and redirects, with safe-public delivery tests. Preserve existing signed payloads and retry semantics; do not combine with INT-002 worker lease redesign.
-Read TASK_QUEUE.md and AUDIT.md for remaining tasks. Do not recreate scaffolds or repeat the full audit.
-Client remains 23 module shells; FE-001 is queued.
+After verifying ENTITIES-001, start ENTITIES-002 with module-owned persistence/use cases for the CRM lead/opportunity capability: permissions and versioned contracts first, lifecycle and tenant/reference validation, EF constraints/migration, endpoints and PostgreSQL tests. Avoid copying the existing Counterparty/customer master or accounting engine.
+INT-001 SSRF and other security tasks remain pending in TASK_QUEUE.md; user reordered entity work explicitly.
+Continue from the module inventory; do not list empty projects to the user or redo the full audit.

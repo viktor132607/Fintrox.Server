@@ -1,6 +1,6 @@
 # Reporting
 
-Status: structural skeleton only; no registered services, endpoints, tables or business rules.
+Status: PARTIAL — Domain entity foundation implemented; persistence, application use cases and API pending.
 
 Owns: FinancialStatements, LedgerReports, ManagementReports, Exports.
 Reserved PostgreSQL schema: `reporting` (not created).
@@ -18,3 +18,9 @@ Existing implementation/reference: Reports; direct accounting reads require migr
 Foreign data is referenced by identifiers/snapshots and accessed through approved Contracts.
 No cross-module DbContext, repositories, entity navigations, SQL joins, foreign keys or shared transactions in the target architecture.
 See [architecture](../../../docs/architecture.md) for the current legacy exceptions and migration gates.
+
+## Implemented entity foundation
+
+`ReportDefinition`, `SavedSearch`, `ReportSchedule`, `KpiDefinition`.
+
+Models live in this module Domain/Entities directory; foreign objects are referenced by IDs. These are domain types, not registered database tables or endpoints. Existing legacy workflows remain in core projects. See [module progress](../../../docs/ai/MODULE_STATUS.md) for inventory and remaining work.

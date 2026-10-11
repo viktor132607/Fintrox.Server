@@ -1,6 +1,6 @@
 # WarehouseManagement
 
-Status: SCAFFOLD — Architecture created; business logic not implemented.
+Status: PARTIAL — Domain entity foundation implemented; persistence, application use cases and API pending.
 
 ## Purpose
 Coordinate physical warehouse execution.
@@ -18,7 +18,7 @@ Warehouse tasks, bins and execution state; Inventory owns stock quantities and v
 
 ## Domain Ownership
 Warehouse tasks, bins and execution state; Inventory owns stock quantities and valuation.
-Reserved PostgreSQL schema: `warehouse_management` (not created). No entities or migrations exist yet.
+Reserved PostgreSQL schema: `warehouse_management` (not created). Entity types exist; module migrations are not implemented.
 
 ## Dependencies
 Planned logical collaborators: Inventory, OrderManagement.
@@ -41,8 +41,7 @@ Foreign data uses IDs/snapshots and approved versioned contracts; no cross-modul
 - `warehouse-management.cycle-counting` — reserved, not enabled.
 
 ## Implementation Status
-Five real .NET projects and feature folders exist. Business rules, DTOs, services,
-endpoints, migrations and tests remain unimplemented. Test folders are placeholders.
+Five .NET projects and feature folders exist. Domain constructors validate their inputs and are covered by the shared executable test project. DTOs, services, endpoints and migrations remain unimplemented.
 Framework/compiler settings inherit from the repository Directory.Build.props.
 
 ## Roadmap
@@ -52,3 +51,9 @@ Framework/compiler settings inherit from the repository Directory.Build.props.
 4. Verify unit, PostgreSQL integration and contract tests before activation or frontend integration.
 
 See [architecture](../../../docs/architecture.md) and [master roadmap](../../../docs/ai/MASTER_ROADMAP.md).
+
+## Implemented entity foundation
+
+`BinLocation`, `ReceivingTask`, `PutawayTask`, `PickingTask`, `Shipment`, `ShipmentPackage`, `CycleCount`, `CycleCountLine`.
+
+Models live in this module Domain/Entities directory; foreign objects are referenced by IDs. These are domain types, not registered database tables or endpoints. Existing legacy workflows remain in core projects. See [module progress](../../../docs/ai/MODULE_STATUS.md) for inventory and remaining work.

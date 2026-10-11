@@ -1,0 +1,26 @@
+namespace Fintrox.Modules.Commerce.Domain.Entities;
+
+public sealed class CommerceOrderLine : OrganizationEntity
+{
+    public CommerceOrderLine(
+        Guid id, Guid organizationId, DateTimeOffset createdAtUtc,
+        Guid commerceOrderId,
+        Guid itemId,
+        decimal quantity,
+        decimal unitPrice,
+        string currency)
+        : base(id, organizationId, createdAtUtc)
+    {
+        CommerceOrderId = DomainRules.Id(commerceOrderId, nameof(commerceOrderId));
+        ItemId = DomainRules.Id(itemId, nameof(itemId));
+        Quantity = DomainRules.Positive(quantity, nameof(quantity));
+        UnitPrice = DomainRules.Nonnegative(unitPrice, nameof(unitPrice));
+        Currency = DomainRules.Currency(currency, nameof(currency));
+    }
+
+    public Guid CommerceOrderId { get; }
+    public Guid ItemId { get; }
+    public decimal Quantity { get; }
+    public decimal UnitPrice { get; }
+    public string Currency { get; }
+}

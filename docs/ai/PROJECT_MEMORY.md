@@ -11,7 +11,7 @@ Modular monolith with Clean Architecture/DDD boundaries, future independent extr
 36 modules, five layers each: Domain, Application, Contracts, Infrastructure, Presentation.
 186 projects: 180 module projects + 5 legacy/core projects + 1 test project.
 Fintrox.Server.slnx is authoritative; preserve it. Catalog: architecture/modules.json.
-Business implementation still lives in legacy horizontal projects; module assemblies are scaffolds.
+Existing runtime business implementation remains in legacy horizontal projects. ENTITIES-001 adds 180 domain entity types across all 36 module Domain assemblies; other module layers remain scaffolds. These entities have not yet been mapped into EF or connected to endpoints.
 Do not mistake README descriptions, reserved capabilities or empty test folders for implemented features.
 
 ## Rules
@@ -30,3 +30,5 @@ Read SESSION_HANDOFF.md, CURRENT_STATE.md and TASK_QUEUE.md first.
 Read MASTER_PROMPT.md only for relevant detailed requirements; MASTER_ROADMAP.md indexes phases.
 Reuse verified findings and inspect changed files only until the explicitly scheduled full audit.
 Update concise project memory after each milestone; continue from the next verified foundation task; the user authorized continuation after the model switch.
+
+User direction 2026-10-11: prioritize adding module entities and record per-module progress in MODULE_STATUS.md instead of repeating inventories in chat. Security backlog remains tracked; do not silently mark it complete.

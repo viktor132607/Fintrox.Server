@@ -1,44 +1,51 @@
-# Module status — 2026-10-09
+# Module status — 2026-10-11
 
-This table describes target module assemblies, not legacy functionality. Repository trees contain no C# business source inside src/Modules. Legacy code still exists in core projects and requires AUDIT-001; no claim that it is fully tested.
-COMPLETE in Scaffold means all five projects/directories exist. Tests=SCAFFOLD means placeholder locations only.
-Frontend statuses refer to module shells, not usable screens. New-module frontend is deferred.
+ENTITIES-001: 180 new entity classes across all 36 module Domain projects. Domain foundation implemented; validation results in VALIDATION.md. Existing 32 legacy entity/persistence classes remain in place, without duplication or migration of their runtime behavior.
 
-| Module | Scaffold | Domain | Application | Infrastructure | API | Tests | Frontend | Overall Status |
-|---|---|---|---|---|---|---|---|---|
-| Accounting | COMPLETE | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD |
-| Audit | COMPLETE | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD |
-| Banking | COMPLETE | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD |
-| Budgeting | COMPLETE | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD |
-| Capabilities | COMPLETE | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD |
-| Commerce | COMPLETE | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | MISSING | SCAFFOLD |
-| Consolidation | COMPLETE | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD |
-| ContractManagement | COMPLETE | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | MISSING | SCAFFOLD |
-| Counterparties | COMPLETE | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD |
-| CRM | COMPLETE | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | MISSING | SCAFFOLD |
-| Currencies | COMPLETE | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD |
-| Documents | COMPLETE | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD |
-| Experience | COMPLETE | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD |
-| FixedAssets | COMPLETE | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD |
-| HumanResources | COMPLETE | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | MISSING | SCAFFOLD |
-| Identity | COMPLETE | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD |
-| Integrations | COMPLETE | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD |
-| Inventory | COMPLETE | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD |
-| Manufacturing | COMPLETE | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | MISSING | SCAFFOLD |
-| OrderManagement | COMPLETE | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | MISSING | SCAFFOLD |
-| Organizations | COMPLETE | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD |
-| Payments | COMPLETE | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD |
-| Payroll | COMPLETE | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD |
-| Projects | COMPLETE | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD |
-| Purchases | COMPLETE | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD |
-| QualityManagement | COMPLETE | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | MISSING | SCAFFOLD |
-| Reporting | COMPLETE | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD |
-| ResourceManagement | COMPLETE | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | MISSING | SCAFFOLD |
-| RevenueManagement | COMPLETE | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | MISSING | SCAFFOLD |
-| Sales | COMPLETE | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD |
-| ServiceManagement | COMPLETE | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | MISSING | SCAFFOLD |
-| SubscriptionBilling | COMPLETE | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | MISSING | SCAFFOLD |
-| SupplyChain | COMPLETE | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | MISSING | SCAFFOLD |
-| Tax | COMPLETE | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD |
-| WarehouseManagement | COMPLETE | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | MISSING | SCAFFOLD |
-| Workflows | COMPLETE | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD | SCAFFOLD |
+The new types have immutable IDs/organization ownership, constructor validation and typed business fields. They are not yet mapped in EF or exposed through APIs. No complete ERP workflow, database tenant isolation, authorization or cross-reference existence checks are claimed by these model classes.
+
+Every module keeps five projects. Domain=PARTIAL; Application/Contracts/Infrastructure/Presentation=SCAFFOLD. Frontend remains 23 shells (13 new module shells missing). Entity constructors do not activate a module.
+
+| Module | New entity classes | Count | Domain | Persistence / API |
+|---|---|---:|---|---|
+| Accounting | `AccountGroup`, `AccountingDimension`, `AccountingDimensionValue`, `AccountingBook`, `RecurringJournal` | 5 | PARTIAL | PENDING |
+| Audit | `AuditRetentionPolicy`, `AuditExportRequest` | 2 | PARTIAL | PENDING |
+| Banking | `BankAccount`, `BankStatement`, `BankStatementLine`, `BankReconciliationMatch` | 4 | PARTIAL | PENDING |
+| Budgeting | `Budget`, `BudgetVersion`, `BudgetLine`, `Forecast` | 4 | PARTIAL | PENDING |
+| CRM | `Lead`, `Opportunity`, `CrmActivity`, `SalesPipeline`, `PipelineStage`, `MarketingCampaign` | 6 | PARTIAL | PENDING |
+| Capabilities | `CapabilityDefinition`, `CapabilityDependency`, `OrganizationModuleInstallation`, `OrganizationCapabilityActivation`, `UserCapabilityEntitlement` | 5 | PARTIAL | PENDING |
+| Commerce | `CatalogListing`, `Storefront`, `PriceList`, `PriceListEntry`, `Promotion`, `CommerceOrder`, `CommerceOrderLine` | 7 | PARTIAL | PENDING |
+| Consolidation | `CompanyGroup`, `GroupCompany`, `ConsolidationPeriod`, `EliminationEntry` | 4 | PARTIAL | PENDING |
+| ContractManagement | `BusinessContract`, `ContractVersion`, `ContractObligation`, `ContractMilestone`, `ContractRenewal` | 5 | PARTIAL | PENDING |
+| Counterparties | `CounterpartyContact`, `CounterpartyAddress`, `CounterpartyBankAccount`, `PaymentTerm`, `CounterpartyGroup` | 5 | PARTIAL | PENDING |
+| Currencies | `ExchangeRateProvider`, `CurrencyRoundingPolicy`, `CurrencyRevaluation` | 3 | PARTIAL | PENDING |
+| Documents | `StoredDocument`, `DocumentVersion`, `DocumentLink`, `DocumentTemplate` | 4 | PARTIAL | PENDING |
+| Experience | `ExperienceProfile`, `UserExperiencePreference`, `DashboardWidget`, `SavedView`, `NavigationPreference` | 5 | PARTIAL | PENDING |
+| FixedAssets | `AssetCategory`, `FixedAsset`, `DepreciationScheduleLine`, `AssetDisposal` | 4 | PARTIAL | PENDING |
+| HumanResources | `Employee`, `JobOpening`, `JobApplication`, `OnboardingTask`, `LeaveRequest`, `PerformanceReview` | 6 | PARTIAL | PENDING |
+| Identity | `OrganizationInvitation`, `RoleDefinition`, `PermissionDefinition`, `RolePermissionGrant`, `ServiceAccount` | 5 | PARTIAL | PENDING |
+| Integrations | `AppRegistration`, `AppVersion`, `AppInstallation`, `ExternalReferenceMapping` | 4 | PARTIAL | PENDING |
+| Inventory | `InventoryItem`, `UnitOfMeasure`, `ItemCategory`, `Warehouse`, `StockMovement`, `StockReservation`, `InventoryLot`, `InventorySerial` | 8 | PARTIAL | PENDING |
+| Manufacturing | `BillOfMaterials`, `BillOfMaterialsLine`, `ProductionRouting`, `RoutingOperation`, `WorkCenter`, `WorkOrder`, `ProductionOutput` | 7 | PARTIAL | PENDING |
+| OrderManagement | `FulfillmentOrder`, `FulfillmentLine`, `Backorder`, `ReturnAuthorization`, `ReturnLine` | 5 | PARTIAL | PENDING |
+| Organizations | `Branch`, `Department`, `BusinessUnit`, `CompanyAccountingPolicy`, `TaxRegistration` | 5 | PARTIAL | PENDING |
+| Payments | `PaymentRefund`, `PaymentAdvance` | 2 | PARTIAL | PENDING |
+| Payroll | `EmployeeCompensation`, `PayrollPeriod`, `PayRun`, `Payslip`, `PayrollComponent` | 5 | PARTIAL | PENDING |
+| Projects | `Project`, `ProjectTask`, `ProjectExpense`, `ProjectMilestone`, `CostCenter` | 5 | PARTIAL | PENDING |
+| Purchases | `PurchaseRequisition`, `PurchaseRequisitionLine`, `PurchaseOrder`, `PurchaseOrderLine`, `GoodsReceipt`, `GoodsReceiptLine` | 6 | PARTIAL | PENDING |
+| QualityManagement | `InspectionPlan`, `InspectionCriterion`, `QualityInspection`, `InspectionResult`, `Nonconformity`, `CorrectiveAction`, `QualityHold` | 7 | PARTIAL | PENDING |
+| Reporting | `ReportDefinition`, `SavedSearch`, `ReportSchedule`, `KpiDefinition` | 4 | PARTIAL | PENDING |
+| ResourceManagement | `Resource`, `ResourceSkill`, `ResourceAllocation`, `ResourceAvailability`, `Timesheet`, `TimesheetEntry` | 6 | PARTIAL | PENDING |
+| RevenueManagement | `RevenueRecognitionRule`, `RevenueContract`, `PerformanceObligation`, `RevenueScheduleLine`, `RevenueAdjustment` | 5 | PARTIAL | PENDING |
+| Sales | `SalesQuotation`, `SalesQuotationLine`, `SalesOrder`, `SalesOrderLine`, `SalesCreditNote` | 5 | PARTIAL | PENDING |
+| ServiceManagement | `SupportTicket`, `ServiceLevelAgreement`, `FieldServiceOrder`, `MaintenancePlan` | 4 | PARTIAL | PENDING |
+| SubscriptionBilling | `SubscriptionPlan`, `Subscription`, `BillingCycle`, `UsageRecord`, `SubscriptionRenewal` | 5 | PARTIAL | PENDING |
+| SupplyChain | `DemandForecast`, `SupplyPlan`, `ProcurementPlan`, `ReplenishmentPolicy`, `SupplierCommitment` | 5 | PARTIAL | PENDING |
+| Tax | `TaxJurisdiction`, `TaxCategory`, `TaxRate`, `VatReturnPeriod`, `VatRegisterEntry` | 5 | PARTIAL | PENDING |
+| WarehouseManagement | `BinLocation`, `ReceivingTask`, `PutawayTask`, `PickingTask`, `Shipment`, `ShipmentPackage`, `CycleCount`, `CycleCountLine` | 8 | PARTIAL | PENDING |
+| Workflows | `WorkflowDefinition`, `ApprovalStep`, `WorkflowInstance`, `ApprovalDecision`, `ApprovalDelegation` | 5 | PARTIAL | PENDING |
+
+Machine-readable inventory: `architecture/domain-entities.json`; completeness gate: `scripts/check_domain_entities.py`.
+Tests: ModuleEntityContractTests exercises each entity's identity, scope immutability, empty references and missing dates; ModuleBusinessInvariantTests covers 18 business boundary scenarios. Actual run results are in VALIDATION.md.
+
+Remaining for each module: aggregate relationships and lifecycle use cases, authorization, cross-reference/tenant checks, versioned contracts, EF mappings/precision/indexes/concurrency, migrations, repositories, endpoints, integration tests and UI. Master prompt feature coverage is broader than the first entity foundation; do not mark entire module COMPLETE.

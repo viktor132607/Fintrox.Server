@@ -1,6 +1,11 @@
 # Validation history — 2026-10-09
 
-## Current verified state
+## ENTITIES-001 current validation
+- Static architecture and full 180-entity/36-module inventory checks PASSED.
+- Local Release build of the affected test/dependency graph with warnings-as-errors PASSED. 604 tests passed; 5 PostgreSQL tests explicitly skipped locally (no server). CI full solution and database verification pending.
+- New regression coverage: 540 entity identity/scope/date cases plus 18 business-boundary tests. No module persistence or API integration claimed.
+
+## Previous verified state
 Code commit: 422cc38dd2a20200ca3a5e1ee91a8c6c78d876dd (AUTH-002).
 CI run 38012762635, job 114096261806: restore, Release build with warnings as errors (0 warnings/errors), 51/51 tests (0 skipped), EF snapshot and PostgreSQL migration application/listing PASSED.
 Five PostgreSQL tests cover simultaneous refresh, revoke winning during refresh read, revocation after rotation, failed replacement-save rollback/same-context retry, and session ownership/revocation.

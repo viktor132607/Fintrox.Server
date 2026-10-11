@@ -14,4 +14,42 @@
     <ProjectReference Include="..\..\src\Fintrox.Application\Fintrox.Application.csproj" />
     <ProjectReference Include="../../src/Fintrox.Infrastructure/Fintrox.Infrastructure.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/Modules/Accounting/Fintrox.Modules.Accounting.Domain/Fintrox.Modules.Accounting.Domain.csproj" />
+    <ProjectReference Include="../../src/Modules/Audit/Fintrox.Modules.Audit.Domain/Fintrox.Modules.Audit.Domain.csproj" />
+    <ProjectReference Include="../../src/Modules/Banking/Fintrox.Modules.Banking.Domain/Fintrox.Modules.Banking.Domain.csproj" />
+    <ProjectReference Include="../../src/Modules/Budgeting/Fintrox.Modules.Budgeting.Domain/Fintrox.Modules.Budgeting.Domain.csproj" />
+    <ProjectReference Include="../../src/Modules/CRM/Fintrox.Modules.CRM.Domain/Fintrox.Modules.CRM.Domain.csproj" />
+    <ProjectReference Include="../../src/Modules/Capabilities/Fintrox.Modules.Capabilities.Domain/Fintrox.Modules.Capabilities.Domain.csproj" />
+    <ProjectReference Include="../../src/Modules/Commerce/Fintrox.Modules.Commerce.Domain/Fintrox.Modules.Commerce.Domain.csproj" />
+    <ProjectReference Include="../../src/Modules/Consolidation/Fintrox.Modules.Consolidation.Domain/Fintrox.Modules.Consolidation.Domain.csproj" />
+    <ProjectReference Include="../../src/Modules/ContractManagement/Fintrox.Modules.ContractManagement.Domain/Fintrox.Modules.ContractManagement.Domain.csproj" />
+    <ProjectReference Include="../../src/Modules/Counterparties/Fintrox.Modules.Counterparties.Domain/Fintrox.Modules.Counterparties.Domain.csproj" />
+    <ProjectReference Include="../../src/Modules/Currencies/Fintrox.Modules.Currencies.Domain/Fintrox.Modules.Currencies.Domain.csproj" />
+    <ProjectReference Include="../../src/Modules/Documents/Fintrox.Modules.Documents.Domain/Fintrox.Modules.Documents.Domain.csproj" />
+    <ProjectReference Include="../../src/Modules/Experience/Fintrox.Modules.Experience.Domain/Fintrox.Modules.Experience.Domain.csproj" />
+    <ProjectReference Include="../../src/Modules/FixedAssets/Fintrox.Modules.FixedAssets.Domain/Fintrox.Modules.FixedAssets.Domain.csproj" />
+    <ProjectReference Include="../../src/Modules/HumanResources/Fintrox.Modules.HumanResources.Domain/Fintrox.Modules.HumanResources.Domain.csproj" />
+    <ProjectReference Include="../../src/Modules/Identity/Fintrox.Modules.Identity.Domain/Fintrox.Modules.Identity.Domain.csproj" />
+    <ProjectReference Include="../../src/Modules/Integrations/Fintrox.Modules.Integrations.Domain/Fintrox.Modules.Integrations.Domain.csproj" />
+    <ProjectReference Include="../../src/Modules/Inventory/Fintrox.Modules.Inventory.Domain/Fintrox.Modules.Inventory.Domain.csproj" />
+    <ProjectReference Include="../../src/Modules/Manufacturing/Fintrox.Modules.Manufacturing.Domain/Fintrox.Modules.Manufacturing.Domain.csproj" />
+    <ProjectReference Include="../../src/Modules/OrderManagement/Fintrox.Modules.OrderManagement.Domain/Fintrox.Modules.OrderManagement.Domain.csproj" />
+    <ProjectReference Include="../../src/Modules/Organizations/Fintrox.Modules.Organizations.Domain/Fintrox.Modules.Organizations.Domain.csproj" />
+    <ProjectReference Include="../../src/Modules/Payments/Fintrox.Modules.Payments.Domain/Fintrox.Modules.Payments.Domain.csproj" />
+    <ProjectReference Include="../../src/Modules/Payroll/Fintrox.Modules.Payroll.Domain/Fintrox.Modules.Payroll.Domain.csproj" />
+    <ProjectReference Include="../../src/Modules/Projects/Fintrox.Modules.Projects.Domain/Fintrox.Modules.Projects.Domain.csproj" />
+    <ProjectReference Include="../../src/Modules/Purchases/Fintrox.Modules.Purchases.Domain/Fintrox.Modules.Purchases.Domain.csproj" />
+    <ProjectReference Include="../../src/Modules/QualityManagement/Fintrox.Modules.QualityManagement.Domain/Fintrox.Modules.QualityManagement.Domain.csproj" />
+    <ProjectReference Include="../../src/Modules/Reporting/Fintrox.Modules.Reporting.Domain/Fintrox.Modules.Reporting.Domain.csproj" />
+    <ProjectReference Include="../../src/Modules/ResourceManagement/Fintrox.Modules.ResourceManagement.Domain/Fintrox.Modules.ResourceManagement.Domain.csproj" />
+    <ProjectReference Include="../../src/Modules/RevenueManagement/Fintrox.Modules.RevenueManagement.Domain/Fintrox.Modules.RevenueManagement.Domain.csproj" />
+    <ProjectReference Include="../../src/Modules/Sales/Fintrox.Modules.Sales.Domain/Fintrox.Modules.Sales.Domain.csproj" />
+    <ProjectReference Include="../../src/Modules/ServiceManagement/Fintrox.Modules.ServiceManagement.Domain/Fintrox.Modules.ServiceManagement.Domain.csproj" />
+    <ProjectReference Include="../../src/Modules/SubscriptionBilling/Fintrox.Modules.SubscriptionBilling.Domain/Fintrox.Modules.SubscriptionBilling.Domain.csproj" />
+    <ProjectReference Include="../../src/Modules/SupplyChain/Fintrox.Modules.SupplyChain.Domain/Fintrox.Modules.SupplyChain.Domain.csproj" />
+    <ProjectReference Include="../../src/Modules/Tax/Fintrox.Modules.Tax.Domain/Fintrox.Modules.Tax.Domain.csproj" />
+    <ProjectReference Include="../../src/Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Domain/Fintrox.Modules.WarehouseManagement.Domain.csproj" />
+    <ProjectReference Include="../../src/Modules/Workflows/Fintrox.Modules.Workflows.Domain/Fintrox.Modules.Workflows.Domain.csproj" />
+  </ItemGroup>
 </Project>
