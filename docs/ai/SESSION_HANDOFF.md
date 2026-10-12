@@ -1,7 +1,7 @@
 # Fintrox Session Handoff — 2026-10-11
 
 ## Current milestone
-ENTITIES-EXPANSION — Accounting Domain complete (35 classes); continue by module in alphabetical order from Audit. Detailed per-module log: ENTITY_EXPANSION_LOG.md.
+ENTITIES-EXPANSION — Audit expanded (17 module entity classes), 225 total. Continue next with Banking; see ENTITY_EXPANSION_LOG.md.
 
 
 ## Changes
@@ -15,4 +15,4 @@ Local affected-graph Release build and 604 tests passed; 5 PostgreSQL tests skip
 Entity foundation only. New types are not yet EF tables, services, DTOs, endpoints or frontend screens. Domain constructor validation is not tenant authorization or reference existence validation. No complete ERP module claimed.
 
 ## Next exact action
-Expand Audit module Domain classes, update machine inventory, module README, MODULE_STATUS and ENTITY_EXPANSION_LOG in same atomic module commit. Continue sequentially across all 36 modules. Avoid duplicating legacy core accounting models. ENTITIES-002 persistence/use cases remains pending.
+Expand Banking Domain records, committing source, architecture/domain-entities.json, MODULE_STATUS.md, module README and ENTITY_EXPANSION_LOG.md after the module. All infrastructure, endpoints, UI and EF persistence remain pending.

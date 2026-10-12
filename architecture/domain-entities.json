@@ -4594,6 +4594,391 @@
           "rule": "text"
         }
       ]
+    },
+    {
+      "module": "Audit",
+      "entity": "AuditEventDigest",
+      "path": "src/Modules/Audit/Fintrox.Modules.Audit.Domain/Entities/AuditEventDigest.cs",
+      "fields": [
+        {
+          "name": "EventId",
+          "rule": "id"
+        },
+        {
+          "name": "EventType",
+          "rule": "text"
+        },
+        {
+          "name": "OccurredAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "PayloadSha256",
+          "rule": "hash"
+        },
+        {
+          "name": "SequenceNumber",
+          "rule": "positiveInt"
+        }
+      ]
+    },
+    {
+      "module": "Audit",
+      "entity": "AuditChainCheckpoint",
+      "path": "src/Modules/Audit/Fintrox.Modules.Audit.Domain/Entities/AuditChainCheckpoint.cs",
+      "fields": [
+        {
+          "name": "LastEventId",
+          "rule": "id"
+        },
+        {
+          "name": "SequenceNumber",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "RootSha256",
+          "rule": "hash"
+        },
+        {
+          "name": "CreatedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "CheckpointAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Audit",
+      "entity": "AuditAccessRecord",
+      "path": "src/Modules/Audit/Fintrox.Modules.Audit.Domain/Entities/AuditAccessRecord.cs",
+      "fields": [
+        {
+          "name": "ActorId",
+          "rule": "id"
+        },
+        {
+          "name": "ResourceType",
+          "rule": "text"
+        },
+        {
+          "name": "ResourceId",
+          "rule": "id"
+        },
+        {
+          "name": "AccessType",
+          "rule": "text"
+        },
+        {
+          "name": "AccessedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Audit",
+      "entity": "AuditExportPart",
+      "path": "src/Modules/Audit/Fintrox.Modules.Audit.Domain/Entities/AuditExportPart.cs",
+      "fields": [
+        {
+          "name": "ExportRequestId",
+          "rule": "id"
+        },
+        {
+          "name": "PartNumber",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "DocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "RecordCount",
+          "rule": "nonnegativeInt"
+        },
+        {
+          "name": "Sha256",
+          "rule": "hash"
+        }
+      ]
+    },
+    {
+      "module": "Audit",
+      "entity": "AuditLegalHold",
+      "path": "src/Modules/Audit/Fintrox.Modules.Audit.Domain/Entities/AuditLegalHold.cs",
+      "fields": [
+        {
+          "name": "MatterReference",
+          "rule": "text"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "ApprovedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Audit",
+      "entity": "AuditRetentionExecution",
+      "path": "src/Modules/Audit/Fintrox.Modules.Audit.Domain/Entities/AuditRetentionExecution.cs",
+      "fields": [
+        {
+          "name": "PolicyId",
+          "rule": "id"
+        },
+        {
+          "name": "StartedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "RemovedRecords",
+          "rule": "nonnegativeLong"
+        },
+        {
+          "name": "RetainedRecords",
+          "rule": "nonnegativeLong"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Audit",
+      "entity": "AuditRedactionRequest",
+      "path": "src/Modules/Audit/Fintrox.Modules.Audit.Domain/Entities/AuditRedactionRequest.cs",
+      "fields": [
+        {
+          "name": "RecordId",
+          "rule": "id"
+        },
+        {
+          "name": "RequestedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        },
+        {
+          "name": "RequestedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Audit",
+      "entity": "AuditEventRule",
+      "path": "src/Modules/Audit/Fintrox.Modules.Audit.Domain/Entities/AuditEventRule.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "EventCategory",
+          "rule": "text"
+        },
+        {
+          "name": "Severity",
+          "rule": "text"
+        },
+        {
+          "name": "IsEnabled",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Audit",
+      "entity": "AuditPolicyAssignment",
+      "path": "src/Modules/Audit/Fintrox.Modules.Audit.Domain/Entities/AuditPolicyAssignment.cs",
+      "fields": [
+        {
+          "name": "RetentionPolicyId",
+          "rule": "id"
+        },
+        {
+          "name": "ResourceType",
+          "rule": "text"
+        },
+        {
+          "name": "EffectiveFrom",
+          "rule": "date"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Audit",
+      "entity": "AuditAccessReview",
+      "path": "src/Modules/Audit/Fintrox.Modules.Audit.Domain/Entities/AuditAccessReview.cs",
+      "fields": [
+        {
+          "name": "ReviewerId",
+          "rule": "id"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Audit",
+      "entity": "AuditAccessReviewFinding",
+      "path": "src/Modules/Audit/Fintrox.Modules.Audit.Domain/Entities/AuditAccessReviewFinding.cs",
+      "fields": [
+        {
+          "name": "AccessReviewId",
+          "rule": "id"
+        },
+        {
+          "name": "UserId",
+          "rule": "id"
+        },
+        {
+          "name": "PermissionCode",
+          "rule": "text"
+        },
+        {
+          "name": "Finding",
+          "rule": "text"
+        },
+        {
+          "name": "RiskLevel",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Audit",
+      "entity": "AuditAlert",
+      "path": "src/Modules/Audit/Fintrox.Modules.Audit.Domain/Entities/AuditAlert.cs",
+      "fields": [
+        {
+          "name": "EventRuleId",
+          "rule": "id"
+        },
+        {
+          "name": "AuditEventId",
+          "rule": "id"
+        },
+        {
+          "name": "Severity",
+          "rule": "text"
+        },
+        {
+          "name": "DetectedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "IsAcknowledged",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Audit",
+      "entity": "AuditEvidenceAttachment",
+      "path": "src/Modules/Audit/Fintrox.Modules.Audit.Domain/Entities/AuditEvidenceAttachment.cs",
+      "fields": [
+        {
+          "name": "CaseId",
+          "rule": "id"
+        },
+        {
+          "name": "DocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "Description",
+          "rule": "text"
+        },
+        {
+          "name": "CollectedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Audit",
+      "entity": "AuditComplianceCase",
+      "path": "src/Modules/Audit/Fintrox.Modules.Audit.Domain/Entities/AuditComplianceCase.cs",
+      "fields": [
+        {
+          "name": "CaseNumber",
+          "rule": "text"
+        },
+        {
+          "name": "Subject",
+          "rule": "text"
+        },
+        {
+          "name": "OpenedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "ResponsibleUserId",
+          "rule": "id"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Audit",
+      "entity": "AuditActorSnapshot",
+      "path": "src/Modules/Audit/Fintrox.Modules.Audit.Domain/Entities/AuditActorSnapshot.cs",
+      "fields": [
+        {
+          "name": "ActorId",
+          "rule": "id"
+        },
+        {
+          "name": "DisplayName",
+          "rule": "text"
+        },
+        {
+          "name": "ActorType",
+          "rule": "text"
+        },
+        {
+          "name": "CapturedAtUtc",
+          "rule": "instant"
+        }
+      ]
     }
   ]
 }
