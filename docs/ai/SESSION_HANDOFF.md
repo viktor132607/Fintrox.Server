@@ -1,7 +1,7 @@
 # Fintrox Session Handoff — 2026-10-11
 
 ## Current milestone
-ENTITIES-EXPANSION: Reporting complete at model level (27 module total / 732 project total). Next ResourceManagement.
+ENTITIES-EXPANSION: ResourceManagement finished at source/domain level; 752 total models. Next RevenueManagement.
 
 
 ## Changes
@@ -15,4 +15,4 @@ Local affected-graph Release build and 604 tests passed; 5 PostgreSQL tests skip
 Entity foundation only. New types are not yet EF tables, services, DTOs, endpoints or frontend screens. Domain constructor validation is not tenant authorization or reference existence validation. No complete ERP module claimed.
 
 ## Next exact action
-Expand ResourceManagement domain classes and update architecture/domain-entities.json, MODULE_STATUS.md, ENTITY_EXPANSION_LOG.md and the module README atomically in that module commit.
+Continue entity expansion with RevenueManagement. After each module, update inventory, MODULE_STATUS.md, ENTITY_EXPANSION_LOG.md, module README, SESSION_HANDOFF.md, commit on main.

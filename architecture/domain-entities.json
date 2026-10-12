@@ -17856,6 +17856,490 @@
           "rule": "id"
         }
       ]
+    },
+    {
+      "module": "ResourceManagement",
+      "entity": "ResourcePool",
+      "path": "src/Modules/ResourceManagement/Fintrox.Modules.ResourceManagement.Domain/Entities/ResourcePool.cs",
+      "fields": [
+        {
+          "name": "PoolCode",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "ManagerUserId",
+          "rule": "id"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "ResourceManagement",
+      "entity": "ResourcePoolMembership",
+      "path": "src/Modules/ResourceManagement/Fintrox.Modules.ResourceManagement.Domain/Entities/ResourcePoolMembership.cs",
+      "fields": [
+        {
+          "name": "ResourcePoolId",
+          "rule": "id"
+        },
+        {
+          "name": "ResourceId",
+          "rule": "id"
+        },
+        {
+          "name": "JoinedOn",
+          "rule": "date"
+        },
+        {
+          "name": "AllocationPercent",
+          "rule": "percent"
+        }
+      ]
+    },
+    {
+      "module": "ResourceManagement",
+      "entity": "ResourceCapacityPlan",
+      "path": "src/Modules/ResourceManagement/Fintrox.Modules.ResourceManagement.Domain/Entities/ResourceCapacityPlan.cs",
+      "fields": [
+        {
+          "name": "ResourceId",
+          "rule": "id"
+        },
+        {
+          "name": "PeriodStartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "PeriodEndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "CapacityHours",
+          "rule": "nonnegative"
+        }
+      ]
+    },
+    {
+      "module": "ResourceManagement",
+      "entity": "ResourceCapacityAdjustment",
+      "path": "src/Modules/ResourceManagement/Fintrox.Modules.ResourceManagement.Domain/Entities/ResourceCapacityAdjustment.cs",
+      "fields": [
+        {
+          "name": "ResourceId",
+          "rule": "id"
+        },
+        {
+          "name": "AdjustmentOn",
+          "rule": "date"
+        },
+        {
+          "name": "HoursChange",
+          "rule": "nonzero"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "ResourceManagement",
+      "entity": "ResourceBooking",
+      "path": "src/Modules/ResourceManagement/Fintrox.Modules.ResourceManagement.Domain/Entities/ResourceBooking.cs",
+      "fields": [
+        {
+          "name": "ResourceId",
+          "rule": "id"
+        },
+        {
+          "name": "ProjectId",
+          "rule": "id"
+        },
+        {
+          "name": "StartsAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "EndsAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "BookedHours",
+          "rule": "positive"
+        }
+      ]
+    },
+    {
+      "module": "ResourceManagement",
+      "entity": "ResourceBookingConflict",
+      "path": "src/Modules/ResourceManagement/Fintrox.Modules.ResourceManagement.Domain/Entities/ResourceBookingConflict.cs",
+      "fields": [
+        {
+          "name": "ResourceBookingId",
+          "rule": "id"
+        },
+        {
+          "name": "ConflictingBookingId",
+          "rule": "id"
+        },
+        {
+          "name": "DetectedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Severity",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "ResourceManagement",
+      "entity": "ResourceCalendar",
+      "path": "src/Modules/ResourceManagement/Fintrox.Modules.ResourceManagement.Domain/Entities/ResourceCalendar.cs",
+      "fields": [
+        {
+          "name": "ResourceId",
+          "rule": "id"
+        },
+        {
+          "name": "CalendarCode",
+          "rule": "text"
+        },
+        {
+          "name": "TimeZoneId",
+          "rule": "text"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "ResourceManagement",
+      "entity": "ResourceCalendarException",
+      "path": "src/Modules/ResourceManagement/Fintrox.Modules.ResourceManagement.Domain/Entities/ResourceCalendarException.cs",
+      "fields": [
+        {
+          "name": "CalendarId",
+          "rule": "id"
+        },
+        {
+          "name": "ExceptionDate",
+          "rule": "date"
+        },
+        {
+          "name": "ExceptionType",
+          "rule": "text"
+        },
+        {
+          "name": "AvailableHours",
+          "rule": "nonnegative"
+        }
+      ]
+    },
+    {
+      "module": "ResourceManagement",
+      "entity": "ResourceShiftTemplate",
+      "path": "src/Modules/ResourceManagement/Fintrox.Modules.ResourceManagement.Domain/Entities/ResourceShiftTemplate.cs",
+      "fields": [
+        {
+          "name": "ResourceId",
+          "rule": "id"
+        },
+        {
+          "name": "ShiftCode",
+          "rule": "text"
+        },
+        {
+          "name": "StartTime",
+          "rule": "text"
+        },
+        {
+          "name": "EndTime",
+          "rule": "text"
+        },
+        {
+          "name": "WorkingHours",
+          "rule": "positive"
+        }
+      ]
+    },
+    {
+      "module": "ResourceManagement",
+      "entity": "ResourceLeaveBlock",
+      "path": "src/Modules/ResourceManagement/Fintrox.Modules.ResourceManagement.Domain/Entities/ResourceLeaveBlock.cs",
+      "fields": [
+        {
+          "name": "ResourceId",
+          "rule": "id"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "LeaveType",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "ResourceManagement",
+      "entity": "ResourceCompetency",
+      "path": "src/Modules/ResourceManagement/Fintrox.Modules.ResourceManagement.Domain/Entities/ResourceCompetency.cs",
+      "fields": [
+        {
+          "name": "ResourceId",
+          "rule": "id"
+        },
+        {
+          "name": "CompetencyCode",
+          "rule": "text"
+        },
+        {
+          "name": "ProficiencyLevel",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "AssessedOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "ResourceManagement",
+      "entity": "ResourceCertification",
+      "path": "src/Modules/ResourceManagement/Fintrox.Modules.ResourceManagement.Domain/Entities/ResourceCertification.cs",
+      "fields": [
+        {
+          "name": "ResourceId",
+          "rule": "id"
+        },
+        {
+          "name": "CertificationCode",
+          "rule": "text"
+        },
+        {
+          "name": "IssuedOn",
+          "rule": "date"
+        },
+        {
+          "name": "ExpiresOn",
+          "rule": "date"
+        },
+        {
+          "name": "Issuer",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "ResourceManagement",
+      "entity": "ResourceDemand",
+      "path": "src/Modules/ResourceManagement/Fintrox.Modules.ResourceManagement.Domain/Entities/ResourceDemand.cs",
+      "fields": [
+        {
+          "name": "ProjectId",
+          "rule": "id"
+        },
+        {
+          "name": "SkillCode",
+          "rule": "text"
+        },
+        {
+          "name": "RequiredHours",
+          "rule": "positive"
+        },
+        {
+          "name": "RequiredFrom",
+          "rule": "date"
+        },
+        {
+          "name": "RequiredUntil",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "ResourceManagement",
+      "entity": "ResourceDemandMatch",
+      "path": "src/Modules/ResourceManagement/Fintrox.Modules.ResourceManagement.Domain/Entities/ResourceDemandMatch.cs",
+      "fields": [
+        {
+          "name": "ResourceDemandId",
+          "rule": "id"
+        },
+        {
+          "name": "ResourceId",
+          "rule": "id"
+        },
+        {
+          "name": "MatchScore",
+          "rule": "nonnegativeInt"
+        },
+        {
+          "name": "MatchedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "ResourceManagement",
+      "entity": "ResourceUtilizationSnapshot",
+      "path": "src/Modules/ResourceManagement/Fintrox.Modules.ResourceManagement.Domain/Entities/ResourceUtilizationSnapshot.cs",
+      "fields": [
+        {
+          "name": "ResourceId",
+          "rule": "id"
+        },
+        {
+          "name": "PeriodStartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "PeriodEndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "BillableHours",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "TotalHours",
+          "rule": "nonnegative"
+        }
+      ]
+    },
+    {
+      "module": "ResourceManagement",
+      "entity": "ResourceCostRate",
+      "path": "src/Modules/ResourceManagement/Fintrox.Modules.ResourceManagement.Domain/Entities/ResourceCostRate.cs",
+      "fields": [
+        {
+          "name": "ResourceId",
+          "rule": "id"
+        },
+        {
+          "name": "HourlyCost",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "EffectiveFrom",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "ResourceManagement",
+      "entity": "ResourceBillingRate",
+      "path": "src/Modules/ResourceManagement/Fintrox.Modules.ResourceManagement.Domain/Entities/ResourceBillingRate.cs",
+      "fields": [
+        {
+          "name": "ResourceId",
+          "rule": "id"
+        },
+        {
+          "name": "CustomerId",
+          "rule": "id"
+        },
+        {
+          "name": "HourlyRate",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "EffectiveFrom",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "ResourceManagement",
+      "entity": "TimesheetApproval",
+      "path": "src/Modules/ResourceManagement/Fintrox.Modules.ResourceManagement.Domain/Entities/TimesheetApproval.cs",
+      "fields": [
+        {
+          "name": "TimesheetId",
+          "rule": "id"
+        },
+        {
+          "name": "ApproverUserId",
+          "rule": "id"
+        },
+        {
+          "name": "Decision",
+          "rule": "text"
+        },
+        {
+          "name": "DecidedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "ResourceManagement",
+      "entity": "TimesheetCorrection",
+      "path": "src/Modules/ResourceManagement/Fintrox.Modules.ResourceManagement.Domain/Entities/TimesheetCorrection.cs",
+      "fields": [
+        {
+          "name": "TimesheetEntryId",
+          "rule": "id"
+        },
+        {
+          "name": "CorrectedHours",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        },
+        {
+          "name": "CorrectedByUserId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "ResourceManagement",
+      "entity": "ResourceForecast",
+      "path": "src/Modules/ResourceManagement/Fintrox.Modules.ResourceManagement.Domain/Entities/ResourceForecast.cs",
+      "fields": [
+        {
+          "name": "ResourcePoolId",
+          "rule": "id"
+        },
+        {
+          "name": "ForecastOn",
+          "rule": "date"
+        },
+        {
+          "name": "RequiredHours",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "AvailableHours",
+          "rule": "nonnegative"
+        }
+      ]
     }
   ]
 }

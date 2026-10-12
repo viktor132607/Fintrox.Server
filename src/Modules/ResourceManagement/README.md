@@ -55,3 +55,9 @@ See [architecture](../../../docs/architecture.md) and [master roadmap](../../../
 `Resource`, `ResourceSkill`, `ResourceAllocation`, `ResourceAvailability`, `Timesheet`, `TimesheetEntry`.
 
 Models live in this module Domain/Entities directory; foreign objects are referenced by IDs. These are domain types, not registered database tables or endpoints. Existing legacy workflows remain in core projects. See [module progress](../../../docs/ai/MODULE_STATUS.md) for inventory and remaining work.
+
+## Domain expansion — 2026-10-13
+
+Added 20 immutable constructor-validated entity models (26 total): `ResourcePool`, `ResourcePoolMembership`, `ResourceCapacityPlan`, `ResourceCapacityAdjustment`, `ResourceBooking`, `ResourceBookingConflict`, `ResourceCalendar`, `ResourceCalendarException`, `ResourceShiftTemplate`, `ResourceLeaveBlock`, `ResourceCompetency`, `ResourceCertification`, `ResourceDemand`, `ResourceDemandMatch`, `ResourceUtilizationSnapshot`, `ResourceCostRate`, `ResourceBillingRate`, `TimesheetApproval`, `TimesheetCorrection`, `ResourceForecast`.
+
+Cross-module IDs require application authorization; persistence, use cases, DTOs, controllers, migrations and accounting tests remain pending.

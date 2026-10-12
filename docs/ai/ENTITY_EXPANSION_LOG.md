@@ -31,3 +31,4 @@ Module-by-module Domain entity expansion, preserving existing 180 entities and t
 | 25 | Purchases | 23 | 29 | Inventory check; .NET CI pending | Domain expanded; EF/API pending |
 | 26 | QualityManagement | 21 | 28 | Inventory check; .NET CI pending | Domain expanded; EF/API pending |
 | 27 | Reporting | 23 | 27 | Inventory check; .NET CI pending | Domain expanded; EF/API pending |
+| 28 | ResourceManagement | 20 | 26 | Static inventory only; CI pending | Domain expanded; EF/API pending |
