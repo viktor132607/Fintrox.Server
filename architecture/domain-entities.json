@@ -11290,6 +11290,572 @@
           "rule": "date"
         }
       ]
+    },
+    {
+      "module": "Identity",
+      "entity": "UserProfile",
+      "path": "src/Modules/Identity/Fintrox.Modules.Identity.Domain/Entities/UserProfile.cs",
+      "fields": [
+        {
+          "name": "UserId",
+          "rule": "id"
+        },
+        {
+          "name": "DisplayName",
+          "rule": "text"
+        },
+        {
+          "name": "PreferredLanguage",
+          "rule": "text"
+        },
+        {
+          "name": "TimeZoneId",
+          "rule": "text"
+        },
+        {
+          "name": "IsPublic",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Identity",
+      "entity": "UserEmailAddress",
+      "path": "src/Modules/Identity/Fintrox.Modules.Identity.Domain/Entities/UserEmailAddress.cs",
+      "fields": [
+        {
+          "name": "UserId",
+          "rule": "id"
+        },
+        {
+          "name": "Email",
+          "rule": "text"
+        },
+        {
+          "name": "IsPrimary",
+          "rule": "bool"
+        },
+        {
+          "name": "IsVerified",
+          "rule": "bool"
+        },
+        {
+          "name": "VerifiedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Identity",
+      "entity": "UserPhoneNumber",
+      "path": "src/Modules/Identity/Fintrox.Modules.Identity.Domain/Entities/UserPhoneNumber.cs",
+      "fields": [
+        {
+          "name": "UserId",
+          "rule": "id"
+        },
+        {
+          "name": "PhoneNumber",
+          "rule": "text"
+        },
+        {
+          "name": "CountryCode",
+          "rule": "country"
+        },
+        {
+          "name": "IsPrimary",
+          "rule": "bool"
+        },
+        {
+          "name": "IsVerified",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Identity",
+      "entity": "UserMfaFactor",
+      "path": "src/Modules/Identity/Fintrox.Modules.Identity.Domain/Entities/UserMfaFactor.cs",
+      "fields": [
+        {
+          "name": "UserId",
+          "rule": "id"
+        },
+        {
+          "name": "FactorType",
+          "rule": "text"
+        },
+        {
+          "name": "ProviderCode",
+          "rule": "text"
+        },
+        {
+          "name": "EnrolledAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "IsEnabled",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Identity",
+      "entity": "UserMfaRecoveryCode",
+      "path": "src/Modules/Identity/Fintrox.Modules.Identity.Domain/Entities/UserMfaRecoveryCode.cs",
+      "fields": [
+        {
+          "name": "UserId",
+          "rule": "id"
+        },
+        {
+          "name": "TokenHash",
+          "rule": "hash"
+        },
+        {
+          "name": "IssuedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "IsRedeemed",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Identity",
+      "entity": "UserPasswordHistory",
+      "path": "src/Modules/Identity/Fintrox.Modules.Identity.Domain/Entities/UserPasswordHistory.cs",
+      "fields": [
+        {
+          "name": "UserId",
+          "rule": "id"
+        },
+        {
+          "name": "PasswordHash",
+          "rule": "hash"
+        },
+        {
+          "name": "ChangedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "ChangeReason",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Identity",
+      "entity": "UserSecurityEvent",
+      "path": "src/Modules/Identity/Fintrox.Modules.Identity.Domain/Entities/UserSecurityEvent.cs",
+      "fields": [
+        {
+          "name": "UserId",
+          "rule": "id"
+        },
+        {
+          "name": "EventCode",
+          "rule": "text"
+        },
+        {
+          "name": "IpAddress",
+          "rule": "text"
+        },
+        {
+          "name": "OccurredAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "RiskLevel",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Identity",
+      "entity": "UserTrustedDevice",
+      "path": "src/Modules/Identity/Fintrox.Modules.Identity.Domain/Entities/UserTrustedDevice.cs",
+      "fields": [
+        {
+          "name": "UserId",
+          "rule": "id"
+        },
+        {
+          "name": "DeviceFingerprint",
+          "rule": "text"
+        },
+        {
+          "name": "FirstSeenAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "ExpiresAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "IsRevoked",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Identity",
+      "entity": "UserApiToken",
+      "path": "src/Modules/Identity/Fintrox.Modules.Identity.Domain/Entities/UserApiToken.cs",
+      "fields": [
+        {
+          "name": "UserId",
+          "rule": "id"
+        },
+        {
+          "name": "TokenHash",
+          "rule": "hash"
+        },
+        {
+          "name": "TokenLabel",
+          "rule": "text"
+        },
+        {
+          "name": "ExpiresAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "IsRevoked",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Identity",
+      "entity": "UserConsent",
+      "path": "src/Modules/Identity/Fintrox.Modules.Identity.Domain/Entities/UserConsent.cs",
+      "fields": [
+        {
+          "name": "UserId",
+          "rule": "id"
+        },
+        {
+          "name": "ConsentPurpose",
+          "rule": "text"
+        },
+        {
+          "name": "ConsentStatus",
+          "rule": "text"
+        },
+        {
+          "name": "RecordedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "PolicyVersion",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Identity",
+      "entity": "RoleAssignment",
+      "path": "src/Modules/Identity/Fintrox.Modules.Identity.Domain/Entities/RoleAssignment.cs",
+      "fields": [
+        {
+          "name": "UserId",
+          "rule": "id"
+        },
+        {
+          "name": "RoleDefinitionId",
+          "rule": "id"
+        },
+        {
+          "name": "ScopeCode",
+          "rule": "text"
+        },
+        {
+          "name": "GrantedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "GrantedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Identity",
+      "entity": "PermissionPolicy",
+      "path": "src/Modules/Identity/Fintrox.Modules.Identity.Domain/Entities/PermissionPolicy.cs",
+      "fields": [
+        {
+          "name": "PolicyCode",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "ResourceType",
+          "rule": "text"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Identity",
+      "entity": "PermissionPolicyRule",
+      "path": "src/Modules/Identity/Fintrox.Modules.Identity.Domain/Entities/PermissionPolicyRule.cs",
+      "fields": [
+        {
+          "name": "PolicyId",
+          "rule": "id"
+        },
+        {
+          "name": "PermissionDefinitionId",
+          "rule": "id"
+        },
+        {
+          "name": "Effect",
+          "rule": "text"
+        },
+        {
+          "name": "ConditionJson",
+          "rule": "json"
+        }
+      ]
+    },
+    {
+      "module": "Identity",
+      "entity": "RoleScopeAssignment",
+      "path": "src/Modules/Identity/Fintrox.Modules.Identity.Domain/Entities/RoleScopeAssignment.cs",
+      "fields": [
+        {
+          "name": "RoleDefinitionId",
+          "rule": "id"
+        },
+        {
+          "name": "ResourceId",
+          "rule": "id"
+        },
+        {
+          "name": "ResourceType",
+          "rule": "text"
+        },
+        {
+          "name": "ValidFrom",
+          "rule": "date"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Identity",
+      "entity": "InvitationAcceptance",
+      "path": "src/Modules/Identity/Fintrox.Modules.Identity.Domain/Entities/InvitationAcceptance.cs",
+      "fields": [
+        {
+          "name": "OrganizationInvitationId",
+          "rule": "id"
+        },
+        {
+          "name": "AcceptedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "AcceptedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "AcceptanceMethod",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Identity",
+      "entity": "ServiceAccountCredential",
+      "path": "src/Modules/Identity/Fintrox.Modules.Identity.Domain/Entities/ServiceAccountCredential.cs",
+      "fields": [
+        {
+          "name": "ServiceAccountId",
+          "rule": "id"
+        },
+        {
+          "name": "TokenHash",
+          "rule": "hash"
+        },
+        {
+          "name": "IssuedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "ExpiresAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "IsRevoked",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Identity",
+      "entity": "IdentityVerificationRequest",
+      "path": "src/Modules/Identity/Fintrox.Modules.Identity.Domain/Entities/IdentityVerificationRequest.cs",
+      "fields": [
+        {
+          "name": "UserId",
+          "rule": "id"
+        },
+        {
+          "name": "VerificationType",
+          "rule": "text"
+        },
+        {
+          "name": "ChallengeId",
+          "rule": "id"
+        },
+        {
+          "name": "RequestedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Identity",
+      "entity": "LoginChallenge",
+      "path": "src/Modules/Identity/Fintrox.Modules.Identity.Domain/Entities/LoginChallenge.cs",
+      "fields": [
+        {
+          "name": "UserId",
+          "rule": "id"
+        },
+        {
+          "name": "ChallengeType",
+          "rule": "text"
+        },
+        {
+          "name": "TokenHash",
+          "rule": "hash"
+        },
+        {
+          "name": "IssuedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "ExpiresAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Identity",
+      "entity": "SessionSecurityContext",
+      "path": "src/Modules/Identity/Fintrox.Modules.Identity.Domain/Entities/SessionSecurityContext.cs",
+      "fields": [
+        {
+          "name": "UserId",
+          "rule": "id"
+        },
+        {
+          "name": "SessionReferenceId",
+          "rule": "id"
+        },
+        {
+          "name": "DeviceFingerprint",
+          "rule": "text"
+        },
+        {
+          "name": "IpAddress",
+          "rule": "text"
+        },
+        {
+          "name": "LastSeenAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Identity",
+      "entity": "AccountLockout",
+      "path": "src/Modules/Identity/Fintrox.Modules.Identity.Domain/Entities/AccountLockout.cs",
+      "fields": [
+        {
+          "name": "UserId",
+          "rule": "id"
+        },
+        {
+          "name": "LockoutReason",
+          "rule": "text"
+        },
+        {
+          "name": "LockedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "UnlockAfterUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Identity",
+      "entity": "OrganizationSsoConfiguration",
+      "path": "src/Modules/Identity/Fintrox.Modules.Identity.Domain/Entities/OrganizationSsoConfiguration.cs",
+      "fields": [
+        {
+          "name": "ProviderCode",
+          "rule": "text"
+        },
+        {
+          "name": "IssuerUri",
+          "rule": "text"
+        },
+        {
+          "name": "ClientIdentifier",
+          "rule": "text"
+        },
+        {
+          "name": "IsEnabled",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Identity",
+      "entity": "IdentityProviderMapping",
+      "path": "src/Modules/Identity/Fintrox.Modules.Identity.Domain/Entities/IdentityProviderMapping.cs",
+      "fields": [
+        {
+          "name": "ProviderCode",
+          "rule": "text"
+        },
+        {
+          "name": "ExternalSubject",
+          "rule": "text"
+        },
+        {
+          "name": "UserId",
+          "rule": "id"
+        },
+        {
+          "name": "LinkedAtUtc",
+          "rule": "instant"
+        }
+      ]
     }
   ]
 }

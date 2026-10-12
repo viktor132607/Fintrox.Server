@@ -1,7 +1,7 @@
 # Fintrox Session Handoff — 2026-10-11
 
 ## Current milestone
-ENTITIES-EXPANSION: HumanResources model expansion committed. 470 total. Next Identity.
+ENTITIES-EXPANSION — Identity updated; 492 inventoried classes. Next: Integrations.
 
 
 ## Changes
@@ -15,4 +15,4 @@ Local affected-graph Release build and 604 tests passed; 5 PostgreSQL tests skip
 Entity foundation only. New types are not yet EF tables, services, DTOs, endpoints or frontend screens. Domain constructor validation is not tenant authorization or reference existence validation. No complete ERP module claimed.
 
 ## Next exact action
-Continue with Identity entities. Update source, architecture/domain-entities.json, MODULE_STATUS.md, ENTITY_EXPANSION_LOG.md and module README in one atomic commit for that module.
+Implement Integrations domain records; update machine inventory and MODULE_STATUS, ENTITY_EXPANSION_LOG and README in module-level atomic commit.

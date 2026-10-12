@@ -24,3 +24,9 @@ See [architecture](../../../docs/architecture.md) for the current legacy excepti
 `OrganizationInvitation`, `RoleDefinition`, `PermissionDefinition`, `RolePermissionGrant`, `ServiceAccount`.
 
 Models live in this module Domain/Entities directory; foreign objects are referenced by IDs. These are domain types, not registered database tables or endpoints. Existing legacy workflows remain in core projects. See [module progress](../../../docs/ai/MODULE_STATUS.md) for inventory and remaining work.
+
+## Domain expansion — 2026-10-13
+
+Added 22 entities (27 total): `UserProfile`, `UserEmailAddress`, `UserPhoneNumber`, `UserMfaFactor`, `UserMfaRecoveryCode`, `UserPasswordHistory`, `UserSecurityEvent`, `UserTrustedDevice`, `UserApiToken`, `UserConsent`, `RoleAssignment`, `PermissionPolicy`, `PermissionPolicyRule`, `RoleScopeAssignment`, `InvitationAcceptance`, `ServiceAccountCredential`, `IdentityVerificationRequest`, `LoginChallenge`, `SessionSecurityContext`, `AccountLockout`, `OrganizationSsoConfiguration`, `IdentityProviderMapping`.
+
+Module-local immutable records, constructor input validation, no references to other Domain assemblies. Persistence, API, security authorizations and implementation remain pending.
