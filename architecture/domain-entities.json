@@ -13648,6 +13648,494 @@
           "rule": "positive"
         }
       ]
+    },
+    {
+      "module": "OrderManagement",
+      "entity": "OrderChannel",
+      "path": "src/Modules/OrderManagement/Fintrox.Modules.OrderManagement.Domain/Entities/OrderChannel.cs",
+      "fields": [
+        {
+          "name": "ChannelCode",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "SourceSystem",
+          "rule": "text"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "OrderManagement",
+      "entity": "OrderRoutingRule",
+      "path": "src/Modules/OrderManagement/Fintrox.Modules.OrderManagement.Domain/Entities/OrderRoutingRule.cs",
+      "fields": [
+        {
+          "name": "ChannelId",
+          "rule": "id"
+        },
+        {
+          "name": "Priority",
+          "rule": "nonnegativeInt"
+        },
+        {
+          "name": "ConditionJson",
+          "rule": "json"
+        },
+        {
+          "name": "FulfillmentLocationId",
+          "rule": "id"
+        },
+        {
+          "name": "IsEnabled",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "OrderManagement",
+      "entity": "OrderRoutingDecision",
+      "path": "src/Modules/OrderManagement/Fintrox.Modules.OrderManagement.Domain/Entities/OrderRoutingDecision.cs",
+      "fields": [
+        {
+          "name": "FulfillmentOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "RoutingRuleId",
+          "rule": "id"
+        },
+        {
+          "name": "SelectedWarehouseId",
+          "rule": "id"
+        },
+        {
+          "name": "DecidedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "OrderManagement",
+      "entity": "FulfillmentWave",
+      "path": "src/Modules/OrderManagement/Fintrox.Modules.OrderManagement.Domain/Entities/FulfillmentWave.cs",
+      "fields": [
+        {
+          "name": "WarehouseId",
+          "rule": "id"
+        },
+        {
+          "name": "WaveNumber",
+          "rule": "text"
+        },
+        {
+          "name": "ScheduledOn",
+          "rule": "date"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "OrderManagement",
+      "entity": "FulfillmentWaveLine",
+      "path": "src/Modules/OrderManagement/Fintrox.Modules.OrderManagement.Domain/Entities/FulfillmentWaveLine.cs",
+      "fields": [
+        {
+          "name": "WaveId",
+          "rule": "id"
+        },
+        {
+          "name": "FulfillmentOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "FulfillmentLineId",
+          "rule": "id"
+        },
+        {
+          "name": "AllocatedQuantity",
+          "rule": "positive"
+        }
+      ]
+    },
+    {
+      "module": "OrderManagement",
+      "entity": "FulfillmentAllocation",
+      "path": "src/Modules/OrderManagement/Fintrox.Modules.OrderManagement.Domain/Entities/FulfillmentAllocation.cs",
+      "fields": [
+        {
+          "name": "FulfillmentLineId",
+          "rule": "id"
+        },
+        {
+          "name": "WarehouseId",
+          "rule": "id"
+        },
+        {
+          "name": "InventoryLotId",
+          "rule": "id"
+        },
+        {
+          "name": "AllocatedQuantity",
+          "rule": "positive"
+        },
+        {
+          "name": "AllocatedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "OrderManagement",
+      "entity": "OrderStatusHistory",
+      "path": "src/Modules/OrderManagement/Fintrox.Modules.OrderManagement.Domain/Entities/OrderStatusHistory.cs",
+      "fields": [
+        {
+          "name": "FulfillmentOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "PreviousStatus",
+          "rule": "text"
+        },
+        {
+          "name": "NewStatus",
+          "rule": "text"
+        },
+        {
+          "name": "ChangedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "ChangedByUserId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "OrderManagement",
+      "entity": "OrderException",
+      "path": "src/Modules/OrderManagement/Fintrox.Modules.OrderManagement.Domain/Entities/OrderException.cs",
+      "fields": [
+        {
+          "name": "FulfillmentOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "ExceptionCode",
+          "rule": "text"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        },
+        {
+          "name": "DetectedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Severity",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "OrderManagement",
+      "entity": "OrderHold",
+      "path": "src/Modules/OrderManagement/Fintrox.Modules.OrderManagement.Domain/Entities/OrderHold.cs",
+      "fields": [
+        {
+          "name": "FulfillmentOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "HoldType",
+          "rule": "text"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        },
+        {
+          "name": "PlacedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "PlacedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "OrderManagement",
+      "entity": "OrderSplit",
+      "path": "src/Modules/OrderManagement/Fintrox.Modules.OrderManagement.Domain/Entities/OrderSplit.cs",
+      "fields": [
+        {
+          "name": "SourceFulfillmentOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "ChildFulfillmentOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "SplitReason",
+          "rule": "text"
+        },
+        {
+          "name": "SplitAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "OrderManagement",
+      "entity": "BackorderAllocation",
+      "path": "src/Modules/OrderManagement/Fintrox.Modules.OrderManagement.Domain/Entities/BackorderAllocation.cs",
+      "fields": [
+        {
+          "name": "BackorderId",
+          "rule": "id"
+        },
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "ReservedQuantity",
+          "rule": "positive"
+        },
+        {
+          "name": "EstimatedFulfillmentOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "OrderManagement",
+      "entity": "ReturnReason",
+      "path": "src/Modules/OrderManagement/Fintrox.Modules.OrderManagement.Domain/Entities/ReturnReason.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Description",
+          "rule": "text"
+        },
+        {
+          "name": "RequiresInspection",
+          "rule": "bool"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "OrderManagement",
+      "entity": "ReturnInspection",
+      "path": "src/Modules/OrderManagement/Fintrox.Modules.OrderManagement.Domain/Entities/ReturnInspection.cs",
+      "fields": [
+        {
+          "name": "ReturnAuthorizationId",
+          "rule": "id"
+        },
+        {
+          "name": "InspectedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "InspectedOn",
+          "rule": "date"
+        },
+        {
+          "name": "Result",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "OrderManagement",
+      "entity": "ReturnDisposition",
+      "path": "src/Modules/OrderManagement/Fintrox.Modules.OrderManagement.Domain/Entities/ReturnDisposition.cs",
+      "fields": [
+        {
+          "name": "ReturnLineId",
+          "rule": "id"
+        },
+        {
+          "name": "DispositionCode",
+          "rule": "text"
+        },
+        {
+          "name": "RefundAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "ApprovedByUserId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "OrderManagement",
+      "entity": "ReturnShipment",
+      "path": "src/Modules/OrderManagement/Fintrox.Modules.OrderManagement.Domain/Entities/ReturnShipment.cs",
+      "fields": [
+        {
+          "name": "ReturnAuthorizationId",
+          "rule": "id"
+        },
+        {
+          "name": "CarrierCode",
+          "rule": "text"
+        },
+        {
+          "name": "TrackingNumber",
+          "rule": "text"
+        },
+        {
+          "name": "ShippedOn",
+          "rule": "date"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "OrderManagement",
+      "entity": "OrderDeliveryConfirmation",
+      "path": "src/Modules/OrderManagement/Fintrox.Modules.OrderManagement.Domain/Entities/OrderDeliveryConfirmation.cs",
+      "fields": [
+        {
+          "name": "FulfillmentOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "ConfirmedOn",
+          "rule": "date"
+        },
+        {
+          "name": "ReceiverName",
+          "rule": "text"
+        },
+        {
+          "name": "ProofDocumentId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "OrderManagement",
+      "entity": "OrderFulfillmentSla",
+      "path": "src/Modules/OrderManagement/Fintrox.Modules.OrderManagement.Domain/Entities/OrderFulfillmentSla.cs",
+      "fields": [
+        {
+          "name": "ChannelId",
+          "rule": "id"
+        },
+        {
+          "name": "ServiceLevelCode",
+          "rule": "text"
+        },
+        {
+          "name": "TargetHours",
+          "rule": "positive"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "OrderManagement",
+      "entity": "OrderPromise",
+      "path": "src/Modules/OrderManagement/Fintrox.Modules.OrderManagement.Domain/Entities/OrderPromise.cs",
+      "fields": [
+        {
+          "name": "FulfillmentOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "PromisedDeliveryOn",
+          "rule": "date"
+        },
+        {
+          "name": "PromiseSource",
+          "rule": "text"
+        },
+        {
+          "name": "IsConfirmed",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "OrderManagement",
+      "entity": "OrderInventoryReservation",
+      "path": "src/Modules/OrderManagement/Fintrox.Modules.OrderManagement.Domain/Entities/OrderInventoryReservation.cs",
+      "fields": [
+        {
+          "name": "FulfillmentOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "Quantity",
+          "rule": "positive"
+        },
+        {
+          "name": "ReservationReferenceId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "OrderManagement",
+      "entity": "OrderCancellation",
+      "path": "src/Modules/OrderManagement/Fintrox.Modules.OrderManagement.Domain/Entities/OrderCancellation.cs",
+      "fields": [
+        {
+          "name": "FulfillmentOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "CancelledAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "CancelledByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        }
+      ]
     }
   ]
 }
