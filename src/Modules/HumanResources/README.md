@@ -55,3 +55,9 @@ See [architecture](../../../docs/architecture.md) and [master roadmap](../../../
 `Employee`, `JobOpening`, `JobApplication`, `OnboardingTask`, `LeaveRequest`, `PerformanceReview`.
 
 Models live in this module Domain/Entities directory; foreign objects are referenced by IDs. These are domain types, not registered database tables or endpoints. Existing legacy workflows remain in core projects. See [module progress](../../../docs/ai/MODULE_STATUS.md) for inventory and remaining work.
+
+## Domain expansion — 2026-10-13
+
+Added 22 entity classes (28 total): `EmployeePersonalProfile`, `EmployeeAddress`, `EmployeeEmergencyContact`, `EmployeeEmploymentContract`, `EmployeePosition`, `EmployeePositionAssignment`, `RecruitmentRequisition`, `JobInterview`, `JobOffer`, `OnboardingChecklist`, `EmployeeDocumentRecord`, `LeaveBalance`, `LeaveAccrual`, `ShiftSchedule`, `AttendanceRecord`, `EmployeeTraining`, `TrainingCertification`, `PerformanceGoal`, `PerformanceFeedback`, `EmployeeBenefitEnrollment`, `EmployeeTermination`, `EmployeeOrgHistory`.
+
+Pure Domain models with immutable properties and constructor validation. No EF tables, DTOs, API routes or production business flows were added.

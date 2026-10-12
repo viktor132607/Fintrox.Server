@@ -10704,6 +10704,592 @@
           "rule": "text"
         }
       ]
+    },
+    {
+      "module": "HumanResources",
+      "entity": "EmployeePersonalProfile",
+      "path": "src/Modules/HumanResources/Fintrox.Modules.HumanResources.Domain/Entities/EmployeePersonalProfile.cs",
+      "fields": [
+        {
+          "name": "EmployeeId",
+          "rule": "id"
+        },
+        {
+          "name": "PreferredName",
+          "rule": "text"
+        },
+        {
+          "name": "BirthDate",
+          "rule": "date"
+        },
+        {
+          "name": "NationalityCode",
+          "rule": "country"
+        },
+        {
+          "name": "IsVerified",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "HumanResources",
+      "entity": "EmployeeAddress",
+      "path": "src/Modules/HumanResources/Fintrox.Modules.HumanResources.Domain/Entities/EmployeeAddress.cs",
+      "fields": [
+        {
+          "name": "EmployeeId",
+          "rule": "id"
+        },
+        {
+          "name": "AddressType",
+          "rule": "text"
+        },
+        {
+          "name": "Street",
+          "rule": "text"
+        },
+        {
+          "name": "City",
+          "rule": "text"
+        },
+        {
+          "name": "PostalCode",
+          "rule": "text"
+        },
+        {
+          "name": "CountryCode",
+          "rule": "country"
+        }
+      ]
+    },
+    {
+      "module": "HumanResources",
+      "entity": "EmployeeEmergencyContact",
+      "path": "src/Modules/HumanResources/Fintrox.Modules.HumanResources.Domain/Entities/EmployeeEmergencyContact.cs",
+      "fields": [
+        {
+          "name": "EmployeeId",
+          "rule": "id"
+        },
+        {
+          "name": "ContactName",
+          "rule": "text"
+        },
+        {
+          "name": "Relationship",
+          "rule": "text"
+        },
+        {
+          "name": "PhoneNumber",
+          "rule": "text"
+        },
+        {
+          "name": "IsPrimary",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "HumanResources",
+      "entity": "EmployeeEmploymentContract",
+      "path": "src/Modules/HumanResources/Fintrox.Modules.HumanResources.Domain/Entities/EmployeeEmploymentContract.cs",
+      "fields": [
+        {
+          "name": "EmployeeId",
+          "rule": "id"
+        },
+        {
+          "name": "ContractNumber",
+          "rule": "text"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EmploymentType",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "HumanResources",
+      "entity": "EmployeePosition",
+      "path": "src/Modules/HumanResources/Fintrox.Modules.HumanResources.Domain/Entities/EmployeePosition.cs",
+      "fields": [
+        {
+          "name": "PositionCode",
+          "rule": "text"
+        },
+        {
+          "name": "Title",
+          "rule": "text"
+        },
+        {
+          "name": "DepartmentId",
+          "rule": "id"
+        },
+        {
+          "name": "ReportsToPositionId",
+          "rule": "id"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "HumanResources",
+      "entity": "EmployeePositionAssignment",
+      "path": "src/Modules/HumanResources/Fintrox.Modules.HumanResources.Domain/Entities/EmployeePositionAssignment.cs",
+      "fields": [
+        {
+          "name": "EmployeeId",
+          "rule": "id"
+        },
+        {
+          "name": "PositionId",
+          "rule": "id"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "IsPrimary",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "HumanResources",
+      "entity": "RecruitmentRequisition",
+      "path": "src/Modules/HumanResources/Fintrox.Modules.HumanResources.Domain/Entities/RecruitmentRequisition.cs",
+      "fields": [
+        {
+          "name": "PositionId",
+          "rule": "id"
+        },
+        {
+          "name": "RequestedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "RequestedOn",
+          "rule": "date"
+        },
+        {
+          "name": "Openings",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "HumanResources",
+      "entity": "JobInterview",
+      "path": "src/Modules/HumanResources/Fintrox.Modules.HumanResources.Domain/Entities/JobInterview.cs",
+      "fields": [
+        {
+          "name": "JobApplicationId",
+          "rule": "id"
+        },
+        {
+          "name": "InterviewerUserId",
+          "rule": "id"
+        },
+        {
+          "name": "ScheduledAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "InterviewType",
+          "rule": "text"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "HumanResources",
+      "entity": "JobOffer",
+      "path": "src/Modules/HumanResources/Fintrox.Modules.HumanResources.Domain/Entities/JobOffer.cs",
+      "fields": [
+        {
+          "name": "JobApplicationId",
+          "rule": "id"
+        },
+        {
+          "name": "OfferedOn",
+          "rule": "date"
+        },
+        {
+          "name": "BaseSalary",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "ExpiresOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "HumanResources",
+      "entity": "OnboardingChecklist",
+      "path": "src/Modules/HumanResources/Fintrox.Modules.HumanResources.Domain/Entities/OnboardingChecklist.cs",
+      "fields": [
+        {
+          "name": "EmployeeId",
+          "rule": "id"
+        },
+        {
+          "name": "TemplateCode",
+          "rule": "text"
+        },
+        {
+          "name": "StartedOn",
+          "rule": "date"
+        },
+        {
+          "name": "DueOn",
+          "rule": "date"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "HumanResources",
+      "entity": "EmployeeDocumentRecord",
+      "path": "src/Modules/HumanResources/Fintrox.Modules.HumanResources.Domain/Entities/EmployeeDocumentRecord.cs",
+      "fields": [
+        {
+          "name": "EmployeeId",
+          "rule": "id"
+        },
+        {
+          "name": "DocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "DocumentType",
+          "rule": "text"
+        },
+        {
+          "name": "UploadedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "HumanResources",
+      "entity": "LeaveBalance",
+      "path": "src/Modules/HumanResources/Fintrox.Modules.HumanResources.Domain/Entities/LeaveBalance.cs",
+      "fields": [
+        {
+          "name": "EmployeeId",
+          "rule": "id"
+        },
+        {
+          "name": "LeaveType",
+          "rule": "text"
+        },
+        {
+          "name": "Year",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "EntitlementDays",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "RemainingDays",
+          "rule": "nonnegative"
+        }
+      ]
+    },
+    {
+      "module": "HumanResources",
+      "entity": "LeaveAccrual",
+      "path": "src/Modules/HumanResources/Fintrox.Modules.HumanResources.Domain/Entities/LeaveAccrual.cs",
+      "fields": [
+        {
+          "name": "EmployeeId",
+          "rule": "id"
+        },
+        {
+          "name": "LeaveType",
+          "rule": "text"
+        },
+        {
+          "name": "AccruedOn",
+          "rule": "date"
+        },
+        {
+          "name": "AccruedDays",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "PeriodCode",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "HumanResources",
+      "entity": "ShiftSchedule",
+      "path": "src/Modules/HumanResources/Fintrox.Modules.HumanResources.Domain/Entities/ShiftSchedule.cs",
+      "fields": [
+        {
+          "name": "EmployeeId",
+          "rule": "id"
+        },
+        {
+          "name": "StartsAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "EndsAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "LocationCode",
+          "rule": "text"
+        },
+        {
+          "name": "ShiftType",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "HumanResources",
+      "entity": "AttendanceRecord",
+      "path": "src/Modules/HumanResources/Fintrox.Modules.HumanResources.Domain/Entities/AttendanceRecord.cs",
+      "fields": [
+        {
+          "name": "EmployeeId",
+          "rule": "id"
+        },
+        {
+          "name": "ClockInAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "ClockOutAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Source",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "HumanResources",
+      "entity": "EmployeeTraining",
+      "path": "src/Modules/HumanResources/Fintrox.Modules.HumanResources.Domain/Entities/EmployeeTraining.cs",
+      "fields": [
+        {
+          "name": "EmployeeId",
+          "rule": "id"
+        },
+        {
+          "name": "CourseCode",
+          "rule": "text"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "HumanResources",
+      "entity": "TrainingCertification",
+      "path": "src/Modules/HumanResources/Fintrox.Modules.HumanResources.Domain/Entities/TrainingCertification.cs",
+      "fields": [
+        {
+          "name": "EmployeeId",
+          "rule": "id"
+        },
+        {
+          "name": "CertificationCode",
+          "rule": "text"
+        },
+        {
+          "name": "IssuedOn",
+          "rule": "date"
+        },
+        {
+          "name": "ExpiresOn",
+          "rule": "date"
+        },
+        {
+          "name": "Issuer",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "HumanResources",
+      "entity": "PerformanceGoal",
+      "path": "src/Modules/HumanResources/Fintrox.Modules.HumanResources.Domain/Entities/PerformanceGoal.cs",
+      "fields": [
+        {
+          "name": "EmployeeId",
+          "rule": "id"
+        },
+        {
+          "name": "GoalName",
+          "rule": "text"
+        },
+        {
+          "name": "TargetValue",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "DueOn",
+          "rule": "date"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "HumanResources",
+      "entity": "PerformanceFeedback",
+      "path": "src/Modules/HumanResources/Fintrox.Modules.HumanResources.Domain/Entities/PerformanceFeedback.cs",
+      "fields": [
+        {
+          "name": "PerformanceReviewId",
+          "rule": "id"
+        },
+        {
+          "name": "ReviewerUserId",
+          "rule": "id"
+        },
+        {
+          "name": "RatingPercent",
+          "rule": "percent"
+        },
+        {
+          "name": "Comment",
+          "rule": "text"
+        },
+        {
+          "name": "SubmittedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "HumanResources",
+      "entity": "EmployeeBenefitEnrollment",
+      "path": "src/Modules/HumanResources/Fintrox.Modules.HumanResources.Domain/Entities/EmployeeBenefitEnrollment.cs",
+      "fields": [
+        {
+          "name": "EmployeeId",
+          "rule": "id"
+        },
+        {
+          "name": "BenefitPlanCode",
+          "rule": "text"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "HumanResources",
+      "entity": "EmployeeTermination",
+      "path": "src/Modules/HumanResources/Fintrox.Modules.HumanResources.Domain/Entities/EmployeeTermination.cs",
+      "fields": [
+        {
+          "name": "EmployeeId",
+          "rule": "id"
+        },
+        {
+          "name": "TerminationOn",
+          "rule": "date"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        },
+        {
+          "name": "ApprovedByUserId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "HumanResources",
+      "entity": "EmployeeOrgHistory",
+      "path": "src/Modules/HumanResources/Fintrox.Modules.HumanResources.Domain/Entities/EmployeeOrgHistory.cs",
+      "fields": [
+        {
+          "name": "EmployeeId",
+          "rule": "id"
+        },
+        {
+          "name": "DepartmentId",
+          "rule": "id"
+        },
+        {
+          "name": "ManagerEmployeeId",
+          "rule": "id"
+        },
+        {
+          "name": "EffectiveFrom",
+          "rule": "date"
+        },
+        {
+          "name": "EffectiveTo",
+          "rule": "date"
+        }
+      ]
     }
   ]
 }
