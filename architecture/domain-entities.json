@@ -5989,6 +5989,548 @@
           "rule": "currency"
         }
       ]
+    },
+    {
+      "module": "CRM",
+      "entity": "LeadSource",
+      "path": "src/Modules/CRM/Fintrox.Modules.CRM.Domain/Entities/LeadSource.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "Channel",
+          "rule": "text"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "CRM",
+      "entity": "LeadQualification",
+      "path": "src/Modules/CRM/Fintrox.Modules.CRM.Domain/Entities/LeadQualification.cs",
+      "fields": [
+        {
+          "name": "LeadId",
+          "rule": "id"
+        },
+        {
+          "name": "Criterion",
+          "rule": "text"
+        },
+        {
+          "name": "Assessment",
+          "rule": "text"
+        },
+        {
+          "name": "Score",
+          "rule": "nonnegativeInt"
+        },
+        {
+          "name": "AssessedByUserId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "CRM",
+      "entity": "LeadAssignment",
+      "path": "src/Modules/CRM/Fintrox.Modules.CRM.Domain/Entities/LeadAssignment.cs",
+      "fields": [
+        {
+          "name": "LeadId",
+          "rule": "id"
+        },
+        {
+          "name": "OwnerUserId",
+          "rule": "id"
+        },
+        {
+          "name": "AssignedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "AssignmentReason",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "CRM",
+      "entity": "LeadScore",
+      "path": "src/Modules/CRM/Fintrox.Modules.CRM.Domain/Entities/LeadScore.cs",
+      "fields": [
+        {
+          "name": "LeadId",
+          "rule": "id"
+        },
+        {
+          "name": "Score",
+          "rule": "nonnegativeInt"
+        },
+        {
+          "name": "ModelVersion",
+          "rule": "text"
+        },
+        {
+          "name": "CalculatedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "CRM",
+      "entity": "LeadConversion",
+      "path": "src/Modules/CRM/Fintrox.Modules.CRM.Domain/Entities/LeadConversion.cs",
+      "fields": [
+        {
+          "name": "LeadId",
+          "rule": "id"
+        },
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "OpportunityId",
+          "rule": "id"
+        },
+        {
+          "name": "ConvertedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "ConvertedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "CRM",
+      "entity": "OpportunityContactRole",
+      "path": "src/Modules/CRM/Fintrox.Modules.CRM.Domain/Entities/OpportunityContactRole.cs",
+      "fields": [
+        {
+          "name": "OpportunityId",
+          "rule": "id"
+        },
+        {
+          "name": "ContactId",
+          "rule": "id"
+        },
+        {
+          "name": "Role",
+          "rule": "text"
+        },
+        {
+          "name": "IsPrimary",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "CRM",
+      "entity": "OpportunityProduct",
+      "path": "src/Modules/CRM/Fintrox.Modules.CRM.Domain/Entities/OpportunityProduct.cs",
+      "fields": [
+        {
+          "name": "OpportunityId",
+          "rule": "id"
+        },
+        {
+          "name": "ProductId",
+          "rule": "id"
+        },
+        {
+          "name": "Quantity",
+          "rule": "positive"
+        },
+        {
+          "name": "UnitPrice",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "CRM",
+      "entity": "OpportunityCompetitor",
+      "path": "src/Modules/CRM/Fintrox.Modules.CRM.Domain/Entities/OpportunityCompetitor.cs",
+      "fields": [
+        {
+          "name": "OpportunityId",
+          "rule": "id"
+        },
+        {
+          "name": "CompetitorName",
+          "rule": "text"
+        },
+        {
+          "name": "ThreatLevel",
+          "rule": "text"
+        },
+        {
+          "name": "Notes",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "CRM",
+      "entity": "OpportunityForecast",
+      "path": "src/Modules/CRM/Fintrox.Modules.CRM.Domain/Entities/OpportunityForecast.cs",
+      "fields": [
+        {
+          "name": "OpportunityId",
+          "rule": "id"
+        },
+        {
+          "name": "ForecastOn",
+          "rule": "date"
+        },
+        {
+          "name": "Amount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "ProbabilityPercent",
+          "rule": "percent"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "CRM",
+      "entity": "OpportunityStageHistory",
+      "path": "src/Modules/CRM/Fintrox.Modules.CRM.Domain/Entities/OpportunityStageHistory.cs",
+      "fields": [
+        {
+          "name": "OpportunityId",
+          "rule": "id"
+        },
+        {
+          "name": "FromStageId",
+          "rule": "id"
+        },
+        {
+          "name": "ToStageId",
+          "rule": "id"
+        },
+        {
+          "name": "ChangedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "ChangedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "CRM",
+      "entity": "OpportunityLossReason",
+      "path": "src/Modules/CRM/Fintrox.Modules.CRM.Domain/Entities/OpportunityLossReason.cs",
+      "fields": [
+        {
+          "name": "OpportunityId",
+          "rule": "id"
+        },
+        {
+          "name": "ReasonCode",
+          "rule": "text"
+        },
+        {
+          "name": "Description",
+          "rule": "text"
+        },
+        {
+          "name": "RecordedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "CRM",
+      "entity": "CrmNote",
+      "path": "src/Modules/CRM/Fintrox.Modules.CRM.Domain/Entities/CrmNote.cs",
+      "fields": [
+        {
+          "name": "RelatedRecordId",
+          "rule": "id"
+        },
+        {
+          "name": "RelatedRecordType",
+          "rule": "text"
+        },
+        {
+          "name": "AuthorUserId",
+          "rule": "id"
+        },
+        {
+          "name": "Body",
+          "rule": "text"
+        },
+        {
+          "name": "WrittenAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "CRM",
+      "entity": "CrmAttachment",
+      "path": "src/Modules/CRM/Fintrox.Modules.CRM.Domain/Entities/CrmAttachment.cs",
+      "fields": [
+        {
+          "name": "RelatedRecordId",
+          "rule": "id"
+        },
+        {
+          "name": "DocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "RelatedRecordType",
+          "rule": "text"
+        },
+        {
+          "name": "AttachedByUserId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "CRM",
+      "entity": "CrmTask",
+      "path": "src/Modules/CRM/Fintrox.Modules.CRM.Domain/Entities/CrmTask.cs",
+      "fields": [
+        {
+          "name": "OwnerUserId",
+          "rule": "id"
+        },
+        {
+          "name": "RelatedRecordId",
+          "rule": "id"
+        },
+        {
+          "name": "Subject",
+          "rule": "text"
+        },
+        {
+          "name": "DueOn",
+          "rule": "date"
+        },
+        {
+          "name": "Priority",
+          "rule": "text"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "CRM",
+      "entity": "CrmInteraction",
+      "path": "src/Modules/CRM/Fintrox.Modules.CRM.Domain/Entities/CrmInteraction.cs",
+      "fields": [
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "ContactId",
+          "rule": "id"
+        },
+        {
+          "name": "Channel",
+          "rule": "text"
+        },
+        {
+          "name": "Subject",
+          "rule": "text"
+        },
+        {
+          "name": "OccurredAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "CRM",
+      "entity": "CrmCampaignMember",
+      "path": "src/Modules/CRM/Fintrox.Modules.CRM.Domain/Entities/CrmCampaignMember.cs",
+      "fields": [
+        {
+          "name": "CampaignId",
+          "rule": "id"
+        },
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "JoinedOn",
+          "rule": "date"
+        },
+        {
+          "name": "MemberStatus",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "CRM",
+      "entity": "CrmSegment",
+      "path": "src/Modules/CRM/Fintrox.Modules.CRM.Domain/Entities/CrmSegment.cs",
+      "fields": [
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "FilterJson",
+          "rule": "json"
+        },
+        {
+          "name": "CreatedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "IsDynamic",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "CRM",
+      "entity": "CrmListMember",
+      "path": "src/Modules/CRM/Fintrox.Modules.CRM.Domain/Entities/CrmListMember.cs",
+      "fields": [
+        {
+          "name": "SegmentId",
+          "rule": "id"
+        },
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "AddedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "CRM",
+      "entity": "CrmCustomerHealthScore",
+      "path": "src/Modules/CRM/Fintrox.Modules.CRM.Domain/Entities/CrmCustomerHealthScore.cs",
+      "fields": [
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "Score",
+          "rule": "nonnegativeInt"
+        },
+        {
+          "name": "CalculatedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "HealthBand",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "CRM",
+      "entity": "CrmTerritory",
+      "path": "src/Modules/CRM/Fintrox.Modules.CRM.Domain/Entities/CrmTerritory.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "Region",
+          "rule": "text"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "CRM",
+      "entity": "CrmTerritoryAssignment",
+      "path": "src/Modules/CRM/Fintrox.Modules.CRM.Domain/Entities/CrmTerritoryAssignment.cs",
+      "fields": [
+        {
+          "name": "TerritoryId",
+          "rule": "id"
+        },
+        {
+          "name": "UserId",
+          "rule": "id"
+        },
+        {
+          "name": "EffectiveFrom",
+          "rule": "date"
+        },
+        {
+          "name": "IsPrimary",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "CRM",
+      "entity": "CrmConsentRecord",
+      "path": "src/Modules/CRM/Fintrox.Modules.CRM.Domain/Entities/CrmConsentRecord.cs",
+      "fields": [
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "Purpose",
+          "rule": "text"
+        },
+        {
+          "name": "ConsentStatus",
+          "rule": "text"
+        },
+        {
+          "name": "RecordedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Source",
+          "rule": "text"
+        }
+      ]
     }
   ]
 }

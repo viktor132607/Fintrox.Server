@@ -55,3 +55,9 @@ See [architecture](../../../docs/architecture.md) and [master roadmap](../../../
 `Lead`, `Opportunity`, `CrmActivity`, `SalesPipeline`, `PipelineStage`, `MarketingCampaign`.
 
 Models live in this module Domain/Entities directory; foreign objects are referenced by IDs. These are domain types, not registered database tables or endpoints. Existing legacy workflows remain in core projects. See [module progress](../../../docs/ai/MODULE_STATUS.md) for inventory and remaining work.
+
+## Domain expansion — 2026-10-13
+
+Added 22 domain entity models (28 total): `LeadSource`, `LeadQualification`, `LeadAssignment`, `LeadScore`, `LeadConversion`, `OpportunityContactRole`, `OpportunityProduct`, `OpportunityCompetitor`, `OpportunityForecast`, `OpportunityStageHistory`, `OpportunityLossReason`, `CrmNote`, `CrmAttachment`, `CrmTask`, `CrmInteraction`, `CrmCampaignMember`, `CrmSegment`, `CrmListMember`, `CrmCustomerHealthScore`, `CrmTerritory`, `CrmTerritoryAssignment`, `CrmConsentRecord`.
+
+Immutable constructor-validated records only. Tenant/reference authorization, cross-module coordination, EF mappings, application use cases, endpoints, migrations and UI remain pending.
