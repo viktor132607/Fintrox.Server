@@ -16207,6 +16207,587 @@
           "rule": "date"
         }
       ]
+    },
+    {
+      "module": "Purchases",
+      "entity": "PurchaseRequestApproval",
+      "path": "src/Modules/Purchases/Fintrox.Modules.Purchases.Domain/Entities/PurchaseRequestApproval.cs",
+      "fields": [
+        {
+          "name": "PurchaseRequisitionId",
+          "rule": "id"
+        },
+        {
+          "name": "ApproverUserId",
+          "rule": "id"
+        },
+        {
+          "name": "Decision",
+          "rule": "text"
+        },
+        {
+          "name": "DecidedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Purchases",
+      "entity": "PurchaseRequisitionAttachment",
+      "path": "src/Modules/Purchases/Fintrox.Modules.Purchases.Domain/Entities/PurchaseRequisitionAttachment.cs",
+      "fields": [
+        {
+          "name": "PurchaseRequisitionId",
+          "rule": "id"
+        },
+        {
+          "name": "DocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "UploadedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Description",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Purchases",
+      "entity": "PurchaseRequestBudgetCheck",
+      "path": "src/Modules/Purchases/Fintrox.Modules.Purchases.Domain/Entities/PurchaseRequestBudgetCheck.cs",
+      "fields": [
+        {
+          "name": "PurchaseRequisitionId",
+          "rule": "id"
+        },
+        {
+          "name": "BudgetLineId",
+          "rule": "id"
+        },
+        {
+          "name": "RequestedAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "CheckedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Purchases",
+      "entity": "SupplierQuotationRequest",
+      "path": "src/Modules/Purchases/Fintrox.Modules.Purchases.Domain/Entities/SupplierQuotationRequest.cs",
+      "fields": [
+        {
+          "name": "PurchaseRequisitionId",
+          "rule": "id"
+        },
+        {
+          "name": "RequestNumber",
+          "rule": "text"
+        },
+        {
+          "name": "IssuedOn",
+          "rule": "date"
+        },
+        {
+          "name": "ResponseDueOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Purchases",
+      "entity": "SupplierQuotationRequestLine",
+      "path": "src/Modules/Purchases/Fintrox.Modules.Purchases.Domain/Entities/SupplierQuotationRequestLine.cs",
+      "fields": [
+        {
+          "name": "QuotationRequestId",
+          "rule": "id"
+        },
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "RequestedQuantity",
+          "rule": "positive"
+        },
+        {
+          "name": "TargetPrice",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Purchases",
+      "entity": "SupplierBid",
+      "path": "src/Modules/Purchases/Fintrox.Modules.Purchases.Domain/Entities/SupplierBid.cs",
+      "fields": [
+        {
+          "name": "QuotationRequestId",
+          "rule": "id"
+        },
+        {
+          "name": "SupplierId",
+          "rule": "id"
+        },
+        {
+          "name": "ReceivedOn",
+          "rule": "date"
+        },
+        {
+          "name": "TotalPrice",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Purchases",
+      "entity": "SupplierBidLine",
+      "path": "src/Modules/Purchases/Fintrox.Modules.Purchases.Domain/Entities/SupplierBidLine.cs",
+      "fields": [
+        {
+          "name": "SupplierBidId",
+          "rule": "id"
+        },
+        {
+          "name": "RequestLineId",
+          "rule": "id"
+        },
+        {
+          "name": "UnitPrice",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "OfferedQuantity",
+          "rule": "positive"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Purchases",
+      "entity": "SupplierBidEvaluation",
+      "path": "src/Modules/Purchases/Fintrox.Modules.Purchases.Domain/Entities/SupplierBidEvaluation.cs",
+      "fields": [
+        {
+          "name": "SupplierBidId",
+          "rule": "id"
+        },
+        {
+          "name": "EvaluatorUserId",
+          "rule": "id"
+        },
+        {
+          "name": "EvaluationScore",
+          "rule": "nonnegativeInt"
+        },
+        {
+          "name": "EvaluatedOn",
+          "rule": "date"
+        },
+        {
+          "name": "Notes",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Purchases",
+      "entity": "PurchaseOrderApproval",
+      "path": "src/Modules/Purchases/Fintrox.Modules.Purchases.Domain/Entities/PurchaseOrderApproval.cs",
+      "fields": [
+        {
+          "name": "PurchaseOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "ApproverUserId",
+          "rule": "id"
+        },
+        {
+          "name": "Decision",
+          "rule": "text"
+        },
+        {
+          "name": "DecidedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Purchases",
+      "entity": "PurchaseOrderChange",
+      "path": "src/Modules/Purchases/Fintrox.Modules.Purchases.Domain/Entities/PurchaseOrderChange.cs",
+      "fields": [
+        {
+          "name": "PurchaseOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "RevisionNumber",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        },
+        {
+          "name": "ChangedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "ChangedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Purchases",
+      "entity": "PurchaseOrderScheduleLine",
+      "path": "src/Modules/Purchases/Fintrox.Modules.Purchases.Domain/Entities/PurchaseOrderScheduleLine.cs",
+      "fields": [
+        {
+          "name": "PurchaseOrderLineId",
+          "rule": "id"
+        },
+        {
+          "name": "ExpectedOn",
+          "rule": "date"
+        },
+        {
+          "name": "ScheduledQuantity",
+          "rule": "positive"
+        },
+        {
+          "name": "DeliveryLocationId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "Purchases",
+      "entity": "PurchaseOrderReceiptMatch",
+      "path": "src/Modules/Purchases/Fintrox.Modules.Purchases.Domain/Entities/PurchaseOrderReceiptMatch.cs",
+      "fields": [
+        {
+          "name": "PurchaseOrderLineId",
+          "rule": "id"
+        },
+        {
+          "name": "GoodsReceiptLineId",
+          "rule": "id"
+        },
+        {
+          "name": "MatchedQuantity",
+          "rule": "positive"
+        },
+        {
+          "name": "MatchedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Purchases",
+      "entity": "GoodsReceiptInspection",
+      "path": "src/Modules/Purchases/Fintrox.Modules.Purchases.Domain/Entities/GoodsReceiptInspection.cs",
+      "fields": [
+        {
+          "name": "GoodsReceiptLineId",
+          "rule": "id"
+        },
+        {
+          "name": "InspectionPlanId",
+          "rule": "id"
+        },
+        {
+          "name": "InspectedOn",
+          "rule": "date"
+        },
+        {
+          "name": "Result",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Purchases",
+      "entity": "PurchaseInvoiceMatching",
+      "path": "src/Modules/Purchases/Fintrox.Modules.Purchases.Domain/Entities/PurchaseInvoiceMatching.cs",
+      "fields": [
+        {
+          "name": "SupplierInvoiceId",
+          "rule": "id"
+        },
+        {
+          "name": "PurchaseOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "GoodsReceiptId",
+          "rule": "id"
+        },
+        {
+          "name": "MatchedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Purchases",
+      "entity": "PurchaseInvoiceMatchVariance",
+      "path": "src/Modules/Purchases/Fintrox.Modules.Purchases.Domain/Entities/PurchaseInvoiceMatchVariance.cs",
+      "fields": [
+        {
+          "name": "PurchaseInvoiceMatchingId",
+          "rule": "id"
+        },
+        {
+          "name": "VarianceType",
+          "rule": "text"
+        },
+        {
+          "name": "VarianceAmount",
+          "rule": "nonzero"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Purchases",
+      "entity": "SupplierReturn",
+      "path": "src/Modules/Purchases/Fintrox.Modules.Purchases.Domain/Entities/SupplierReturn.cs",
+      "fields": [
+        {
+          "name": "SupplierId",
+          "rule": "id"
+        },
+        {
+          "name": "GoodsReceiptId",
+          "rule": "id"
+        },
+        {
+          "name": "ReturnNumber",
+          "rule": "text"
+        },
+        {
+          "name": "RequestedOn",
+          "rule": "date"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Purchases",
+      "entity": "SupplierReturnLine",
+      "path": "src/Modules/Purchases/Fintrox.Modules.Purchases.Domain/Entities/SupplierReturnLine.cs",
+      "fields": [
+        {
+          "name": "SupplierReturnId",
+          "rule": "id"
+        },
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "ReturnedQuantity",
+          "rule": "positive"
+        },
+        {
+          "name": "ReturnReason",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Purchases",
+      "entity": "PurchaseLandedCost",
+      "path": "src/Modules/Purchases/Fintrox.Modules.Purchases.Domain/Entities/PurchaseLandedCost.cs",
+      "fields": [
+        {
+          "name": "GoodsReceiptId",
+          "rule": "id"
+        },
+        {
+          "name": "CostType",
+          "rule": "text"
+        },
+        {
+          "name": "Amount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "DocumentId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "Purchases",
+      "entity": "PurchaseLandedCostAllocation",
+      "path": "src/Modules/Purchases/Fintrox.Modules.Purchases.Domain/Entities/PurchaseLandedCostAllocation.cs",
+      "fields": [
+        {
+          "name": "LandedCostId",
+          "rule": "id"
+        },
+        {
+          "name": "GoodsReceiptLineId",
+          "rule": "id"
+        },
+        {
+          "name": "AllocatedAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Purchases",
+      "entity": "PurchaseContractLink",
+      "path": "src/Modules/Purchases/Fintrox.Modules.Purchases.Domain/Entities/PurchaseContractLink.cs",
+      "fields": [
+        {
+          "name": "PurchaseOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "ContractId",
+          "rule": "id"
+        },
+        {
+          "name": "ContractVersionId",
+          "rule": "id"
+        },
+        {
+          "name": "LinkedOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Purchases",
+      "entity": "SupplierPerformanceSnapshot",
+      "path": "src/Modules/Purchases/Fintrox.Modules.Purchases.Domain/Entities/SupplierPerformanceSnapshot.cs",
+      "fields": [
+        {
+          "name": "SupplierId",
+          "rule": "id"
+        },
+        {
+          "name": "PeriodStartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "PeriodEndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "OnTimeRatePercent",
+          "rule": "percent"
+        },
+        {
+          "name": "DefectRatePercent",
+          "rule": "percent"
+        }
+      ]
+    },
+    {
+      "module": "Purchases",
+      "entity": "PurchaseSpendCategory",
+      "path": "src/Modules/Purchases/Fintrox.Modules.Purchases.Domain/Entities/PurchaseSpendCategory.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "ParentCategoryId",
+          "rule": "id"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Purchases",
+      "entity": "PurchaseSpendLimit",
+      "path": "src/Modules/Purchases/Fintrox.Modules.Purchases.Domain/Entities/PurchaseSpendLimit.cs",
+      "fields": [
+        {
+          "name": "SpendCategoryId",
+          "rule": "id"
+        },
+        {
+          "name": "DepartmentId",
+          "rule": "id"
+        },
+        {
+          "name": "PeriodStartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "PeriodEndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "MaximumAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
     }
   ]
 }

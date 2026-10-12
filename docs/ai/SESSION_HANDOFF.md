@@ -1,7 +1,7 @@
 # Fintrox Session Handoff — 2026-10-11
 
 ## Current milestone
-ENTITIES-EXPANSION: Projects entity expansion committed (25 module / 665 total). Next Purchases.
+ENTITIES-EXPANSION: Purchases complete at model level (29 module total / 688 project total). Next QualityManagement.
 
 
 ## Changes
@@ -15,4 +15,4 @@ Local affected-graph Release build and 604 tests passed; 5 PostgreSQL tests skip
 Entity foundation only. New types are not yet EF tables, services, DTOs, endpoints or frontend screens. Domain constructor validation is not tenant authorization or reference existence validation. No complete ERP module claimed.
 
 ## Next exact action
-Add Purchases models with module-scoped immutable properties and update source, architecture/domain-entities.json, MODULE_STATUS.md, ENTITY_EXPANSION_LOG.md and README in a single module commit.
+Expand QualityManagement domain classes and update architecture/domain-entities.json, MODULE_STATUS.md, ENTITY_EXPANSION_LOG.md and the module README atomically in that module commit.

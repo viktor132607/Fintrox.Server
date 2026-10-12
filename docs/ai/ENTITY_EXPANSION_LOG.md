@@ -28,3 +28,4 @@ Module-by-module Domain entity expansion, preserving existing 180 entities and t
 | 22 | Payments | 21 | 23 | Inventory checked; CI pending | Domain expanded; EF/API pending |
 | 23 | Payroll | 22 | 27 | Inventory checked; CI pending | Domain expanded; EF/API pending |
 | 24 | Projects | 20 | 25 | Inventory checked; CI pending | Domain expanded; EF/API pending |
+| 25 | Purchases | 23 | 29 | Inventory check; .NET CI pending | Domain expanded; EF/API pending |

@@ -24,3 +24,9 @@ See [architecture](../../../docs/architecture.md) for the current legacy excepti
 `PurchaseRequisition`, `PurchaseRequisitionLine`, `PurchaseOrder`, `PurchaseOrderLine`, `GoodsReceipt`, `GoodsReceiptLine`.
 
 Models live in this module Domain/Entities directory; foreign objects are referenced by IDs. These are domain types, not registered database tables or endpoints. Existing legacy workflows remain in core projects. See [module progress](../../../docs/ai/MODULE_STATUS.md) for inventory and remaining work.
+
+## Domain expansion — 2026-10-13
+
+Added 23 constructor-validated models (29 total): `PurchaseRequestApproval`, `PurchaseRequisitionAttachment`, `PurchaseRequestBudgetCheck`, `SupplierQuotationRequest`, `SupplierQuotationRequestLine`, `SupplierBid`, `SupplierBidLine`, `SupplierBidEvaluation`, `PurchaseOrderApproval`, `PurchaseOrderChange`, `PurchaseOrderScheduleLine`, `PurchaseOrderReceiptMatch`, `GoodsReceiptInspection`, `PurchaseInvoiceMatching`, `PurchaseInvoiceMatchVariance`, `SupplierReturn`, `SupplierReturnLine`, `PurchaseLandedCost`, `PurchaseLandedCostAllocation`, `PurchaseContractLink`, `SupplierPerformanceSnapshot`, `PurchaseSpendCategory`, `PurchaseSpendLimit`.
+
+Domain only. Real transactions, reporting execution, database schema, localization, integration, authorizations and APIs are not implemented by these classes.
