@@ -7,3 +7,4 @@ Module-by-module Domain entity expansion, preserving existing 180 entities and t
 | 1 | Accounting | 30 | 35 | Static source/inventory validation; .NET CI pending | Domain models added; persistence/API pending |
 | 2 | Audit | 15 | 17 | Structural/inventory checks; .NET CI pending | Domain models added; persistence/API pending |
 | 3 | Banking | 22 | 26 | Structural/inventory checks; .NET CI pending | Domain models added; persistence/API pending |
+| 4 | Budgeting | 16 | 20 | Inventory and structural checks; .NET CI pending | Domain expanded, EF/API pending |

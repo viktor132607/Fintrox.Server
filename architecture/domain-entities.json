@@ -5565,6 +5565,430 @@
           "rule": "bool"
         }
       ]
+    },
+    {
+      "module": "Budgeting",
+      "entity": "BudgetScenario",
+      "path": "src/Modules/Budgeting/Fintrox.Modules.Budgeting.Domain/Entities/BudgetScenario.cs",
+      "fields": [
+        {
+          "name": "BudgetId",
+          "rule": "id"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "ScenarioType",
+          "rule": "text"
+        },
+        {
+          "name": "ProbabilityPercent",
+          "rule": "percent"
+        },
+        {
+          "name": "IsBaseline",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Budgeting",
+      "entity": "BudgetOwner",
+      "path": "src/Modules/Budgeting/Fintrox.Modules.Budgeting.Domain/Entities/BudgetOwner.cs",
+      "fields": [
+        {
+          "name": "BudgetId",
+          "rule": "id"
+        },
+        {
+          "name": "ResponsibleUserId",
+          "rule": "id"
+        },
+        {
+          "name": "ResponsibilityType",
+          "rule": "text"
+        },
+        {
+          "name": "EffectiveFrom",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Budgeting",
+      "entity": "BudgetApproval",
+      "path": "src/Modules/Budgeting/Fintrox.Modules.Budgeting.Domain/Entities/BudgetApproval.cs",
+      "fields": [
+        {
+          "name": "BudgetVersionId",
+          "rule": "id"
+        },
+        {
+          "name": "ApproverUserId",
+          "rule": "id"
+        },
+        {
+          "name": "Decision",
+          "rule": "text"
+        },
+        {
+          "name": "DecidedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Budgeting",
+      "entity": "BudgetDimension",
+      "path": "src/Modules/Budgeting/Fintrox.Modules.Budgeting.Domain/Entities/BudgetDimension.cs",
+      "fields": [
+        {
+          "name": "BudgetId",
+          "rule": "id"
+        },
+        {
+          "name": "DimensionCode",
+          "rule": "text"
+        },
+        {
+          "name": "DimensionValueId",
+          "rule": "id"
+        },
+        {
+          "name": "IsRequired",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Budgeting",
+      "entity": "BudgetPeriod",
+      "path": "src/Modules/Budgeting/Fintrox.Modules.Budgeting.Domain/Entities/BudgetPeriod.cs",
+      "fields": [
+        {
+          "name": "BudgetId",
+          "rule": "id"
+        },
+        {
+          "name": "PeriodNumber",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "IsLocked",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Budgeting",
+      "entity": "BudgetAdjustment",
+      "path": "src/Modules/Budgeting/Fintrox.Modules.Budgeting.Domain/Entities/BudgetAdjustment.cs",
+      "fields": [
+        {
+          "name": "BudgetLineId",
+          "rule": "id"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        },
+        {
+          "name": "AdjustmentAmount",
+          "rule": "nonzero"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "ApprovedByUserId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "Budgeting",
+      "entity": "BudgetTransfer",
+      "path": "src/Modules/Budgeting/Fintrox.Modules.Budgeting.Domain/Entities/BudgetTransfer.cs",
+      "fields": [
+        {
+          "name": "SourceBudgetLineId",
+          "rule": "id"
+        },
+        {
+          "name": "TargetBudgetLineId",
+          "rule": "id"
+        },
+        {
+          "name": "TransferAmount",
+          "rule": "positive"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "RequestedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Budgeting",
+      "entity": "BudgetCommitment",
+      "path": "src/Modules/Budgeting/Fintrox.Modules.Budgeting.Domain/Entities/BudgetCommitment.cs",
+      "fields": [
+        {
+          "name": "BudgetLineId",
+          "rule": "id"
+        },
+        {
+          "name": "SourceDocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "CommittedOn",
+          "rule": "date"
+        },
+        {
+          "name": "Amount",
+          "rule": "positive"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Budgeting",
+      "entity": "BudgetActualSnapshot",
+      "path": "src/Modules/Budgeting/Fintrox.Modules.Budgeting.Domain/Entities/BudgetActualSnapshot.cs",
+      "fields": [
+        {
+          "name": "BudgetLineId",
+          "rule": "id"
+        },
+        {
+          "name": "AsOfDate",
+          "rule": "date"
+        },
+        {
+          "name": "ActualAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "CommittedAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Budgeting",
+      "entity": "BudgetVariance",
+      "path": "src/Modules/Budgeting/Fintrox.Modules.Budgeting.Domain/Entities/BudgetVariance.cs",
+      "fields": [
+        {
+          "name": "BudgetLineId",
+          "rule": "id"
+        },
+        {
+          "name": "PeriodStartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "PeriodEndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "BudgetAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "ActualAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Budgeting",
+      "entity": "BudgetForecastVersion",
+      "path": "src/Modules/Budgeting/Fintrox.Modules.Budgeting.Domain/Entities/BudgetForecastVersion.cs",
+      "fields": [
+        {
+          "name": "ForecastId",
+          "rule": "id"
+        },
+        {
+          "name": "VersionNumber",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "PreparedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "PreparedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Budgeting",
+      "entity": "ForecastAssumption",
+      "path": "src/Modules/Budgeting/Fintrox.Modules.Budgeting.Domain/Entities/ForecastAssumption.cs",
+      "fields": [
+        {
+          "name": "ForecastVersionId",
+          "rule": "id"
+        },
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Description",
+          "rule": "text"
+        },
+        {
+          "name": "AssumedValue",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Unit",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Budgeting",
+      "entity": "ForecastLine",
+      "path": "src/Modules/Budgeting/Fintrox.Modules.Budgeting.Domain/Entities/ForecastLine.cs",
+      "fields": [
+        {
+          "name": "ForecastVersionId",
+          "rule": "id"
+        },
+        {
+          "name": "AccountId",
+          "rule": "id"
+        },
+        {
+          "name": "PeriodStartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "PeriodEndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "ForecastAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Budgeting",
+      "entity": "RollingForecastWindow",
+      "path": "src/Modules/Budgeting/Fintrox.Modules.Budgeting.Domain/Entities/RollingForecastWindow.cs",
+      "fields": [
+        {
+          "name": "ForecastId",
+          "rule": "id"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "IntervalMonths",
+          "rule": "positiveInt"
+        }
+      ]
+    },
+    {
+      "module": "Budgeting",
+      "entity": "BudgetAllocation",
+      "path": "src/Modules/Budgeting/Fintrox.Modules.Budgeting.Domain/Entities/BudgetAllocation.cs",
+      "fields": [
+        {
+          "name": "BudgetVersionId",
+          "rule": "id"
+        },
+        {
+          "name": "SourceLineId",
+          "rule": "id"
+        },
+        {
+          "name": "TargetLineId",
+          "rule": "id"
+        },
+        {
+          "name": "AllocatedAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Budgeting",
+      "entity": "BudgetThresholdAlert",
+      "path": "src/Modules/Budgeting/Fintrox.Modules.Budgeting.Domain/Entities/BudgetThresholdAlert.cs",
+      "fields": [
+        {
+          "name": "BudgetLineId",
+          "rule": "id"
+        },
+        {
+          "name": "ThresholdPercent",
+          "rule": "percent"
+        },
+        {
+          "name": "TriggeredAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "ActualAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
     }
   ]
 }

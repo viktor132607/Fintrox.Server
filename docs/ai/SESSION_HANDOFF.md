@@ -1,7 +1,7 @@
 # Fintrox Session Handoff — 2026-10-11
 
 ## Current milestone
-ENTITIES-EXPANSION — Banking expanded (26 module entity classes), 247 total. Continue next with Budgeting; see ENTITY_EXPANSION_LOG.md.
+ENTITIES-EXPANSION: Budgeting module updated; 263 entities total. Next: CRM. See ENTITY_EXPANSION_LOG.md for per-module commits.
 
 
 ## Changes
@@ -15,4 +15,4 @@ Local affected-graph Release build and 604 tests passed; 5 PostgreSQL tests skip
 Entity foundation only. New types are not yet EF tables, services, DTOs, endpoints or frontend screens. Domain constructor validation is not tenant authorization or reference existence validation. No complete ERP module claimed.
 
 ## Next exact action
-Expand Budgeting Domain records, committing source, architecture/domain-entities.json, MODULE_STATUS.md, module README and ENTITY_EXPANSION_LOG.md after the module. All infrastructure, endpoints, UI and EF persistence remain pending.
+Expand CRM module entity models. Commit source + machine inventory + module status + per-module README + progress log together after every module. Existing EF/use cases/API remain pending.

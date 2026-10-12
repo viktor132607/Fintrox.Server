@@ -24,3 +24,9 @@ See [architecture](../../../docs/architecture.md) for the current legacy excepti
 `Budget`, `BudgetVersion`, `BudgetLine`, `Forecast`.
 
 Models live in this module Domain/Entities directory; foreign objects are referenced by IDs. These are domain types, not registered database tables or endpoints. Existing legacy workflows remain in core projects. See [module progress](../../../docs/ai/MODULE_STATUS.md) for inventory and remaining work.
+
+## Domain expansion — 2026-10-13
+
+Added 16 domain entity models (20 total): `BudgetScenario`, `BudgetOwner`, `BudgetApproval`, `BudgetDimension`, `BudgetPeriod`, `BudgetAdjustment`, `BudgetTransfer`, `BudgetCommitment`, `BudgetActualSnapshot`, `BudgetVariance`, `BudgetForecastVersion`, `ForecastAssumption`, `ForecastLine`, `RollingForecastWindow`, `BudgetAllocation`, `BudgetThresholdAlert`.
+
+Immutable constructor-validated records only. Tenant/reference authorization, cross-module coordination, EF mappings, application use cases, endpoints, migrations and UI remain pending.
