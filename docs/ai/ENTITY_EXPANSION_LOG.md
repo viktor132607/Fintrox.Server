@@ -35,3 +35,4 @@ Module-by-module Domain entity expansion, preserving existing 180 entities and t
 | 29 | RevenueManagement | 20 | 25 | Static inventory only; CI pending | Domain expanded; EF/API pending |
 | 30 | Sales | 22 | 27 | Static inventory only; CI pending | Domain expanded; EF/API pending |
 | 31 | ServiceManagement | 21 | 25 | Source structure/inventory; .NET CI pending | Domain expanded; EF/API pending |
+| 32 | SubscriptionBilling | 23 | 28 | Source structure/inventory; .NET CI pending | Domain expanded; EF/API pending |

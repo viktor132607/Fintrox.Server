@@ -19941,6 +19941,579 @@
           "rule": "bool"
         }
       ]
+    },
+    {
+      "module": "SubscriptionBilling",
+      "entity": "SubscriptionPlanVersion",
+      "path": "src/Modules/SubscriptionBilling/Fintrox.Modules.SubscriptionBilling.Domain/Entities/SubscriptionPlanVersion.cs",
+      "fields": [
+        {
+          "name": "SubscriptionPlanId",
+          "rule": "id"
+        },
+        {
+          "name": "VersionNumber",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "EffectiveFrom",
+          "rule": "date"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "SubscriptionBilling",
+      "entity": "SubscriptionPlanFeature",
+      "path": "src/Modules/SubscriptionBilling/Fintrox.Modules.SubscriptionBilling.Domain/Entities/SubscriptionPlanFeature.cs",
+      "fields": [
+        {
+          "name": "SubscriptionPlanId",
+          "rule": "id"
+        },
+        {
+          "name": "FeatureCode",
+          "rule": "text"
+        },
+        {
+          "name": "IncludedUnits",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "IsEnabled",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "SubscriptionBilling",
+      "entity": "SubscriptionPlanPrice",
+      "path": "src/Modules/SubscriptionBilling/Fintrox.Modules.SubscriptionBilling.Domain/Entities/SubscriptionPlanPrice.cs",
+      "fields": [
+        {
+          "name": "SubscriptionPlanId",
+          "rule": "id"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "Amount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "BillingIntervalMonths",
+          "rule": "positiveInt"
+        }
+      ]
+    },
+    {
+      "module": "SubscriptionBilling",
+      "entity": "SubscriptionPlanAddon",
+      "path": "src/Modules/SubscriptionBilling/Fintrox.Modules.SubscriptionBilling.Domain/Entities/SubscriptionPlanAddon.cs",
+      "fields": [
+        {
+          "name": "SubscriptionPlanId",
+          "rule": "id"
+        },
+        {
+          "name": "AddonCode",
+          "rule": "text"
+        },
+        {
+          "name": "AddonPrice",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "SubscriptionBilling",
+      "entity": "SubscriptionAddonEnrollment",
+      "path": "src/Modules/SubscriptionBilling/Fintrox.Modules.SubscriptionBilling.Domain/Entities/SubscriptionAddonEnrollment.cs",
+      "fields": [
+        {
+          "name": "SubscriptionId",
+          "rule": "id"
+        },
+        {
+          "name": "AddonCode",
+          "rule": "text"
+        },
+        {
+          "name": "Quantity",
+          "rule": "positive"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "SubscriptionBilling",
+      "entity": "SubscriptionTrial",
+      "path": "src/Modules/SubscriptionBilling/Fintrox.Modules.SubscriptionBilling.Domain/Entities/SubscriptionTrial.cs",
+      "fields": [
+        {
+          "name": "SubscriptionId",
+          "rule": "id"
+        },
+        {
+          "name": "TrialStartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "TrialEndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "IsConverted",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "SubscriptionBilling",
+      "entity": "SubscriptionDiscount",
+      "path": "src/Modules/SubscriptionBilling/Fintrox.Modules.SubscriptionBilling.Domain/Entities/SubscriptionDiscount.cs",
+      "fields": [
+        {
+          "name": "SubscriptionId",
+          "rule": "id"
+        },
+        {
+          "name": "DiscountCode",
+          "rule": "text"
+        },
+        {
+          "name": "DiscountPercent",
+          "rule": "percent"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "SubscriptionBilling",
+      "entity": "SubscriptionTaxProfile",
+      "path": "src/Modules/SubscriptionBilling/Fintrox.Modules.SubscriptionBilling.Domain/Entities/SubscriptionTaxProfile.cs",
+      "fields": [
+        {
+          "name": "SubscriptionId",
+          "rule": "id"
+        },
+        {
+          "name": "TaxCode",
+          "rule": "text"
+        },
+        {
+          "name": "CountryCode",
+          "rule": "country"
+        },
+        {
+          "name": "IsReverseCharge",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "SubscriptionBilling",
+      "entity": "SubscriptionUsageMeter",
+      "path": "src/Modules/SubscriptionBilling/Fintrox.Modules.SubscriptionBilling.Domain/Entities/SubscriptionUsageMeter.cs",
+      "fields": [
+        {
+          "name": "SubscriptionPlanId",
+          "rule": "id"
+        },
+        {
+          "name": "MeterCode",
+          "rule": "text"
+        },
+        {
+          "name": "UnitName",
+          "rule": "text"
+        },
+        {
+          "name": "AggregationMethod",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "SubscriptionBilling",
+      "entity": "SubscriptionUsageReading",
+      "path": "src/Modules/SubscriptionBilling/Fintrox.Modules.SubscriptionBilling.Domain/Entities/SubscriptionUsageReading.cs",
+      "fields": [
+        {
+          "name": "SubscriptionId",
+          "rule": "id"
+        },
+        {
+          "name": "UsageMeterId",
+          "rule": "id"
+        },
+        {
+          "name": "MeasuredOn",
+          "rule": "date"
+        },
+        {
+          "name": "ConsumedUnits",
+          "rule": "nonnegative"
+        }
+      ]
+    },
+    {
+      "module": "SubscriptionBilling",
+      "entity": "SubscriptionUsageRate",
+      "path": "src/Modules/SubscriptionBilling/Fintrox.Modules.SubscriptionBilling.Domain/Entities/SubscriptionUsageRate.cs",
+      "fields": [
+        {
+          "name": "UsageMeterId",
+          "rule": "id"
+        },
+        {
+          "name": "MinimumUnits",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "PricePerUnit",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "SubscriptionBilling",
+      "entity": "SubscriptionUsageAggregation",
+      "path": "src/Modules/SubscriptionBilling/Fintrox.Modules.SubscriptionBilling.Domain/Entities/SubscriptionUsageAggregation.cs",
+      "fields": [
+        {
+          "name": "SubscriptionId",
+          "rule": "id"
+        },
+        {
+          "name": "UsageMeterId",
+          "rule": "id"
+        },
+        {
+          "name": "PeriodStartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "PeriodEndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "TotalUnits",
+          "rule": "nonnegative"
+        }
+      ]
+    },
+    {
+      "module": "SubscriptionBilling",
+      "entity": "SubscriptionProration",
+      "path": "src/Modules/SubscriptionBilling/Fintrox.Modules.SubscriptionBilling.Domain/Entities/SubscriptionProration.cs",
+      "fields": [
+        {
+          "name": "SubscriptionId",
+          "rule": "id"
+        },
+        {
+          "name": "ProrationOn",
+          "rule": "date"
+        },
+        {
+          "name": "OldPlanId",
+          "rule": "id"
+        },
+        {
+          "name": "NewPlanId",
+          "rule": "id"
+        },
+        {
+          "name": "ProratedAmount",
+          "rule": "nonzero"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "SubscriptionBilling",
+      "entity": "SubscriptionInvoiceRun",
+      "path": "src/Modules/SubscriptionBilling/Fintrox.Modules.SubscriptionBilling.Domain/Entities/SubscriptionInvoiceRun.cs",
+      "fields": [
+        {
+          "name": "BillingCycleId",
+          "rule": "id"
+        },
+        {
+          "name": "RunAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "ProcessedSubscriptions",
+          "rule": "nonnegativeInt"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "SubscriptionBilling",
+      "entity": "SubscriptionInvoiceItem",
+      "path": "src/Modules/SubscriptionBilling/Fintrox.Modules.SubscriptionBilling.Domain/Entities/SubscriptionInvoiceItem.cs",
+      "fields": [
+        {
+          "name": "InvoiceRunId",
+          "rule": "id"
+        },
+        {
+          "name": "SubscriptionId",
+          "rule": "id"
+        },
+        {
+          "name": "BillingCode",
+          "rule": "text"
+        },
+        {
+          "name": "Amount",
+          "rule": "nonzero"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "SubscriptionBilling",
+      "entity": "SubscriptionInvoiceLink",
+      "path": "src/Modules/SubscriptionBilling/Fintrox.Modules.SubscriptionBilling.Domain/Entities/SubscriptionInvoiceLink.cs",
+      "fields": [
+        {
+          "name": "SubscriptionId",
+          "rule": "id"
+        },
+        {
+          "name": "InvoiceId",
+          "rule": "id"
+        },
+        {
+          "name": "BillingCycleId",
+          "rule": "id"
+        },
+        {
+          "name": "LinkedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "SubscriptionBilling",
+      "entity": "SubscriptionPaymentAttempt",
+      "path": "src/Modules/SubscriptionBilling/Fintrox.Modules.SubscriptionBilling.Domain/Entities/SubscriptionPaymentAttempt.cs",
+      "fields": [
+        {
+          "name": "SubscriptionId",
+          "rule": "id"
+        },
+        {
+          "name": "InvoiceId",
+          "rule": "id"
+        },
+        {
+          "name": "PaymentId",
+          "rule": "id"
+        },
+        {
+          "name": "AttemptAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "SubscriptionBilling",
+      "entity": "SubscriptionDunningStep",
+      "path": "src/Modules/SubscriptionBilling/Fintrox.Modules.SubscriptionBilling.Domain/Entities/SubscriptionDunningStep.cs",
+      "fields": [
+        {
+          "name": "SubscriptionId",
+          "rule": "id"
+        },
+        {
+          "name": "InvoiceId",
+          "rule": "id"
+        },
+        {
+          "name": "AttemptNumber",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "DueOn",
+          "rule": "date"
+        },
+        {
+          "name": "ActionCode",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "SubscriptionBilling",
+      "entity": "SubscriptionPause",
+      "path": "src/Modules/SubscriptionBilling/Fintrox.Modules.SubscriptionBilling.Domain/Entities/SubscriptionPause.cs",
+      "fields": [
+        {
+          "name": "SubscriptionId",
+          "rule": "id"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "SubscriptionBilling",
+      "entity": "SubscriptionCancellation",
+      "path": "src/Modules/SubscriptionBilling/Fintrox.Modules.SubscriptionBilling.Domain/Entities/SubscriptionCancellation.cs",
+      "fields": [
+        {
+          "name": "SubscriptionId",
+          "rule": "id"
+        },
+        {
+          "name": "RequestedOn",
+          "rule": "date"
+        },
+        {
+          "name": "EffectiveOn",
+          "rule": "date"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        },
+        {
+          "name": "IsImmediate",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "SubscriptionBilling",
+      "entity": "SubscriptionChangeHistory",
+      "path": "src/Modules/SubscriptionBilling/Fintrox.Modules.SubscriptionBilling.Domain/Entities/SubscriptionChangeHistory.cs",
+      "fields": [
+        {
+          "name": "SubscriptionId",
+          "rule": "id"
+        },
+        {
+          "name": "PreviousPlanId",
+          "rule": "id"
+        },
+        {
+          "name": "NewPlanId",
+          "rule": "id"
+        },
+        {
+          "name": "ChangedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "SubscriptionBilling",
+      "entity": "SubscriptionBillingAdjustment",
+      "path": "src/Modules/SubscriptionBilling/Fintrox.Modules.SubscriptionBilling.Domain/Entities/SubscriptionBillingAdjustment.cs",
+      "fields": [
+        {
+          "name": "SubscriptionId",
+          "rule": "id"
+        },
+        {
+          "name": "InvoiceId",
+          "rule": "id"
+        },
+        {
+          "name": "AdjustmentAmount",
+          "rule": "nonzero"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "SubscriptionBilling",
+      "entity": "SubscriptionRevenueAllocation",
+      "path": "src/Modules/SubscriptionBilling/Fintrox.Modules.SubscriptionBilling.Domain/Entities/SubscriptionRevenueAllocation.cs",
+      "fields": [
+        {
+          "name": "SubscriptionId",
+          "rule": "id"
+        },
+        {
+          "name": "RevenueContractId",
+          "rule": "id"
+        },
+        {
+          "name": "RecognizedAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "AsOfDate",
+          "rule": "date"
+        }
+      ]
     }
   ]
 }

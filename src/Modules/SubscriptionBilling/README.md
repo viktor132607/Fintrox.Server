@@ -57,3 +57,9 @@ See [architecture](../../../docs/architecture.md) and [master roadmap](../../../
 `SubscriptionPlan`, `Subscription`, `BillingCycle`, `UsageRecord`, `SubscriptionRenewal`.
 
 Models live in this module Domain/Entities directory; foreign objects are referenced by IDs. These are domain types, not registered database tables or endpoints. Existing legacy workflows remain in core projects. See [module progress](../../../docs/ai/MODULE_STATUS.md) for inventory and remaining work.
+
+## Domain expansion — 2026-10-13
+
+Added 23 immutable, constructor-validated entity classes (28 total): `SubscriptionPlanVersion`, `SubscriptionPlanFeature`, `SubscriptionPlanPrice`, `SubscriptionPlanAddon`, `SubscriptionAddonEnrollment`, `SubscriptionTrial`, `SubscriptionDiscount`, `SubscriptionTaxProfile`, `SubscriptionUsageMeter`, `SubscriptionUsageReading`, `SubscriptionUsageRate`, `SubscriptionUsageAggregation`, `SubscriptionProration`, `SubscriptionInvoiceRun`, `SubscriptionInvoiceItem`, `SubscriptionInvoiceLink`, `SubscriptionPaymentAttempt`, `SubscriptionDunningStep`, `SubscriptionPause`, `SubscriptionCancellation`, `SubscriptionChangeHistory`, `SubscriptionBillingAdjustment`, `SubscriptionRevenueAllocation`.
+
+No EF migrations, API endpoints, domain services or external legal/business rules are implemented in this model-only commit.
