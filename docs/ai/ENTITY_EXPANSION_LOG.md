@@ -26,3 +26,4 @@ Module-by-module Domain entity expansion, preserving existing 180 entities and t
 | 20 | OrderManagement | 20 | 25 | Structural inventory; CI not rerun | Domain expanded; EF/API pending |
 | 21 | Organizations | 18 | 23 | Structural inventory; CI not rerun | Domain expanded; EF/API pending |
 | 22 | Payments | 21 | 23 | Inventory checked; CI pending | Domain expanded; EF/API pending |
+| 23 | Payroll | 22 | 27 | Inventory checked; CI pending | Domain expanded; EF/API pending |

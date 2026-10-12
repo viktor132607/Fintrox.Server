@@ -15117,6 +15117,580 @@
           "rule": "nonnegativeInt"
         }
       ]
+    },
+    {
+      "module": "Payroll",
+      "entity": "PayrollEmployeeProfile",
+      "path": "src/Modules/Payroll/Fintrox.Modules.Payroll.Domain/Entities/PayrollEmployeeProfile.cs",
+      "fields": [
+        {
+          "name": "EmployeeId",
+          "rule": "id"
+        },
+        {
+          "name": "PayrollNumber",
+          "rule": "text"
+        },
+        {
+          "name": "BaseCurrency",
+          "rule": "currency"
+        },
+        {
+          "name": "PayFrequency",
+          "rule": "text"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Payroll",
+      "entity": "PayrollEmploymentAssignment",
+      "path": "src/Modules/Payroll/Fintrox.Modules.Payroll.Domain/Entities/PayrollEmploymentAssignment.cs",
+      "fields": [
+        {
+          "name": "EmployeeId",
+          "rule": "id"
+        },
+        {
+          "name": "CostCenterId",
+          "rule": "id"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "PayGroupCode",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Payroll",
+      "entity": "PayrollPayGroup",
+      "path": "src/Modules/Payroll/Fintrox.Modules.Payroll.Domain/Entities/PayrollPayGroup.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "PaymentScheduleCode",
+          "rule": "text"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Payroll",
+      "entity": "PayrollEarningType",
+      "path": "src/Modules/Payroll/Fintrox.Modules.Payroll.Domain/Entities/PayrollEarningType.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Description",
+          "rule": "text"
+        },
+        {
+          "name": "CalculationBasis",
+          "rule": "text"
+        },
+        {
+          "name": "IsTaxable",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Payroll",
+      "entity": "PayrollDeductionType",
+      "path": "src/Modules/Payroll/Fintrox.Modules.Payroll.Domain/Entities/PayrollDeductionType.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Description",
+          "rule": "text"
+        },
+        {
+          "name": "DeductionCategory",
+          "rule": "text"
+        },
+        {
+          "name": "IsMandatory",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Payroll",
+      "entity": "PayrollBenefitType",
+      "path": "src/Modules/Payroll/Fintrox.Modules.Payroll.Domain/Entities/PayrollBenefitType.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "TaxTreatmentCode",
+          "rule": "text"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Payroll",
+      "entity": "PayrollPayItem",
+      "path": "src/Modules/Payroll/Fintrox.Modules.Payroll.Domain/Entities/PayrollPayItem.cs",
+      "fields": [
+        {
+          "name": "PayRunId",
+          "rule": "id"
+        },
+        {
+          "name": "EmployeeId",
+          "rule": "id"
+        },
+        {
+          "name": "ComponentType",
+          "rule": "text"
+        },
+        {
+          "name": "Amount",
+          "rule": "nonzero"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Payroll",
+      "entity": "PayrollAdjustment",
+      "path": "src/Modules/Payroll/Fintrox.Modules.Payroll.Domain/Entities/PayrollAdjustment.cs",
+      "fields": [
+        {
+          "name": "EmployeeId",
+          "rule": "id"
+        },
+        {
+          "name": "PeriodId",
+          "rule": "id"
+        },
+        {
+          "name": "AdjustmentType",
+          "rule": "text"
+        },
+        {
+          "name": "Amount",
+          "rule": "nonzero"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Payroll",
+      "entity": "PayrollOvertimeRecord",
+      "path": "src/Modules/Payroll/Fintrox.Modules.Payroll.Domain/Entities/PayrollOvertimeRecord.cs",
+      "fields": [
+        {
+          "name": "EmployeeId",
+          "rule": "id"
+        },
+        {
+          "name": "WorkDate",
+          "rule": "date"
+        },
+        {
+          "name": "Hours",
+          "rule": "positive"
+        },
+        {
+          "name": "Multiplier",
+          "rule": "positive"
+        },
+        {
+          "name": "ApprovedByUserId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "Payroll",
+      "entity": "PayrollLeavePayment",
+      "path": "src/Modules/Payroll/Fintrox.Modules.Payroll.Domain/Entities/PayrollLeavePayment.cs",
+      "fields": [
+        {
+          "name": "EmployeeId",
+          "rule": "id"
+        },
+        {
+          "name": "LeaveRequestId",
+          "rule": "id"
+        },
+        {
+          "name": "PayPeriodId",
+          "rule": "id"
+        },
+        {
+          "name": "Amount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Payroll",
+      "entity": "PayrollTaxRule",
+      "path": "src/Modules/Payroll/Fintrox.Modules.Payroll.Domain/Entities/PayrollTaxRule.cs",
+      "fields": [
+        {
+          "name": "JurisdictionCode",
+          "rule": "text"
+        },
+        {
+          "name": "RuleCode",
+          "rule": "text"
+        },
+        {
+          "name": "ValidFrom",
+          "rule": "date"
+        },
+        {
+          "name": "RuleJson",
+          "rule": "json"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Payroll",
+      "entity": "PayrollTaxWithholding",
+      "path": "src/Modules/Payroll/Fintrox.Modules.Payroll.Domain/Entities/PayrollTaxWithholding.cs",
+      "fields": [
+        {
+          "name": "PayslipId",
+          "rule": "id"
+        },
+        {
+          "name": "TaxCode",
+          "rule": "text"
+        },
+        {
+          "name": "TaxableBase",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "WithheldAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Payroll",
+      "entity": "PayrollContributionRule",
+      "path": "src/Modules/Payroll/Fintrox.Modules.Payroll.Domain/Entities/PayrollContributionRule.cs",
+      "fields": [
+        {
+          "name": "JurisdictionCode",
+          "rule": "text"
+        },
+        {
+          "name": "ContributionCode",
+          "rule": "text"
+        },
+        {
+          "name": "EmployeeRate",
+          "rule": "percent"
+        },
+        {
+          "name": "EmployerRate",
+          "rule": "percent"
+        },
+        {
+          "name": "EffectiveFrom",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Payroll",
+      "entity": "PayrollContributionLine",
+      "path": "src/Modules/Payroll/Fintrox.Modules.Payroll.Domain/Entities/PayrollContributionLine.cs",
+      "fields": [
+        {
+          "name": "PayslipId",
+          "rule": "id"
+        },
+        {
+          "name": "ContributionCode",
+          "rule": "text"
+        },
+        {
+          "name": "EmployeeAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "EmployerAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Payroll",
+      "entity": "PayrollPaymentInstruction",
+      "path": "src/Modules/Payroll/Fintrox.Modules.Payroll.Domain/Entities/PayrollPaymentInstruction.cs",
+      "fields": [
+        {
+          "name": "PayRunId",
+          "rule": "id"
+        },
+        {
+          "name": "EmployeeId",
+          "rule": "id"
+        },
+        {
+          "name": "BankAccountId",
+          "rule": "id"
+        },
+        {
+          "name": "NetAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "ValueDate",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Payroll",
+      "entity": "PayrollDisbursement",
+      "path": "src/Modules/Payroll/Fintrox.Modules.Payroll.Domain/Entities/PayrollDisbursement.cs",
+      "fields": [
+        {
+          "name": "PaymentInstructionId",
+          "rule": "id"
+        },
+        {
+          "name": "PaymentId",
+          "rule": "id"
+        },
+        {
+          "name": "PaidOn",
+          "rule": "date"
+        },
+        {
+          "name": "PaidAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Payroll",
+      "entity": "PayrollAccrual",
+      "path": "src/Modules/Payroll/Fintrox.Modules.Payroll.Domain/Entities/PayrollAccrual.cs",
+      "fields": [
+        {
+          "name": "PayRunId",
+          "rule": "id"
+        },
+        {
+          "name": "AccountingBookId",
+          "rule": "id"
+        },
+        {
+          "name": "AccrualOn",
+          "rule": "date"
+        },
+        {
+          "name": "Amount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Payroll",
+      "entity": "PayrollPostingBatch",
+      "path": "src/Modules/Payroll/Fintrox.Modules.Payroll.Domain/Entities/PayrollPostingBatch.cs",
+      "fields": [
+        {
+          "name": "PayRunId",
+          "rule": "id"
+        },
+        {
+          "name": "JournalEntryId",
+          "rule": "id"
+        },
+        {
+          "name": "PostingDate",
+          "rule": "date"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Payroll",
+      "entity": "PayrollYearEndStatement",
+      "path": "src/Modules/Payroll/Fintrox.Modules.Payroll.Domain/Entities/PayrollYearEndStatement.cs",
+      "fields": [
+        {
+          "name": "EmployeeId",
+          "rule": "id"
+        },
+        {
+          "name": "TaxYear",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "GrossEarnings",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "TaxWithheld",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Payroll",
+      "entity": "PayrollLocalizationConfig",
+      "path": "src/Modules/Payroll/Fintrox.Modules.Payroll.Domain/Entities/PayrollLocalizationConfig.cs",
+      "fields": [
+        {
+          "name": "CountryCode",
+          "rule": "country"
+        },
+        {
+          "name": "JurisdictionCode",
+          "rule": "text"
+        },
+        {
+          "name": "PolicyVersion",
+          "rule": "text"
+        },
+        {
+          "name": "EffectiveFrom",
+          "rule": "date"
+        },
+        {
+          "name": "ConfigurationJson",
+          "rule": "json"
+        }
+      ]
+    },
+    {
+      "module": "Payroll",
+      "entity": "PayrollCorrection",
+      "path": "src/Modules/Payroll/Fintrox.Modules.Payroll.Domain/Entities/PayrollCorrection.cs",
+      "fields": [
+        {
+          "name": "OriginalPayslipId",
+          "rule": "id"
+        },
+        {
+          "name": "CorrectedPayslipId",
+          "rule": "id"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        },
+        {
+          "name": "CorrectedOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Payroll",
+      "entity": "PayrollApproval",
+      "path": "src/Modules/Payroll/Fintrox.Modules.Payroll.Domain/Entities/PayrollApproval.cs",
+      "fields": [
+        {
+          "name": "PayRunId",
+          "rule": "id"
+        },
+        {
+          "name": "ApproverUserId",
+          "rule": "id"
+        },
+        {
+          "name": "Decision",
+          "rule": "text"
+        },
+        {
+          "name": "DecidedAtUtc",
+          "rule": "instant"
+        }
+      ]
     }
   ]
 }
