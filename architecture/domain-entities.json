@@ -12444,6 +12444,598 @@
           "rule": "json"
         }
       ]
+    },
+    {
+      "module": "Inventory",
+      "entity": "InventorySku",
+      "path": "src/Modules/Inventory/Fintrox.Modules.Inventory.Domain/Entities/InventorySku.cs",
+      "fields": [
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "Sku",
+          "rule": "text"
+        },
+        {
+          "name": "Barcode",
+          "rule": "text"
+        },
+        {
+          "name": "IsStockTracked",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Inventory",
+      "entity": "InventoryAttribute",
+      "path": "src/Modules/Inventory/Fintrox.Modules.Inventory.Domain/Entities/InventoryAttribute.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "DataType",
+          "rule": "text"
+        },
+        {
+          "name": "IsRequired",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Inventory",
+      "entity": "InventoryAttributeValue",
+      "path": "src/Modules/Inventory/Fintrox.Modules.Inventory.Domain/Entities/InventoryAttributeValue.cs",
+      "fields": [
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "InventoryAttributeId",
+          "rule": "id"
+        },
+        {
+          "name": "Value",
+          "rule": "text"
+        },
+        {
+          "name": "IsSearchable",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Inventory",
+      "entity": "InventoryTransfer",
+      "path": "src/Modules/Inventory/Fintrox.Modules.Inventory.Domain/Entities/InventoryTransfer.cs",
+      "fields": [
+        {
+          "name": "SourceWarehouseId",
+          "rule": "id"
+        },
+        {
+          "name": "DestinationWarehouseId",
+          "rule": "id"
+        },
+        {
+          "name": "Reference",
+          "rule": "text"
+        },
+        {
+          "name": "RequestedOn",
+          "rule": "date"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Inventory",
+      "entity": "InventoryTransferLine",
+      "path": "src/Modules/Inventory/Fintrox.Modules.Inventory.Domain/Entities/InventoryTransferLine.cs",
+      "fields": [
+        {
+          "name": "InventoryTransferId",
+          "rule": "id"
+        },
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "Quantity",
+          "rule": "positive"
+        },
+        {
+          "name": "UnitCode",
+          "rule": "text"
+        },
+        {
+          "name": "LineNumber",
+          "rule": "positiveInt"
+        }
+      ]
+    },
+    {
+      "module": "Inventory",
+      "entity": "InventoryAdjustment",
+      "path": "src/Modules/Inventory/Fintrox.Modules.Inventory.Domain/Entities/InventoryAdjustment.cs",
+      "fields": [
+        {
+          "name": "WarehouseId",
+          "rule": "id"
+        },
+        {
+          "name": "AdjustmentNumber",
+          "rule": "text"
+        },
+        {
+          "name": "AdjustmentOn",
+          "rule": "date"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Inventory",
+      "entity": "InventoryAdjustmentLine",
+      "path": "src/Modules/Inventory/Fintrox.Modules.Inventory.Domain/Entities/InventoryAdjustmentLine.cs",
+      "fields": [
+        {
+          "name": "InventoryAdjustmentId",
+          "rule": "id"
+        },
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "QuantityChange",
+          "rule": "nonzero"
+        },
+        {
+          "name": "UnitCost",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Inventory",
+      "entity": "InventoryCount",
+      "path": "src/Modules/Inventory/Fintrox.Modules.Inventory.Domain/Entities/InventoryCount.cs",
+      "fields": [
+        {
+          "name": "WarehouseId",
+          "rule": "id"
+        },
+        {
+          "name": "CountReference",
+          "rule": "text"
+        },
+        {
+          "name": "CountedOn",
+          "rule": "date"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Inventory",
+      "entity": "InventoryCountLine",
+      "path": "src/Modules/Inventory/Fintrox.Modules.Inventory.Domain/Entities/InventoryCountLine.cs",
+      "fields": [
+        {
+          "name": "InventoryCountId",
+          "rule": "id"
+        },
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "ExpectedQuantity",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "CountedQuantity",
+          "rule": "nonnegative"
+        }
+      ]
+    },
+    {
+      "module": "Inventory",
+      "entity": "InventoryValuationLayer",
+      "path": "src/Modules/Inventory/Fintrox.Modules.Inventory.Domain/Entities/InventoryValuationLayer.cs",
+      "fields": [
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "WarehouseId",
+          "rule": "id"
+        },
+        {
+          "name": "ReceiptReferenceId",
+          "rule": "id"
+        },
+        {
+          "name": "RemainingQuantity",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "UnitCost",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Inventory",
+      "entity": "InventoryCostingRule",
+      "path": "src/Modules/Inventory/Fintrox.Modules.Inventory.Domain/Entities/InventoryCostingRule.cs",
+      "fields": [
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "CostingMethod",
+          "rule": "text"
+        },
+        {
+          "name": "EffectiveFrom",
+          "rule": "date"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Inventory",
+      "entity": "InventoryCostAdjustment",
+      "path": "src/Modules/Inventory/Fintrox.Modules.Inventory.Domain/Entities/InventoryCostAdjustment.cs",
+      "fields": [
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "SourceMovementId",
+          "rule": "id"
+        },
+        {
+          "name": "AdjustmentOn",
+          "rule": "date"
+        },
+        {
+          "name": "Amount",
+          "rule": "nonzero"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Inventory",
+      "entity": "InventoryReorderPoint",
+      "path": "src/Modules/Inventory/Fintrox.Modules.Inventory.Domain/Entities/InventoryReorderPoint.cs",
+      "fields": [
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "WarehouseId",
+          "rule": "id"
+        },
+        {
+          "name": "MinimumQuantity",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "TargetQuantity",
+          "rule": "nonnegative"
+        }
+      ]
+    },
+    {
+      "module": "Inventory",
+      "entity": "InventorySafetyStock",
+      "path": "src/Modules/Inventory/Fintrox.Modules.Inventory.Domain/Entities/InventorySafetyStock.cs",
+      "fields": [
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "WarehouseId",
+          "rule": "id"
+        },
+        {
+          "name": "SafetyQuantity",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "CalculatedOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Inventory",
+      "entity": "InventorySupplierItem",
+      "path": "src/Modules/Inventory/Fintrox.Modules.Inventory.Domain/Entities/InventorySupplierItem.cs",
+      "fields": [
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "SupplierId",
+          "rule": "id"
+        },
+        {
+          "name": "SupplierSku",
+          "rule": "text"
+        },
+        {
+          "name": "MinimumOrderQuantity",
+          "rule": "positive"
+        },
+        {
+          "name": "LeadTimeDays",
+          "rule": "positiveInt"
+        }
+      ]
+    },
+    {
+      "module": "Inventory",
+      "entity": "InventoryStocktakeSession",
+      "path": "src/Modules/Inventory/Fintrox.Modules.Inventory.Domain/Entities/InventoryStocktakeSession.cs",
+      "fields": [
+        {
+          "name": "WarehouseId",
+          "rule": "id"
+        },
+        {
+          "name": "StartedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "StartedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Inventory",
+      "entity": "InventoryStocktakeVariance",
+      "path": "src/Modules/Inventory/Fintrox.Modules.Inventory.Domain/Entities/InventoryStocktakeVariance.cs",
+      "fields": [
+        {
+          "name": "StocktakeSessionId",
+          "rule": "id"
+        },
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "VarianceQuantity",
+          "rule": "nonzero"
+        },
+        {
+          "name": "VarianceValue",
+          "rule": "nonzero"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Inventory",
+      "entity": "InventoryLotAttribute",
+      "path": "src/Modules/Inventory/Fintrox.Modules.Inventory.Domain/Entities/InventoryLotAttribute.cs",
+      "fields": [
+        {
+          "name": "InventoryLotId",
+          "rule": "id"
+        },
+        {
+          "name": "AttributeCode",
+          "rule": "text"
+        },
+        {
+          "name": "AttributeValue",
+          "rule": "text"
+        },
+        {
+          "name": "RecordedOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Inventory",
+      "entity": "InventorySerialHistory",
+      "path": "src/Modules/Inventory/Fintrox.Modules.Inventory.Domain/Entities/InventorySerialHistory.cs",
+      "fields": [
+        {
+          "name": "InventorySerialId",
+          "rule": "id"
+        },
+        {
+          "name": "MovementId",
+          "rule": "id"
+        },
+        {
+          "name": "OccurredAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "EventCode",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Inventory",
+      "entity": "InventoryExpiryRule",
+      "path": "src/Modules/Inventory/Fintrox.Modules.Inventory.Domain/Entities/InventoryExpiryRule.cs",
+      "fields": [
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "DaysBeforeExpiry",
+          "rule": "nonnegativeInt"
+        },
+        {
+          "name": "DisposalPolicy",
+          "rule": "text"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Inventory",
+      "entity": "InventoryUnitConversion",
+      "path": "src/Modules/Inventory/Fintrox.Modules.Inventory.Domain/Entities/InventoryUnitConversion.cs",
+      "fields": [
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "FromUnitCode",
+          "rule": "text"
+        },
+        {
+          "name": "ToUnitCode",
+          "rule": "text"
+        },
+        {
+          "name": "Factor",
+          "rule": "positive"
+        }
+      ]
+    },
+    {
+      "module": "Inventory",
+      "entity": "InventoryReservationAllocation",
+      "path": "src/Modules/Inventory/Fintrox.Modules.Inventory.Domain/Entities/InventoryReservationAllocation.cs",
+      "fields": [
+        {
+          "name": "StockReservationId",
+          "rule": "id"
+        },
+        {
+          "name": "InventoryLotId",
+          "rule": "id"
+        },
+        {
+          "name": "AllocatedQuantity",
+          "rule": "positive"
+        },
+        {
+          "name": "AllocatedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Inventory",
+      "entity": "InventoryAvailabilitySnapshot",
+      "path": "src/Modules/Inventory/Fintrox.Modules.Inventory.Domain/Entities/InventoryAvailabilitySnapshot.cs",
+      "fields": [
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "WarehouseId",
+          "rule": "id"
+        },
+        {
+          "name": "AvailableQuantity",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "ReservedQuantity",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "AsOfUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Inventory",
+      "entity": "InventoryMovementReason",
+      "path": "src/Modules/Inventory/Fintrox.Modules.Inventory.Domain/Entities/InventoryMovementReason.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "IsAdjustment",
+          "rule": "bool"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
     }
   ]
 }

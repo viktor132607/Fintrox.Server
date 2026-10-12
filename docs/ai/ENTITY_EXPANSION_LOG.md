@@ -21,3 +21,4 @@ Module-by-module Domain entity expansion, preserving existing 180 entities and t
 | 15 | HumanResources | 22 | 28 | Static inventory; .NET CI pending | Domain expanded; EF/API pending |
 | 16 | Identity | 22 | 27 | Structure/inventory checked; .NET CI pending | Domain expanded; EF/API pending |
 | 17 | Integrations | 24 | 28 | Structure/inventory checked; .NET CI pending | Domain expanded; EF/API pending |
+| 18 | Inventory | 24 | 32 | Structure/inventory checked; .NET CI pending | Domain expanded; EF/API pending |

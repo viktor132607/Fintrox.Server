@@ -24,3 +24,9 @@ See [architecture](../../../docs/architecture.md) for the current legacy excepti
 `InventoryItem`, `UnitOfMeasure`, `ItemCategory`, `Warehouse`, `StockMovement`, `StockReservation`, `InventoryLot`, `InventorySerial`.
 
 Models live in this module Domain/Entities directory; foreign objects are referenced by IDs. These are domain types, not registered database tables or endpoints. Existing legacy workflows remain in core projects. See [module progress](../../../docs/ai/MODULE_STATUS.md) for inventory and remaining work.
+
+## Domain expansion — 2026-10-13
+
+Added 24 entities (32 total): `InventorySku`, `InventoryAttribute`, `InventoryAttributeValue`, `InventoryTransfer`, `InventoryTransferLine`, `InventoryAdjustment`, `InventoryAdjustmentLine`, `InventoryCount`, `InventoryCountLine`, `InventoryValuationLayer`, `InventoryCostingRule`, `InventoryCostAdjustment`, `InventoryReorderPoint`, `InventorySafetyStock`, `InventorySupplierItem`, `InventoryStocktakeSession`, `InventoryStocktakeVariance`, `InventoryLotAttribute`, `InventorySerialHistory`, `InventoryExpiryRule`, `InventoryUnitConversion`, `InventoryReservationAllocation`, `InventoryAvailabilitySnapshot`, `InventoryMovementReason`.
+
+Module-local immutable records, constructor input validation, no references to other Domain assemblies. Persistence, API, security authorizations and implementation remain pending.
