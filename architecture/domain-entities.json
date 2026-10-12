@@ -13036,6 +13036,618 @@
           "rule": "bool"
         }
       ]
+    },
+    {
+      "module": "Manufacturing",
+      "entity": "BomVersion",
+      "path": "src/Modules/Manufacturing/Fintrox.Modules.Manufacturing.Domain/Entities/BomVersion.cs",
+      "fields": [
+        {
+          "name": "BillOfMaterialsId",
+          "rule": "id"
+        },
+        {
+          "name": "VersionNumber",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "EffectiveFrom",
+          "rule": "date"
+        },
+        {
+          "name": "IsReleased",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Manufacturing",
+      "entity": "BomComponentAlternative",
+      "path": "src/Modules/Manufacturing/Fintrox.Modules.Manufacturing.Domain/Entities/BomComponentAlternative.cs",
+      "fields": [
+        {
+          "name": "BillOfMaterialsLineId",
+          "rule": "id"
+        },
+        {
+          "name": "AlternativeInventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "SubstitutionRatio",
+          "rule": "positive"
+        },
+        {
+          "name": "Priority",
+          "rule": "nonnegativeInt"
+        }
+      ]
+    },
+    {
+      "module": "Manufacturing",
+      "entity": "ProductionWorkOrderLine",
+      "path": "src/Modules/Manufacturing/Fintrox.Modules.Manufacturing.Domain/Entities/ProductionWorkOrderLine.cs",
+      "fields": [
+        {
+          "name": "WorkOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "PlannedQuantity",
+          "rule": "positive"
+        },
+        {
+          "name": "ProducedQuantity",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "ScrappedQuantity",
+          "rule": "nonnegative"
+        }
+      ]
+    },
+    {
+      "module": "Manufacturing",
+      "entity": "ProductionMaterialRequirement",
+      "path": "src/Modules/Manufacturing/Fintrox.Modules.Manufacturing.Domain/Entities/ProductionMaterialRequirement.cs",
+      "fields": [
+        {
+          "name": "WorkOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "RequiredQuantity",
+          "rule": "positive"
+        },
+        {
+          "name": "RequiredOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Manufacturing",
+      "entity": "ProductionMaterialIssue",
+      "path": "src/Modules/Manufacturing/Fintrox.Modules.Manufacturing.Domain/Entities/ProductionMaterialIssue.cs",
+      "fields": [
+        {
+          "name": "WorkOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "InventoryMovementId",
+          "rule": "id"
+        },
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "IssuedQuantity",
+          "rule": "positive"
+        },
+        {
+          "name": "IssuedOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Manufacturing",
+      "entity": "ProductionMaterialReturn",
+      "path": "src/Modules/Manufacturing/Fintrox.Modules.Manufacturing.Domain/Entities/ProductionMaterialReturn.cs",
+      "fields": [
+        {
+          "name": "WorkOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "ReturnedQuantity",
+          "rule": "positive"
+        },
+        {
+          "name": "ReturnedOn",
+          "rule": "date"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Manufacturing",
+      "entity": "ProductionLot",
+      "path": "src/Modules/Manufacturing/Fintrox.Modules.Manufacturing.Domain/Entities/ProductionLot.cs",
+      "fields": [
+        {
+          "name": "WorkOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "LotNumber",
+          "rule": "text"
+        },
+        {
+          "name": "ProducedOn",
+          "rule": "date"
+        },
+        {
+          "name": "GoodQuantity",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "RejectedQuantity",
+          "rule": "nonnegative"
+        }
+      ]
+    },
+    {
+      "module": "Manufacturing",
+      "entity": "ProductionOperationExecution",
+      "path": "src/Modules/Manufacturing/Fintrox.Modules.Manufacturing.Domain/Entities/ProductionOperationExecution.cs",
+      "fields": [
+        {
+          "name": "WorkOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "RoutingOperationId",
+          "rule": "id"
+        },
+        {
+          "name": "StartedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "CompletedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Manufacturing",
+      "entity": "MachineAsset",
+      "path": "src/Modules/Manufacturing/Fintrox.Modules.Manufacturing.Domain/Entities/MachineAsset.cs",
+      "fields": [
+        {
+          "name": "WorkCenterId",
+          "rule": "id"
+        },
+        {
+          "name": "FixedAssetId",
+          "rule": "id"
+        },
+        {
+          "name": "MachineCode",
+          "rule": "text"
+        },
+        {
+          "name": "IsOperational",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Manufacturing",
+      "entity": "MachineDowntime",
+      "path": "src/Modules/Manufacturing/Fintrox.Modules.Manufacturing.Domain/Entities/MachineDowntime.cs",
+      "fields": [
+        {
+          "name": "MachineAssetId",
+          "rule": "id"
+        },
+        {
+          "name": "StartedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "EndedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "ReasonCode",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Manufacturing",
+      "entity": "ProductionShift",
+      "path": "src/Modules/Manufacturing/Fintrox.Modules.Manufacturing.Domain/Entities/ProductionShift.cs",
+      "fields": [
+        {
+          "name": "WorkCenterId",
+          "rule": "id"
+        },
+        {
+          "name": "ShiftCode",
+          "rule": "text"
+        },
+        {
+          "name": "StartsAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "EndsAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "CapacityHours",
+          "rule": "positive"
+        }
+      ]
+    },
+    {
+      "module": "Manufacturing",
+      "entity": "WorkCenterCapacity",
+      "path": "src/Modules/Manufacturing/Fintrox.Modules.Manufacturing.Domain/Entities/WorkCenterCapacity.cs",
+      "fields": [
+        {
+          "name": "WorkCenterId",
+          "rule": "id"
+        },
+        {
+          "name": "CapacityDate",
+          "rule": "date"
+        },
+        {
+          "name": "AvailableHours",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "ReservedHours",
+          "rule": "nonnegative"
+        }
+      ]
+    },
+    {
+      "module": "Manufacturing",
+      "entity": "ProductionSchedule",
+      "path": "src/Modules/Manufacturing/Fintrox.Modules.Manufacturing.Domain/Entities/ProductionSchedule.cs",
+      "fields": [
+        {
+          "name": "WorkOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "WorkCenterId",
+          "rule": "id"
+        },
+        {
+          "name": "PlannedStartUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "PlannedFinishUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Priority",
+          "rule": "nonnegativeInt"
+        }
+      ]
+    },
+    {
+      "module": "Manufacturing",
+      "entity": "ProductionScheduleException",
+      "path": "src/Modules/Manufacturing/Fintrox.Modules.Manufacturing.Domain/Entities/ProductionScheduleException.cs",
+      "fields": [
+        {
+          "name": "ProductionScheduleId",
+          "rule": "id"
+        },
+        {
+          "name": "ExceptionCode",
+          "rule": "text"
+        },
+        {
+          "name": "Description",
+          "rule": "text"
+        },
+        {
+          "name": "DetectedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Manufacturing",
+      "entity": "ProductionQualityCheck",
+      "path": "src/Modules/Manufacturing/Fintrox.Modules.Manufacturing.Domain/Entities/ProductionQualityCheck.cs",
+      "fields": [
+        {
+          "name": "WorkOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "InspectionPlanId",
+          "rule": "id"
+        },
+        {
+          "name": "InspectedOn",
+          "rule": "date"
+        },
+        {
+          "name": "Result",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Manufacturing",
+      "entity": "ProductionScrapRecord",
+      "path": "src/Modules/Manufacturing/Fintrox.Modules.Manufacturing.Domain/Entities/ProductionScrapRecord.cs",
+      "fields": [
+        {
+          "name": "WorkOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "Quantity",
+          "rule": "positive"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        },
+        {
+          "name": "RecordedOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Manufacturing",
+      "entity": "ProductionByproduct",
+      "path": "src/Modules/Manufacturing/Fintrox.Modules.Manufacturing.Domain/Entities/ProductionByproduct.cs",
+      "fields": [
+        {
+          "name": "WorkOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "ProducedQuantity",
+          "rule": "positive"
+        },
+        {
+          "name": "RecordedOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Manufacturing",
+      "entity": "ProductionYieldRecord",
+      "path": "src/Modules/Manufacturing/Fintrox.Modules.Manufacturing.Domain/Entities/ProductionYieldRecord.cs",
+      "fields": [
+        {
+          "name": "WorkOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "InputQuantity",
+          "rule": "positive"
+        },
+        {
+          "name": "GoodOutputQuantity",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "ScrapQuantity",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "RecordedOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Manufacturing",
+      "entity": "ProductionCostPool",
+      "path": "src/Modules/Manufacturing/Fintrox.Modules.Manufacturing.Domain/Entities/ProductionCostPool.cs",
+      "fields": [
+        {
+          "name": "WorkCenterId",
+          "rule": "id"
+        },
+        {
+          "name": "CostCategory",
+          "rule": "text"
+        },
+        {
+          "name": "PeriodStartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "PeriodEndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "Amount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Manufacturing",
+      "entity": "ProductionCostAllocation",
+      "path": "src/Modules/Manufacturing/Fintrox.Modules.Manufacturing.Domain/Entities/ProductionCostAllocation.cs",
+      "fields": [
+        {
+          "name": "WorkOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "CostPoolId",
+          "rule": "id"
+        },
+        {
+          "name": "AllocatedAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "AllocationBasis",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Manufacturing",
+      "entity": "WorkInProgressBalance",
+      "path": "src/Modules/Manufacturing/Fintrox.Modules.Manufacturing.Domain/Entities/WorkInProgressBalance.cs",
+      "fields": [
+        {
+          "name": "WorkOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "AsOfDate",
+          "rule": "date"
+        },
+        {
+          "name": "MaterialCost",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "LaborCost",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "OverheadCost",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Manufacturing",
+      "entity": "ProductionVariance",
+      "path": "src/Modules/Manufacturing/Fintrox.Modules.Manufacturing.Domain/Entities/ProductionVariance.cs",
+      "fields": [
+        {
+          "name": "WorkOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "VarianceType",
+          "rule": "text"
+        },
+        {
+          "name": "ExpectedCost",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "ActualCost",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Manufacturing",
+      "entity": "ProductionCompletion",
+      "path": "src/Modules/Manufacturing/Fintrox.Modules.Manufacturing.Domain/Entities/ProductionCompletion.cs",
+      "fields": [
+        {
+          "name": "WorkOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "CompletedOn",
+          "rule": "date"
+        },
+        {
+          "name": "CompletedQuantity",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "RecordedByUserId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "Manufacturing",
+      "entity": "ManufacturingTraceabilityLink",
+      "path": "src/Modules/Manufacturing/Fintrox.Modules.Manufacturing.Domain/Entities/ManufacturingTraceabilityLink.cs",
+      "fields": [
+        {
+          "name": "WorkOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "SourceLotId",
+          "rule": "id"
+        },
+        {
+          "name": "ProducedLotId",
+          "rule": "id"
+        },
+        {
+          "name": "LinkedQuantity",
+          "rule": "positive"
+        }
+      ]
     }
   ]
 }
