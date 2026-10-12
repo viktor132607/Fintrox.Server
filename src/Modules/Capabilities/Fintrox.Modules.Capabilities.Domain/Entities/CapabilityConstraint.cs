@@ -7,14 +7,14 @@ public sealed class CapabilityConstraint : OrganizationEntity
         Guid id, Guid organizationId, DateTimeOffset createdAtUtc,
         Guid capabilityId,
         string constraintKey,
-        string operator,
+        string @operator,
         string expectedValue,
         bool isRequired)
         : base(id, organizationId, createdAtUtc)
     {
         CapabilityId = DomainRules.Id(capabilityId, nameof(capabilityId));
         ConstraintKey = DomainRules.Text(constraintKey, nameof(constraintKey));
-        Operator = DomainRules.Text(operator, nameof(operator));
+        Operator = DomainRules.Text(@operator, nameof(@operator));
         ExpectedValue = DomainRules.Text(expectedValue, nameof(expectedValue));
         IsRequired = isRequired;
     }
