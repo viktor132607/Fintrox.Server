@@ -7980,6 +7980,460 @@
           "rule": "positiveInt"
         }
       ]
+    },
+    {
+      "module": "ContractManagement",
+      "entity": "ContractParty",
+      "path": "src/Modules/ContractManagement/Fintrox.Modules.ContractManagement.Domain/Entities/ContractParty.cs",
+      "fields": [
+        {
+          "name": "BusinessContractId",
+          "rule": "id"
+        },
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "Role",
+          "rule": "text"
+        },
+        {
+          "name": "SignatoryName",
+          "rule": "text"
+        },
+        {
+          "name": "IsPrimary",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "ContractManagement",
+      "entity": "ContractClause",
+      "path": "src/Modules/ContractManagement/Fintrox.Modules.ContractManagement.Domain/Entities/ContractClause.cs",
+      "fields": [
+        {
+          "name": "ContractVersionId",
+          "rule": "id"
+        },
+        {
+          "name": "ClauseNumber",
+          "rule": "text"
+        },
+        {
+          "name": "Title",
+          "rule": "text"
+        },
+        {
+          "name": "Content",
+          "rule": "text"
+        },
+        {
+          "name": "IsMandatory",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "ContractManagement",
+      "entity": "ContractAmendment",
+      "path": "src/Modules/ContractManagement/Fintrox.Modules.ContractManagement.Domain/Entities/ContractAmendment.cs",
+      "fields": [
+        {
+          "name": "BusinessContractId",
+          "rule": "id"
+        },
+        {
+          "name": "AmendmentNumber",
+          "rule": "text"
+        },
+        {
+          "name": "EffectiveOn",
+          "rule": "date"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "ContractManagement",
+      "entity": "ContractApproval",
+      "path": "src/Modules/ContractManagement/Fintrox.Modules.ContractManagement.Domain/Entities/ContractApproval.cs",
+      "fields": [
+        {
+          "name": "ContractVersionId",
+          "rule": "id"
+        },
+        {
+          "name": "ApproverUserId",
+          "rule": "id"
+        },
+        {
+          "name": "Decision",
+          "rule": "text"
+        },
+        {
+          "name": "DecidedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "ContractManagement",
+      "entity": "ContractSignature",
+      "path": "src/Modules/ContractManagement/Fintrox.Modules.ContractManagement.Domain/Entities/ContractSignature.cs",
+      "fields": [
+        {
+          "name": "ContractVersionId",
+          "rule": "id"
+        },
+        {
+          "name": "SignatoryId",
+          "rule": "id"
+        },
+        {
+          "name": "SignedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "SignatureMethod",
+          "rule": "text"
+        },
+        {
+          "name": "IsVerified",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "ContractManagement",
+      "entity": "ContractDocument",
+      "path": "src/Modules/ContractManagement/Fintrox.Modules.ContractManagement.Domain/Entities/ContractDocument.cs",
+      "fields": [
+        {
+          "name": "ContractVersionId",
+          "rule": "id"
+        },
+        {
+          "name": "DocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "DocumentType",
+          "rule": "text"
+        },
+        {
+          "name": "AttachedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "ContractManagement",
+      "entity": "ContractTemplate",
+      "path": "src/Modules/ContractManagement/Fintrox.Modules.ContractManagement.Domain/Entities/ContractTemplate.cs",
+      "fields": [
+        {
+          "name": "TemplateCode",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "ContractType",
+          "rule": "text"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "ContractManagement",
+      "entity": "ContractTemplateVersion",
+      "path": "src/Modules/ContractManagement/Fintrox.Modules.ContractManagement.Domain/Entities/ContractTemplateVersion.cs",
+      "fields": [
+        {
+          "name": "ContractTemplateId",
+          "rule": "id"
+        },
+        {
+          "name": "VersionNumber",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "TemplateJson",
+          "rule": "json"
+        },
+        {
+          "name": "PublishedOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "ContractManagement",
+      "entity": "ContractPricingTerm",
+      "path": "src/Modules/ContractManagement/Fintrox.Modules.ContractManagement.Domain/Entities/ContractPricingTerm.cs",
+      "fields": [
+        {
+          "name": "BusinessContractId",
+          "rule": "id"
+        },
+        {
+          "name": "PriceComponent",
+          "rule": "text"
+        },
+        {
+          "name": "UnitPrice",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "EffectiveFrom",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "ContractManagement",
+      "entity": "ContractServiceLevel",
+      "path": "src/Modules/ContractManagement/Fintrox.Modules.ContractManagement.Domain/Entities/ContractServiceLevel.cs",
+      "fields": [
+        {
+          "name": "BusinessContractId",
+          "rule": "id"
+        },
+        {
+          "name": "MetricCode",
+          "rule": "text"
+        },
+        {
+          "name": "TargetValue",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "MeasurementUnit",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "ContractManagement",
+      "entity": "ContractComplianceRequirement",
+      "path": "src/Modules/ContractManagement/Fintrox.Modules.ContractManagement.Domain/Entities/ContractComplianceRequirement.cs",
+      "fields": [
+        {
+          "name": "BusinessContractId",
+          "rule": "id"
+        },
+        {
+          "name": "RequirementCode",
+          "rule": "text"
+        },
+        {
+          "name": "Description",
+          "rule": "text"
+        },
+        {
+          "name": "ReviewFrequencyDays",
+          "rule": "positiveInt"
+        }
+      ]
+    },
+    {
+      "module": "ContractManagement",
+      "entity": "ContractRisk",
+      "path": "src/Modules/ContractManagement/Fintrox.Modules.ContractManagement.Domain/Entities/ContractRisk.cs",
+      "fields": [
+        {
+          "name": "BusinessContractId",
+          "rule": "id"
+        },
+        {
+          "name": "RiskCode",
+          "rule": "text"
+        },
+        {
+          "name": "Impact",
+          "rule": "text"
+        },
+        {
+          "name": "Likelihood",
+          "rule": "text"
+        },
+        {
+          "name": "Mitigation",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "ContractManagement",
+      "entity": "ContractObligationEvidence",
+      "path": "src/Modules/ContractManagement/Fintrox.Modules.ContractManagement.Domain/Entities/ContractObligationEvidence.cs",
+      "fields": [
+        {
+          "name": "ContractObligationId",
+          "rule": "id"
+        },
+        {
+          "name": "DocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "RecordedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "RecordedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "ContractManagement",
+      "entity": "ContractChangeRequest",
+      "path": "src/Modules/ContractManagement/Fintrox.Modules.ContractManagement.Domain/Entities/ContractChangeRequest.cs",
+      "fields": [
+        {
+          "name": "BusinessContractId",
+          "rule": "id"
+        },
+        {
+          "name": "RequestedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "RequestedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "ContractManagement",
+      "entity": "ContractNotification",
+      "path": "src/Modules/ContractManagement/Fintrox.Modules.ContractManagement.Domain/Entities/ContractNotification.cs",
+      "fields": [
+        {
+          "name": "BusinessContractId",
+          "rule": "id"
+        },
+        {
+          "name": "RecipientUserId",
+          "rule": "id"
+        },
+        {
+          "name": "NotificationType",
+          "rule": "text"
+        },
+        {
+          "name": "DueOn",
+          "rule": "date"
+        },
+        {
+          "name": "IsSent",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "ContractManagement",
+      "entity": "ContractRenewalNotice",
+      "path": "src/Modules/ContractManagement/Fintrox.Modules.ContractManagement.Domain/Entities/ContractRenewalNotice.cs",
+      "fields": [
+        {
+          "name": "ContractRenewalId",
+          "rule": "id"
+        },
+        {
+          "name": "NoticeDate",
+          "rule": "date"
+        },
+        {
+          "name": "RecipientId",
+          "rule": "id"
+        },
+        {
+          "name": "NoticeMethod",
+          "rule": "text"
+        },
+        {
+          "name": "SentAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "ContractManagement",
+      "entity": "ContractTermination",
+      "path": "src/Modules/ContractManagement/Fintrox.Modules.ContractManagement.Domain/Entities/ContractTermination.cs",
+      "fields": [
+        {
+          "name": "BusinessContractId",
+          "rule": "id"
+        },
+        {
+          "name": "EffectiveOn",
+          "rule": "date"
+        },
+        {
+          "name": "TerminationReason",
+          "rule": "text"
+        },
+        {
+          "name": "ApprovedByUserId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "ContractManagement",
+      "entity": "ContractAuditEvent",
+      "path": "src/Modules/ContractManagement/Fintrox.Modules.ContractManagement.Domain/Entities/ContractAuditEvent.cs",
+      "fields": [
+        {
+          "name": "BusinessContractId",
+          "rule": "id"
+        },
+        {
+          "name": "ActorId",
+          "rule": "id"
+        },
+        {
+          "name": "EventCode",
+          "rule": "text"
+        },
+        {
+          "name": "OccurredAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Details",
+          "rule": "text"
+        }
+      ]
     }
   ]
 }
