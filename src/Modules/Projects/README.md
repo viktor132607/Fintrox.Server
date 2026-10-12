@@ -24,3 +24,9 @@ See [architecture](../../../docs/architecture.md) for the current legacy excepti
 `Project`, `ProjectTask`, `ProjectExpense`, `ProjectMilestone`, `CostCenter`.
 
 Models live in this module Domain/Entities directory; foreign objects are referenced by IDs. These are domain types, not registered database tables or endpoints. Existing legacy workflows remain in core projects. See [module progress](../../../docs/ai/MODULE_STATUS.md) for inventory and remaining work.
+
+## Domain expansion — 2026-10-13
+
+Added 20 records (25 module total): `ProjectPhase`, `ProjectDeliverable`, `ProjectDependency`, `ProjectTaskAssignment`, `ProjectTaskChecklistItem`, `ProjectTaskComment`, `ProjectTimeEntry`, `ProjectExpenseAllocation`, `ProjectCostBudget`, `ProjectCostActual`, `ProjectRevenueSchedule`, `ProjectInvoiceMilestone`, `ProjectRisk`, `ProjectIssue`, `ProjectChangeRequest`, `ProjectBaseline`, `ProjectForecast`, `ProjectPortfolio`, `ProjectPortfolioMember`, `ProjectResourceDemand`.
+
+Pure model definitions; no runtime payroll/payment/project transactions were introduced. EF mappings, security, services, endpoints and tests remain separate tasks.

@@ -15691,6 +15691,522 @@
           "rule": "instant"
         }
       ]
+    },
+    {
+      "module": "Projects",
+      "entity": "ProjectPhase",
+      "path": "src/Modules/Projects/Fintrox.Modules.Projects.Domain/Entities/ProjectPhase.cs",
+      "fields": [
+        {
+          "name": "ProjectId",
+          "rule": "id"
+        },
+        {
+          "name": "PhaseCode",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Projects",
+      "entity": "ProjectDeliverable",
+      "path": "src/Modules/Projects/Fintrox.Modules.Projects.Domain/Entities/ProjectDeliverable.cs",
+      "fields": [
+        {
+          "name": "ProjectId",
+          "rule": "id"
+        },
+        {
+          "name": "MilestoneId",
+          "rule": "id"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "DueOn",
+          "rule": "date"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Projects",
+      "entity": "ProjectDependency",
+      "path": "src/Modules/Projects/Fintrox.Modules.Projects.Domain/Entities/ProjectDependency.cs",
+      "fields": [
+        {
+          "name": "PredecessorTaskId",
+          "rule": "id"
+        },
+        {
+          "name": "SuccessorTaskId",
+          "rule": "id"
+        },
+        {
+          "name": "DependencyType",
+          "rule": "text"
+        },
+        {
+          "name": "LagDays",
+          "rule": "nonnegativeInt"
+        }
+      ]
+    },
+    {
+      "module": "Projects",
+      "entity": "ProjectTaskAssignment",
+      "path": "src/Modules/Projects/Fintrox.Modules.Projects.Domain/Entities/ProjectTaskAssignment.cs",
+      "fields": [
+        {
+          "name": "ProjectTaskId",
+          "rule": "id"
+        },
+        {
+          "name": "ResourceId",
+          "rule": "id"
+        },
+        {
+          "name": "AllocationPercent",
+          "rule": "percent"
+        },
+        {
+          "name": "AssignedOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Projects",
+      "entity": "ProjectTaskChecklistItem",
+      "path": "src/Modules/Projects/Fintrox.Modules.Projects.Domain/Entities/ProjectTaskChecklistItem.cs",
+      "fields": [
+        {
+          "name": "ProjectTaskId",
+          "rule": "id"
+        },
+        {
+          "name": "ItemDescription",
+          "rule": "text"
+        },
+        {
+          "name": "SortOrder",
+          "rule": "nonnegativeInt"
+        },
+        {
+          "name": "IsComplete",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Projects",
+      "entity": "ProjectTaskComment",
+      "path": "src/Modules/Projects/Fintrox.Modules.Projects.Domain/Entities/ProjectTaskComment.cs",
+      "fields": [
+        {
+          "name": "ProjectTaskId",
+          "rule": "id"
+        },
+        {
+          "name": "AuthorUserId",
+          "rule": "id"
+        },
+        {
+          "name": "Content",
+          "rule": "text"
+        },
+        {
+          "name": "PostedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Projects",
+      "entity": "ProjectTimeEntry",
+      "path": "src/Modules/Projects/Fintrox.Modules.Projects.Domain/Entities/ProjectTimeEntry.cs",
+      "fields": [
+        {
+          "name": "ProjectId",
+          "rule": "id"
+        },
+        {
+          "name": "ProjectTaskId",
+          "rule": "id"
+        },
+        {
+          "name": "ResourceId",
+          "rule": "id"
+        },
+        {
+          "name": "WorkDate",
+          "rule": "date"
+        },
+        {
+          "name": "Hours",
+          "rule": "positive"
+        }
+      ]
+    },
+    {
+      "module": "Projects",
+      "entity": "ProjectExpenseAllocation",
+      "path": "src/Modules/Projects/Fintrox.Modules.Projects.Domain/Entities/ProjectExpenseAllocation.cs",
+      "fields": [
+        {
+          "name": "ProjectExpenseId",
+          "rule": "id"
+        },
+        {
+          "name": "CostCenterId",
+          "rule": "id"
+        },
+        {
+          "name": "Amount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "AllocatedOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Projects",
+      "entity": "ProjectCostBudget",
+      "path": "src/Modules/Projects/Fintrox.Modules.Projects.Domain/Entities/ProjectCostBudget.cs",
+      "fields": [
+        {
+          "name": "ProjectId",
+          "rule": "id"
+        },
+        {
+          "name": "CostCategory",
+          "rule": "text"
+        },
+        {
+          "name": "ApprovedAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "EffectiveFrom",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Projects",
+      "entity": "ProjectCostActual",
+      "path": "src/Modules/Projects/Fintrox.Modules.Projects.Domain/Entities/ProjectCostActual.cs",
+      "fields": [
+        {
+          "name": "ProjectId",
+          "rule": "id"
+        },
+        {
+          "name": "SourceDocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "CostCategory",
+          "rule": "text"
+        },
+        {
+          "name": "Amount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "RecordedOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Projects",
+      "entity": "ProjectRevenueSchedule",
+      "path": "src/Modules/Projects/Fintrox.Modules.Projects.Domain/Entities/ProjectRevenueSchedule.cs",
+      "fields": [
+        {
+          "name": "ProjectId",
+          "rule": "id"
+        },
+        {
+          "name": "MilestoneId",
+          "rule": "id"
+        },
+        {
+          "name": "ExpectedRevenue",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "ExpectedOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Projects",
+      "entity": "ProjectInvoiceMilestone",
+      "path": "src/Modules/Projects/Fintrox.Modules.Projects.Domain/Entities/ProjectInvoiceMilestone.cs",
+      "fields": [
+        {
+          "name": "ProjectId",
+          "rule": "id"
+        },
+        {
+          "name": "MilestoneId",
+          "rule": "id"
+        },
+        {
+          "name": "InvoiceReferenceId",
+          "rule": "id"
+        },
+        {
+          "name": "Amount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Projects",
+      "entity": "ProjectRisk",
+      "path": "src/Modules/Projects/Fintrox.Modules.Projects.Domain/Entities/ProjectRisk.cs",
+      "fields": [
+        {
+          "name": "ProjectId",
+          "rule": "id"
+        },
+        {
+          "name": "RiskCode",
+          "rule": "text"
+        },
+        {
+          "name": "Impact",
+          "rule": "text"
+        },
+        {
+          "name": "Likelihood",
+          "rule": "text"
+        },
+        {
+          "name": "Mitigation",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Projects",
+      "entity": "ProjectIssue",
+      "path": "src/Modules/Projects/Fintrox.Modules.Projects.Domain/Entities/ProjectIssue.cs",
+      "fields": [
+        {
+          "name": "ProjectId",
+          "rule": "id"
+        },
+        {
+          "name": "IssueCode",
+          "rule": "text"
+        },
+        {
+          "name": "Description",
+          "rule": "text"
+        },
+        {
+          "name": "Severity",
+          "rule": "text"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Projects",
+      "entity": "ProjectChangeRequest",
+      "path": "src/Modules/Projects/Fintrox.Modules.Projects.Domain/Entities/ProjectChangeRequest.cs",
+      "fields": [
+        {
+          "name": "ProjectId",
+          "rule": "id"
+        },
+        {
+          "name": "RequestedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "RequestedOn",
+          "rule": "date"
+        },
+        {
+          "name": "Description",
+          "rule": "text"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Projects",
+      "entity": "ProjectBaseline",
+      "path": "src/Modules/Projects/Fintrox.Modules.Projects.Domain/Entities/ProjectBaseline.cs",
+      "fields": [
+        {
+          "name": "ProjectId",
+          "rule": "id"
+        },
+        {
+          "name": "BaselineNumber",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "ApprovedOn",
+          "rule": "date"
+        },
+        {
+          "name": "ApprovedBudget",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Projects",
+      "entity": "ProjectForecast",
+      "path": "src/Modules/Projects/Fintrox.Modules.Projects.Domain/Entities/ProjectForecast.cs",
+      "fields": [
+        {
+          "name": "ProjectId",
+          "rule": "id"
+        },
+        {
+          "name": "ForecastOn",
+          "rule": "date"
+        },
+        {
+          "name": "EstimatedCompletionOn",
+          "rule": "date"
+        },
+        {
+          "name": "ForecastCost",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Projects",
+      "entity": "ProjectPortfolio",
+      "path": "src/Modules/Projects/Fintrox.Modules.Projects.Domain/Entities/ProjectPortfolio.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "OwnerUserId",
+          "rule": "id"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Projects",
+      "entity": "ProjectPortfolioMember",
+      "path": "src/Modules/Projects/Fintrox.Modules.Projects.Domain/Entities/ProjectPortfolioMember.cs",
+      "fields": [
+        {
+          "name": "PortfolioId",
+          "rule": "id"
+        },
+        {
+          "name": "ProjectId",
+          "rule": "id"
+        },
+        {
+          "name": "JoinedOn",
+          "rule": "date"
+        },
+        {
+          "name": "Priority",
+          "rule": "nonnegativeInt"
+        }
+      ]
+    },
+    {
+      "module": "Projects",
+      "entity": "ProjectResourceDemand",
+      "path": "src/Modules/Projects/Fintrox.Modules.Projects.Domain/Entities/ProjectResourceDemand.cs",
+      "fields": [
+        {
+          "name": "ProjectId",
+          "rule": "id"
+        },
+        {
+          "name": "ResourceSkillCode",
+          "rule": "text"
+        },
+        {
+          "name": "RequiredHours",
+          "rule": "positive"
+        },
+        {
+          "name": "NeededBy",
+          "rule": "date"
+        }
+      ]
     }
   ]
 }
