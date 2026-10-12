@@ -1,7 +1,7 @@
 # Fintrox Session Handoff — 2026-10-11
 
 ## Current milestone
-ENTITIES-EXPANSION — Commerce expanded; inventory contains 322 Domain classes. Next Consolidation.
+ENTITIES-EXPANSION — Consolidation expanded; inventory contains 340 Domain classes. Next ContractManagement.
 
 
 ## Changes
@@ -15,4 +15,4 @@ Local affected-graph Release build and 604 tests passed; 5 PostgreSQL tests skip
 Entity foundation only. New types are not yet EF tables, services, DTOs, endpoints or frontend screens. Domain constructor validation is not tenant authorization or reference existence validation. No complete ERP module claimed.
 
 ## Next exact action
-Continue with Consolidation domain model classes and commit source + inventory + per-module documentation. See ENTITY_EXPANSION_LOG.md for completed modules.
+Continue with ContractManagement domain model classes and commit source + inventory + per-module documentation. See ENTITY_EXPANSION_LOG.md for completed modules.

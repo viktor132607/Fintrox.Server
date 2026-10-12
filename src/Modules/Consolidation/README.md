@@ -24,3 +24,9 @@ See [architecture](../../../docs/architecture.md) for the current legacy excepti
 `CompanyGroup`, `GroupCompany`, `ConsolidationPeriod`, `EliminationEntry`.
 
 Models live in this module Domain/Entities directory; foreign objects are referenced by IDs. These are domain types, not registered database tables or endpoints. Existing legacy workflows remain in core projects. See [module progress](../../../docs/ai/MODULE_STATUS.md) for inventory and remaining work.
+
+## Domain expansion — 2026-10-13
+
+Added 18 validated entities (22 total): `IntercompanyPartnerLink`, `IntercompanyTransaction`, `IntercompanyReconciliation`, `ConsolidationRule`, `ConsolidationRun`, `ConsolidationWorksheet`, `ConsolidationWorksheetLine`, `ConsolidationCurrencyTranslation`, `ConsolidationExchangeRateSet`, `MinorityInterest`, `OwnershipChange`, `ConsolidationAdjustment`, `ConsolidationJournal`, `ConsolidationDisclosure`, `ConsolidatedStatement`, `ConsolidatedStatementLine`, `GroupAccountingPolicy`, `ConsolidationReportSnapshot`.
+
+Entity-only implementation; persistence, versioned DTOs, application logic, endpoints, tests with PostgreSQL and frontend are not implemented by this commit.

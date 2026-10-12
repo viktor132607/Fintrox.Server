@@ -7502,6 +7502,484 @@
           "rule": "text"
         }
       ]
+    },
+    {
+      "module": "Consolidation",
+      "entity": "IntercompanyPartnerLink",
+      "path": "src/Modules/Consolidation/Fintrox.Modules.Consolidation.Domain/Entities/IntercompanyPartnerLink.cs",
+      "fields": [
+        {
+          "name": "CompanyGroupId",
+          "rule": "id"
+        },
+        {
+          "name": "SourceCompanyId",
+          "rule": "id"
+        },
+        {
+          "name": "TargetCompanyId",
+          "rule": "id"
+        },
+        {
+          "name": "PartnerCode",
+          "rule": "text"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Consolidation",
+      "entity": "IntercompanyTransaction",
+      "path": "src/Modules/Consolidation/Fintrox.Modules.Consolidation.Domain/Entities/IntercompanyTransaction.cs",
+      "fields": [
+        {
+          "name": "SourceCompanyId",
+          "rule": "id"
+        },
+        {
+          "name": "TargetCompanyId",
+          "rule": "id"
+        },
+        {
+          "name": "SourceDocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "TransactionDate",
+          "rule": "date"
+        },
+        {
+          "name": "Amount",
+          "rule": "nonzero"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Consolidation",
+      "entity": "IntercompanyReconciliation",
+      "path": "src/Modules/Consolidation/Fintrox.Modules.Consolidation.Domain/Entities/IntercompanyReconciliation.cs",
+      "fields": [
+        {
+          "name": "CompanyGroupId",
+          "rule": "id"
+        },
+        {
+          "name": "PeriodId",
+          "rule": "id"
+        },
+        {
+          "name": "LeftCompanyId",
+          "rule": "id"
+        },
+        {
+          "name": "RightCompanyId",
+          "rule": "id"
+        },
+        {
+          "name": "DifferenceAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Consolidation",
+      "entity": "ConsolidationRule",
+      "path": "src/Modules/Consolidation/Fintrox.Modules.Consolidation.Domain/Entities/ConsolidationRule.cs",
+      "fields": [
+        {
+          "name": "CompanyGroupId",
+          "rule": "id"
+        },
+        {
+          "name": "RuleCode",
+          "rule": "text"
+        },
+        {
+          "name": "RuleType",
+          "rule": "text"
+        },
+        {
+          "name": "Priority",
+          "rule": "nonnegativeInt"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Consolidation",
+      "entity": "ConsolidationRun",
+      "path": "src/Modules/Consolidation/Fintrox.Modules.Consolidation.Domain/Entities/ConsolidationRun.cs",
+      "fields": [
+        {
+          "name": "CompanyGroupId",
+          "rule": "id"
+        },
+        {
+          "name": "ConsolidationPeriodId",
+          "rule": "id"
+        },
+        {
+          "name": "RunNumber",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "StartedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Consolidation",
+      "entity": "ConsolidationWorksheet",
+      "path": "src/Modules/Consolidation/Fintrox.Modules.Consolidation.Domain/Entities/ConsolidationWorksheet.cs",
+      "fields": [
+        {
+          "name": "ConsolidationRunId",
+          "rule": "id"
+        },
+        {
+          "name": "WorksheetName",
+          "rule": "text"
+        },
+        {
+          "name": "CompanyId",
+          "rule": "id"
+        },
+        {
+          "name": "PresentationCurrency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Consolidation",
+      "entity": "ConsolidationWorksheetLine",
+      "path": "src/Modules/Consolidation/Fintrox.Modules.Consolidation.Domain/Entities/ConsolidationWorksheetLine.cs",
+      "fields": [
+        {
+          "name": "WorksheetId",
+          "rule": "id"
+        },
+        {
+          "name": "GroupAccountCode",
+          "rule": "text"
+        },
+        {
+          "name": "Debit",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Credit",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Consolidation",
+      "entity": "ConsolidationCurrencyTranslation",
+      "path": "src/Modules/Consolidation/Fintrox.Modules.Consolidation.Domain/Entities/ConsolidationCurrencyTranslation.cs",
+      "fields": [
+        {
+          "name": "ConsolidationRunId",
+          "rule": "id"
+        },
+        {
+          "name": "SourceCompanyId",
+          "rule": "id"
+        },
+        {
+          "name": "SourceCurrency",
+          "rule": "currency"
+        },
+        {
+          "name": "TargetCurrency",
+          "rule": "currency"
+        },
+        {
+          "name": "Rate",
+          "rule": "positive"
+        },
+        {
+          "name": "TranslationDifference",
+          "rule": "nonnegative"
+        }
+      ]
+    },
+    {
+      "module": "Consolidation",
+      "entity": "ConsolidationExchangeRateSet",
+      "path": "src/Modules/Consolidation/Fintrox.Modules.Consolidation.Domain/Entities/ConsolidationExchangeRateSet.cs",
+      "fields": [
+        {
+          "name": "CompanyGroupId",
+          "rule": "id"
+        },
+        {
+          "name": "PeriodId",
+          "rule": "id"
+        },
+        {
+          "name": "ProviderCode",
+          "rule": "text"
+        },
+        {
+          "name": "EffectiveOn",
+          "rule": "date"
+        },
+        {
+          "name": "IsLocked",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Consolidation",
+      "entity": "MinorityInterest",
+      "path": "src/Modules/Consolidation/Fintrox.Modules.Consolidation.Domain/Entities/MinorityInterest.cs",
+      "fields": [
+        {
+          "name": "CompanyGroupId",
+          "rule": "id"
+        },
+        {
+          "name": "SubsidiaryCompanyId",
+          "rule": "id"
+        },
+        {
+          "name": "OwnershipPercent",
+          "rule": "percent"
+        },
+        {
+          "name": "NonControllingAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Consolidation",
+      "entity": "OwnershipChange",
+      "path": "src/Modules/Consolidation/Fintrox.Modules.Consolidation.Domain/Entities/OwnershipChange.cs",
+      "fields": [
+        {
+          "name": "CompanyGroupId",
+          "rule": "id"
+        },
+        {
+          "name": "SubsidiaryCompanyId",
+          "rule": "id"
+        },
+        {
+          "name": "EffectiveOn",
+          "rule": "date"
+        },
+        {
+          "name": "OldPercent",
+          "rule": "percent"
+        },
+        {
+          "name": "NewPercent",
+          "rule": "percent"
+        }
+      ]
+    },
+    {
+      "module": "Consolidation",
+      "entity": "ConsolidationAdjustment",
+      "path": "src/Modules/Consolidation/Fintrox.Modules.Consolidation.Domain/Entities/ConsolidationAdjustment.cs",
+      "fields": [
+        {
+          "name": "ConsolidationRunId",
+          "rule": "id"
+        },
+        {
+          "name": "AdjustmentCode",
+          "rule": "text"
+        },
+        {
+          "name": "Description",
+          "rule": "text"
+        },
+        {
+          "name": "Amount",
+          "rule": "nonzero"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Consolidation",
+      "entity": "ConsolidationJournal",
+      "path": "src/Modules/Consolidation/Fintrox.Modules.Consolidation.Domain/Entities/ConsolidationJournal.cs",
+      "fields": [
+        {
+          "name": "ConsolidationRunId",
+          "rule": "id"
+        },
+        {
+          "name": "JournalNumber",
+          "rule": "text"
+        },
+        {
+          "name": "DocumentDate",
+          "rule": "date"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Consolidation",
+      "entity": "ConsolidationDisclosure",
+      "path": "src/Modules/Consolidation/Fintrox.Modules.Consolidation.Domain/Entities/ConsolidationDisclosure.cs",
+      "fields": [
+        {
+          "name": "ConsolidationRunId",
+          "rule": "id"
+        },
+        {
+          "name": "DisclosureCode",
+          "rule": "text"
+        },
+        {
+          "name": "Title",
+          "rule": "text"
+        },
+        {
+          "name": "Content",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Consolidation",
+      "entity": "ConsolidatedStatement",
+      "path": "src/Modules/Consolidation/Fintrox.Modules.Consolidation.Domain/Entities/ConsolidatedStatement.cs",
+      "fields": [
+        {
+          "name": "ConsolidationRunId",
+          "rule": "id"
+        },
+        {
+          "name": "StatementType",
+          "rule": "text"
+        },
+        {
+          "name": "PresentationCurrency",
+          "rule": "currency"
+        },
+        {
+          "name": "AsOfDate",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Consolidation",
+      "entity": "ConsolidatedStatementLine",
+      "path": "src/Modules/Consolidation/Fintrox.Modules.Consolidation.Domain/Entities/ConsolidatedStatementLine.cs",
+      "fields": [
+        {
+          "name": "StatementId",
+          "rule": "id"
+        },
+        {
+          "name": "AccountCode",
+          "rule": "text"
+        },
+        {
+          "name": "LineNumber",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "Amount",
+          "rule": "nonzero"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Consolidation",
+      "entity": "GroupAccountingPolicy",
+      "path": "src/Modules/Consolidation/Fintrox.Modules.Consolidation.Domain/Entities/GroupAccountingPolicy.cs",
+      "fields": [
+        {
+          "name": "CompanyGroupId",
+          "rule": "id"
+        },
+        {
+          "name": "PolicyCode",
+          "rule": "text"
+        },
+        {
+          "name": "EffectiveFrom",
+          "rule": "date"
+        },
+        {
+          "name": "PolicyJson",
+          "rule": "json"
+        },
+        {
+          "name": "VersionNumber",
+          "rule": "positiveInt"
+        }
+      ]
+    },
+    {
+      "module": "Consolidation",
+      "entity": "ConsolidationReportSnapshot",
+      "path": "src/Modules/Consolidation/Fintrox.Modules.Consolidation.Domain/Entities/ConsolidationReportSnapshot.cs",
+      "fields": [
+        {
+          "name": "ConsolidationRunId",
+          "rule": "id"
+        },
+        {
+          "name": "GeneratedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "DocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "VersionNumber",
+          "rule": "positiveInt"
+        }
+      ]
     }
   ]
 }
