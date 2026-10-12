@@ -6531,6 +6531,387 @@
           "rule": "text"
         }
       ]
+    },
+    {
+      "module": "Capabilities",
+      "entity": "CapabilityConstraint",
+      "path": "src/Modules/Capabilities/Fintrox.Modules.Capabilities.Domain/Entities/CapabilityConstraint.cs",
+      "fields": [
+        {
+          "name": "CapabilityId",
+          "rule": "id"
+        },
+        {
+          "name": "ConstraintKey",
+          "rule": "text"
+        },
+        {
+          "name": "Operator",
+          "rule": "text"
+        },
+        {
+          "name": "ExpectedValue",
+          "rule": "text"
+        },
+        {
+          "name": "IsRequired",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Capabilities",
+      "entity": "CapabilityConfiguration",
+      "path": "src/Modules/Capabilities/Fintrox.Modules.Capabilities.Domain/Entities/CapabilityConfiguration.cs",
+      "fields": [
+        {
+          "name": "CapabilityId",
+          "rule": "id"
+        },
+        {
+          "name": "ConfigurationJson",
+          "rule": "json"
+        },
+        {
+          "name": "VersionNumber",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Capabilities",
+      "entity": "CapabilityOverride",
+      "path": "src/Modules/Capabilities/Fintrox.Modules.Capabilities.Domain/Entities/CapabilityOverride.cs",
+      "fields": [
+        {
+          "name": "CapabilityId",
+          "rule": "id"
+        },
+        {
+          "name": "UserId",
+          "rule": "id"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        },
+        {
+          "name": "EffectiveFrom",
+          "rule": "date"
+        },
+        {
+          "name": "IsEnabled",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Capabilities",
+      "entity": "CapabilityLicense",
+      "path": "src/Modules/Capabilities/Fintrox.Modules.Capabilities.Domain/Entities/CapabilityLicense.cs",
+      "fields": [
+        {
+          "name": "CapabilityId",
+          "rule": "id"
+        },
+        {
+          "name": "LicenseKey",
+          "rule": "text"
+        },
+        {
+          "name": "SeatLimit",
+          "rule": "nonnegativeInt"
+        },
+        {
+          "name": "ExpiresOn",
+          "rule": "date"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Capabilities",
+      "entity": "CapabilityUsage",
+      "path": "src/Modules/Capabilities/Fintrox.Modules.Capabilities.Domain/Entities/CapabilityUsage.cs",
+      "fields": [
+        {
+          "name": "CapabilityId",
+          "rule": "id"
+        },
+        {
+          "name": "UsageDate",
+          "rule": "date"
+        },
+        {
+          "name": "ConsumedUnits",
+          "rule": "nonnegativeLong"
+        },
+        {
+          "name": "UnitName",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Capabilities",
+      "entity": "CapabilityActivationHistory",
+      "path": "src/Modules/Capabilities/Fintrox.Modules.Capabilities.Domain/Entities/CapabilityActivationHistory.cs",
+      "fields": [
+        {
+          "name": "CapabilityId",
+          "rule": "id"
+        },
+        {
+          "name": "ActivatedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "ChangedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "PreviousState",
+          "rule": "text"
+        },
+        {
+          "name": "NewState",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Capabilities",
+      "entity": "CapabilityRollout",
+      "path": "src/Modules/Capabilities/Fintrox.Modules.Capabilities.Domain/Entities/CapabilityRollout.cs",
+      "fields": [
+        {
+          "name": "CapabilityId",
+          "rule": "id"
+        },
+        {
+          "name": "Environment",
+          "rule": "text"
+        },
+        {
+          "name": "ExposurePercent",
+          "rule": "percent"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "IsEnabled",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Capabilities",
+      "entity": "FeatureFlag",
+      "path": "src/Modules/Capabilities/Fintrox.Modules.Capabilities.Domain/Entities/FeatureFlag.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Description",
+          "rule": "text"
+        },
+        {
+          "name": "DefaultEnabled",
+          "rule": "bool"
+        },
+        {
+          "name": "IsArchived",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Capabilities",
+      "entity": "FeatureFlagOverride",
+      "path": "src/Modules/Capabilities/Fintrox.Modules.Capabilities.Domain/Entities/FeatureFlagOverride.cs",
+      "fields": [
+        {
+          "name": "FeatureFlagId",
+          "rule": "id"
+        },
+        {
+          "name": "TargetScope",
+          "rule": "text"
+        },
+        {
+          "name": "TargetId",
+          "rule": "id"
+        },
+        {
+          "name": "IsEnabled",
+          "rule": "bool"
+        },
+        {
+          "name": "EffectiveFrom",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Capabilities",
+      "entity": "ModuleCompatibilityRule",
+      "path": "src/Modules/Capabilities/Fintrox.Modules.Capabilities.Domain/Entities/ModuleCompatibilityRule.cs",
+      "fields": [
+        {
+          "name": "ModuleCode",
+          "rule": "text"
+        },
+        {
+          "name": "RequiredModuleCode",
+          "rule": "text"
+        },
+        {
+          "name": "MinimumVersion",
+          "rule": "text"
+        },
+        {
+          "name": "IsMandatory",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Capabilities",
+      "entity": "ModuleDependency",
+      "path": "src/Modules/Capabilities/Fintrox.Modules.Capabilities.Domain/Entities/ModuleDependency.cs",
+      "fields": [
+        {
+          "name": "ModuleCode",
+          "rule": "text"
+        },
+        {
+          "name": "DependsOnModuleCode",
+          "rule": "text"
+        },
+        {
+          "name": "MinimumVersion",
+          "rule": "text"
+        },
+        {
+          "name": "IsOptional",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Capabilities",
+      "entity": "ModuleVersion",
+      "path": "src/Modules/Capabilities/Fintrox.Modules.Capabilities.Domain/Entities/ModuleVersion.cs",
+      "fields": [
+        {
+          "name": "ModuleCode",
+          "rule": "text"
+        },
+        {
+          "name": "SemanticVersion",
+          "rule": "text"
+        },
+        {
+          "name": "ReleasedOn",
+          "rule": "date"
+        },
+        {
+          "name": "ReleaseChannel",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Capabilities",
+      "entity": "ModuleProvisioningJob",
+      "path": "src/Modules/Capabilities/Fintrox.Modules.Capabilities.Domain/Entities/ModuleProvisioningJob.cs",
+      "fields": [
+        {
+          "name": "ModuleCode",
+          "rule": "text"
+        },
+        {
+          "name": "RequestedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "RequestedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        },
+        {
+          "name": "AttemptCount",
+          "rule": "nonnegativeInt"
+        }
+      ]
+    },
+    {
+      "module": "Capabilities",
+      "entity": "CapabilityAccessGrant",
+      "path": "src/Modules/Capabilities/Fintrox.Modules.Capabilities.Domain/Entities/CapabilityAccessGrant.cs",
+      "fields": [
+        {
+          "name": "CapabilityId",
+          "rule": "id"
+        },
+        {
+          "name": "PrincipalId",
+          "rule": "id"
+        },
+        {
+          "name": "PermissionCode",
+          "rule": "text"
+        },
+        {
+          "name": "GrantedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "GrantedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Capabilities",
+      "entity": "CapabilityEvaluationLog",
+      "path": "src/Modules/Capabilities/Fintrox.Modules.Capabilities.Domain/Entities/CapabilityEvaluationLog.cs",
+      "fields": [
+        {
+          "name": "CapabilityId",
+          "rule": "id"
+        },
+        {
+          "name": "PrincipalId",
+          "rule": "id"
+        },
+        {
+          "name": "EvaluatedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Outcome",
+          "rule": "text"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        }
+      ]
     }
   ]
 }
