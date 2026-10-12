@@ -14,3 +14,4 @@ Module-by-module Domain entity expansion, preserving existing 180 entities and t
 | 8 | Consolidation | 18 | 22 | Static structure / inventory; .NET CI pending | Domain expanded; EF/API pending |
 | 9 | ContractManagement | 18 | 23 | Static structure / inventory; .NET CI pending | Domain expanded; EF/API pending |
 | 10 | Counterparties | 18 | 23 | Structural inventory; no .NET CI yet | Domain expanded; EF/API pending |
+| 11 | Currencies | 14 | 17 | Structural inventory; no .NET CI yet | Domain expanded; EF/API pending |

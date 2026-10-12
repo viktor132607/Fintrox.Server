@@ -1,7 +1,7 @@
 # Fintrox Session Handoff — 2026-10-11
 
 ## Current milestone
-ENTITIES-EXPANSION: Counterparties expanded. Total: 376 entity models. Next Currencies.
+ENTITIES-EXPANSION: Currencies expanded. Total: 390 entity models. Next Documents.
 
 
 ## Changes
@@ -15,4 +15,4 @@ Local affected-graph Release build and 604 tests passed; 5 PostgreSQL tests skip
 Entity foundation only. New types are not yet EF tables, services, DTOs, endpoints or frontend screens. Domain constructor validation is not tenant authorization or reference existence validation. No complete ERP module claimed.
 
 ## Next exact action
-Expand Currencies with explicit module-owned entity classes, updating inventory and documentation after the module. No EF/API/UI in this phase.
+Expand Documents with explicit module-owned entity classes, updating inventory and documentation after the module. No EF/API/UI in this phase.

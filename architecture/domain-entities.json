@@ -8904,6 +8904,372 @@
           "rule": "bool"
         }
       ]
+    },
+    {
+      "module": "Currencies",
+      "entity": "CurrencyRateBatch",
+      "path": "src/Modules/Currencies/Fintrox.Modules.Currencies.Domain/Entities/CurrencyRateBatch.cs",
+      "fields": [
+        {
+          "name": "ProviderId",
+          "rule": "id"
+        },
+        {
+          "name": "RateDate",
+          "rule": "date"
+        },
+        {
+          "name": "BaseCurrency",
+          "rule": "currency"
+        },
+        {
+          "name": "ImportReference",
+          "rule": "text"
+        },
+        {
+          "name": "ImportedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Currencies",
+      "entity": "CurrencyRateBatchLine",
+      "path": "src/Modules/Currencies/Fintrox.Modules.Currencies.Domain/Entities/CurrencyRateBatchLine.cs",
+      "fields": [
+        {
+          "name": "BatchId",
+          "rule": "id"
+        },
+        {
+          "name": "QuoteCurrency",
+          "rule": "currency"
+        },
+        {
+          "name": "Rate",
+          "rule": "positive"
+        },
+        {
+          "name": "RateType",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Currencies",
+      "entity": "CurrencyConversionQuote",
+      "path": "src/Modules/Currencies/Fintrox.Modules.Currencies.Domain/Entities/CurrencyConversionQuote.cs",
+      "fields": [
+        {
+          "name": "SourceCurrency",
+          "rule": "currency"
+        },
+        {
+          "name": "TargetCurrency",
+          "rule": "currency"
+        },
+        {
+          "name": "SourceAmount",
+          "rule": "positive"
+        },
+        {
+          "name": "ConvertedAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "QuotedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Currencies",
+      "entity": "CurrencyConversionExecution",
+      "path": "src/Modules/Currencies/Fintrox.Modules.Currencies.Domain/Entities/CurrencyConversionExecution.cs",
+      "fields": [
+        {
+          "name": "QuoteId",
+          "rule": "id"
+        },
+        {
+          "name": "SourceTransactionId",
+          "rule": "id"
+        },
+        {
+          "name": "ExecutedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "AppliedRate",
+          "rule": "positive"
+        },
+        {
+          "name": "FeeAmount",
+          "rule": "nonnegative"
+        }
+      ]
+    },
+    {
+      "module": "Currencies",
+      "entity": "CurrencyRateOverride",
+      "path": "src/Modules/Currencies/Fintrox.Modules.Currencies.Domain/Entities/CurrencyRateOverride.cs",
+      "fields": [
+        {
+          "name": "SourceCurrency",
+          "rule": "currency"
+        },
+        {
+          "name": "TargetCurrency",
+          "rule": "currency"
+        },
+        {
+          "name": "Rate",
+          "rule": "positive"
+        },
+        {
+          "name": "EffectiveOn",
+          "rule": "date"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        },
+        {
+          "name": "ApprovedByUserId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "Currencies",
+      "entity": "CurrencyRateTolerance",
+      "path": "src/Modules/Currencies/Fintrox.Modules.Currencies.Domain/Entities/CurrencyRateTolerance.cs",
+      "fields": [
+        {
+          "name": "CurrencyPairCode",
+          "rule": "text"
+        },
+        {
+          "name": "MaximumVariancePercent",
+          "rule": "percent"
+        },
+        {
+          "name": "EffectiveFrom",
+          "rule": "date"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Currencies",
+      "entity": "CurrencyMarketCalendar",
+      "path": "src/Modules/Currencies/Fintrox.Modules.Currencies.Domain/Entities/CurrencyMarketCalendar.cs",
+      "fields": [
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "CountryCode",
+          "rule": "country"
+        },
+        {
+          "name": "HolidayDate",
+          "rule": "date"
+        },
+        {
+          "name": "HolidayName",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Currencies",
+      "entity": "CurrencyRevaluationLine",
+      "path": "src/Modules/Currencies/Fintrox.Modules.Currencies.Domain/Entities/CurrencyRevaluationLine.cs",
+      "fields": [
+        {
+          "name": "RevaluationId",
+          "rule": "id"
+        },
+        {
+          "name": "AccountId",
+          "rule": "id"
+        },
+        {
+          "name": "OriginalAmount",
+          "rule": "nonzero"
+        },
+        {
+          "name": "RevaluedAmount",
+          "rule": "nonzero"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Currencies",
+      "entity": "CurrencyRevaluationRun",
+      "path": "src/Modules/Currencies/Fintrox.Modules.Currencies.Domain/Entities/CurrencyRevaluationRun.cs",
+      "fields": [
+        {
+          "name": "AccountingBookId",
+          "rule": "id"
+        },
+        {
+          "name": "AsOfDate",
+          "rule": "date"
+        },
+        {
+          "name": "BaseCurrency",
+          "rule": "currency"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        },
+        {
+          "name": "ExecutedByUserId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "Currencies",
+      "entity": "CurrencyTranslationRule",
+      "path": "src/Modules/Currencies/Fintrox.Modules.Currencies.Domain/Entities/CurrencyTranslationRule.cs",
+      "fields": [
+        {
+          "name": "SourceCurrency",
+          "rule": "currency"
+        },
+        {
+          "name": "TargetCurrency",
+          "rule": "currency"
+        },
+        {
+          "name": "RateBasis",
+          "rule": "text"
+        },
+        {
+          "name": "EffectiveFrom",
+          "rule": "date"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Currencies",
+      "entity": "CurrencyTranslationAdjustment",
+      "path": "src/Modules/Currencies/Fintrox.Modules.Currencies.Domain/Entities/CurrencyTranslationAdjustment.cs",
+      "fields": [
+        {
+          "name": "RevaluationRunId",
+          "rule": "id"
+        },
+        {
+          "name": "SourceDocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "AdjustmentAmount",
+          "rule": "nonzero"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Currencies",
+      "entity": "CurrencyRoundingAdjustment",
+      "path": "src/Modules/Currencies/Fintrox.Modules.Currencies.Domain/Entities/CurrencyRoundingAdjustment.cs",
+      "fields": [
+        {
+          "name": "SourceDocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "OriginalAmount",
+          "rule": "nonzero"
+        },
+        {
+          "name": "RoundedAmount",
+          "rule": "nonzero"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "PrecisionScale",
+          "rule": "scale"
+        }
+      ]
+    },
+    {
+      "module": "Currencies",
+      "entity": "CurrencyPair",
+      "path": "src/Modules/Currencies/Fintrox.Modules.Currencies.Domain/Entities/CurrencyPair.cs",
+      "fields": [
+        {
+          "name": "BaseCurrency",
+          "rule": "currency"
+        },
+        {
+          "name": "QuoteCurrency",
+          "rule": "currency"
+        },
+        {
+          "name": "MinimumRate",
+          "rule": "positive"
+        },
+        {
+          "name": "IsEnabled",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Currencies",
+      "entity": "ExchangeRateAudit",
+      "path": "src/Modules/Currencies/Fintrox.Modules.Currencies.Domain/Entities/ExchangeRateAudit.cs",
+      "fields": [
+        {
+          "name": "ExchangeRateProviderId",
+          "rule": "id"
+        },
+        {
+          "name": "CurrencyPairId",
+          "rule": "id"
+        },
+        {
+          "name": "Rate",
+          "rule": "positive"
+        },
+        {
+          "name": "ChangedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "ChangedByUserId",
+          "rule": "id"
+        }
+      ]
     }
   ]
 }
