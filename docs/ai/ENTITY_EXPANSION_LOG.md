@@ -38,3 +38,4 @@ Module-by-module Domain entity expansion, preserving existing 180 entities and t
 | 32 | SubscriptionBilling | 23 | 28 | Source structure/inventory; .NET CI pending | Domain expanded; EF/API pending |
 | 33 | SupplyChain | 21 | 26 | Source structure/inventory; .NET CI pending | Domain expanded; EF/API pending |
 | 34 | Tax | 26 | 31 | Source and inventory only; full .NET CI pending | Domain expanded; EF/API pending |
+| 35 | WarehouseManagement | 26 | 34 | Source and inventory only; full .NET CI pending | Domain expanded; EF/API pending |

@@ -21715,6 +21715,656 @@
           "rule": "text"
         }
       ]
+    },
+    {
+      "module": "WarehouseManagement",
+      "entity": "WarehouseZone",
+      "path": "src/Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Domain/Entities/WarehouseZone.cs",
+      "fields": [
+        {
+          "name": "WarehouseId",
+          "rule": "id"
+        },
+        {
+          "name": "ZoneCode",
+          "rule": "text"
+        },
+        {
+          "name": "ZoneType",
+          "rule": "text"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "WarehouseManagement",
+      "entity": "StorageCapacityProfile",
+      "path": "src/Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Domain/Entities/StorageCapacityProfile.cs",
+      "fields": [
+        {
+          "name": "BinLocationId",
+          "rule": "id"
+        },
+        {
+          "name": "MaximumWeight",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "MaximumVolume",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "IsHazardousAllowed",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "WarehouseManagement",
+      "entity": "BinStockBalance",
+      "path": "src/Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Domain/Entities/BinStockBalance.cs",
+      "fields": [
+        {
+          "name": "BinLocationId",
+          "rule": "id"
+        },
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "InventoryLotId",
+          "rule": "id"
+        },
+        {
+          "name": "OnHandQuantity",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "ReservedQuantity",
+          "rule": "nonnegative"
+        }
+      ]
+    },
+    {
+      "module": "WarehouseManagement",
+      "entity": "WarehouseReceivingAppointment",
+      "path": "src/Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Domain/Entities/WarehouseReceivingAppointment.cs",
+      "fields": [
+        {
+          "name": "WarehouseId",
+          "rule": "id"
+        },
+        {
+          "name": "SupplierId",
+          "rule": "id"
+        },
+        {
+          "name": "ScheduledAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Reference",
+          "rule": "text"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "WarehouseManagement",
+      "entity": "WarehouseReceivingLine",
+      "path": "src/Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Domain/Entities/WarehouseReceivingLine.cs",
+      "fields": [
+        {
+          "name": "ReceivingTaskId",
+          "rule": "id"
+        },
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "ExpectedQuantity",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "ReceivedQuantity",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "UnitCode",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "WarehouseManagement",
+      "entity": "GoodsHandlingUnit",
+      "path": "src/Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Domain/Entities/GoodsHandlingUnit.cs",
+      "fields": [
+        {
+          "name": "WarehouseId",
+          "rule": "id"
+        },
+        {
+          "name": "HandlingUnitCode",
+          "rule": "text"
+        },
+        {
+          "name": "HandlingUnitType",
+          "rule": "text"
+        },
+        {
+          "name": "GrossWeight",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "IsSealed",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "WarehouseManagement",
+      "entity": "PutawayAssignment",
+      "path": "src/Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Domain/Entities/PutawayAssignment.cs",
+      "fields": [
+        {
+          "name": "PutawayTaskId",
+          "rule": "id"
+        },
+        {
+          "name": "BinLocationId",
+          "rule": "id"
+        },
+        {
+          "name": "AssignedUserId",
+          "rule": "id"
+        },
+        {
+          "name": "AssignedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "WarehouseManagement",
+      "entity": "PutawayConfirmation",
+      "path": "src/Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Domain/Entities/PutawayConfirmation.cs",
+      "fields": [
+        {
+          "name": "PutawayTaskId",
+          "rule": "id"
+        },
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "ConfirmedQuantity",
+          "rule": "positive"
+        },
+        {
+          "name": "ConfirmedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "WarehouseManagement",
+      "entity": "PickWave",
+      "path": "src/Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Domain/Entities/PickWave.cs",
+      "fields": [
+        {
+          "name": "WarehouseId",
+          "rule": "id"
+        },
+        {
+          "name": "WaveReference",
+          "rule": "text"
+        },
+        {
+          "name": "ScheduledOn",
+          "rule": "date"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "WarehouseManagement",
+      "entity": "PickWaveLine",
+      "path": "src/Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Domain/Entities/PickWaveLine.cs",
+      "fields": [
+        {
+          "name": "PickWaveId",
+          "rule": "id"
+        },
+        {
+          "name": "PickingTaskId",
+          "rule": "id"
+        },
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "RequestedQuantity",
+          "rule": "positive"
+        }
+      ]
+    },
+    {
+      "module": "WarehouseManagement",
+      "entity": "PickAssignment",
+      "path": "src/Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Domain/Entities/PickAssignment.cs",
+      "fields": [
+        {
+          "name": "PickingTaskId",
+          "rule": "id"
+        },
+        {
+          "name": "PickerUserId",
+          "rule": "id"
+        },
+        {
+          "name": "AssignedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Priority",
+          "rule": "nonnegativeInt"
+        }
+      ]
+    },
+    {
+      "module": "WarehouseManagement",
+      "entity": "PickingConfirmation",
+      "path": "src/Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Domain/Entities/PickingConfirmation.cs",
+      "fields": [
+        {
+          "name": "PickingTaskId",
+          "rule": "id"
+        },
+        {
+          "name": "BinLocationId",
+          "rule": "id"
+        },
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "PickedQuantity",
+          "rule": "positive"
+        },
+        {
+          "name": "ConfirmedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "WarehouseManagement",
+      "entity": "PackingStation",
+      "path": "src/Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Domain/Entities/PackingStation.cs",
+      "fields": [
+        {
+          "name": "WarehouseId",
+          "rule": "id"
+        },
+        {
+          "name": "StationCode",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "WarehouseManagement",
+      "entity": "PackingJob",
+      "path": "src/Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Domain/Entities/PackingJob.cs",
+      "fields": [
+        {
+          "name": "PackingStationId",
+          "rule": "id"
+        },
+        {
+          "name": "ShipmentId",
+          "rule": "id"
+        },
+        {
+          "name": "PackedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "PackedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "WarehouseManagement",
+      "entity": "PackageLabel",
+      "path": "src/Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Domain/Entities/PackageLabel.cs",
+      "fields": [
+        {
+          "name": "ShipmentPackageId",
+          "rule": "id"
+        },
+        {
+          "name": "LabelCode",
+          "rule": "text"
+        },
+        {
+          "name": "CarrierCode",
+          "rule": "text"
+        },
+        {
+          "name": "GeneratedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "DocumentId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "WarehouseManagement",
+      "entity": "ShipmentManifest",
+      "path": "src/Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Domain/Entities/ShipmentManifest.cs",
+      "fields": [
+        {
+          "name": "ShipmentId",
+          "rule": "id"
+        },
+        {
+          "name": "ManifestNumber",
+          "rule": "text"
+        },
+        {
+          "name": "CarrierCode",
+          "rule": "text"
+        },
+        {
+          "name": "CreatedOn",
+          "rule": "date"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "WarehouseManagement",
+      "entity": "CarrierRateQuote",
+      "path": "src/Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Domain/Entities/CarrierRateQuote.cs",
+      "fields": [
+        {
+          "name": "ShipmentId",
+          "rule": "id"
+        },
+        {
+          "name": "CarrierCode",
+          "rule": "text"
+        },
+        {
+          "name": "ServiceCode",
+          "rule": "text"
+        },
+        {
+          "name": "QuotedAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "WarehouseManagement",
+      "entity": "WarehouseShippingDocument",
+      "path": "src/Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Domain/Entities/WarehouseShippingDocument.cs",
+      "fields": [
+        {
+          "name": "ShipmentId",
+          "rule": "id"
+        },
+        {
+          "name": "DocumentType",
+          "rule": "text"
+        },
+        {
+          "name": "DocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "IssuedOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "WarehouseManagement",
+      "entity": "WarehouseCycleCountVariance",
+      "path": "src/Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Domain/Entities/WarehouseCycleCountVariance.cs",
+      "fields": [
+        {
+          "name": "CycleCountLineId",
+          "rule": "id"
+        },
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "ExpectedQuantity",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "ActualQuantity",
+          "rule": "nonnegative"
+        }
+      ]
+    },
+    {
+      "module": "WarehouseManagement",
+      "entity": "WarehouseInventoryDiscrepancy",
+      "path": "src/Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Domain/Entities/WarehouseInventoryDiscrepancy.cs",
+      "fields": [
+        {
+          "name": "WarehouseId",
+          "rule": "id"
+        },
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "DiscrepancyQuantity",
+          "rule": "nonzero"
+        },
+        {
+          "name": "DiscoveredOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "WarehouseManagement",
+      "entity": "WarehouseRelocation",
+      "path": "src/Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Domain/Entities/WarehouseRelocation.cs",
+      "fields": [
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "FromBinId",
+          "rule": "id"
+        },
+        {
+          "name": "ToBinId",
+          "rule": "id"
+        },
+        {
+          "name": "Quantity",
+          "rule": "positive"
+        },
+        {
+          "name": "TransferredOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "WarehouseManagement",
+      "entity": "WarehouseLaborTask",
+      "path": "src/Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Domain/Entities/WarehouseLaborTask.cs",
+      "fields": [
+        {
+          "name": "WarehouseId",
+          "rule": "id"
+        },
+        {
+          "name": "AssignedUserId",
+          "rule": "id"
+        },
+        {
+          "name": "TaskType",
+          "rule": "text"
+        },
+        {
+          "name": "DueAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "WarehouseManagement",
+      "entity": "BarcodeScanEvent",
+      "path": "src/Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Domain/Entities/BarcodeScanEvent.cs",
+      "fields": [
+        {
+          "name": "WarehouseId",
+          "rule": "id"
+        },
+        {
+          "name": "ScannerCode",
+          "rule": "text"
+        },
+        {
+          "name": "Barcode",
+          "rule": "text"
+        },
+        {
+          "name": "ScannedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "ScanType",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "WarehouseManagement",
+      "entity": "WarehouseDock",
+      "path": "src/Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Domain/Entities/WarehouseDock.cs",
+      "fields": [
+        {
+          "name": "WarehouseId",
+          "rule": "id"
+        },
+        {
+          "name": "DockCode",
+          "rule": "text"
+        },
+        {
+          "name": "DockType",
+          "rule": "text"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "WarehouseManagement",
+      "entity": "WarehouseCrossDockAllocation",
+      "path": "src/Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Domain/Entities/WarehouseCrossDockAllocation.cs",
+      "fields": [
+        {
+          "name": "ReceivingTaskId",
+          "rule": "id"
+        },
+        {
+          "name": "ShippingTaskId",
+          "rule": "id"
+        },
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "AllocatedQuantity",
+          "rule": "positive"
+        }
+      ]
+    },
+    {
+      "module": "WarehouseManagement",
+      "entity": "WarehouseAutomationCommand",
+      "path": "src/Modules/WarehouseManagement/Fintrox.Modules.WarehouseManagement.Domain/Entities/WarehouseAutomationCommand.cs",
+      "fields": [
+        {
+          "name": "WarehouseId",
+          "rule": "id"
+        },
+        {
+          "name": "CommandType",
+          "rule": "text"
+        },
+        {
+          "name": "PayloadJson",
+          "rule": "json"
+        },
+        {
+          "name": "RequestedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
     }
   ]
 }

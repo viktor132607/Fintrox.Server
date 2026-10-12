@@ -57,3 +57,9 @@ See [architecture](../../../docs/architecture.md) and [master roadmap](../../../
 `BinLocation`, `ReceivingTask`, `PutawayTask`, `PickingTask`, `Shipment`, `ShipmentPackage`, `CycleCount`, `CycleCountLine`.
 
 Models live in this module Domain/Entities directory; foreign objects are referenced by IDs. These are domain types, not registered database tables or endpoints. Existing legacy workflows remain in core projects. See [module progress](../../../docs/ai/MODULE_STATUS.md) for inventory and remaining work.
+
+## Domain expansion — 2026-10-13
+
+Added 26 Domain entities (34 total): `WarehouseZone`, `StorageCapacityProfile`, `BinStockBalance`, `WarehouseReceivingAppointment`, `WarehouseReceivingLine`, `GoodsHandlingUnit`, `PutawayAssignment`, `PutawayConfirmation`, `PickWave`, `PickWaveLine`, `PickAssignment`, `PickingConfirmation`, `PackingStation`, `PackingJob`, `PackageLabel`, `ShipmentManifest`, `CarrierRateQuote`, `WarehouseShippingDocument`, `WarehouseCycleCountVariance`, `WarehouseInventoryDiscrepancy`, `WarehouseRelocation`, `WarehouseLaborTask`, `BarcodeScanEvent`, `WarehouseDock`, `WarehouseCrossDockAllocation`, `WarehouseAutomationCommand`.
+
+Model-only classes with typed constructor properties and invariant guards. Persistence, tenant authorization/reference checks, lifecycle use cases, endpoints, localization logic and UI are pending.
