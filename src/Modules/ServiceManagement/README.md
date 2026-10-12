@@ -55,3 +55,9 @@ See [architecture](../../../docs/architecture.md) and [master roadmap](../../../
 `SupportTicket`, `ServiceLevelAgreement`, `FieldServiceOrder`, `MaintenancePlan`.
 
 Models live in this module Domain/Entities directory; foreign objects are referenced by IDs. These are domain types, not registered database tables or endpoints. Existing legacy workflows remain in core projects. See [module progress](../../../docs/ai/MODULE_STATUS.md) for inventory and remaining work.
+
+## Domain expansion — 2026-10-13
+
+Added 21 immutable, constructor-validated entity classes (25 total): `SupportTicketMessage`, `SupportTicketAttachment`, `SupportTicketAssignment`, `SupportTicketCategory`, `SupportTicketStatusHistory`, `SupportTicketEscalation`, `SupportTicketResolution`, `ServiceLevelMetric`, `ServiceLevelMeasurement`, `ServiceLevelBreach`, `ServiceKnowledgeArticle`, `ServiceKnowledgeArticleVersion`, `FieldServiceTechnician`, `FieldServiceVisit`, `FieldServiceVisitPart`, `FieldServiceTravel`, `ServiceEquipmentAsset`, `ServiceWarrantyClaim`, `ServiceMaintenanceEvent`, `CustomerSatisfactionSurvey`, `ServiceContractLink`.
+
+No EF migrations, API endpoints, domain services or external legal/business rules are implemented in this model-only commit.

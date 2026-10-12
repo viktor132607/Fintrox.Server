@@ -19418,6 +19418,529 @@
           "rule": "text"
         }
       ]
+    },
+    {
+      "module": "ServiceManagement",
+      "entity": "SupportTicketMessage",
+      "path": "src/Modules/ServiceManagement/Fintrox.Modules.ServiceManagement.Domain/Entities/SupportTicketMessage.cs",
+      "fields": [
+        {
+          "name": "SupportTicketId",
+          "rule": "id"
+        },
+        {
+          "name": "SenderUserId",
+          "rule": "id"
+        },
+        {
+          "name": "Body",
+          "rule": "text"
+        },
+        {
+          "name": "SentAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "IsInternal",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "ServiceManagement",
+      "entity": "SupportTicketAttachment",
+      "path": "src/Modules/ServiceManagement/Fintrox.Modules.ServiceManagement.Domain/Entities/SupportTicketAttachment.cs",
+      "fields": [
+        {
+          "name": "SupportTicketId",
+          "rule": "id"
+        },
+        {
+          "name": "DocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "AttachedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "AttachedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "ServiceManagement",
+      "entity": "SupportTicketAssignment",
+      "path": "src/Modules/ServiceManagement/Fintrox.Modules.ServiceManagement.Domain/Entities/SupportTicketAssignment.cs",
+      "fields": [
+        {
+          "name": "SupportTicketId",
+          "rule": "id"
+        },
+        {
+          "name": "AssignedUserId",
+          "rule": "id"
+        },
+        {
+          "name": "AssignedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "AssignmentReason",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "ServiceManagement",
+      "entity": "SupportTicketCategory",
+      "path": "src/Modules/ServiceManagement/Fintrox.Modules.ServiceManagement.Domain/Entities/SupportTicketCategory.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "DefaultPriority",
+          "rule": "text"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "ServiceManagement",
+      "entity": "SupportTicketStatusHistory",
+      "path": "src/Modules/ServiceManagement/Fintrox.Modules.ServiceManagement.Domain/Entities/SupportTicketStatusHistory.cs",
+      "fields": [
+        {
+          "name": "SupportTicketId",
+          "rule": "id"
+        },
+        {
+          "name": "OldStatus",
+          "rule": "text"
+        },
+        {
+          "name": "NewStatus",
+          "rule": "text"
+        },
+        {
+          "name": "ChangedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "ChangedByUserId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "ServiceManagement",
+      "entity": "SupportTicketEscalation",
+      "path": "src/Modules/ServiceManagement/Fintrox.Modules.ServiceManagement.Domain/Entities/SupportTicketEscalation.cs",
+      "fields": [
+        {
+          "name": "SupportTicketId",
+          "rule": "id"
+        },
+        {
+          "name": "EscalatedToUserId",
+          "rule": "id"
+        },
+        {
+          "name": "EscalationReason",
+          "rule": "text"
+        },
+        {
+          "name": "EscalatedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "ServiceManagement",
+      "entity": "SupportTicketResolution",
+      "path": "src/Modules/ServiceManagement/Fintrox.Modules.ServiceManagement.Domain/Entities/SupportTicketResolution.cs",
+      "fields": [
+        {
+          "name": "SupportTicketId",
+          "rule": "id"
+        },
+        {
+          "name": "ResolutionCode",
+          "rule": "text"
+        },
+        {
+          "name": "Description",
+          "rule": "text"
+        },
+        {
+          "name": "ResolvedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "ResolvedByUserId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "ServiceManagement",
+      "entity": "ServiceLevelMetric",
+      "path": "src/Modules/ServiceManagement/Fintrox.Modules.ServiceManagement.Domain/Entities/ServiceLevelMetric.cs",
+      "fields": [
+        {
+          "name": "ServiceLevelAgreementId",
+          "rule": "id"
+        },
+        {
+          "name": "MetricCode",
+          "rule": "text"
+        },
+        {
+          "name": "TargetMinutes",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "MeasurementType",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "ServiceManagement",
+      "entity": "ServiceLevelMeasurement",
+      "path": "src/Modules/ServiceManagement/Fintrox.Modules.ServiceManagement.Domain/Entities/ServiceLevelMeasurement.cs",
+      "fields": [
+        {
+          "name": "SupportTicketId",
+          "rule": "id"
+        },
+        {
+          "name": "ServiceLevelMetricId",
+          "rule": "id"
+        },
+        {
+          "name": "MeasuredMinutes",
+          "rule": "nonnegativeInt"
+        },
+        {
+          "name": "MeasuredAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "IsBreached",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "ServiceManagement",
+      "entity": "ServiceLevelBreach",
+      "path": "src/Modules/ServiceManagement/Fintrox.Modules.ServiceManagement.Domain/Entities/ServiceLevelBreach.cs",
+      "fields": [
+        {
+          "name": "SupportTicketId",
+          "rule": "id"
+        },
+        {
+          "name": "ServiceLevelMetricId",
+          "rule": "id"
+        },
+        {
+          "name": "BreachedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "BreachMinutes",
+          "rule": "positiveInt"
+        }
+      ]
+    },
+    {
+      "module": "ServiceManagement",
+      "entity": "ServiceKnowledgeArticle",
+      "path": "src/Modules/ServiceManagement/Fintrox.Modules.ServiceManagement.Domain/Entities/ServiceKnowledgeArticle.cs",
+      "fields": [
+        {
+          "name": "ArticleCode",
+          "rule": "text"
+        },
+        {
+          "name": "Title",
+          "rule": "text"
+        },
+        {
+          "name": "Body",
+          "rule": "text"
+        },
+        {
+          "name": "IsPublished",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "ServiceManagement",
+      "entity": "ServiceKnowledgeArticleVersion",
+      "path": "src/Modules/ServiceManagement/Fintrox.Modules.ServiceManagement.Domain/Entities/ServiceKnowledgeArticleVersion.cs",
+      "fields": [
+        {
+          "name": "ArticleId",
+          "rule": "id"
+        },
+        {
+          "name": "VersionNumber",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "ChangedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "PublishedOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "ServiceManagement",
+      "entity": "FieldServiceTechnician",
+      "path": "src/Modules/ServiceManagement/Fintrox.Modules.ServiceManagement.Domain/Entities/FieldServiceTechnician.cs",
+      "fields": [
+        {
+          "name": "EmployeeId",
+          "rule": "id"
+        },
+        {
+          "name": "SkillCode",
+          "rule": "text"
+        },
+        {
+          "name": "ServiceRegion",
+          "rule": "text"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "ServiceManagement",
+      "entity": "FieldServiceVisit",
+      "path": "src/Modules/ServiceManagement/Fintrox.Modules.ServiceManagement.Domain/Entities/FieldServiceVisit.cs",
+      "fields": [
+        {
+          "name": "FieldServiceOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "TechnicianId",
+          "rule": "id"
+        },
+        {
+          "name": "StartsAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "EndsAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "VisitStatus",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "ServiceManagement",
+      "entity": "FieldServiceVisitPart",
+      "path": "src/Modules/ServiceManagement/Fintrox.Modules.ServiceManagement.Domain/Entities/FieldServiceVisitPart.cs",
+      "fields": [
+        {
+          "name": "FieldServiceVisitId",
+          "rule": "id"
+        },
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "QuantityUsed",
+          "rule": "positive"
+        },
+        {
+          "name": "UnitCost",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "ServiceManagement",
+      "entity": "FieldServiceTravel",
+      "path": "src/Modules/ServiceManagement/Fintrox.Modules.ServiceManagement.Domain/Entities/FieldServiceTravel.cs",
+      "fields": [
+        {
+          "name": "FieldServiceVisitId",
+          "rule": "id"
+        },
+        {
+          "name": "DistanceKm",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "TravelHours",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "ExpenseAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "ServiceManagement",
+      "entity": "ServiceEquipmentAsset",
+      "path": "src/Modules/ServiceManagement/Fintrox.Modules.ServiceManagement.Domain/Entities/ServiceEquipmentAsset.cs",
+      "fields": [
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "FixedAssetId",
+          "rule": "id"
+        },
+        {
+          "name": "SerialNumber",
+          "rule": "text"
+        },
+        {
+          "name": "InstalledOn",
+          "rule": "date"
+        },
+        {
+          "name": "IsUnderWarranty",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "ServiceManagement",
+      "entity": "ServiceWarrantyClaim",
+      "path": "src/Modules/ServiceManagement/Fintrox.Modules.ServiceManagement.Domain/Entities/ServiceWarrantyClaim.cs",
+      "fields": [
+        {
+          "name": "ServiceEquipmentAssetId",
+          "rule": "id"
+        },
+        {
+          "name": "SupportTicketId",
+          "rule": "id"
+        },
+        {
+          "name": "ClaimedOn",
+          "rule": "date"
+        },
+        {
+          "name": "ClaimStatus",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "ServiceManagement",
+      "entity": "ServiceMaintenanceEvent",
+      "path": "src/Modules/ServiceManagement/Fintrox.Modules.ServiceManagement.Domain/Entities/ServiceMaintenanceEvent.cs",
+      "fields": [
+        {
+          "name": "MaintenancePlanId",
+          "rule": "id"
+        },
+        {
+          "name": "ServiceEquipmentAssetId",
+          "rule": "id"
+        },
+        {
+          "name": "PerformedOn",
+          "rule": "date"
+        },
+        {
+          "name": "TechnicianId",
+          "rule": "id"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "ServiceManagement",
+      "entity": "CustomerSatisfactionSurvey",
+      "path": "src/Modules/ServiceManagement/Fintrox.Modules.ServiceManagement.Domain/Entities/CustomerSatisfactionSurvey.cs",
+      "fields": [
+        {
+          "name": "SupportTicketId",
+          "rule": "id"
+        },
+        {
+          "name": "CustomerId",
+          "rule": "id"
+        },
+        {
+          "name": "RatingPercent",
+          "rule": "percent"
+        },
+        {
+          "name": "SubmittedOn",
+          "rule": "date"
+        },
+        {
+          "name": "Comment",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "ServiceManagement",
+      "entity": "ServiceContractLink",
+      "path": "src/Modules/ServiceManagement/Fintrox.Modules.ServiceManagement.Domain/Entities/ServiceContractLink.cs",
+      "fields": [
+        {
+          "name": "ServiceLevelAgreementId",
+          "rule": "id"
+        },
+        {
+          "name": "ContractId",
+          "rule": "id"
+        },
+        {
+          "name": "EffectiveFrom",
+          "rule": "date"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
     }
   ]
 }
