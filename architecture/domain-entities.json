@@ -20514,6 +20514,525 @@
           "rule": "date"
         }
       ]
+    },
+    {
+      "module": "SupplyChain",
+      "entity": "DemandPlanVersion",
+      "path": "src/Modules/SupplyChain/Fintrox.Modules.SupplyChain.Domain/Entities/DemandPlanVersion.cs",
+      "fields": [
+        {
+          "name": "DemandForecastId",
+          "rule": "id"
+        },
+        {
+          "name": "VersionNumber",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "PreparedOn",
+          "rule": "date"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "SupplyChain",
+      "entity": "DemandPlanLine",
+      "path": "src/Modules/SupplyChain/Fintrox.Modules.SupplyChain.Domain/Entities/DemandPlanLine.cs",
+      "fields": [
+        {
+          "name": "DemandPlanVersionId",
+          "rule": "id"
+        },
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "WarehouseId",
+          "rule": "id"
+        },
+        {
+          "name": "ForecastOn",
+          "rule": "date"
+        },
+        {
+          "name": "ForecastQuantity",
+          "rule": "nonnegative"
+        }
+      ]
+    },
+    {
+      "module": "SupplyChain",
+      "entity": "DemandForecastFactor",
+      "path": "src/Modules/SupplyChain/Fintrox.Modules.SupplyChain.Domain/Entities/DemandForecastFactor.cs",
+      "fields": [
+        {
+          "name": "DemandForecastId",
+          "rule": "id"
+        },
+        {
+          "name": "FactorCode",
+          "rule": "text"
+        },
+        {
+          "name": "WeightPercent",
+          "rule": "percent"
+        },
+        {
+          "name": "Value",
+          "rule": "nonnegative"
+        }
+      ]
+    },
+    {
+      "module": "SupplyChain",
+      "entity": "SupplyPlanVersion",
+      "path": "src/Modules/SupplyChain/Fintrox.Modules.SupplyChain.Domain/Entities/SupplyPlanVersion.cs",
+      "fields": [
+        {
+          "name": "SupplyPlanId",
+          "rule": "id"
+        },
+        {
+          "name": "VersionNumber",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "PreparedOn",
+          "rule": "date"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "SupplyChain",
+      "entity": "SupplyPlanLine",
+      "path": "src/Modules/SupplyChain/Fintrox.Modules.SupplyChain.Domain/Entities/SupplyPlanLine.cs",
+      "fields": [
+        {
+          "name": "SupplyPlanVersionId",
+          "rule": "id"
+        },
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "WarehouseId",
+          "rule": "id"
+        },
+        {
+          "name": "NeededOn",
+          "rule": "date"
+        },
+        {
+          "name": "PlannedQuantity",
+          "rule": "nonnegative"
+        }
+      ]
+    },
+    {
+      "module": "SupplyChain",
+      "entity": "SupplyDemandPegging",
+      "path": "src/Modules/SupplyChain/Fintrox.Modules.SupplyChain.Domain/Entities/SupplyDemandPegging.cs",
+      "fields": [
+        {
+          "name": "DemandPlanLineId",
+          "rule": "id"
+        },
+        {
+          "name": "SupplyPlanLineId",
+          "rule": "id"
+        },
+        {
+          "name": "AllocatedQuantity",
+          "rule": "positive"
+        },
+        {
+          "name": "AllocationOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "SupplyChain",
+      "entity": "SupplierCapacityPlan",
+      "path": "src/Modules/SupplyChain/Fintrox.Modules.SupplyChain.Domain/Entities/SupplierCapacityPlan.cs",
+      "fields": [
+        {
+          "name": "SupplierId",
+          "rule": "id"
+        },
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "PeriodStartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "PeriodEndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "MaximumQuantity",
+          "rule": "nonnegative"
+        }
+      ]
+    },
+    {
+      "module": "SupplyChain",
+      "entity": "SupplierCapacityReservation",
+      "path": "src/Modules/SupplyChain/Fintrox.Modules.SupplyChain.Domain/Entities/SupplierCapacityReservation.cs",
+      "fields": [
+        {
+          "name": "SupplierCapacityPlanId",
+          "rule": "id"
+        },
+        {
+          "name": "PurchaseOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "ReservedQuantity",
+          "rule": "positive"
+        },
+        {
+          "name": "ReservedOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "SupplyChain",
+      "entity": "SupplierLeadTime",
+      "path": "src/Modules/SupplyChain/Fintrox.Modules.SupplyChain.Domain/Entities/SupplierLeadTime.cs",
+      "fields": [
+        {
+          "name": "SupplierId",
+          "rule": "id"
+        },
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "LeadTimeDays",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "EffectiveFrom",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "SupplyChain",
+      "entity": "SupplierCollaborationMessage",
+      "path": "src/Modules/SupplyChain/Fintrox.Modules.SupplyChain.Domain/Entities/SupplierCollaborationMessage.cs",
+      "fields": [
+        {
+          "name": "SupplierId",
+          "rule": "id"
+        },
+        {
+          "name": "RelatedDocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "Subject",
+          "rule": "text"
+        },
+        {
+          "name": "Body",
+          "rule": "text"
+        },
+        {
+          "name": "SentAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "SupplyChain",
+      "entity": "SupplierShipmentNotice",
+      "path": "src/Modules/SupplyChain/Fintrox.Modules.SupplyChain.Domain/Entities/SupplierShipmentNotice.cs",
+      "fields": [
+        {
+          "name": "SupplierId",
+          "rule": "id"
+        },
+        {
+          "name": "PurchaseOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "NoticeReference",
+          "rule": "text"
+        },
+        {
+          "name": "EstimatedArrivalOn",
+          "rule": "date"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "SupplyChain",
+      "entity": "SupplierShipmentNoticeLine",
+      "path": "src/Modules/SupplyChain/Fintrox.Modules.SupplyChain.Domain/Entities/SupplierShipmentNoticeLine.cs",
+      "fields": [
+        {
+          "name": "ShipmentNoticeId",
+          "rule": "id"
+        },
+        {
+          "name": "PurchaseOrderLineId",
+          "rule": "id"
+        },
+        {
+          "name": "ShippedQuantity",
+          "rule": "positive"
+        },
+        {
+          "name": "InventoryLotReference",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "SupplyChain",
+      "entity": "ProcurementRecommendation",
+      "path": "src/Modules/SupplyChain/Fintrox.Modules.SupplyChain.Domain/Entities/ProcurementRecommendation.cs",
+      "fields": [
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "SupplierId",
+          "rule": "id"
+        },
+        {
+          "name": "RecommendedQuantity",
+          "rule": "positive"
+        },
+        {
+          "name": "RequiredOn",
+          "rule": "date"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "SupplyChain",
+      "entity": "ReplenishmentExecution",
+      "path": "src/Modules/SupplyChain/Fintrox.Modules.SupplyChain.Domain/Entities/ReplenishmentExecution.cs",
+      "fields": [
+        {
+          "name": "ReplenishmentPolicyId",
+          "rule": "id"
+        },
+        {
+          "name": "ExecutedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "CreatedDocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "SupplyChain",
+      "entity": "ReplenishmentProposal",
+      "path": "src/Modules/SupplyChain/Fintrox.Modules.SupplyChain.Domain/Entities/ReplenishmentProposal.cs",
+      "fields": [
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "SourceWarehouseId",
+          "rule": "id"
+        },
+        {
+          "name": "TargetWarehouseId",
+          "rule": "id"
+        },
+        {
+          "name": "ProposedQuantity",
+          "rule": "positive"
+        },
+        {
+          "name": "NeededOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "SupplyChain",
+      "entity": "SafetyStockRecommendation",
+      "path": "src/Modules/SupplyChain/Fintrox.Modules.SupplyChain.Domain/Entities/SafetyStockRecommendation.cs",
+      "fields": [
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "WarehouseId",
+          "rule": "id"
+        },
+        {
+          "name": "RecommendedQuantity",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "CalculatedOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "SupplyChain",
+      "entity": "SupplyChainRisk",
+      "path": "src/Modules/SupplyChain/Fintrox.Modules.SupplyChain.Domain/Entities/SupplyChainRisk.cs",
+      "fields": [
+        {
+          "name": "RiskCode",
+          "rule": "text"
+        },
+        {
+          "name": "SupplierId",
+          "rule": "id"
+        },
+        {
+          "name": "Impact",
+          "rule": "text"
+        },
+        {
+          "name": "Likelihood",
+          "rule": "text"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "SupplyChain",
+      "entity": "SupplyChainDisruption",
+      "path": "src/Modules/SupplyChain/Fintrox.Modules.SupplyChain.Domain/Entities/SupplyChainDisruption.cs",
+      "fields": [
+        {
+          "name": "AffectedSupplierId",
+          "rule": "id"
+        },
+        {
+          "name": "DisruptionType",
+          "rule": "text"
+        },
+        {
+          "name": "StartedOn",
+          "rule": "date"
+        },
+        {
+          "name": "ExpectedResolvedOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "SupplyChain",
+      "entity": "SupplyChainTransportLeg",
+      "path": "src/Modules/SupplyChain/Fintrox.Modules.SupplyChain.Domain/Entities/SupplyChainTransportLeg.cs",
+      "fields": [
+        {
+          "name": "ShipmentId",
+          "rule": "id"
+        },
+        {
+          "name": "CarrierCode",
+          "rule": "text"
+        },
+        {
+          "name": "DepartureOn",
+          "rule": "date"
+        },
+        {
+          "name": "ArrivalOn",
+          "rule": "date"
+        },
+        {
+          "name": "TrackingReference",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "SupplyChain",
+      "entity": "SupplyChainShipmentMilestone",
+      "path": "src/Modules/SupplyChain/Fintrox.Modules.SupplyChain.Domain/Entities/SupplyChainShipmentMilestone.cs",
+      "fields": [
+        {
+          "name": "TransportLegId",
+          "rule": "id"
+        },
+        {
+          "name": "MilestoneCode",
+          "rule": "text"
+        },
+        {
+          "name": "ReachedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "LocationCode",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "SupplyChain",
+      "entity": "SupplyChainInventoryProjection",
+      "path": "src/Modules/SupplyChain/Fintrox.Modules.SupplyChain.Domain/Entities/SupplyChainInventoryProjection.cs",
+      "fields": [
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "WarehouseId",
+          "rule": "id"
+        },
+        {
+          "name": "ProjectionOn",
+          "rule": "date"
+        },
+        {
+          "name": "ProjectedAvailableQuantity",
+          "rule": "nonnegative"
+        }
+      ]
     }
   ]
 }

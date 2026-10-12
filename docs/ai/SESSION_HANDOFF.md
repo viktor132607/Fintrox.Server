@@ -1,7 +1,7 @@
 # Fintrox Session Handoff — 2026-10-11
 
 ## Current milestone
-ENTITIES-EXPANSION — SubscriptionBilling: 28 module models, 838 overall. Next SupplyChain.
+ENTITIES-EXPANSION — SupplyChain: 26 module models, 859 overall. Next Tax.
 
 
 ## Changes
@@ -15,4 +15,4 @@ Local affected-graph Release build and 604 tests passed; 5 PostgreSQL tests skip
 Entity foundation only. New types are not yet EF tables, services, DTOs, endpoints or frontend screens. Domain constructor validation is not tenant authorization or reference existence validation. No complete ERP module claimed.
 
 ## Next exact action
-Expand SupplyChain Domain records with immutable validated fields; update MODULE_STATUS.md, module README, machine inventory and ENTITY_EXPANSION_LOG.md in the same commit.
+Expand Tax Domain records with immutable validated fields; update MODULE_STATUS.md, module README, machine inventory and ENTITY_EXPANSION_LOG.md in the same commit.
