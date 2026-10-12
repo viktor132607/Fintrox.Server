@@ -55,3 +55,9 @@ See [architecture](../../../docs/architecture.md) and [master roadmap](../../../
 `InspectionPlan`, `InspectionCriterion`, `QualityInspection`, `InspectionResult`, `Nonconformity`, `CorrectiveAction`, `QualityHold`.
 
 Models live in this module Domain/Entities directory; foreign objects are referenced by IDs. These are domain types, not registered database tables or endpoints. Existing legacy workflows remain in core projects. See [module progress](../../../docs/ai/MODULE_STATUS.md) for inventory and remaining work.
+
+## Domain expansion — 2026-10-13
+
+Added 21 constructor-validated models (28 total): `QualityStandard`, `QualityStandardRequirement`, `InspectionSamplingPlan`, `InspectionBatch`, `InspectionSample`, `InspectionMeasurement`, `QualityRelease`, `QualityDeviation`, `QualityDefectCategory`, `QualityDefect`, `QualityContainmentAction`, `QualityRootCauseAnalysis`, `CorrectiveActionTask`, `PreventiveAction`, `QualityEffectivenessCheck`, `QualitySupplierClaim`, `QualityCustomerComplaint`, `QualityRecall`, `QualityTraceabilityRecord`, `QualityCertificate`, `QualityEquipmentCalibration`.
+
+Domain only. Real transactions, reporting execution, database schema, localization, integration, authorizations and APIs are not implemented by these classes.

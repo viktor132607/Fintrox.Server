@@ -16788,6 +16788,537 @@
           "rule": "currency"
         }
       ]
+    },
+    {
+      "module": "QualityManagement",
+      "entity": "QualityStandard",
+      "path": "src/Modules/QualityManagement/Fintrox.Modules.QualityManagement.Domain/Entities/QualityStandard.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "StandardVersion",
+          "rule": "text"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "QualityManagement",
+      "entity": "QualityStandardRequirement",
+      "path": "src/Modules/QualityManagement/Fintrox.Modules.QualityManagement.Domain/Entities/QualityStandardRequirement.cs",
+      "fields": [
+        {
+          "name": "StandardId",
+          "rule": "id"
+        },
+        {
+          "name": "RequirementCode",
+          "rule": "text"
+        },
+        {
+          "name": "Description",
+          "rule": "text"
+        },
+        {
+          "name": "IsMandatory",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "QualityManagement",
+      "entity": "InspectionSamplingPlan",
+      "path": "src/Modules/QualityManagement/Fintrox.Modules.QualityManagement.Domain/Entities/InspectionSamplingPlan.cs",
+      "fields": [
+        {
+          "name": "InspectionPlanId",
+          "rule": "id"
+        },
+        {
+          "name": "SamplingMethod",
+          "rule": "text"
+        },
+        {
+          "name": "SampleSize",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "AcceptableDefects",
+          "rule": "nonnegativeInt"
+        }
+      ]
+    },
+    {
+      "module": "QualityManagement",
+      "entity": "InspectionBatch",
+      "path": "src/Modules/QualityManagement/Fintrox.Modules.QualityManagement.Domain/Entities/InspectionBatch.cs",
+      "fields": [
+        {
+          "name": "InspectionPlanId",
+          "rule": "id"
+        },
+        {
+          "name": "InventoryLotId",
+          "rule": "id"
+        },
+        {
+          "name": "BatchReference",
+          "rule": "text"
+        },
+        {
+          "name": "InspectedOn",
+          "rule": "date"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "QualityManagement",
+      "entity": "InspectionSample",
+      "path": "src/Modules/QualityManagement/Fintrox.Modules.QualityManagement.Domain/Entities/InspectionSample.cs",
+      "fields": [
+        {
+          "name": "InspectionBatchId",
+          "rule": "id"
+        },
+        {
+          "name": "SampleNumber",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "SerialReference",
+          "rule": "text"
+        },
+        {
+          "name": "SampleStatus",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "QualityManagement",
+      "entity": "InspectionMeasurement",
+      "path": "src/Modules/QualityManagement/Fintrox.Modules.QualityManagement.Domain/Entities/InspectionMeasurement.cs",
+      "fields": [
+        {
+          "name": "InspectionSampleId",
+          "rule": "id"
+        },
+        {
+          "name": "CriterionId",
+          "rule": "id"
+        },
+        {
+          "name": "MeasuredValue",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "UnitCode",
+          "rule": "text"
+        },
+        {
+          "name": "IsWithinTolerance",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "QualityManagement",
+      "entity": "QualityRelease",
+      "path": "src/Modules/QualityManagement/Fintrox.Modules.QualityManagement.Domain/Entities/QualityRelease.cs",
+      "fields": [
+        {
+          "name": "InspectionBatchId",
+          "rule": "id"
+        },
+        {
+          "name": "ApprovedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "ReleasedOn",
+          "rule": "date"
+        },
+        {
+          "name": "ReleaseStatus",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "QualityManagement",
+      "entity": "QualityDeviation",
+      "path": "src/Modules/QualityManagement/Fintrox.Modules.QualityManagement.Domain/Entities/QualityDeviation.cs",
+      "fields": [
+        {
+          "name": "InspectionResultId",
+          "rule": "id"
+        },
+        {
+          "name": "DeviationCode",
+          "rule": "text"
+        },
+        {
+          "name": "ObservedValue",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "ExpectedValue",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Severity",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "QualityManagement",
+      "entity": "QualityDefectCategory",
+      "path": "src/Modules/QualityManagement/Fintrox.Modules.QualityManagement.Domain/Entities/QualityDefectCategory.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "Severity",
+          "rule": "text"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "QualityManagement",
+      "entity": "QualityDefect",
+      "path": "src/Modules/QualityManagement/Fintrox.Modules.QualityManagement.Domain/Entities/QualityDefect.cs",
+      "fields": [
+        {
+          "name": "InspectionResultId",
+          "rule": "id"
+        },
+        {
+          "name": "DefectCategoryId",
+          "rule": "id"
+        },
+        {
+          "name": "Description",
+          "rule": "text"
+        },
+        {
+          "name": "QuantityAffected",
+          "rule": "positive"
+        }
+      ]
+    },
+    {
+      "module": "QualityManagement",
+      "entity": "QualityContainmentAction",
+      "path": "src/Modules/QualityManagement/Fintrox.Modules.QualityManagement.Domain/Entities/QualityContainmentAction.cs",
+      "fields": [
+        {
+          "name": "NonconformityId",
+          "rule": "id"
+        },
+        {
+          "name": "ActionDescription",
+          "rule": "text"
+        },
+        {
+          "name": "OwnerUserId",
+          "rule": "id"
+        },
+        {
+          "name": "DueOn",
+          "rule": "date"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "QualityManagement",
+      "entity": "QualityRootCauseAnalysis",
+      "path": "src/Modules/QualityManagement/Fintrox.Modules.QualityManagement.Domain/Entities/QualityRootCauseAnalysis.cs",
+      "fields": [
+        {
+          "name": "NonconformityId",
+          "rule": "id"
+        },
+        {
+          "name": "AnalysisMethod",
+          "rule": "text"
+        },
+        {
+          "name": "RootCause",
+          "rule": "text"
+        },
+        {
+          "name": "AnalyzedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "AnalyzedOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "QualityManagement",
+      "entity": "CorrectiveActionTask",
+      "path": "src/Modules/QualityManagement/Fintrox.Modules.QualityManagement.Domain/Entities/CorrectiveActionTask.cs",
+      "fields": [
+        {
+          "name": "CorrectiveActionId",
+          "rule": "id"
+        },
+        {
+          "name": "AssignedUserId",
+          "rule": "id"
+        },
+        {
+          "name": "Description",
+          "rule": "text"
+        },
+        {
+          "name": "DueOn",
+          "rule": "date"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "QualityManagement",
+      "entity": "PreventiveAction",
+      "path": "src/Modules/QualityManagement/Fintrox.Modules.QualityManagement.Domain/Entities/PreventiveAction.cs",
+      "fields": [
+        {
+          "name": "SourceNonconformityId",
+          "rule": "id"
+        },
+        {
+          "name": "ActionDescription",
+          "rule": "text"
+        },
+        {
+          "name": "OwnerUserId",
+          "rule": "id"
+        },
+        {
+          "name": "DueOn",
+          "rule": "date"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "QualityManagement",
+      "entity": "QualityEffectivenessCheck",
+      "path": "src/Modules/QualityManagement/Fintrox.Modules.QualityManagement.Domain/Entities/QualityEffectivenessCheck.cs",
+      "fields": [
+        {
+          "name": "CorrectiveActionId",
+          "rule": "id"
+        },
+        {
+          "name": "CheckedOn",
+          "rule": "date"
+        },
+        {
+          "name": "CheckedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "Outcome",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "QualityManagement",
+      "entity": "QualitySupplierClaim",
+      "path": "src/Modules/QualityManagement/Fintrox.Modules.QualityManagement.Domain/Entities/QualitySupplierClaim.cs",
+      "fields": [
+        {
+          "name": "SupplierId",
+          "rule": "id"
+        },
+        {
+          "name": "GoodsReceiptId",
+          "rule": "id"
+        },
+        {
+          "name": "ClaimReference",
+          "rule": "text"
+        },
+        {
+          "name": "ClaimAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "QualityManagement",
+      "entity": "QualityCustomerComplaint",
+      "path": "src/Modules/QualityManagement/Fintrox.Modules.QualityManagement.Domain/Entities/QualityCustomerComplaint.cs",
+      "fields": [
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "SourceOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "ComplaintReference",
+          "rule": "text"
+        },
+        {
+          "name": "ReceivedOn",
+          "rule": "date"
+        },
+        {
+          "name": "Severity",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "QualityManagement",
+      "entity": "QualityRecall",
+      "path": "src/Modules/QualityManagement/Fintrox.Modules.QualityManagement.Domain/Entities/QualityRecall.cs",
+      "fields": [
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "RecallCode",
+          "rule": "text"
+        },
+        {
+          "name": "InitiatedOn",
+          "rule": "date"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "QualityManagement",
+      "entity": "QualityTraceabilityRecord",
+      "path": "src/Modules/QualityManagement/Fintrox.Modules.QualityManagement.Domain/Entities/QualityTraceabilityRecord.cs",
+      "fields": [
+        {
+          "name": "InventoryLotId",
+          "rule": "id"
+        },
+        {
+          "name": "SourceMovementId",
+          "rule": "id"
+        },
+        {
+          "name": "RelatedLotId",
+          "rule": "id"
+        },
+        {
+          "name": "RecordedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "QualityManagement",
+      "entity": "QualityCertificate",
+      "path": "src/Modules/QualityManagement/Fintrox.Modules.QualityManagement.Domain/Entities/QualityCertificate.cs",
+      "fields": [
+        {
+          "name": "InventoryLotId",
+          "rule": "id"
+        },
+        {
+          "name": "CertificateNumber",
+          "rule": "text"
+        },
+        {
+          "name": "DocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "IssuedOn",
+          "rule": "date"
+        },
+        {
+          "name": "ExpiresOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "QualityManagement",
+      "entity": "QualityEquipmentCalibration",
+      "path": "src/Modules/QualityManagement/Fintrox.Modules.QualityManagement.Domain/Entities/QualityEquipmentCalibration.cs",
+      "fields": [
+        {
+          "name": "EquipmentId",
+          "rule": "id"
+        },
+        {
+          "name": "CalibratedOn",
+          "rule": "date"
+        },
+        {
+          "name": "NextCalibrationOn",
+          "rule": "date"
+        },
+        {
+          "name": "CertificateDocumentId",
+          "rule": "id"
+        }
+      ]
     }
   ]
 }
