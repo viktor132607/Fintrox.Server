@@ -9270,6 +9270,486 @@
           "rule": "id"
         }
       ]
+    },
+    {
+      "module": "Documents",
+      "entity": "DocumentFolder",
+      "path": "src/Modules/Documents/Fintrox.Modules.Documents.Domain/Entities/DocumentFolder.cs",
+      "fields": [
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "ParentFolderId",
+          "rule": "id"
+        },
+        {
+          "name": "OwnerUserId",
+          "rule": "id"
+        },
+        {
+          "name": "Visibility",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Documents",
+      "entity": "DocumentFolderMembership",
+      "path": "src/Modules/Documents/Fintrox.Modules.Documents.Domain/Entities/DocumentFolderMembership.cs",
+      "fields": [
+        {
+          "name": "FolderId",
+          "rule": "id"
+        },
+        {
+          "name": "StoredDocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "LinkedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "LinkedByUserId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "Documents",
+      "entity": "DocumentMetadataField",
+      "path": "src/Modules/Documents/Fintrox.Modules.Documents.Domain/Entities/DocumentMetadataField.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "DisplayName",
+          "rule": "text"
+        },
+        {
+          "name": "FieldType",
+          "rule": "text"
+        },
+        {
+          "name": "IsSearchable",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Documents",
+      "entity": "DocumentMetadataValue",
+      "path": "src/Modules/Documents/Fintrox.Modules.Documents.Domain/Entities/DocumentMetadataValue.cs",
+      "fields": [
+        {
+          "name": "StoredDocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "MetadataFieldId",
+          "rule": "id"
+        },
+        {
+          "name": "Value",
+          "rule": "text"
+        },
+        {
+          "name": "UpdatedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Documents",
+      "entity": "DocumentContentBlob",
+      "path": "src/Modules/Documents/Fintrox.Modules.Documents.Domain/Entities/DocumentContentBlob.cs",
+      "fields": [
+        {
+          "name": "StoredDocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "StorageKey",
+          "rule": "text"
+        },
+        {
+          "name": "ContentType",
+          "rule": "text"
+        },
+        {
+          "name": "SizeBytes",
+          "rule": "nonnegativeLong"
+        },
+        {
+          "name": "Sha256",
+          "rule": "hash"
+        }
+      ]
+    },
+    {
+      "module": "Documents",
+      "entity": "DocumentUploadSession",
+      "path": "src/Modules/Documents/Fintrox.Modules.Documents.Domain/Entities/DocumentUploadSession.cs",
+      "fields": [
+        {
+          "name": "OwnerUserId",
+          "rule": "id"
+        },
+        {
+          "name": "Filename",
+          "rule": "text"
+        },
+        {
+          "name": "ExpectedSizeBytes",
+          "rule": "nonnegativeLong"
+        },
+        {
+          "name": "StartedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "ExpiresAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Documents",
+      "entity": "DocumentUploadPart",
+      "path": "src/Modules/Documents/Fintrox.Modules.Documents.Domain/Entities/DocumentUploadPart.cs",
+      "fields": [
+        {
+          "name": "UploadSessionId",
+          "rule": "id"
+        },
+        {
+          "name": "PartNumber",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "PartSizeBytes",
+          "rule": "nonnegativeLong"
+        },
+        {
+          "name": "Sha256",
+          "rule": "hash"
+        }
+      ]
+    },
+    {
+      "module": "Documents",
+      "entity": "DocumentScanJob",
+      "path": "src/Modules/Documents/Fintrox.Modules.Documents.Domain/Entities/DocumentScanJob.cs",
+      "fields": [
+        {
+          "name": "StoredDocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "ScannerName",
+          "rule": "text"
+        },
+        {
+          "name": "SubmittedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Documents",
+      "entity": "DocumentOcrResult",
+      "path": "src/Modules/Documents/Fintrox.Modules.Documents.Domain/Entities/DocumentOcrResult.cs",
+      "fields": [
+        {
+          "name": "StoredDocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "LanguageCode",
+          "rule": "text"
+        },
+        {
+          "name": "TextContent",
+          "rule": "text"
+        },
+        {
+          "name": "ConfidencePercent",
+          "rule": "percent"
+        },
+        {
+          "name": "ProcessedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Documents",
+      "entity": "DocumentIndexEntry",
+      "path": "src/Modules/Documents/Fintrox.Modules.Documents.Domain/Entities/DocumentIndexEntry.cs",
+      "fields": [
+        {
+          "name": "StoredDocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "IndexName",
+          "rule": "text"
+        },
+        {
+          "name": "IndexedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "IndexVersion",
+          "rule": "positiveInt"
+        }
+      ]
+    },
+    {
+      "module": "Documents",
+      "entity": "DocumentAccessGrant",
+      "path": "src/Modules/Documents/Fintrox.Modules.Documents.Domain/Entities/DocumentAccessGrant.cs",
+      "fields": [
+        {
+          "name": "StoredDocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "PrincipalId",
+          "rule": "id"
+        },
+        {
+          "name": "PermissionCode",
+          "rule": "text"
+        },
+        {
+          "name": "GrantedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Documents",
+      "entity": "DocumentAccessEvent",
+      "path": "src/Modules/Documents/Fintrox.Modules.Documents.Domain/Entities/DocumentAccessEvent.cs",
+      "fields": [
+        {
+          "name": "StoredDocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "ActorId",
+          "rule": "id"
+        },
+        {
+          "name": "AccessType",
+          "rule": "text"
+        },
+        {
+          "name": "AccessedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Documents",
+      "entity": "DocumentSignatureRequest",
+      "path": "src/Modules/Documents/Fintrox.Modules.Documents.Domain/Entities/DocumentSignatureRequest.cs",
+      "fields": [
+        {
+          "name": "StoredDocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "SignatoryId",
+          "rule": "id"
+        },
+        {
+          "name": "RequestedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "DueOn",
+          "rule": "date"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Documents",
+      "entity": "DocumentSignature",
+      "path": "src/Modules/Documents/Fintrox.Modules.Documents.Domain/Entities/DocumentSignature.cs",
+      "fields": [
+        {
+          "name": "SignatureRequestId",
+          "rule": "id"
+        },
+        {
+          "name": "SignedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "CertificateReference",
+          "rule": "text"
+        },
+        {
+          "name": "IsVerified",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Documents",
+      "entity": "DocumentRetentionSchedule",
+      "path": "src/Modules/Documents/Fintrox.Modules.Documents.Domain/Entities/DocumentRetentionSchedule.cs",
+      "fields": [
+        {
+          "name": "DocumentType",
+          "rule": "text"
+        },
+        {
+          "name": "RetentionDays",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "LegalBasis",
+          "rule": "text"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Documents",
+      "entity": "DocumentLegalHold",
+      "path": "src/Modules/Documents/Fintrox.Modules.Documents.Domain/Entities/DocumentLegalHold.cs",
+      "fields": [
+        {
+          "name": "StoredDocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "CaseReference",
+          "rule": "text"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        },
+        {
+          "name": "PlacedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Released",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Documents",
+      "entity": "DocumentImportBatch",
+      "path": "src/Modules/Documents/Fintrox.Modules.Documents.Domain/Entities/DocumentImportBatch.cs",
+      "fields": [
+        {
+          "name": "SourceSystem",
+          "rule": "text"
+        },
+        {
+          "name": "ImportedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "StartedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Documents",
+      "entity": "DocumentImportItem",
+      "path": "src/Modules/Documents/Fintrox.Modules.Documents.Domain/Entities/DocumentImportItem.cs",
+      "fields": [
+        {
+          "name": "ImportBatchId",
+          "rule": "id"
+        },
+        {
+          "name": "ExternalReference",
+          "rule": "text"
+        },
+        {
+          "name": "StoredDocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "ImportStatus",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Documents",
+      "entity": "DocumentExportJob",
+      "path": "src/Modules/Documents/Fintrox.Modules.Documents.Domain/Entities/DocumentExportJob.cs",
+      "fields": [
+        {
+          "name": "RequestedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "ExportFormat",
+          "rule": "text"
+        },
+        {
+          "name": "RequestedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Documents",
+      "entity": "DocumentTemplateVariable",
+      "path": "src/Modules/Documents/Fintrox.Modules.Documents.Domain/Entities/DocumentTemplateVariable.cs",
+      "fields": [
+        {
+          "name": "DocumentTemplateId",
+          "rule": "id"
+        },
+        {
+          "name": "VariableCode",
+          "rule": "text"
+        },
+        {
+          "name": "DataType",
+          "rule": "text"
+        },
+        {
+          "name": "IsRequired",
+          "rule": "bool"
+        }
+      ]
     }
   ]
 }

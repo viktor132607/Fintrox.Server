@@ -24,3 +24,9 @@ See [architecture](../../../docs/architecture.md) for the current legacy excepti
 `StoredDocument`, `DocumentVersion`, `DocumentLink`, `DocumentTemplate`.
 
 Models live in this module Domain/Entities directory; foreign objects are referenced by IDs. These are domain types, not registered database tables or endpoints. Existing legacy workflows remain in core projects. See [module progress](../../../docs/ai/MODULE_STATUS.md) for inventory and remaining work.
+
+## Domain expansion — 2026-10-13
+
+Added 20 entities (24 total): `DocumentFolder`, `DocumentFolderMembership`, `DocumentMetadataField`, `DocumentMetadataValue`, `DocumentContentBlob`, `DocumentUploadSession`, `DocumentUploadPart`, `DocumentScanJob`, `DocumentOcrResult`, `DocumentIndexEntry`, `DocumentAccessGrant`, `DocumentAccessEvent`, `DocumentSignatureRequest`, `DocumentSignature`, `DocumentRetentionSchedule`, `DocumentLegalHold`, `DocumentImportBatch`, `DocumentImportItem`, `DocumentExportJob`, `DocumentTemplateVariable`.
+
+New Domain types are immutable and validate constructor fields; application/EF/API integration, tenant authorization, reference checks, migrations and UI remain pending.
