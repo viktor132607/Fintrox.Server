@@ -1,0 +1,7 @@
+# Entity expansion — 2026-10-13
+
+Module-by-module Domain entity expansion, preserving existing 180 entities and the 32 legacy runtime types. Each module has its own atomic commit with inventory, code and documentation.
+
+| Sequence | Module | Added | Module total | Verification | State |
+|---:|---|---:|---:|---|---|
+| 1 | Accounting | 30 | 35 | Static source/inventory validation; .NET CI pending | Domain models added; persistence/API pending |

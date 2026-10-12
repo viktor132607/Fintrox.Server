@@ -3764,6 +3764,836 @@
           "rule": "date"
         }
       ]
+    },
+    {
+      "module": "Accounting",
+      "entity": "AccountSegment",
+      "path": "src/Modules/Accounting/Fintrox.Modules.Accounting.Domain/Entities/AccountSegment.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "Length",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "IsRequired",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Accounting",
+      "entity": "AccountSegmentValue",
+      "path": "src/Modules/Accounting/Fintrox.Modules.Accounting.Domain/Entities/AccountSegmentValue.cs",
+      "fields": [
+        {
+          "name": "SegmentId",
+          "rule": "id"
+        },
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Label",
+          "rule": "text"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Accounting",
+      "entity": "AccountHierarchyNode",
+      "path": "src/Modules/Accounting/Fintrox.Modules.Accounting.Domain/Entities/AccountHierarchyNode.cs",
+      "fields": [
+        {
+          "name": "AccountId",
+          "rule": "id"
+        },
+        {
+          "name": "ParentAccountId",
+          "rule": "id"
+        },
+        {
+          "name": "SortOrder",
+          "rule": "nonnegativeInt"
+        },
+        {
+          "name": "Level",
+          "rule": "positiveInt"
+        }
+      ]
+    },
+    {
+      "module": "Accounting",
+      "entity": "AccountBalanceSnapshot",
+      "path": "src/Modules/Accounting/Fintrox.Modules.Accounting.Domain/Entities/AccountBalanceSnapshot.cs",
+      "fields": [
+        {
+          "name": "AccountId",
+          "rule": "id"
+        },
+        {
+          "name": "AccountingBookId",
+          "rule": "id"
+        },
+        {
+          "name": "PeriodStartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "PeriodEndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "OpeningDebit",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "OpeningCredit",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "MovementDebit",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "MovementCredit",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Accounting",
+      "entity": "LedgerBookBalance",
+      "path": "src/Modules/Accounting/Fintrox.Modules.Accounting.Domain/Entities/LedgerBookBalance.cs",
+      "fields": [
+        {
+          "name": "AccountingBookId",
+          "rule": "id"
+        },
+        {
+          "name": "AccountId",
+          "rule": "id"
+        },
+        {
+          "name": "AsOfDate",
+          "rule": "date"
+        },
+        {
+          "name": "DebitTotal",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "CreditTotal",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Accounting",
+      "entity": "JournalBatch",
+      "path": "src/Modules/Accounting/Fintrox.Modules.Accounting.Domain/Entities/JournalBatch.cs",
+      "fields": [
+        {
+          "name": "BatchNumber",
+          "rule": "text"
+        },
+        {
+          "name": "AccountingBookId",
+          "rule": "id"
+        },
+        {
+          "name": "DocumentDate",
+          "rule": "date"
+        },
+        {
+          "name": "Description",
+          "rule": "text"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        },
+        {
+          "name": "CreatedByUserId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "Accounting",
+      "entity": "JournalBatchLine",
+      "path": "src/Modules/Accounting/Fintrox.Modules.Accounting.Domain/Entities/JournalBatchLine.cs",
+      "fields": [
+        {
+          "name": "JournalBatchId",
+          "rule": "id"
+        },
+        {
+          "name": "LineNumber",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "AccountId",
+          "rule": "id"
+        },
+        {
+          "name": "Debit",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Credit",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "Description",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Accounting",
+      "entity": "JournalApproval",
+      "path": "src/Modules/Accounting/Fintrox.Modules.Accounting.Domain/Entities/JournalApproval.cs",
+      "fields": [
+        {
+          "name": "JournalBatchId",
+          "rule": "id"
+        },
+        {
+          "name": "ApproverId",
+          "rule": "id"
+        },
+        {
+          "name": "Decision",
+          "rule": "text"
+        },
+        {
+          "name": "DecidedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Comment",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Accounting",
+      "entity": "PostingRuleVersion",
+      "path": "src/Modules/Accounting/Fintrox.Modules.Accounting.Domain/Entities/PostingRuleVersion.cs",
+      "fields": [
+        {
+          "name": "RuleCode",
+          "rule": "text"
+        },
+        {
+          "name": "VersionNumber",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "EffectiveFrom",
+          "rule": "date"
+        },
+        {
+          "name": "EffectiveTo",
+          "rule": "date"
+        },
+        {
+          "name": "IsEnabled",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Accounting",
+      "entity": "PostingRuleAllocation",
+      "path": "src/Modules/Accounting/Fintrox.Modules.Accounting.Domain/Entities/PostingRuleAllocation.cs",
+      "fields": [
+        {
+          "name": "PostingRuleVersionId",
+          "rule": "id"
+        },
+        {
+          "name": "AccountId",
+          "rule": "id"
+        },
+        {
+          "name": "Side",
+          "rule": "text"
+        },
+        {
+          "name": "Percent",
+          "rule": "percent"
+        },
+        {
+          "name": "SortOrder",
+          "rule": "nonnegativeInt"
+        }
+      ]
+    },
+    {
+      "module": "Accounting",
+      "entity": "FiscalYearConfiguration",
+      "path": "src/Modules/Accounting/Fintrox.Modules.Accounting.Domain/Entities/FiscalYearConfiguration.cs",
+      "fields": [
+        {
+          "name": "FiscalYearId",
+          "rule": "id"
+        },
+        {
+          "name": "StartMonth",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "CalendarType",
+          "rule": "text"
+        },
+        {
+          "name": "IsAdjustmentPeriodAllowed",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Accounting",
+      "entity": "FiscalPeriodSchedule",
+      "path": "src/Modules/Accounting/Fintrox.Modules.Accounting.Domain/Entities/FiscalPeriodSchedule.cs",
+      "fields": [
+        {
+          "name": "FiscalYearId",
+          "rule": "id"
+        },
+        {
+          "name": "PeriodNumber",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "IsAdjustment",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Accounting",
+      "entity": "PeriodCloseChecklist",
+      "path": "src/Modules/Accounting/Fintrox.Modules.Accounting.Domain/Entities/PeriodCloseChecklist.cs",
+      "fields": [
+        {
+          "name": "FiscalYearId",
+          "rule": "id"
+        },
+        {
+          "name": "PeriodNumber",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "RequiredTaskCount",
+          "rule": "nonnegativeInt"
+        }
+      ]
+    },
+    {
+      "module": "Accounting",
+      "entity": "PeriodCloseTask",
+      "path": "src/Modules/Accounting/Fintrox.Modules.Accounting.Domain/Entities/PeriodCloseTask.cs",
+      "fields": [
+        {
+          "name": "ChecklistId",
+          "rule": "id"
+        },
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Description",
+          "rule": "text"
+        },
+        {
+          "name": "AssignedRole",
+          "rule": "text"
+        },
+        {
+          "name": "IsMandatory",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Accounting",
+      "entity": "PeriodCloseRun",
+      "path": "src/Modules/Accounting/Fintrox.Modules.Accounting.Domain/Entities/PeriodCloseRun.cs",
+      "fields": [
+        {
+          "name": "FiscalPeriodId",
+          "rule": "id"
+        },
+        {
+          "name": "StartedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "StartedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Accounting",
+      "entity": "ClosingEntry",
+      "path": "src/Modules/Accounting/Fintrox.Modules.Accounting.Domain/Entities/ClosingEntry.cs",
+      "fields": [
+        {
+          "name": "PeriodCloseRunId",
+          "rule": "id"
+        },
+        {
+          "name": "JournalEntryId",
+          "rule": "id"
+        },
+        {
+          "name": "AccountId",
+          "rule": "id"
+        },
+        {
+          "name": "Amount",
+          "rule": "nonzero"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Accounting",
+      "entity": "OpeningBalanceImport",
+      "path": "src/Modules/Accounting/Fintrox.Modules.Accounting.Domain/Entities/OpeningBalanceImport.cs",
+      "fields": [
+        {
+          "name": "FiscalYearId",
+          "rule": "id"
+        },
+        {
+          "name": "AccountingBookId",
+          "rule": "id"
+        },
+        {
+          "name": "SourceDocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "ImportedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "ImportedByUserId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "Accounting",
+      "entity": "OpeningBalanceLine",
+      "path": "src/Modules/Accounting/Fintrox.Modules.Accounting.Domain/Entities/OpeningBalanceLine.cs",
+      "fields": [
+        {
+          "name": "ImportId",
+          "rule": "id"
+        },
+        {
+          "name": "AccountId",
+          "rule": "id"
+        },
+        {
+          "name": "Debit",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Credit",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "LineNumber",
+          "rule": "positiveInt"
+        }
+      ]
+    },
+    {
+      "module": "Accounting",
+      "entity": "AccrualSchedule",
+      "path": "src/Modules/Accounting/Fintrox.Modules.Accounting.Domain/Entities/AccrualSchedule.cs",
+      "fields": [
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "AccountId",
+          "rule": "id"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "Amount",
+          "rule": "nonzero"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Accounting",
+      "entity": "AccrualScheduleLine",
+      "path": "src/Modules/Accounting/Fintrox.Modules.Accounting.Domain/Entities/AccrualScheduleLine.cs",
+      "fields": [
+        {
+          "name": "ScheduleId",
+          "rule": "id"
+        },
+        {
+          "name": "PeriodDate",
+          "rule": "date"
+        },
+        {
+          "name": "JournalEntryId",
+          "rule": "id"
+        },
+        {
+          "name": "Amount",
+          "rule": "nonzero"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Accounting",
+      "entity": "DeferralSchedule",
+      "path": "src/Modules/Accounting/Fintrox.Modules.Accounting.Domain/Entities/DeferralSchedule.cs",
+      "fields": [
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "SourceJournalId",
+          "rule": "id"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "Amount",
+          "rule": "positive"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Accounting",
+      "entity": "DeferralScheduleLine",
+      "path": "src/Modules/Accounting/Fintrox.Modules.Accounting.Domain/Entities/DeferralScheduleLine.cs",
+      "fields": [
+        {
+          "name": "ScheduleId",
+          "rule": "id"
+        },
+        {
+          "name": "RecognitionOn",
+          "rule": "date"
+        },
+        {
+          "name": "Amount",
+          "rule": "positive"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "PostedJournalId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "Accounting",
+      "entity": "CostAllocationRule",
+      "path": "src/Modules/Accounting/Fintrox.Modules.Accounting.Domain/Entities/CostAllocationRule.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "SourceAccountId",
+          "rule": "id"
+        },
+        {
+          "name": "EffectiveFrom",
+          "rule": "date"
+        },
+        {
+          "name": "AllocationBasis",
+          "rule": "text"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Accounting",
+      "entity": "CostAllocationTarget",
+      "path": "src/Modules/Accounting/Fintrox.Modules.Accounting.Domain/Entities/CostAllocationTarget.cs",
+      "fields": [
+        {
+          "name": "AllocationRuleId",
+          "rule": "id"
+        },
+        {
+          "name": "TargetDimensionId",
+          "rule": "id"
+        },
+        {
+          "name": "TargetDimensionValueId",
+          "rule": "id"
+        },
+        {
+          "name": "SharePercent",
+          "rule": "percent"
+        }
+      ]
+    },
+    {
+      "module": "Accounting",
+      "entity": "AccountingReconciliation",
+      "path": "src/Modules/Accounting/Fintrox.Modules.Accounting.Domain/Entities/AccountingReconciliation.cs",
+      "fields": [
+        {
+          "name": "AccountingBookId",
+          "rule": "id"
+        },
+        {
+          "name": "AccountId",
+          "rule": "id"
+        },
+        {
+          "name": "StatementDate",
+          "rule": "date"
+        },
+        {
+          "name": "ExpectedBalance",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "ActualBalance",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Accounting",
+      "entity": "AccountingReconciliationLine",
+      "path": "src/Modules/Accounting/Fintrox.Modules.Accounting.Domain/Entities/AccountingReconciliationLine.cs",
+      "fields": [
+        {
+          "name": "ReconciliationId",
+          "rule": "id"
+        },
+        {
+          "name": "ReferenceId",
+          "rule": "id"
+        },
+        {
+          "name": "ReferenceType",
+          "rule": "text"
+        },
+        {
+          "name": "Amount",
+          "rule": "nonzero"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Accounting",
+      "entity": "RecurringJournalOccurrence",
+      "path": "src/Modules/Accounting/Fintrox.Modules.Accounting.Domain/Entities/RecurringJournalOccurrence.cs",
+      "fields": [
+        {
+          "name": "RecurringJournalId",
+          "rule": "id"
+        },
+        {
+          "name": "DueOn",
+          "rule": "date"
+        },
+        {
+          "name": "GeneratedJournalId",
+          "rule": "id"
+        },
+        {
+          "name": "ProcessedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Accounting",
+      "entity": "DocumentNumberSequence",
+      "path": "src/Modules/Accounting/Fintrox.Modules.Accounting.Domain/Entities/DocumentNumberSequence.cs",
+      "fields": [
+        {
+          "name": "DocumentType",
+          "rule": "text"
+        },
+        {
+          "name": "Prefix",
+          "rule": "text"
+        },
+        {
+          "name": "NextNumber",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "FiscalYearId",
+          "rule": "id"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Accounting",
+      "entity": "AccountingPolicyVersion",
+      "path": "src/Modules/Accounting/Fintrox.Modules.Accounting.Domain/Entities/AccountingPolicyVersion.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Version",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "EffectiveFrom",
+          "rule": "date"
+        },
+        {
+          "name": "PolicyJson",
+          "rule": "json"
+        },
+        {
+          "name": "ApprovedByUserId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "Accounting",
+      "entity": "LedgerAdjustmentRequest",
+      "path": "src/Modules/Accounting/Fintrox.Modules.Accounting.Domain/Entities/LedgerAdjustmentRequest.cs",
+      "fields": [
+        {
+          "name": "AccountingBookId",
+          "rule": "id"
+        },
+        {
+          "name": "SourceJournalId",
+          "rule": "id"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        },
+        {
+          "name": "RequestedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "RequestedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
     }
   ]
 }

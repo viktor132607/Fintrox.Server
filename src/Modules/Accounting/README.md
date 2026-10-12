@@ -24,3 +24,9 @@ See [architecture](../../../docs/architecture.md) for the current legacy excepti
 `AccountGroup`, `AccountingDimension`, `AccountingDimensionValue`, `AccountingBook`, `RecurringJournal`.
 
 Models live in this module Domain/Entities directory; foreign objects are referenced by IDs. These are domain types, not registered database tables or endpoints. Existing legacy workflows remain in core projects. See [module progress](../../../docs/ai/MODULE_STATUS.md) for inventory and remaining work.
+
+## Domain expansion — 2026-10-13
+
+Added 30 explicit, immutable, constructor-validated entity types (35 module types total): `AccountSegment`, `AccountSegmentValue`, `AccountHierarchyNode`, `AccountBalanceSnapshot`, `LedgerBookBalance`, `JournalBatch`, `JournalBatchLine`, `JournalApproval`, `PostingRuleVersion`, `PostingRuleAllocation`, `FiscalYearConfiguration`, `FiscalPeriodSchedule`, `PeriodCloseChecklist`, `PeriodCloseTask`, `PeriodCloseRun`, `ClosingEntry`, `OpeningBalanceImport`, `OpeningBalanceLine`, `AccrualSchedule`, `AccrualScheduleLine`, `DeferralSchedule`, `DeferralScheduleLine`, `CostAllocationRule`, `CostAllocationTarget`, `AccountingReconciliation`, `AccountingReconciliationLine`, `RecurringJournalOccurrence`, `DocumentNumberSequence`, `AccountingPolicyVersion`, `LedgerAdjustmentRequest`.
+
+These are model definitions only. Existing core ledger and posting engine remain authoritative; no EF configuration, API, migrations, security rules or financial accounting logic has been added. See [module progress](../../../docs/ai/MODULE_STATUS.md).

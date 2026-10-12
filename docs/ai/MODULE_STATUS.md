@@ -1,6 +1,6 @@
-# Module status — 2026-10-11
+# Module status — 2026-10-13
 
-ENTITIES-001: 180 new entity classes across all 36 module Domain projects. Domain foundation implemented; validation results in VALIDATION.md. Existing 32 legacy entity/persistence classes remain in place, without duplication or migration of their runtime behavior.
+ENTITIES-001: 180 original domain entities. ENTITIES-EXPANSION underway: 210 inventoried new Domain classes across 36 modules. CI verification of expansion pending.
 
 The new types have immutable IDs/organization ownership, constructor validation and typed business fields. They are not yet mapped in EF or exposed through APIs. No complete ERP workflow, database tenant isolation, authorization or cross-reference existence checks are claimed by these model classes.
 
@@ -8,7 +8,7 @@ Every module keeps five projects. Domain=PARTIAL; Application/Contracts/Infrastr
 
 | Module | New entity classes | Count | Domain | Persistence / API |
 |---|---|---:|---|---|
-| Accounting | `AccountGroup`, `AccountingDimension`, `AccountingDimensionValue`, `AccountingBook`, `RecurringJournal` | 5 | PARTIAL | PENDING |
+| Accounting | `AccountGroup`, `AccountingDimension`, `AccountingDimensionValue`, `AccountingBook`, `RecurringJournal`, `AccountSegment`, `AccountSegmentValue`, `AccountHierarchyNode`, `AccountBalanceSnapshot`, `LedgerBookBalance`, `JournalBatch`, `JournalBatchLine`, `JournalApproval`, `PostingRuleVersion`, `PostingRuleAllocation`, `FiscalYearConfiguration`, `FiscalPeriodSchedule`, `PeriodCloseChecklist`, `PeriodCloseTask`, `PeriodCloseRun`, `ClosingEntry`, `OpeningBalanceImport`, `OpeningBalanceLine`, `AccrualSchedule`, `AccrualScheduleLine`, `DeferralSchedule`, `DeferralScheduleLine`, `CostAllocationRule`, `CostAllocationTarget`, `AccountingReconciliation`, `AccountingReconciliationLine`, `RecurringJournalOccurrence`, `DocumentNumberSequence`, `AccountingPolicyVersion`, `LedgerAdjustmentRequest` | 35 | PARTIAL (expanded 2026-10-13) | PENDING |
 | Audit | `AuditRetentionPolicy`, `AuditExportRequest` | 2 | PARTIAL | PENDING |
 | Banking | `BankAccount`, `BankStatement`, `BankStatementLine`, `BankReconciliationMatch` | 4 | PARTIAL | PENDING |
 | Budgeting | `Budget`, `BudgetVersion`, `BudgetLine`, `Forecast` | 4 | PARTIAL | PENDING |
