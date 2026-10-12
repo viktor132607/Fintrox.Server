@@ -24,3 +24,9 @@ See [architecture](../../../docs/architecture.md) for the current legacy excepti
 `Branch`, `Department`, `BusinessUnit`, `CompanyAccountingPolicy`, `TaxRegistration`.
 
 Models live in this module Domain/Entities directory; foreign objects are referenced by IDs. These are domain types, not registered database tables or endpoints. Existing legacy workflows remain in core projects. See [module progress](../../../docs/ai/MODULE_STATUS.md) for inventory and remaining work.
+
+## Domain expansion — 2026-10-13
+
+Added 18 validated Domain entities (23 total): `OrganizationLegalEntity`, `OrganizationAddress`, `OrganizationContact`, `OrganizationHierarchy`, `OrganizationMemberProfile`, `OrganizationMemberRole`, `OrganizationMembershipInvitation`, `OrganizationSettingVersion`, `OrganizationBranding`, `OrganizationFiscalPreference`, `OrganizationLocale`, `OrganizationOperatingLocation`, `OrganizationCostCenterAssignment`, `OrganizationSubscription`, `OrganizationModuleEntitlement`, `OrganizationLifecycleEvent`, `OrganizationComplianceRegistration`, `OrganizationBankAccountLink`.
+
+Records are pure C# types and do not register EF mappings, queries, use cases or HTTP endpoints. References are identifiers without cross-module navigation.

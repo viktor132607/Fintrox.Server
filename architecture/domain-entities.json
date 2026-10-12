@@ -14136,6 +14136,432 @@
           "rule": "text"
         }
       ]
+    },
+    {
+      "module": "Organizations",
+      "entity": "OrganizationLegalEntity",
+      "path": "src/Modules/Organizations/Fintrox.Modules.Organizations.Domain/Entities/OrganizationLegalEntity.cs",
+      "fields": [
+        {
+          "name": "CompanyCode",
+          "rule": "text"
+        },
+        {
+          "name": "RegisteredName",
+          "rule": "text"
+        },
+        {
+          "name": "RegistrationNumber",
+          "rule": "text"
+        },
+        {
+          "name": "CountryCode",
+          "rule": "country"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Organizations",
+      "entity": "OrganizationAddress",
+      "path": "src/Modules/Organizations/Fintrox.Modules.Organizations.Domain/Entities/OrganizationAddress.cs",
+      "fields": [
+        {
+          "name": "LegalEntityId",
+          "rule": "id"
+        },
+        {
+          "name": "AddressType",
+          "rule": "text"
+        },
+        {
+          "name": "Street",
+          "rule": "text"
+        },
+        {
+          "name": "City",
+          "rule": "text"
+        },
+        {
+          "name": "PostalCode",
+          "rule": "text"
+        },
+        {
+          "name": "CountryCode",
+          "rule": "country"
+        }
+      ]
+    },
+    {
+      "module": "Organizations",
+      "entity": "OrganizationContact",
+      "path": "src/Modules/Organizations/Fintrox.Modules.Organizations.Domain/Entities/OrganizationContact.cs",
+      "fields": [
+        {
+          "name": "LegalEntityId",
+          "rule": "id"
+        },
+        {
+          "name": "ContactType",
+          "rule": "text"
+        },
+        {
+          "name": "ContactValue",
+          "rule": "text"
+        },
+        {
+          "name": "IsPrimary",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Organizations",
+      "entity": "OrganizationHierarchy",
+      "path": "src/Modules/Organizations/Fintrox.Modules.Organizations.Domain/Entities/OrganizationHierarchy.cs",
+      "fields": [
+        {
+          "name": "ParentUnitId",
+          "rule": "id"
+        },
+        {
+          "name": "ChildUnitId",
+          "rule": "id"
+        },
+        {
+          "name": "RelationshipType",
+          "rule": "text"
+        },
+        {
+          "name": "EffectiveFrom",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Organizations",
+      "entity": "OrganizationMemberProfile",
+      "path": "src/Modules/Organizations/Fintrox.Modules.Organizations.Domain/Entities/OrganizationMemberProfile.cs",
+      "fields": [
+        {
+          "name": "UserId",
+          "rule": "id"
+        },
+        {
+          "name": "EmployeeId",
+          "rule": "id"
+        },
+        {
+          "name": "DisplayName",
+          "rule": "text"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Organizations",
+      "entity": "OrganizationMemberRole",
+      "path": "src/Modules/Organizations/Fintrox.Modules.Organizations.Domain/Entities/OrganizationMemberRole.cs",
+      "fields": [
+        {
+          "name": "MemberUserId",
+          "rule": "id"
+        },
+        {
+          "name": "RoleCode",
+          "rule": "text"
+        },
+        {
+          "name": "ValidFrom",
+          "rule": "date"
+        },
+        {
+          "name": "IsOwner",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Organizations",
+      "entity": "OrganizationMembershipInvitation",
+      "path": "src/Modules/Organizations/Fintrox.Modules.Organizations.Domain/Entities/OrganizationMembershipInvitation.cs",
+      "fields": [
+        {
+          "name": "InvitedEmail",
+          "rule": "text"
+        },
+        {
+          "name": "InvitedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "ExpiresAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Organizations",
+      "entity": "OrganizationSettingVersion",
+      "path": "src/Modules/Organizations/Fintrox.Modules.Organizations.Domain/Entities/OrganizationSettingVersion.cs",
+      "fields": [
+        {
+          "name": "SettingCode",
+          "rule": "text"
+        },
+        {
+          "name": "VersionNumber",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "ValueJson",
+          "rule": "json"
+        },
+        {
+          "name": "EffectiveFrom",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Organizations",
+      "entity": "OrganizationBranding",
+      "path": "src/Modules/Organizations/Fintrox.Modules.Organizations.Domain/Entities/OrganizationBranding.cs",
+      "fields": [
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "LogoDocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "PrimaryColor",
+          "rule": "text"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Organizations",
+      "entity": "OrganizationFiscalPreference",
+      "path": "src/Modules/Organizations/Fintrox.Modules.Organizations.Domain/Entities/OrganizationFiscalPreference.cs",
+      "fields": [
+        {
+          "name": "FiscalYearStartMonth",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "BaseCurrency",
+          "rule": "currency"
+        },
+        {
+          "name": "AccountingPolicyCode",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Organizations",
+      "entity": "OrganizationLocale",
+      "path": "src/Modules/Organizations/Fintrox.Modules.Organizations.Domain/Entities/OrganizationLocale.cs",
+      "fields": [
+        {
+          "name": "LanguageCode",
+          "rule": "text"
+        },
+        {
+          "name": "TimeZoneId",
+          "rule": "text"
+        },
+        {
+          "name": "CountryCode",
+          "rule": "country"
+        },
+        {
+          "name": "DateFormat",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Organizations",
+      "entity": "OrganizationOperatingLocation",
+      "path": "src/Modules/Organizations/Fintrox.Modules.Organizations.Domain/Entities/OrganizationOperatingLocation.cs",
+      "fields": [
+        {
+          "name": "LocationCode",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "Street",
+          "rule": "text"
+        },
+        {
+          "name": "City",
+          "rule": "text"
+        },
+        {
+          "name": "CountryCode",
+          "rule": "country"
+        }
+      ]
+    },
+    {
+      "module": "Organizations",
+      "entity": "OrganizationCostCenterAssignment",
+      "path": "src/Modules/Organizations/Fintrox.Modules.Organizations.Domain/Entities/OrganizationCostCenterAssignment.cs",
+      "fields": [
+        {
+          "name": "BusinessUnitId",
+          "rule": "id"
+        },
+        {
+          "name": "CostCenterId",
+          "rule": "id"
+        },
+        {
+          "name": "EffectiveFrom",
+          "rule": "date"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Organizations",
+      "entity": "OrganizationSubscription",
+      "path": "src/Modules/Organizations/Fintrox.Modules.Organizations.Domain/Entities/OrganizationSubscription.cs",
+      "fields": [
+        {
+          "name": "SubscriptionPlanCode",
+          "rule": "text"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "SeatLimit",
+          "rule": "nonnegativeInt"
+        }
+      ]
+    },
+    {
+      "module": "Organizations",
+      "entity": "OrganizationModuleEntitlement",
+      "path": "src/Modules/Organizations/Fintrox.Modules.Organizations.Domain/Entities/OrganizationModuleEntitlement.cs",
+      "fields": [
+        {
+          "name": "ModuleCode",
+          "rule": "text"
+        },
+        {
+          "name": "GrantedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "GrantedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Organizations",
+      "entity": "OrganizationLifecycleEvent",
+      "path": "src/Modules/Organizations/Fintrox.Modules.Organizations.Domain/Entities/OrganizationLifecycleEvent.cs",
+      "fields": [
+        {
+          "name": "EventCode",
+          "rule": "text"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        },
+        {
+          "name": "ActorUserId",
+          "rule": "id"
+        },
+        {
+          "name": "OccurredAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Organizations",
+      "entity": "OrganizationComplianceRegistration",
+      "path": "src/Modules/Organizations/Fintrox.Modules.Organizations.Domain/Entities/OrganizationComplianceRegistration.cs",
+      "fields": [
+        {
+          "name": "RegistrationType",
+          "rule": "text"
+        },
+        {
+          "name": "RegistrationNumber",
+          "rule": "text"
+        },
+        {
+          "name": "CountryCode",
+          "rule": "country"
+        },
+        {
+          "name": "EffectiveFrom",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Organizations",
+      "entity": "OrganizationBankAccountLink",
+      "path": "src/Modules/Organizations/Fintrox.Modules.Organizations.Domain/Entities/OrganizationBankAccountLink.cs",
+      "fields": [
+        {
+          "name": "BankAccountId",
+          "rule": "id"
+        },
+        {
+          "name": "LegalEntityId",
+          "rule": "id"
+        },
+        {
+          "name": "IsDefault",
+          "rule": "bool"
+        },
+        {
+          "name": "LinkedOn",
+          "rule": "date"
+        }
+      ]
     }
   ]
 }

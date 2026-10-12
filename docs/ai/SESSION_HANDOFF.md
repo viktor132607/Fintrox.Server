@@ -1,7 +1,7 @@
 # Fintrox Session Handoff — 2026-10-11
 
 ## Current milestone
-ENTITIES-EXPANSION: OrderManagement expanded (25 classes); overall 584. Next Organizations.
+ENTITIES-EXPANSION: Organizations expanded (23 classes); overall 602. Next Payments.
 
 
 ## Changes
@@ -15,4 +15,4 @@ Local affected-graph Release build and 604 tests passed; 5 PostgreSQL tests skip
 Entity foundation only. New types are not yet EF tables, services, DTOs, endpoints or frontend screens. Domain constructor validation is not tenant authorization or reference existence validation. No complete ERP module claimed.
 
 ## Next exact action
-Continue model-only work with Organizations. Commit source + machine inventory + module docs + progress log together.
+Continue model-only work with Payments. Commit source + machine inventory + module docs + progress log together.
