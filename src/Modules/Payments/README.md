@@ -24,3 +24,9 @@ See [architecture](../../../docs/architecture.md) for the current legacy excepti
 `PaymentRefund`, `PaymentAdvance`.
 
 Models live in this module Domain/Entities directory; foreign objects are referenced by IDs. These are domain types, not registered database tables or endpoints. Existing legacy workflows remain in core projects. See [module progress](../../../docs/ai/MODULE_STATUS.md) for inventory and remaining work.
+
+## Domain expansion — 2026-10-13
+
+Added 21 records (23 module total): `PaymentMethodDefinition`, `PaymentProviderConnection`, `PaymentAuthorization`, `PaymentCapture`, `PaymentProviderTransaction`, `PaymentProviderWebhook`, `PaymentSettlement`, `PaymentSettlementLine`, `PaymentFee`, `PaymentChargeback`, `PaymentChargebackEvidence`, `PaymentRefundRequest`, `PaymentAllocationRule`, `PaymentAllocationSnapshot`, `PaymentReconciliation`, `PaymentSchedule`, `PaymentInstallment`, `PaymentDiscount`, `PaymentWriteOffRequest`, `PaymentDispute`, `PaymentRetryPlan`.
+
+Pure model definitions; no runtime payroll/payment/project transactions were introduced. EF mappings, security, services, endpoints and tests remain separate tasks.

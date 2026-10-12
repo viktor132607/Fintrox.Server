@@ -14562,6 +14562,561 @@
           "rule": "date"
         }
       ]
+    },
+    {
+      "module": "Payments",
+      "entity": "PaymentMethodDefinition",
+      "path": "src/Modules/Payments/Fintrox.Modules.Payments.Domain/Entities/PaymentMethodDefinition.cs",
+      "fields": [
+        {
+          "name": "MethodCode",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "PaymentChannel",
+          "rule": "text"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Payments",
+      "entity": "PaymentProviderConnection",
+      "path": "src/Modules/Payments/Fintrox.Modules.Payments.Domain/Entities/PaymentProviderConnection.cs",
+      "fields": [
+        {
+          "name": "ProviderCode",
+          "rule": "text"
+        },
+        {
+          "name": "ExternalMerchantId",
+          "rule": "text"
+        },
+        {
+          "name": "CredentialReference",
+          "rule": "text"
+        },
+        {
+          "name": "IsEnabled",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Payments",
+      "entity": "PaymentAuthorization",
+      "path": "src/Modules/Payments/Fintrox.Modules.Payments.Domain/Entities/PaymentAuthorization.cs",
+      "fields": [
+        {
+          "name": "ExternalPaymentId",
+          "rule": "text"
+        },
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "AuthorizedAmount",
+          "rule": "positive"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "AuthorizedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Payments",
+      "entity": "PaymentCapture",
+      "path": "src/Modules/Payments/Fintrox.Modules.Payments.Domain/Entities/PaymentCapture.cs",
+      "fields": [
+        {
+          "name": "PaymentAuthorizationId",
+          "rule": "id"
+        },
+        {
+          "name": "CapturedAmount",
+          "rule": "positive"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "CapturedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "ExternalReference",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Payments",
+      "entity": "PaymentProviderTransaction",
+      "path": "src/Modules/Payments/Fintrox.Modules.Payments.Domain/Entities/PaymentProviderTransaction.cs",
+      "fields": [
+        {
+          "name": "ProviderConnectionId",
+          "rule": "id"
+        },
+        {
+          "name": "ExternalTransactionId",
+          "rule": "text"
+        },
+        {
+          "name": "TransactionType",
+          "rule": "text"
+        },
+        {
+          "name": "Amount",
+          "rule": "nonzero"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "OccurredAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Payments",
+      "entity": "PaymentProviderWebhook",
+      "path": "src/Modules/Payments/Fintrox.Modules.Payments.Domain/Entities/PaymentProviderWebhook.cs",
+      "fields": [
+        {
+          "name": "ProviderConnectionId",
+          "rule": "id"
+        },
+        {
+          "name": "EventType",
+          "rule": "text"
+        },
+        {
+          "name": "ExternalEventId",
+          "rule": "text"
+        },
+        {
+          "name": "ReceivedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "PayloadHash",
+          "rule": "hash"
+        }
+      ]
+    },
+    {
+      "module": "Payments",
+      "entity": "PaymentSettlement",
+      "path": "src/Modules/Payments/Fintrox.Modules.Payments.Domain/Entities/PaymentSettlement.cs",
+      "fields": [
+        {
+          "name": "ProviderConnectionId",
+          "rule": "id"
+        },
+        {
+          "name": "SettlementReference",
+          "rule": "text"
+        },
+        {
+          "name": "SettledOn",
+          "rule": "date"
+        },
+        {
+          "name": "GrossAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "FeeAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Payments",
+      "entity": "PaymentSettlementLine",
+      "path": "src/Modules/Payments/Fintrox.Modules.Payments.Domain/Entities/PaymentSettlementLine.cs",
+      "fields": [
+        {
+          "name": "SettlementId",
+          "rule": "id"
+        },
+        {
+          "name": "ProviderTransactionId",
+          "rule": "id"
+        },
+        {
+          "name": "SettlementAmount",
+          "rule": "nonzero"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Payments",
+      "entity": "PaymentFee",
+      "path": "src/Modules/Payments/Fintrox.Modules.Payments.Domain/Entities/PaymentFee.cs",
+      "fields": [
+        {
+          "name": "PaymentId",
+          "rule": "id"
+        },
+        {
+          "name": "FeeType",
+          "rule": "text"
+        },
+        {
+          "name": "Amount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "ChargedOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Payments",
+      "entity": "PaymentChargeback",
+      "path": "src/Modules/Payments/Fintrox.Modules.Payments.Domain/Entities/PaymentChargeback.cs",
+      "fields": [
+        {
+          "name": "PaymentId",
+          "rule": "id"
+        },
+        {
+          "name": "ExternalCaseId",
+          "rule": "text"
+        },
+        {
+          "name": "DisputedAmount",
+          "rule": "positive"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "OpenedOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Payments",
+      "entity": "PaymentChargebackEvidence",
+      "path": "src/Modules/Payments/Fintrox.Modules.Payments.Domain/Entities/PaymentChargebackEvidence.cs",
+      "fields": [
+        {
+          "name": "ChargebackId",
+          "rule": "id"
+        },
+        {
+          "name": "DocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "SubmittedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "EvidenceType",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Payments",
+      "entity": "PaymentRefundRequest",
+      "path": "src/Modules/Payments/Fintrox.Modules.Payments.Domain/Entities/PaymentRefundRequest.cs",
+      "fields": [
+        {
+          "name": "PaymentId",
+          "rule": "id"
+        },
+        {
+          "name": "RequestedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "Amount",
+          "rule": "positive"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        },
+        {
+          "name": "RequestedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Payments",
+      "entity": "PaymentAllocationRule",
+      "path": "src/Modules/Payments/Fintrox.Modules.Payments.Domain/Entities/PaymentAllocationRule.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "DocumentType",
+          "rule": "text"
+        },
+        {
+          "name": "AllocationPriority",
+          "rule": "nonnegativeInt"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Payments",
+      "entity": "PaymentAllocationSnapshot",
+      "path": "src/Modules/Payments/Fintrox.Modules.Payments.Domain/Entities/PaymentAllocationSnapshot.cs",
+      "fields": [
+        {
+          "name": "PaymentId",
+          "rule": "id"
+        },
+        {
+          "name": "SourceDocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "AllocatedAmount",
+          "rule": "positive"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "AllocatedOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Payments",
+      "entity": "PaymentReconciliation",
+      "path": "src/Modules/Payments/Fintrox.Modules.Payments.Domain/Entities/PaymentReconciliation.cs",
+      "fields": [
+        {
+          "name": "PaymentId",
+          "rule": "id"
+        },
+        {
+          "name": "BankStatementLineId",
+          "rule": "id"
+        },
+        {
+          "name": "MatchedAmount",
+          "rule": "positive"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "MatchedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Payments",
+      "entity": "PaymentSchedule",
+      "path": "src/Modules/Payments/Fintrox.Modules.Payments.Domain/Entities/PaymentSchedule.cs",
+      "fields": [
+        {
+          "name": "SourceDocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "DueOn",
+          "rule": "date"
+        },
+        {
+          "name": "Amount",
+          "rule": "positive"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Payments",
+      "entity": "PaymentInstallment",
+      "path": "src/Modules/Payments/Fintrox.Modules.Payments.Domain/Entities/PaymentInstallment.cs",
+      "fields": [
+        {
+          "name": "PaymentScheduleId",
+          "rule": "id"
+        },
+        {
+          "name": "InstallmentNumber",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "DueOn",
+          "rule": "date"
+        },
+        {
+          "name": "Amount",
+          "rule": "positive"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Payments",
+      "entity": "PaymentDiscount",
+      "path": "src/Modules/Payments/Fintrox.Modules.Payments.Domain/Entities/PaymentDiscount.cs",
+      "fields": [
+        {
+          "name": "PaymentScheduleId",
+          "rule": "id"
+        },
+        {
+          "name": "DiscountPercent",
+          "rule": "percent"
+        },
+        {
+          "name": "EligibleUntil",
+          "rule": "date"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Payments",
+      "entity": "PaymentWriteOffRequest",
+      "path": "src/Modules/Payments/Fintrox.Modules.Payments.Domain/Entities/PaymentWriteOffRequest.cs",
+      "fields": [
+        {
+          "name": "PaymentId",
+          "rule": "id"
+        },
+        {
+          "name": "Amount",
+          "rule": "positive"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        },
+        {
+          "name": "RequestedByUserId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "Payments",
+      "entity": "PaymentDispute",
+      "path": "src/Modules/Payments/Fintrox.Modules.Payments.Domain/Entities/PaymentDispute.cs",
+      "fields": [
+        {
+          "name": "PaymentId",
+          "rule": "id"
+        },
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "DisputedAmount",
+          "rule": "positive"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "OpenedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Payments",
+      "entity": "PaymentRetryPlan",
+      "path": "src/Modules/Payments/Fintrox.Modules.Payments.Domain/Entities/PaymentRetryPlan.cs",
+      "fields": [
+        {
+          "name": "PaymentId",
+          "rule": "id"
+        },
+        {
+          "name": "NextRetryAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "MaxAttempts",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "AttemptCount",
+          "rule": "nonnegativeInt"
+        }
+      ]
     }
   ]
 }

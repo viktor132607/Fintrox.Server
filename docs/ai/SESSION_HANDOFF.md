@@ -1,7 +1,7 @@
 # Fintrox Session Handoff — 2026-10-11
 
 ## Current milestone
-ENTITIES-EXPANSION: Organizations expanded (23 classes); overall 602. Next Payments.
+ENTITIES-EXPANSION: Payments entity expansion committed (23 module / 623 total). Next Payroll.
 
 
 ## Changes
@@ -15,4 +15,4 @@ Local affected-graph Release build and 604 tests passed; 5 PostgreSQL tests skip
 Entity foundation only. New types are not yet EF tables, services, DTOs, endpoints or frontend screens. Domain constructor validation is not tenant authorization or reference existence validation. No complete ERP module claimed.
 
 ## Next exact action
-Continue model-only work with Payments. Commit source + machine inventory + module docs + progress log together.
+Add Payroll models with module-scoped immutable properties and update source, architecture/domain-entities.json, MODULE_STATUS.md, ENTITY_EXPANSION_LOG.md and README in a single module commit.
