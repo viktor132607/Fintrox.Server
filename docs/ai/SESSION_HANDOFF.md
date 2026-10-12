@@ -1,7 +1,7 @@
 # Fintrox Session Handoff — 2026-10-11
 
 ## Current milestone
-ENTITIES-EXPANSION: RevenueManagement finished at source/domain level; 772 total models. Next Sales.
+ENTITIES-EXPANSION: Sales finished at source/domain level; 794 total models. Next ServiceManagement.
 
 
 ## Changes
@@ -15,4 +15,4 @@ Local affected-graph Release build and 604 tests passed; 5 PostgreSQL tests skip
 Entity foundation only. New types are not yet EF tables, services, DTOs, endpoints or frontend screens. Domain constructor validation is not tenant authorization or reference existence validation. No complete ERP module claimed.
 
 ## Next exact action
-Continue entity expansion with Sales. After each module, update inventory, MODULE_STATUS.md, ENTITY_EXPANSION_LOG.md, module README, SESSION_HANDOFF.md, commit on main.
+Continue entity expansion with ServiceManagement. After each module, update inventory, MODULE_STATUS.md, ENTITY_EXPANSION_LOG.md, module README, SESSION_HANDOFF.md, commit on main.

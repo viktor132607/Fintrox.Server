@@ -18852,6 +18852,572 @@
           "rule": "text"
         }
       ]
+    },
+    {
+      "module": "Sales",
+      "entity": "SalesQuotationRevision",
+      "path": "src/Modules/Sales/Fintrox.Modules.Sales.Domain/Entities/SalesQuotationRevision.cs",
+      "fields": [
+        {
+          "name": "SalesQuotationId",
+          "rule": "id"
+        },
+        {
+          "name": "RevisionNumber",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "RevisedOn",
+          "rule": "date"
+        },
+        {
+          "name": "RevisedByUserId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "Sales",
+      "entity": "SalesQuotationApproval",
+      "path": "src/Modules/Sales/Fintrox.Modules.Sales.Domain/Entities/SalesQuotationApproval.cs",
+      "fields": [
+        {
+          "name": "SalesQuotationId",
+          "rule": "id"
+        },
+        {
+          "name": "ApproverUserId",
+          "rule": "id"
+        },
+        {
+          "name": "Decision",
+          "rule": "text"
+        },
+        {
+          "name": "DecidedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Sales",
+      "entity": "SalesQuotationDiscount",
+      "path": "src/Modules/Sales/Fintrox.Modules.Sales.Domain/Entities/SalesQuotationDiscount.cs",
+      "fields": [
+        {
+          "name": "SalesQuotationLineId",
+          "rule": "id"
+        },
+        {
+          "name": "DiscountType",
+          "rule": "text"
+        },
+        {
+          "name": "DiscountPercent",
+          "rule": "percent"
+        },
+        {
+          "name": "DiscountAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Sales",
+      "entity": "SalesOrderStatusHistory",
+      "path": "src/Modules/Sales/Fintrox.Modules.Sales.Domain/Entities/SalesOrderStatusHistory.cs",
+      "fields": [
+        {
+          "name": "SalesOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "PreviousStatus",
+          "rule": "text"
+        },
+        {
+          "name": "NewStatus",
+          "rule": "text"
+        },
+        {
+          "name": "ChangedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "ChangedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Sales",
+      "entity": "SalesOrderApproval",
+      "path": "src/Modules/Sales/Fintrox.Modules.Sales.Domain/Entities/SalesOrderApproval.cs",
+      "fields": [
+        {
+          "name": "SalesOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "ApproverUserId",
+          "rule": "id"
+        },
+        {
+          "name": "Decision",
+          "rule": "text"
+        },
+        {
+          "name": "DecidedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Sales",
+      "entity": "SalesOrderScheduleLine",
+      "path": "src/Modules/Sales/Fintrox.Modules.Sales.Domain/Entities/SalesOrderScheduleLine.cs",
+      "fields": [
+        {
+          "name": "SalesOrderLineId",
+          "rule": "id"
+        },
+        {
+          "name": "PromisedOn",
+          "rule": "date"
+        },
+        {
+          "name": "Quantity",
+          "rule": "positive"
+        },
+        {
+          "name": "WarehouseId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "Sales",
+      "entity": "SalesOrderPaymentTerm",
+      "path": "src/Modules/Sales/Fintrox.Modules.Sales.Domain/Entities/SalesOrderPaymentTerm.cs",
+      "fields": [
+        {
+          "name": "SalesOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "PaymentTermId",
+          "rule": "id"
+        },
+        {
+          "name": "DueOn",
+          "rule": "date"
+        },
+        {
+          "name": "InstallmentPercent",
+          "rule": "percent"
+        }
+      ]
+    },
+    {
+      "module": "Sales",
+      "entity": "SalesOrderFulfillmentLink",
+      "path": "src/Modules/Sales/Fintrox.Modules.Sales.Domain/Entities/SalesOrderFulfillmentLink.cs",
+      "fields": [
+        {
+          "name": "SalesOrderLineId",
+          "rule": "id"
+        },
+        {
+          "name": "FulfillmentOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "Quantity",
+          "rule": "positive"
+        },
+        {
+          "name": "LinkedOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Sales",
+      "entity": "SalesOrderTaxSnapshot",
+      "path": "src/Modules/Sales/Fintrox.Modules.Sales.Domain/Entities/SalesOrderTaxSnapshot.cs",
+      "fields": [
+        {
+          "name": "SalesOrderLineId",
+          "rule": "id"
+        },
+        {
+          "name": "TaxCode",
+          "rule": "text"
+        },
+        {
+          "name": "TaxableAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "TaxPercent",
+          "rule": "percent"
+        },
+        {
+          "name": "TaxAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Sales",
+      "entity": "SalesOrderPriceOverride",
+      "path": "src/Modules/Sales/Fintrox.Modules.Sales.Domain/Entities/SalesOrderPriceOverride.cs",
+      "fields": [
+        {
+          "name": "SalesOrderLineId",
+          "rule": "id"
+        },
+        {
+          "name": "OriginalPrice",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "OverridePrice",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Sales",
+      "entity": "SalesInvoiceSchedule",
+      "path": "src/Modules/Sales/Fintrox.Modules.Sales.Domain/Entities/SalesInvoiceSchedule.cs",
+      "fields": [
+        {
+          "name": "SalesOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "ScheduleNumber",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "BillingOn",
+          "rule": "date"
+        },
+        {
+          "name": "Amount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Sales",
+      "entity": "SalesInvoiceAdjustment",
+      "path": "src/Modules/Sales/Fintrox.Modules.Sales.Domain/Entities/SalesInvoiceAdjustment.cs",
+      "fields": [
+        {
+          "name": "InvoiceId",
+          "rule": "id"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        },
+        {
+          "name": "AdjustmentAmount",
+          "rule": "nonzero"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "AdjustedOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Sales",
+      "entity": "SalesCreditNoteAllocation",
+      "path": "src/Modules/Sales/Fintrox.Modules.Sales.Domain/Entities/SalesCreditNoteAllocation.cs",
+      "fields": [
+        {
+          "name": "SalesCreditNoteId",
+          "rule": "id"
+        },
+        {
+          "name": "InvoiceId",
+          "rule": "id"
+        },
+        {
+          "name": "AppliedAmount",
+          "rule": "positive"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Sales",
+      "entity": "SalesReturnAuthorization",
+      "path": "src/Modules/Sales/Fintrox.Modules.Sales.Domain/Entities/SalesReturnAuthorization.cs",
+      "fields": [
+        {
+          "name": "SalesOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "CustomerId",
+          "rule": "id"
+        },
+        {
+          "name": "ReturnReference",
+          "rule": "text"
+        },
+        {
+          "name": "RequestedOn",
+          "rule": "date"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Sales",
+      "entity": "SalesReturnLine",
+      "path": "src/Modules/Sales/Fintrox.Modules.Sales.Domain/Entities/SalesReturnLine.cs",
+      "fields": [
+        {
+          "name": "ReturnAuthorizationId",
+          "rule": "id"
+        },
+        {
+          "name": "SalesOrderLineId",
+          "rule": "id"
+        },
+        {
+          "name": "Quantity",
+          "rule": "positive"
+        },
+        {
+          "name": "ReturnReason",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Sales",
+      "entity": "SalesReceivableAgingSnapshot",
+      "path": "src/Modules/Sales/Fintrox.Modules.Sales.Domain/Entities/SalesReceivableAgingSnapshot.cs",
+      "fields": [
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "AsOfDate",
+          "rule": "date"
+        },
+        {
+          "name": "CurrentBalance",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "OverdueBalance",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Sales",
+      "entity": "SalesCollectionCase",
+      "path": "src/Modules/Sales/Fintrox.Modules.Sales.Domain/Entities/SalesCollectionCase.cs",
+      "fields": [
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "InvoiceId",
+          "rule": "id"
+        },
+        {
+          "name": "OpenedOn",
+          "rule": "date"
+        },
+        {
+          "name": "OutstandingAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Sales",
+      "entity": "SalesCollectionActivity",
+      "path": "src/Modules/Sales/Fintrox.Modules.Sales.Domain/Entities/SalesCollectionActivity.cs",
+      "fields": [
+        {
+          "name": "CollectionCaseId",
+          "rule": "id"
+        },
+        {
+          "name": "Channel",
+          "rule": "text"
+        },
+        {
+          "name": "ActivityDate",
+          "rule": "date"
+        },
+        {
+          "name": "Outcome",
+          "rule": "text"
+        },
+        {
+          "name": "OwnerUserId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "Sales",
+      "entity": "SalesCustomerCreditCheck",
+      "path": "src/Modules/Sales/Fintrox.Modules.Sales.Domain/Entities/SalesCustomerCreditCheck.cs",
+      "fields": [
+        {
+          "name": "SalesOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "CheckedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "AvailableCredit",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "Result",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Sales",
+      "entity": "SalesCommissionRule",
+      "path": "src/Modules/Sales/Fintrox.Modules.Sales.Domain/Entities/SalesCommissionRule.cs",
+      "fields": [
+        {
+          "name": "SalesPersonId",
+          "rule": "id"
+        },
+        {
+          "name": "CommissionPercent",
+          "rule": "percent"
+        },
+        {
+          "name": "EffectiveFrom",
+          "rule": "date"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Sales",
+      "entity": "SalesCommissionAccrual",
+      "path": "src/Modules/Sales/Fintrox.Modules.Sales.Domain/Entities/SalesCommissionAccrual.cs",
+      "fields": [
+        {
+          "name": "SalesOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "SalesPersonId",
+          "rule": "id"
+        },
+        {
+          "name": "AccrualOn",
+          "rule": "date"
+        },
+        {
+          "name": "Amount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Sales",
+      "entity": "SalesOrderAttachment",
+      "path": "src/Modules/Sales/Fintrox.Modules.Sales.Domain/Entities/SalesOrderAttachment.cs",
+      "fields": [
+        {
+          "name": "SalesOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "DocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "UploadedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Description",
+          "rule": "text"
+        }
+      ]
     }
   ]
 }
