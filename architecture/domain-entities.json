@@ -9750,6 +9750,440 @@
           "rule": "bool"
         }
       ]
+    },
+    {
+      "module": "Experience",
+      "entity": "LayoutTemplate",
+      "path": "src/Modules/Experience/Fintrox.Modules.Experience.Domain/Entities/LayoutTemplate.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "ExperienceLevel",
+          "rule": "text"
+        },
+        {
+          "name": "IsSystemDefault",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Experience",
+      "entity": "LayoutTemplateVersion",
+      "path": "src/Modules/Experience/Fintrox.Modules.Experience.Domain/Entities/LayoutTemplateVersion.cs",
+      "fields": [
+        {
+          "name": "LayoutTemplateId",
+          "rule": "id"
+        },
+        {
+          "name": "VersionNumber",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "LayoutJson",
+          "rule": "json"
+        },
+        {
+          "name": "PublishedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Experience",
+      "entity": "UserLayout",
+      "path": "src/Modules/Experience/Fintrox.Modules.Experience.Domain/Entities/UserLayout.cs",
+      "fields": [
+        {
+          "name": "UserId",
+          "rule": "id"
+        },
+        {
+          "name": "LayoutTemplateId",
+          "rule": "id"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "IsDefault",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Experience",
+      "entity": "UserLayoutSection",
+      "path": "src/Modules/Experience/Fintrox.Modules.Experience.Domain/Entities/UserLayoutSection.cs",
+      "fields": [
+        {
+          "name": "UserLayoutId",
+          "rule": "id"
+        },
+        {
+          "name": "SectionCode",
+          "rule": "text"
+        },
+        {
+          "name": "Position",
+          "rule": "nonnegativeInt"
+        },
+        {
+          "name": "IsVisible",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Experience",
+      "entity": "UserLayoutWidget",
+      "path": "src/Modules/Experience/Fintrox.Modules.Experience.Domain/Entities/UserLayoutWidget.cs",
+      "fields": [
+        {
+          "name": "UserLayoutId",
+          "rule": "id"
+        },
+        {
+          "name": "DashboardWidgetId",
+          "rule": "id"
+        },
+        {
+          "name": "Position",
+          "rule": "nonnegativeInt"
+        },
+        {
+          "name": "ConfigurationJson",
+          "rule": "json"
+        }
+      ]
+    },
+    {
+      "module": "Experience",
+      "entity": "WidgetCatalogEntry",
+      "path": "src/Modules/Experience/Fintrox.Modules.Experience.Domain/Entities/WidgetCatalogEntry.cs",
+      "fields": [
+        {
+          "name": "WidgetCode",
+          "rule": "text"
+        },
+        {
+          "name": "ModuleCode",
+          "rule": "text"
+        },
+        {
+          "name": "DisplayName",
+          "rule": "text"
+        },
+        {
+          "name": "MinimumAccessLevel",
+          "rule": "text"
+        },
+        {
+          "name": "IsEnabled",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Experience",
+      "entity": "WidgetDataBinding",
+      "path": "src/Modules/Experience/Fintrox.Modules.Experience.Domain/Entities/WidgetDataBinding.cs",
+      "fields": [
+        {
+          "name": "WidgetCatalogEntryId",
+          "rule": "id"
+        },
+        {
+          "name": "SourceCode",
+          "rule": "text"
+        },
+        {
+          "name": "QueryKey",
+          "rule": "text"
+        },
+        {
+          "name": "RefreshIntervalSeconds",
+          "rule": "positiveInt"
+        }
+      ]
+    },
+    {
+      "module": "Experience",
+      "entity": "NavigationItem",
+      "path": "src/Modules/Experience/Fintrox.Modules.Experience.Domain/Entities/NavigationItem.cs",
+      "fields": [
+        {
+          "name": "ModuleCode",
+          "rule": "text"
+        },
+        {
+          "name": "Route",
+          "rule": "text"
+        },
+        {
+          "name": "Label",
+          "rule": "text"
+        },
+        {
+          "name": "SortOrder",
+          "rule": "nonnegativeInt"
+        },
+        {
+          "name": "IsVisible",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Experience",
+      "entity": "NavigationItemPreference",
+      "path": "src/Modules/Experience/Fintrox.Modules.Experience.Domain/Entities/NavigationItemPreference.cs",
+      "fields": [
+        {
+          "name": "UserId",
+          "rule": "id"
+        },
+        {
+          "name": "NavigationItemId",
+          "rule": "id"
+        },
+        {
+          "name": "SortOrder",
+          "rule": "nonnegativeInt"
+        },
+        {
+          "name": "IsPinned",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Experience",
+      "entity": "DashboardTemplate",
+      "path": "src/Modules/Experience/Fintrox.Modules.Experience.Domain/Entities/DashboardTemplate.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "ExperienceLevel",
+          "rule": "text"
+        },
+        {
+          "name": "IsDefault",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Experience",
+      "entity": "DashboardSection",
+      "path": "src/Modules/Experience/Fintrox.Modules.Experience.Domain/Entities/DashboardSection.cs",
+      "fields": [
+        {
+          "name": "DashboardTemplateId",
+          "rule": "id"
+        },
+        {
+          "name": "SectionCode",
+          "rule": "text"
+        },
+        {
+          "name": "Position",
+          "rule": "nonnegativeInt"
+        },
+        {
+          "name": "Title",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Experience",
+      "entity": "DashboardAssignment",
+      "path": "src/Modules/Experience/Fintrox.Modules.Experience.Domain/Entities/DashboardAssignment.cs",
+      "fields": [
+        {
+          "name": "UserId",
+          "rule": "id"
+        },
+        {
+          "name": "DashboardTemplateId",
+          "rule": "id"
+        },
+        {
+          "name": "AssignedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "IsPrimary",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Experience",
+      "entity": "UserFeatureVisibility",
+      "path": "src/Modules/Experience/Fintrox.Modules.Experience.Domain/Entities/UserFeatureVisibility.cs",
+      "fields": [
+        {
+          "name": "UserId",
+          "rule": "id"
+        },
+        {
+          "name": "CapabilityCode",
+          "rule": "text"
+        },
+        {
+          "name": "IsVisible",
+          "rule": "bool"
+        },
+        {
+          "name": "UpdatedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Experience",
+      "entity": "UserSavedFilter",
+      "path": "src/Modules/Experience/Fintrox.Modules.Experience.Domain/Entities/UserSavedFilter.cs",
+      "fields": [
+        {
+          "name": "UserId",
+          "rule": "id"
+        },
+        {
+          "name": "ModuleCode",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "FilterJson",
+          "rule": "json"
+        },
+        {
+          "name": "IsDefault",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Experience",
+      "entity": "UserTableColumnPreference",
+      "path": "src/Modules/Experience/Fintrox.Modules.Experience.Domain/Entities/UserTableColumnPreference.cs",
+      "fields": [
+        {
+          "name": "UserId",
+          "rule": "id"
+        },
+        {
+          "name": "TableCode",
+          "rule": "text"
+        },
+        {
+          "name": "ColumnCode",
+          "rule": "text"
+        },
+        {
+          "name": "Position",
+          "rule": "nonnegativeInt"
+        },
+        {
+          "name": "IsVisible",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Experience",
+      "entity": "ExperienceAccessPolicy",
+      "path": "src/Modules/Experience/Fintrox.Modules.Experience.Domain/Entities/ExperienceAccessPolicy.cs",
+      "fields": [
+        {
+          "name": "ProfileId",
+          "rule": "id"
+        },
+        {
+          "name": "CapabilityCode",
+          "rule": "text"
+        },
+        {
+          "name": "MinimumLevel",
+          "rule": "text"
+        },
+        {
+          "name": "IsAllowed",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Experience",
+      "entity": "ExperienceConfigurationVersion",
+      "path": "src/Modules/Experience/Fintrox.Modules.Experience.Domain/Entities/ExperienceConfigurationVersion.cs",
+      "fields": [
+        {
+          "name": "ExperienceProfileId",
+          "rule": "id"
+        },
+        {
+          "name": "VersionNumber",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "ConfigurationJson",
+          "rule": "json"
+        },
+        {
+          "name": "PublishedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Experience",
+      "entity": "UserLocalePreference",
+      "path": "src/Modules/Experience/Fintrox.Modules.Experience.Domain/Entities/UserLocalePreference.cs",
+      "fields": [
+        {
+          "name": "UserId",
+          "rule": "id"
+        },
+        {
+          "name": "LanguageCode",
+          "rule": "text"
+        },
+        {
+          "name": "TimeZoneId",
+          "rule": "text"
+        },
+        {
+          "name": "DateFormat",
+          "rule": "text"
+        },
+        {
+          "name": "NumberFormat",
+          "rule": "text"
+        }
+      ]
     }
   ]
 }
