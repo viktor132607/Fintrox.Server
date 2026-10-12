@@ -24,3 +24,9 @@ See [architecture](../../../docs/architecture.md) for the current legacy excepti
 `WorkflowDefinition`, `ApprovalStep`, `WorkflowInstance`, `ApprovalDecision`, `ApprovalDelegation`.
 
 Models live in this module Domain/Entities directory; foreign objects are referenced by IDs. These are domain types, not registered database tables or endpoints. Existing legacy workflows remain in core projects. See [module progress](../../../docs/ai/MODULE_STATUS.md) for inventory and remaining work.
+
+## Domain expansion — 2026-10-13
+
+Added 25 Domain entities (30 total): `WorkflowVersion`, `WorkflowTrigger`, `WorkflowCondition`, `WorkflowAction`, `WorkflowTransition`, `WorkflowInstanceState`, `WorkflowExecutionLog`, `WorkflowTask`, `WorkflowTaskAssignment`, `WorkflowTaskDependency`, `ApprovalPolicy`, `ApprovalGroup`, `ApprovalGroupMember`, `ApprovalRule`, `ApprovalEscalation`, `ApprovalReminder`, `ApprovalEvidence`, `WorkflowNotification`, `WorkflowNotificationTemplate`, `WorkflowTimer`, `WorkflowAutomationRun`, `WorkflowAutomationError`, `WorkflowDelegationRule`, `WorkflowServiceLevel`, `WorkflowWebhookAction`.
+
+Model-only classes with typed constructor properties and invariant guards. Persistence, tenant authorization/reference checks, lifecycle use cases, endpoints, localization logic and UI are pending.

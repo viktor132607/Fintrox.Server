@@ -1,5 +1,5 @@
 {
-  "status": "DOMAIN_FOUNDATION",
+  "status": "DOMAIN_EXPANDED_PENDING_CI",
   "entities": [
     {
       "module": "Accounting",
@@ -22363,6 +22363,601 @@
         {
           "name": "Status",
           "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Workflows",
+      "entity": "WorkflowVersion",
+      "path": "src/Modules/Workflows/Fintrox.Modules.Workflows.Domain/Entities/WorkflowVersion.cs",
+      "fields": [
+        {
+          "name": "WorkflowDefinitionId",
+          "rule": "id"
+        },
+        {
+          "name": "VersionNumber",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "PublishedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Workflows",
+      "entity": "WorkflowTrigger",
+      "path": "src/Modules/Workflows/Fintrox.Modules.Workflows.Domain/Entities/WorkflowTrigger.cs",
+      "fields": [
+        {
+          "name": "WorkflowVersionId",
+          "rule": "id"
+        },
+        {
+          "name": "TriggerType",
+          "rule": "text"
+        },
+        {
+          "name": "EventCode",
+          "rule": "text"
+        },
+        {
+          "name": "IsEnabled",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Workflows",
+      "entity": "WorkflowCondition",
+      "path": "src/Modules/Workflows/Fintrox.Modules.Workflows.Domain/Entities/WorkflowCondition.cs",
+      "fields": [
+        {
+          "name": "WorkflowVersionId",
+          "rule": "id"
+        },
+        {
+          "name": "ConditionCode",
+          "rule": "text"
+        },
+        {
+          "name": "Expression",
+          "rule": "text"
+        },
+        {
+          "name": "Priority",
+          "rule": "nonnegativeInt"
+        }
+      ]
+    },
+    {
+      "module": "Workflows",
+      "entity": "WorkflowAction",
+      "path": "src/Modules/Workflows/Fintrox.Modules.Workflows.Domain/Entities/WorkflowAction.cs",
+      "fields": [
+        {
+          "name": "WorkflowVersionId",
+          "rule": "id"
+        },
+        {
+          "name": "ActionType",
+          "rule": "text"
+        },
+        {
+          "name": "TargetCode",
+          "rule": "text"
+        },
+        {
+          "name": "ConfigurationJson",
+          "rule": "json"
+        }
+      ]
+    },
+    {
+      "module": "Workflows",
+      "entity": "WorkflowTransition",
+      "path": "src/Modules/Workflows/Fintrox.Modules.Workflows.Domain/Entities/WorkflowTransition.cs",
+      "fields": [
+        {
+          "name": "WorkflowVersionId",
+          "rule": "id"
+        },
+        {
+          "name": "FromState",
+          "rule": "text"
+        },
+        {
+          "name": "ToState",
+          "rule": "text"
+        },
+        {
+          "name": "ConditionId",
+          "rule": "id"
+        },
+        {
+          "name": "Priority",
+          "rule": "nonnegativeInt"
+        }
+      ]
+    },
+    {
+      "module": "Workflows",
+      "entity": "WorkflowInstanceState",
+      "path": "src/Modules/Workflows/Fintrox.Modules.Workflows.Domain/Entities/WorkflowInstanceState.cs",
+      "fields": [
+        {
+          "name": "WorkflowInstanceId",
+          "rule": "id"
+        },
+        {
+          "name": "StateCode",
+          "rule": "text"
+        },
+        {
+          "name": "EnteredAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "IsTerminal",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Workflows",
+      "entity": "WorkflowExecutionLog",
+      "path": "src/Modules/Workflows/Fintrox.Modules.Workflows.Domain/Entities/WorkflowExecutionLog.cs",
+      "fields": [
+        {
+          "name": "WorkflowInstanceId",
+          "rule": "id"
+        },
+        {
+          "name": "StepCode",
+          "rule": "text"
+        },
+        {
+          "name": "EventType",
+          "rule": "text"
+        },
+        {
+          "name": "OccurredAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Result",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Workflows",
+      "entity": "WorkflowTask",
+      "path": "src/Modules/Workflows/Fintrox.Modules.Workflows.Domain/Entities/WorkflowTask.cs",
+      "fields": [
+        {
+          "name": "WorkflowInstanceId",
+          "rule": "id"
+        },
+        {
+          "name": "TaskCode",
+          "rule": "text"
+        },
+        {
+          "name": "Subject",
+          "rule": "text"
+        },
+        {
+          "name": "DueAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Workflows",
+      "entity": "WorkflowTaskAssignment",
+      "path": "src/Modules/Workflows/Fintrox.Modules.Workflows.Domain/Entities/WorkflowTaskAssignment.cs",
+      "fields": [
+        {
+          "name": "WorkflowTaskId",
+          "rule": "id"
+        },
+        {
+          "name": "AssignedUserId",
+          "rule": "id"
+        },
+        {
+          "name": "AssignedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "AssignmentType",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Workflows",
+      "entity": "WorkflowTaskDependency",
+      "path": "src/Modules/Workflows/Fintrox.Modules.Workflows.Domain/Entities/WorkflowTaskDependency.cs",
+      "fields": [
+        {
+          "name": "PredecessorTaskId",
+          "rule": "id"
+        },
+        {
+          "name": "SuccessorTaskId",
+          "rule": "id"
+        },
+        {
+          "name": "DependencyType",
+          "rule": "text"
+        },
+        {
+          "name": "IsBlocking",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Workflows",
+      "entity": "ApprovalPolicy",
+      "path": "src/Modules/Workflows/Fintrox.Modules.Workflows.Domain/Entities/ApprovalPolicy.cs",
+      "fields": [
+        {
+          "name": "PolicyCode",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "ResourceType",
+          "rule": "text"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Workflows",
+      "entity": "ApprovalGroup",
+      "path": "src/Modules/Workflows/Fintrox.Modules.Workflows.Domain/Entities/ApprovalGroup.cs",
+      "fields": [
+        {
+          "name": "GroupCode",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Workflows",
+      "entity": "ApprovalGroupMember",
+      "path": "src/Modules/Workflows/Fintrox.Modules.Workflows.Domain/Entities/ApprovalGroupMember.cs",
+      "fields": [
+        {
+          "name": "ApprovalGroupId",
+          "rule": "id"
+        },
+        {
+          "name": "UserId",
+          "rule": "id"
+        },
+        {
+          "name": "JoinedOn",
+          "rule": "date"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Workflows",
+      "entity": "ApprovalRule",
+      "path": "src/Modules/Workflows/Fintrox.Modules.Workflows.Domain/Entities/ApprovalRule.cs",
+      "fields": [
+        {
+          "name": "ApprovalPolicyId",
+          "rule": "id"
+        },
+        {
+          "name": "ConditionJson",
+          "rule": "json"
+        },
+        {
+          "name": "ApproverRole",
+          "rule": "text"
+        },
+        {
+          "name": "SequenceNumber",
+          "rule": "positiveInt"
+        }
+      ]
+    },
+    {
+      "module": "Workflows",
+      "entity": "ApprovalEscalation",
+      "path": "src/Modules/Workflows/Fintrox.Modules.Workflows.Domain/Entities/ApprovalEscalation.cs",
+      "fields": [
+        {
+          "name": "ApprovalStepId",
+          "rule": "id"
+        },
+        {
+          "name": "EscalateToUserId",
+          "rule": "id"
+        },
+        {
+          "name": "EscalationAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Workflows",
+      "entity": "ApprovalReminder",
+      "path": "src/Modules/Workflows/Fintrox.Modules.Workflows.Domain/Entities/ApprovalReminder.cs",
+      "fields": [
+        {
+          "name": "ApprovalStepId",
+          "rule": "id"
+        },
+        {
+          "name": "RecipientUserId",
+          "rule": "id"
+        },
+        {
+          "name": "ReminderAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "IsSent",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Workflows",
+      "entity": "ApprovalEvidence",
+      "path": "src/Modules/Workflows/Fintrox.Modules.Workflows.Domain/Entities/ApprovalEvidence.cs",
+      "fields": [
+        {
+          "name": "ApprovalDecisionId",
+          "rule": "id"
+        },
+        {
+          "name": "DocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "RecordedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Description",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Workflows",
+      "entity": "WorkflowNotification",
+      "path": "src/Modules/Workflows/Fintrox.Modules.Workflows.Domain/Entities/WorkflowNotification.cs",
+      "fields": [
+        {
+          "name": "WorkflowInstanceId",
+          "rule": "id"
+        },
+        {
+          "name": "RecipientUserId",
+          "rule": "id"
+        },
+        {
+          "name": "NotificationType",
+          "rule": "text"
+        },
+        {
+          "name": "SentAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Workflows",
+      "entity": "WorkflowNotificationTemplate",
+      "path": "src/Modules/Workflows/Fintrox.Modules.Workflows.Domain/Entities/WorkflowNotificationTemplate.cs",
+      "fields": [
+        {
+          "name": "TemplateCode",
+          "rule": "text"
+        },
+        {
+          "name": "Channel",
+          "rule": "text"
+        },
+        {
+          "name": "SubjectTemplate",
+          "rule": "text"
+        },
+        {
+          "name": "BodyTemplate",
+          "rule": "text"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Workflows",
+      "entity": "WorkflowTimer",
+      "path": "src/Modules/Workflows/Fintrox.Modules.Workflows.Domain/Entities/WorkflowTimer.cs",
+      "fields": [
+        {
+          "name": "WorkflowInstanceId",
+          "rule": "id"
+        },
+        {
+          "name": "TimerCode",
+          "rule": "text"
+        },
+        {
+          "name": "FireAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "IsCancelled",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Workflows",
+      "entity": "WorkflowAutomationRun",
+      "path": "src/Modules/Workflows/Fintrox.Modules.Workflows.Domain/Entities/WorkflowAutomationRun.cs",
+      "fields": [
+        {
+          "name": "WorkflowVersionId",
+          "rule": "id"
+        },
+        {
+          "name": "TriggeredAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "TriggerReferenceId",
+          "rule": "id"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Workflows",
+      "entity": "WorkflowAutomationError",
+      "path": "src/Modules/Workflows/Fintrox.Modules.Workflows.Domain/Entities/WorkflowAutomationError.cs",
+      "fields": [
+        {
+          "name": "AutomationRunId",
+          "rule": "id"
+        },
+        {
+          "name": "ErrorCode",
+          "rule": "text"
+        },
+        {
+          "name": "ErrorMessage",
+          "rule": "text"
+        },
+        {
+          "name": "OccurredAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Workflows",
+      "entity": "WorkflowDelegationRule",
+      "path": "src/Modules/Workflows/Fintrox.Modules.Workflows.Domain/Entities/WorkflowDelegationRule.cs",
+      "fields": [
+        {
+          "name": "DelegatorUserId",
+          "rule": "id"
+        },
+        {
+          "name": "DelegateUserId",
+          "rule": "id"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Workflows",
+      "entity": "WorkflowServiceLevel",
+      "path": "src/Modules/Workflows/Fintrox.Modules.Workflows.Domain/Entities/WorkflowServiceLevel.cs",
+      "fields": [
+        {
+          "name": "WorkflowVersionId",
+          "rule": "id"
+        },
+        {
+          "name": "SlaCode",
+          "rule": "text"
+        },
+        {
+          "name": "TargetMinutes",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Workflows",
+      "entity": "WorkflowWebhookAction",
+      "path": "src/Modules/Workflows/Fintrox.Modules.Workflows.Domain/Entities/WorkflowWebhookAction.cs",
+      "fields": [
+        {
+          "name": "WorkflowActionId",
+          "rule": "id"
+        },
+        {
+          "name": "IntegrationSubscriptionId",
+          "rule": "id"
+        },
+        {
+          "name": "EventCode",
+          "rule": "text"
+        },
+        {
+          "name": "IsEnabled",
+          "rule": "bool"
         }
       ]
     }
