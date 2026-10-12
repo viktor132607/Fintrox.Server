@@ -6912,6 +6912,596 @@
           "rule": "text"
         }
       ]
+    },
+    {
+      "module": "Commerce",
+      "entity": "ProductOffer",
+      "path": "src/Modules/Commerce/Fintrox.Modules.Commerce.Domain/Entities/ProductOffer.cs",
+      "fields": [
+        {
+          "name": "CatalogListingId",
+          "rule": "id"
+        },
+        {
+          "name": "OfferCode",
+          "rule": "text"
+        },
+        {
+          "name": "SalePrice",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "AvailableFrom",
+          "rule": "date"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Commerce",
+      "entity": "ProductVariant",
+      "path": "src/Modules/Commerce/Fintrox.Modules.Commerce.Domain/Entities/ProductVariant.cs",
+      "fields": [
+        {
+          "name": "CatalogListingId",
+          "rule": "id"
+        },
+        {
+          "name": "Sku",
+          "rule": "text"
+        },
+        {
+          "name": "Barcode",
+          "rule": "text"
+        },
+        {
+          "name": "VariantName",
+          "rule": "text"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Commerce",
+      "entity": "ProductAttributeDefinition",
+      "path": "src/Modules/Commerce/Fintrox.Modules.Commerce.Domain/Entities/ProductAttributeDefinition.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "DataType",
+          "rule": "text"
+        },
+        {
+          "name": "IsRequired",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Commerce",
+      "entity": "ProductAttributeValue",
+      "path": "src/Modules/Commerce/Fintrox.Modules.Commerce.Domain/Entities/ProductAttributeValue.cs",
+      "fields": [
+        {
+          "name": "VariantId",
+          "rule": "id"
+        },
+        {
+          "name": "AttributeDefinitionId",
+          "rule": "id"
+        },
+        {
+          "name": "Value",
+          "rule": "text"
+        },
+        {
+          "name": "SortOrder",
+          "rule": "nonnegativeInt"
+        }
+      ]
+    },
+    {
+      "module": "Commerce",
+      "entity": "PriceTier",
+      "path": "src/Modules/Commerce/Fintrox.Modules.Commerce.Domain/Entities/PriceTier.cs",
+      "fields": [
+        {
+          "name": "PriceListId",
+          "rule": "id"
+        },
+        {
+          "name": "MinimumQuantity",
+          "rule": "positive"
+        },
+        {
+          "name": "UnitPrice",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Commerce",
+      "entity": "PriceListAssignment",
+      "path": "src/Modules/Commerce/Fintrox.Modules.Commerce.Domain/Entities/PriceListAssignment.cs",
+      "fields": [
+        {
+          "name": "PriceListId",
+          "rule": "id"
+        },
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "ValidFrom",
+          "rule": "date"
+        },
+        {
+          "name": "ValidTo",
+          "rule": "date"
+        },
+        {
+          "name": "IsExclusive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Commerce",
+      "entity": "ShoppingCart",
+      "path": "src/Modules/Commerce/Fintrox.Modules.Commerce.Domain/Entities/ShoppingCart.cs",
+      "fields": [
+        {
+          "name": "CustomerId",
+          "rule": "id"
+        },
+        {
+          "name": "StorefrontId",
+          "rule": "id"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        },
+        {
+          "name": "ExpiresAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Commerce",
+      "entity": "ShoppingCartLine",
+      "path": "src/Modules/Commerce/Fintrox.Modules.Commerce.Domain/Entities/ShoppingCartLine.cs",
+      "fields": [
+        {
+          "name": "CartId",
+          "rule": "id"
+        },
+        {
+          "name": "ProductVariantId",
+          "rule": "id"
+        },
+        {
+          "name": "Quantity",
+          "rule": "positive"
+        },
+        {
+          "name": "UnitPrice",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Commerce",
+      "entity": "CheckoutSession",
+      "path": "src/Modules/Commerce/Fintrox.Modules.Commerce.Domain/Entities/CheckoutSession.cs",
+      "fields": [
+        {
+          "name": "CartId",
+          "rule": "id"
+        },
+        {
+          "name": "CustomerId",
+          "rule": "id"
+        },
+        {
+          "name": "StartedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "ExpiresAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Commerce",
+      "entity": "CommerceOrderPayment",
+      "path": "src/Modules/Commerce/Fintrox.Modules.Commerce.Domain/Entities/CommerceOrderPayment.cs",
+      "fields": [
+        {
+          "name": "CommerceOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "PaymentId",
+          "rule": "id"
+        },
+        {
+          "name": "Amount",
+          "rule": "positive"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "PaymentStatus",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Commerce",
+      "entity": "CommerceOrderShipment",
+      "path": "src/Modules/Commerce/Fintrox.Modules.Commerce.Domain/Entities/CommerceOrderShipment.cs",
+      "fields": [
+        {
+          "name": "CommerceOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "ShipmentId",
+          "rule": "id"
+        },
+        {
+          "name": "TrackingReference",
+          "rule": "text"
+        },
+        {
+          "name": "ShippedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Commerce",
+      "entity": "PromotionRule",
+      "path": "src/Modules/Commerce/Fintrox.Modules.Commerce.Domain/Entities/PromotionRule.cs",
+      "fields": [
+        {
+          "name": "PromotionId",
+          "rule": "id"
+        },
+        {
+          "name": "RuleType",
+          "rule": "text"
+        },
+        {
+          "name": "ConditionJson",
+          "rule": "json"
+        },
+        {
+          "name": "DiscountPercent",
+          "rule": "percent"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Commerce",
+      "entity": "PromotionCoupon",
+      "path": "src/Modules/Commerce/Fintrox.Modules.Commerce.Domain/Entities/PromotionCoupon.cs",
+      "fields": [
+        {
+          "name": "PromotionId",
+          "rule": "id"
+        },
+        {
+          "name": "CouponCode",
+          "rule": "text"
+        },
+        {
+          "name": "MaxRedemptions",
+          "rule": "nonnegativeInt"
+        },
+        {
+          "name": "ExpiresOn",
+          "rule": "date"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Commerce",
+      "entity": "PromotionRedemption",
+      "path": "src/Modules/Commerce/Fintrox.Modules.Commerce.Domain/Entities/PromotionRedemption.cs",
+      "fields": [
+        {
+          "name": "PromotionId",
+          "rule": "id"
+        },
+        {
+          "name": "CouponId",
+          "rule": "id"
+        },
+        {
+          "name": "CommerceOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "RedeemedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "DiscountAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Commerce",
+      "entity": "StorefrontChannel",
+      "path": "src/Modules/Commerce/Fintrox.Modules.Commerce.Domain/Entities/StorefrontChannel.cs",
+      "fields": [
+        {
+          "name": "StorefrontId",
+          "rule": "id"
+        },
+        {
+          "name": "ChannelType",
+          "rule": "text"
+        },
+        {
+          "name": "ExternalStoreId",
+          "rule": "text"
+        },
+        {
+          "name": "IsEnabled",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Commerce",
+      "entity": "PointOfSaleTerminal",
+      "path": "src/Modules/Commerce/Fintrox.Modules.Commerce.Domain/Entities/PointOfSaleTerminal.cs",
+      "fields": [
+        {
+          "name": "StorefrontId",
+          "rule": "id"
+        },
+        {
+          "name": "TerminalCode",
+          "rule": "text"
+        },
+        {
+          "name": "LocationCode",
+          "rule": "text"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Commerce",
+      "entity": "PosSession",
+      "path": "src/Modules/Commerce/Fintrox.Modules.Commerce.Domain/Entities/PosSession.cs",
+      "fields": [
+        {
+          "name": "TerminalId",
+          "rule": "id"
+        },
+        {
+          "name": "CashierUserId",
+          "rule": "id"
+        },
+        {
+          "name": "OpenedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "OpeningCash",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Commerce",
+      "entity": "PosReceipt",
+      "path": "src/Modules/Commerce/Fintrox.Modules.Commerce.Domain/Entities/PosReceipt.cs",
+      "fields": [
+        {
+          "name": "PosSessionId",
+          "rule": "id"
+        },
+        {
+          "name": "ReceiptNumber",
+          "rule": "text"
+        },
+        {
+          "name": "IssuedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "TotalAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Commerce",
+      "entity": "PosReceiptLine",
+      "path": "src/Modules/Commerce/Fintrox.Modules.Commerce.Domain/Entities/PosReceiptLine.cs",
+      "fields": [
+        {
+          "name": "ReceiptId",
+          "rule": "id"
+        },
+        {
+          "name": "ProductVariantId",
+          "rule": "id"
+        },
+        {
+          "name": "Quantity",
+          "rule": "positive"
+        },
+        {
+          "name": "UnitPrice",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "TaxAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Commerce",
+      "entity": "CommerceRefund",
+      "path": "src/Modules/Commerce/Fintrox.Modules.Commerce.Domain/Entities/CommerceRefund.cs",
+      "fields": [
+        {
+          "name": "CommerceOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "PaymentId",
+          "rule": "id"
+        },
+        {
+          "name": "RefundAmount",
+          "rule": "positive"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "RequestedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Commerce",
+      "entity": "CommerceTaxSnapshot",
+      "path": "src/Modules/Commerce/Fintrox.Modules.Commerce.Domain/Entities/CommerceTaxSnapshot.cs",
+      "fields": [
+        {
+          "name": "OrderLineId",
+          "rule": "id"
+        },
+        {
+          "name": "TaxCode",
+          "rule": "text"
+        },
+        {
+          "name": "TaxRatePercent",
+          "rule": "percent"
+        },
+        {
+          "name": "TaxableAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "TaxAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Commerce",
+      "entity": "CommerceInventoryReservation",
+      "path": "src/Modules/Commerce/Fintrox.Modules.Commerce.Domain/Entities/CommerceInventoryReservation.cs",
+      "fields": [
+        {
+          "name": "CommerceOrderId",
+          "rule": "id"
+        },
+        {
+          "name": "InventoryItemId",
+          "rule": "id"
+        },
+        {
+          "name": "Quantity",
+          "rule": "positive"
+        },
+        {
+          "name": "ReservedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
     }
   ]
 }

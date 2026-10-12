@@ -57,3 +57,9 @@ See [architecture](../../../docs/architecture.md) and [master roadmap](../../../
 `CatalogListing`, `Storefront`, `PriceList`, `PriceListEntry`, `Promotion`, `CommerceOrder`, `CommerceOrderLine`.
 
 Models live in this module Domain/Entities directory; foreign objects are referenced by IDs. These are domain types, not registered database tables or endpoints. Existing legacy workflows remain in core projects. See [module progress](../../../docs/ai/MODULE_STATUS.md) for inventory and remaining work.
+
+## Domain expansion — 2026-10-13
+
+Added 22 validated entities (29 total): `ProductOffer`, `ProductVariant`, `ProductAttributeDefinition`, `ProductAttributeValue`, `PriceTier`, `PriceListAssignment`, `ShoppingCart`, `ShoppingCartLine`, `CheckoutSession`, `CommerceOrderPayment`, `CommerceOrderShipment`, `PromotionRule`, `PromotionCoupon`, `PromotionRedemption`, `StorefrontChannel`, `PointOfSaleTerminal`, `PosSession`, `PosReceipt`, `PosReceiptLine`, `CommerceRefund`, `CommerceTaxSnapshot`, `CommerceInventoryReservation`.
+
+Entity-only implementation; persistence, versioned DTOs, application logic, endpoints, tests with PostgreSQL and frontend are not implemented by this commit.

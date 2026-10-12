@@ -10,3 +10,4 @@ Module-by-module Domain entity expansion, preserving existing 180 entities and t
 | 4 | Budgeting | 16 | 20 | Inventory and structural checks; .NET CI pending | Domain expanded, EF/API pending |
 | 5 | CRM | 22 | 28 | Inventory and structural checks; .NET CI pending | Domain expanded, EF/API pending |
 | 6 | Capabilities | 15 | 20 | Inventory and structural checks; .NET CI pending | Domain expanded, EF/API pending |
+| 7 | Commerce | 22 | 29 | Static structure / inventory; .NET CI pending | Domain expanded; EF/API pending |
