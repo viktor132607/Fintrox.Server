@@ -24,3 +24,9 @@ See [architecture](../../../docs/architecture.md) for the current legacy excepti
 `CounterpartyContact`, `CounterpartyAddress`, `CounterpartyBankAccount`, `PaymentTerm`, `CounterpartyGroup`.
 
 Models live in this module Domain/Entities directory; foreign objects are referenced by IDs. These are domain types, not registered database tables or endpoints. Existing legacy workflows remain in core projects. See [module progress](../../../docs/ai/MODULE_STATUS.md) for inventory and remaining work.
+
+## Domain expansion — 2026-10-13
+
+Added 18 entities (23 total): `CounterpartyLegalIdentifier`, `CounterpartyContactMethod`, `CounterpartyContactRole`, `CounterpartyRelationship`, `CounterpartyGroupMembership`, `CounterpartyClassification`, `CounterpartyCreditLimit`, `CounterpartyRiskAssessment`, `CounterpartyDueDiligence`, `CounterpartyTaxProfile`, `CounterpartyPaymentPreference`, `CounterpartyBankVerification`, `CounterpartyPriceAgreement`, `CounterpartyDocumentRequirement`, `CounterpartyCommunicationPreference`, `CounterpartyDispute`, `CounterpartyActivityTimeline`, `CounterpartyPortalAccess`.
+
+New Domain types are immutable and validate constructor fields; application/EF/API integration, tenant authorization, reference checks, migrations and UI remain pending.

@@ -8434,6 +8434,476 @@
           "rule": "text"
         }
       ]
+    },
+    {
+      "module": "Counterparties",
+      "entity": "CounterpartyLegalIdentifier",
+      "path": "src/Modules/Counterparties/Fintrox.Modules.Counterparties.Domain/Entities/CounterpartyLegalIdentifier.cs",
+      "fields": [
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "IdentifierType",
+          "rule": "text"
+        },
+        {
+          "name": "IdentifierValue",
+          "rule": "text"
+        },
+        {
+          "name": "CountryCode",
+          "rule": "country"
+        },
+        {
+          "name": "IsVerified",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Counterparties",
+      "entity": "CounterpartyContactMethod",
+      "path": "src/Modules/Counterparties/Fintrox.Modules.Counterparties.Domain/Entities/CounterpartyContactMethod.cs",
+      "fields": [
+        {
+          "name": "ContactId",
+          "rule": "id"
+        },
+        {
+          "name": "MethodType",
+          "rule": "text"
+        },
+        {
+          "name": "Value",
+          "rule": "text"
+        },
+        {
+          "name": "IsPrimary",
+          "rule": "bool"
+        },
+        {
+          "name": "IsVerified",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Counterparties",
+      "entity": "CounterpartyContactRole",
+      "path": "src/Modules/Counterparties/Fintrox.Modules.Counterparties.Domain/Entities/CounterpartyContactRole.cs",
+      "fields": [
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "ContactId",
+          "rule": "id"
+        },
+        {
+          "name": "RoleCode",
+          "rule": "text"
+        },
+        {
+          "name": "ValidFrom",
+          "rule": "date"
+        },
+        {
+          "name": "IsPrimary",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Counterparties",
+      "entity": "CounterpartyRelationship",
+      "path": "src/Modules/Counterparties/Fintrox.Modules.Counterparties.Domain/Entities/CounterpartyRelationship.cs",
+      "fields": [
+        {
+          "name": "SourceCounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "RelatedCounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "RelationshipType",
+          "rule": "text"
+        },
+        {
+          "name": "EffectiveFrom",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Counterparties",
+      "entity": "CounterpartyGroupMembership",
+      "path": "src/Modules/Counterparties/Fintrox.Modules.Counterparties.Domain/Entities/CounterpartyGroupMembership.cs",
+      "fields": [
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "CounterpartyGroupId",
+          "rule": "id"
+        },
+        {
+          "name": "JoinedOn",
+          "rule": "date"
+        },
+        {
+          "name": "IsPrimary",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Counterparties",
+      "entity": "CounterpartyClassification",
+      "path": "src/Modules/Counterparties/Fintrox.Modules.Counterparties.Domain/Entities/CounterpartyClassification.cs",
+      "fields": [
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "ClassificationCode",
+          "rule": "text"
+        },
+        {
+          "name": "AssignedOn",
+          "rule": "date"
+        },
+        {
+          "name": "AssignedByUserId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "Counterparties",
+      "entity": "CounterpartyCreditLimit",
+      "path": "src/Modules/Counterparties/Fintrox.Modules.Counterparties.Domain/Entities/CounterpartyCreditLimit.cs",
+      "fields": [
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "CreditLimit",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "EffectiveFrom",
+          "rule": "date"
+        },
+        {
+          "name": "ApprovedByUserId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "Counterparties",
+      "entity": "CounterpartyRiskAssessment",
+      "path": "src/Modules/Counterparties/Fintrox.Modules.Counterparties.Domain/Entities/CounterpartyRiskAssessment.cs",
+      "fields": [
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "RiskCategory",
+          "rule": "text"
+        },
+        {
+          "name": "RiskScore",
+          "rule": "nonnegativeInt"
+        },
+        {
+          "name": "AssessedOn",
+          "rule": "date"
+        },
+        {
+          "name": "ReviewerUserId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "Counterparties",
+      "entity": "CounterpartyDueDiligence",
+      "path": "src/Modules/Counterparties/Fintrox.Modules.Counterparties.Domain/Entities/CounterpartyDueDiligence.cs",
+      "fields": [
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "ReviewType",
+          "rule": "text"
+        },
+        {
+          "name": "ReviewedOn",
+          "rule": "date"
+        },
+        {
+          "name": "ExpiresOn",
+          "rule": "date"
+        },
+        {
+          "name": "Outcome",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Counterparties",
+      "entity": "CounterpartyTaxProfile",
+      "path": "src/Modules/Counterparties/Fintrox.Modules.Counterparties.Domain/Entities/CounterpartyTaxProfile.cs",
+      "fields": [
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "TaxRegistrationNumber",
+          "rule": "text"
+        },
+        {
+          "name": "CountryCode",
+          "rule": "country"
+        },
+        {
+          "name": "TaxCategory",
+          "rule": "text"
+        },
+        {
+          "name": "ValidFrom",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Counterparties",
+      "entity": "CounterpartyPaymentPreference",
+      "path": "src/Modules/Counterparties/Fintrox.Modules.Counterparties.Domain/Entities/CounterpartyPaymentPreference.cs",
+      "fields": [
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "PaymentTermId",
+          "rule": "id"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "PreferredMethod",
+          "rule": "text"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Counterparties",
+      "entity": "CounterpartyBankVerification",
+      "path": "src/Modules/Counterparties/Fintrox.Modules.Counterparties.Domain/Entities/CounterpartyBankVerification.cs",
+      "fields": [
+        {
+          "name": "CounterpartyBankAccountId",
+          "rule": "id"
+        },
+        {
+          "name": "VerificationMethod",
+          "rule": "text"
+        },
+        {
+          "name": "VerifiedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "VerifiedByUserId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "Counterparties",
+      "entity": "CounterpartyPriceAgreement",
+      "path": "src/Modules/Counterparties/Fintrox.Modules.Counterparties.Domain/Entities/CounterpartyPriceAgreement.cs",
+      "fields": [
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "PriceListId",
+          "rule": "id"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Counterparties",
+      "entity": "CounterpartyDocumentRequirement",
+      "path": "src/Modules/Counterparties/Fintrox.Modules.Counterparties.Domain/Entities/CounterpartyDocumentRequirement.cs",
+      "fields": [
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "DocumentType",
+          "rule": "text"
+        },
+        {
+          "name": "DueOn",
+          "rule": "date"
+        },
+        {
+          "name": "IsMandatory",
+          "rule": "bool"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Counterparties",
+      "entity": "CounterpartyCommunicationPreference",
+      "path": "src/Modules/Counterparties/Fintrox.Modules.Counterparties.Domain/Entities/CounterpartyCommunicationPreference.cs",
+      "fields": [
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "Channel",
+          "rule": "text"
+        },
+        {
+          "name": "LanguageCode",
+          "rule": "text"
+        },
+        {
+          "name": "IsOptedIn",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Counterparties",
+      "entity": "CounterpartyDispute",
+      "path": "src/Modules/Counterparties/Fintrox.Modules.Counterparties.Domain/Entities/CounterpartyDispute.cs",
+      "fields": [
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "Reference",
+          "rule": "text"
+        },
+        {
+          "name": "OpenedOn",
+          "rule": "date"
+        },
+        {
+          "name": "DisputedAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Counterparties",
+      "entity": "CounterpartyActivityTimeline",
+      "path": "src/Modules/Counterparties/Fintrox.Modules.Counterparties.Domain/Entities/CounterpartyActivityTimeline.cs",
+      "fields": [
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "EventType",
+          "rule": "text"
+        },
+        {
+          "name": "SourceReferenceId",
+          "rule": "id"
+        },
+        {
+          "name": "OccurredAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Description",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Counterparties",
+      "entity": "CounterpartyPortalAccess",
+      "path": "src/Modules/Counterparties/Fintrox.Modules.Counterparties.Domain/Entities/CounterpartyPortalAccess.cs",
+      "fields": [
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "UserId",
+          "rule": "id"
+        },
+        {
+          "name": "AccessRole",
+          "rule": "text"
+        },
+        {
+          "name": "GrantedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
     }
   ]
 }
