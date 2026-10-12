@@ -24,3 +24,9 @@ See [architecture](../../../docs/architecture.md) for the current legacy excepti
 `BankAccount`, `BankStatement`, `BankStatementLine`, `BankReconciliationMatch`.
 
 Models live in this module Domain/Entities directory; foreign objects are referenced by IDs. These are domain types, not registered database tables or endpoints. Existing legacy workflows remain in core projects. See [module progress](../../../docs/ai/MODULE_STATUS.md) for inventory and remaining work.
+
+## Domain expansion — 2026-10-13
+
+Added 22 constructor-validated entity records (26 total): `BankBranch`, `BankFeedConnection`, `BankFeedSyncJob`, `BankStatementImport`, `BankStatementImportError`, `BankStatementBalance`, `BankTransactionCategory`, `BankTransactionClassification`, `BankReconciliationSession`, `BankReconciliationAdjustment`, `BankPaymentInstruction`, `BankPaymentBatch`, `BankPaymentBatchLine`, `BankMandate`, `BankTransferBeneficiary`, `CashAccount`, `CashRegister`, `CashMovement`, `CashForecast`, `BankFeeRule`, `BankFeeCharge`, `CashSweepRule`.
+
+Model definitions only; existing legacy runtime is unchanged. Persistence, services, DTOs, endpoints, authorization and relational tests are pending. See [module status](../../../docs/ai/MODULE_STATUS.md).

@@ -1,6 +1,6 @@
 # Module status — 2026-10-13
 
-ENTITIES-001: 180 original domain entities. ENTITIES-EXPANSION underway: 225 inventoried module Domain classes across 36 modules. New classes are not EF mapped or API exposed; CI pending.
+ENTITIES-001: 180 original domain entities. ENTITIES-EXPANSION underway: 247 inventoried module Domain classes across 36 modules. New classes are not EF mapped or API exposed; CI pending.
 
 The new types have immutable IDs/organization ownership, constructor validation and typed business fields. They are not yet mapped in EF or exposed through APIs. No complete ERP workflow, database tenant isolation, authorization or cross-reference existence checks are claimed by these model classes.
 
@@ -10,7 +10,7 @@ Every module keeps five projects. Domain=PARTIAL; Application/Contracts/Infrastr
 |---|---|---:|---|---|
 | Accounting | `AccountGroup`, `AccountingDimension`, `AccountingDimensionValue`, `AccountingBook`, `RecurringJournal`, `AccountSegment`, `AccountSegmentValue`, `AccountHierarchyNode`, `AccountBalanceSnapshot`, `LedgerBookBalance`, `JournalBatch`, `JournalBatchLine`, `JournalApproval`, `PostingRuleVersion`, `PostingRuleAllocation`, `FiscalYearConfiguration`, `FiscalPeriodSchedule`, `PeriodCloseChecklist`, `PeriodCloseTask`, `PeriodCloseRun`, `ClosingEntry`, `OpeningBalanceImport`, `OpeningBalanceLine`, `AccrualSchedule`, `AccrualScheduleLine`, `DeferralSchedule`, `DeferralScheduleLine`, `CostAllocationRule`, `CostAllocationTarget`, `AccountingReconciliation`, `AccountingReconciliationLine`, `RecurringJournalOccurrence`, `DocumentNumberSequence`, `AccountingPolicyVersion`, `LedgerAdjustmentRequest` | 35 | PARTIAL (expanded 2026-10-13) | PENDING |
 | Audit | `AuditRetentionPolicy`, `AuditExportRequest`, `AuditEventDigest`, `AuditChainCheckpoint`, `AuditAccessRecord`, `AuditExportPart`, `AuditLegalHold`, `AuditRetentionExecution`, `AuditRedactionRequest`, `AuditEventRule`, `AuditPolicyAssignment`, `AuditAccessReview`, `AuditAccessReviewFinding`, `AuditAlert`, `AuditEvidenceAttachment`, `AuditComplianceCase`, `AuditActorSnapshot` | 17 | PARTIAL (expanded 2026-10-13) | PENDING |
-| Banking | `BankAccount`, `BankStatement`, `BankStatementLine`, `BankReconciliationMatch` | 4 | PARTIAL | PENDING |
+| Banking | `BankAccount`, `BankStatement`, `BankStatementLine`, `BankReconciliationMatch`, `BankBranch`, `BankFeedConnection`, `BankFeedSyncJob`, `BankStatementImport`, `BankStatementImportError`, `BankStatementBalance`, `BankTransactionCategory`, `BankTransactionClassification`, `BankReconciliationSession`, `BankReconciliationAdjustment`, `BankPaymentInstruction`, `BankPaymentBatch`, `BankPaymentBatchLine`, `BankMandate`, `BankTransferBeneficiary`, `CashAccount`, `CashRegister`, `CashMovement`, `CashForecast`, `BankFeeRule`, `BankFeeCharge`, `CashSweepRule` | 26 | PARTIAL (expanded 2026-10-13) | PENDING |
 | Budgeting | `Budget`, `BudgetVersion`, `BudgetLine`, `Forecast` | 4 | PARTIAL | PENDING |
 | CRM | `Lead`, `Opportunity`, `CrmActivity`, `SalesPipeline`, `PipelineStage`, `MarketingCampaign` | 6 | PARTIAL | PENDING |
 | Capabilities | `CapabilityDefinition`, `CapabilityDependency`, `OrganizationModuleInstallation`, `OrganizationCapabilityActivation`, `UserCapabilityEntitlement` | 5 | PARTIAL | PENDING |

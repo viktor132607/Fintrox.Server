@@ -4979,6 +4979,592 @@
           "rule": "instant"
         }
       ]
+    },
+    {
+      "module": "Banking",
+      "entity": "BankBranch",
+      "path": "src/Modules/Banking/Fintrox.Modules.Banking.Domain/Entities/BankBranch.cs",
+      "fields": [
+        {
+          "name": "BankName",
+          "rule": "text"
+        },
+        {
+          "name": "Bic",
+          "rule": "text"
+        },
+        {
+          "name": "CountryCode",
+          "rule": "country"
+        },
+        {
+          "name": "BranchCode",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Banking",
+      "entity": "BankFeedConnection",
+      "path": "src/Modules/Banking/Fintrox.Modules.Banking.Domain/Entities/BankFeedConnection.cs",
+      "fields": [
+        {
+          "name": "BankAccountId",
+          "rule": "id"
+        },
+        {
+          "name": "ProviderName",
+          "rule": "text"
+        },
+        {
+          "name": "ExternalConnectionId",
+          "rule": "text"
+        },
+        {
+          "name": "ConsentExpiresAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Banking",
+      "entity": "BankFeedSyncJob",
+      "path": "src/Modules/Banking/Fintrox.Modules.Banking.Domain/Entities/BankFeedSyncJob.cs",
+      "fields": [
+        {
+          "name": "ConnectionId",
+          "rule": "id"
+        },
+        {
+          "name": "StartedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        },
+        {
+          "name": "ImportedCount",
+          "rule": "nonnegativeInt"
+        }
+      ]
+    },
+    {
+      "module": "Banking",
+      "entity": "BankStatementImport",
+      "path": "src/Modules/Banking/Fintrox.Modules.Banking.Domain/Entities/BankStatementImport.cs",
+      "fields": [
+        {
+          "name": "BankAccountId",
+          "rule": "id"
+        },
+        {
+          "name": "SourceDocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "ImportedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "ImportedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "ImportFormat",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Banking",
+      "entity": "BankStatementImportError",
+      "path": "src/Modules/Banking/Fintrox.Modules.Banking.Domain/Entities/BankStatementImportError.cs",
+      "fields": [
+        {
+          "name": "ImportId",
+          "rule": "id"
+        },
+        {
+          "name": "SourceLineNumber",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "ErrorCode",
+          "rule": "text"
+        },
+        {
+          "name": "Description",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Banking",
+      "entity": "BankStatementBalance",
+      "path": "src/Modules/Banking/Fintrox.Modules.Banking.Domain/Entities/BankStatementBalance.cs",
+      "fields": [
+        {
+          "name": "StatementId",
+          "rule": "id"
+        },
+        {
+          "name": "BalanceDate",
+          "rule": "date"
+        },
+        {
+          "name": "AvailableAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "BookedAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Banking",
+      "entity": "BankTransactionCategory",
+      "path": "src/Modules/Banking/Fintrox.Modules.Banking.Domain/Entities/BankTransactionCategory.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "DefaultAccountId",
+          "rule": "id"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Banking",
+      "entity": "BankTransactionClassification",
+      "path": "src/Modules/Banking/Fintrox.Modules.Banking.Domain/Entities/BankTransactionClassification.cs",
+      "fields": [
+        {
+          "name": "StatementLineId",
+          "rule": "id"
+        },
+        {
+          "name": "CategoryId",
+          "rule": "id"
+        },
+        {
+          "name": "ConfidencePercent",
+          "rule": "percent"
+        },
+        {
+          "name": "ClassifiedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Banking",
+      "entity": "BankReconciliationSession",
+      "path": "src/Modules/Banking/Fintrox.Modules.Banking.Domain/Entities/BankReconciliationSession.cs",
+      "fields": [
+        {
+          "name": "BankAccountId",
+          "rule": "id"
+        },
+        {
+          "name": "FromDate",
+          "rule": "date"
+        },
+        {
+          "name": "ToDate",
+          "rule": "date"
+        },
+        {
+          "name": "StatementEndingBalance",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Banking",
+      "entity": "BankReconciliationAdjustment",
+      "path": "src/Modules/Banking/Fintrox.Modules.Banking.Domain/Entities/BankReconciliationAdjustment.cs",
+      "fields": [
+        {
+          "name": "ReconciliationSessionId",
+          "rule": "id"
+        },
+        {
+          "name": "StatementLineId",
+          "rule": "id"
+        },
+        {
+          "name": "AdjustmentType",
+          "rule": "text"
+        },
+        {
+          "name": "Amount",
+          "rule": "nonzero"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Banking",
+      "entity": "BankPaymentInstruction",
+      "path": "src/Modules/Banking/Fintrox.Modules.Banking.Domain/Entities/BankPaymentInstruction.cs",
+      "fields": [
+        {
+          "name": "BankAccountId",
+          "rule": "id"
+        },
+        {
+          "name": "BeneficiaryId",
+          "rule": "id"
+        },
+        {
+          "name": "PaymentReference",
+          "rule": "text"
+        },
+        {
+          "name": "ValueDate",
+          "rule": "date"
+        },
+        {
+          "name": "Amount",
+          "rule": "positive"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Banking",
+      "entity": "BankPaymentBatch",
+      "path": "src/Modules/Banking/Fintrox.Modules.Banking.Domain/Entities/BankPaymentBatch.cs",
+      "fields": [
+        {
+          "name": "BankAccountId",
+          "rule": "id"
+        },
+        {
+          "name": "BatchReference",
+          "rule": "text"
+        },
+        {
+          "name": "RequestedOn",
+          "rule": "date"
+        },
+        {
+          "name": "RequestedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Banking",
+      "entity": "BankPaymentBatchLine",
+      "path": "src/Modules/Banking/Fintrox.Modules.Banking.Domain/Entities/BankPaymentBatchLine.cs",
+      "fields": [
+        {
+          "name": "BatchId",
+          "rule": "id"
+        },
+        {
+          "name": "PaymentInstructionId",
+          "rule": "id"
+        },
+        {
+          "name": "LineNumber",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "Amount",
+          "rule": "positive"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Banking",
+      "entity": "BankMandate",
+      "path": "src/Modules/Banking/Fintrox.Modules.Banking.Domain/Entities/BankMandate.cs",
+      "fields": [
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "MandateReference",
+          "rule": "text"
+        },
+        {
+          "name": "SignedOn",
+          "rule": "date"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Banking",
+      "entity": "BankTransferBeneficiary",
+      "path": "src/Modules/Banking/Fintrox.Modules.Banking.Domain/Entities/BankTransferBeneficiary.cs",
+      "fields": [
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "BeneficiaryName",
+          "rule": "text"
+        },
+        {
+          "name": "Iban",
+          "rule": "text"
+        },
+        {
+          "name": "Bic",
+          "rule": "text"
+        },
+        {
+          "name": "CountryCode",
+          "rule": "country"
+        }
+      ]
+    },
+    {
+      "module": "Banking",
+      "entity": "CashAccount",
+      "path": "src/Modules/Banking/Fintrox.Modules.Banking.Domain/Entities/CashAccount.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "CustodianUserId",
+          "rule": "id"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Banking",
+      "entity": "CashRegister",
+      "path": "src/Modules/Banking/Fintrox.Modules.Banking.Domain/Entities/CashRegister.cs",
+      "fields": [
+        {
+          "name": "CashAccountId",
+          "rule": "id"
+        },
+        {
+          "name": "LocationCode",
+          "rule": "text"
+        },
+        {
+          "name": "OpeningAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "OpenedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Banking",
+      "entity": "CashMovement",
+      "path": "src/Modules/Banking/Fintrox.Modules.Banking.Domain/Entities/CashMovement.cs",
+      "fields": [
+        {
+          "name": "CashAccountId",
+          "rule": "id"
+        },
+        {
+          "name": "Reference",
+          "rule": "text"
+        },
+        {
+          "name": "MovementOn",
+          "rule": "date"
+        },
+        {
+          "name": "Amount",
+          "rule": "nonzero"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Banking",
+      "entity": "CashForecast",
+      "path": "src/Modules/Banking/Fintrox.Modules.Banking.Domain/Entities/CashForecast.cs",
+      "fields": [
+        {
+          "name": "BankAccountId",
+          "rule": "id"
+        },
+        {
+          "name": "ForecastOn",
+          "rule": "date"
+        },
+        {
+          "name": "ExpectedInflow",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "ExpectedOutflow",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Banking",
+      "entity": "BankFeeRule",
+      "path": "src/Modules/Banking/Fintrox.Modules.Banking.Domain/Entities/BankFeeRule.cs",
+      "fields": [
+        {
+          "name": "BankAccountId",
+          "rule": "id"
+        },
+        {
+          "name": "FeeType",
+          "rule": "text"
+        },
+        {
+          "name": "FlatAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "RatePercent",
+          "rule": "percent"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Banking",
+      "entity": "BankFeeCharge",
+      "path": "src/Modules/Banking/Fintrox.Modules.Banking.Domain/Entities/BankFeeCharge.cs",
+      "fields": [
+        {
+          "name": "BankAccountId",
+          "rule": "id"
+        },
+        {
+          "name": "StatementLineId",
+          "rule": "id"
+        },
+        {
+          "name": "ChargedOn",
+          "rule": "date"
+        },
+        {
+          "name": "Amount",
+          "rule": "positive"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Banking",
+      "entity": "CashSweepRule",
+      "path": "src/Modules/Banking/Fintrox.Modules.Banking.Domain/Entities/CashSweepRule.cs",
+      "fields": [
+        {
+          "name": "SourceBankAccountId",
+          "rule": "id"
+        },
+        {
+          "name": "TargetBankAccountId",
+          "rule": "id"
+        },
+        {
+          "name": "ThresholdAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
     }
   ]
 }
