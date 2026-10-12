@@ -1,13 +1,15 @@
 # Validation history — 2026-10-13
 
 ## ENTITIES-EXPANSION (2026-10-13)
+- VERIFIED for code commit 90d601e935c50f8d0874387d8db753962d1e821a in GitHub Actions run 38324236400, Build/Test/Migrations job 115059092795: Release build succeeded with 0 warnings, 0 errors; 2,877 tests passed, 0 failed, 0 skipped; EF model snapshot verification passed; PostgreSQL migrations applied and listed successfully. Docker publish job is separate.
+
 - CI run 38324015336 reached the Release build and identified five CA1711 type-naming analyzer errors (entity names ending Attribute / Exception). Renamed those model classes and updated all affected inventory paths and module documentation. New CI pending.
 - First expanded-head CI (38323676459) identified reserved C# keyword used as constructor parameter in Capabilities/CapabilityConstraint.Operator; fixed with escaped @operator in the next commit. Other generated identifiers were scanned against reserved C# keywords. New CI/build result pending.
 - All 36 modules expanded by 756 additional Domain entity classes: 936 total inventoried module model types; the 32 legacy core persistence types remain unchanged.
 - Recursive GitHub tree verified 936 distinct entity model source paths, all matched by the machine inventory; tree result was not truncated.
 - Verified 36 sequential per-module progress records and 36 module-status rows.
 - Expanded the inventory checker to verify field-property names/types and fixed dynamic reflection test samples for nationality and supply-country codes.
-- No local .NET SDK: build, tests and GitHub CI are not yet confirmed for this expansion. Previous 604 local passing tests below predate the new models.
+- No local .NET SDK: build, tests and PostgreSQL migration verification have now passed in the above GitHub Actions job. Previous 604 local passing tests below predate the new models.
 - Domain definitions only. EF mappings, migrations, authorization, application services, APIs and UI remain pending.
 
 

@@ -46,6 +46,6 @@ Module-by-module Domain entity expansion, preserving existing 180 entities and t
 - 36/36 module updates committed separately: 756 added C# Domain entity types; 936 module-owned Entity classes in total (initial 180 included).
 - GitHub recursive main tree has 936 matching unique model source files; architecture/domain-entities.json contains those 936 paths and all 36 module names.
 - ENTITY_EXPANSION_LOG.md contains exactly 36 ordered module entries, with a corresponding row in MODULE_STATUS.md for each.
-- .NET build/test/CI verification pending; no EF tables, module use cases, endpoints or frontend screens were added.
+- Verified Release build, 2,877 tests, EF snapshot and PostgreSQL migrations at code commit 90d601e9 (CI run 38324236400, build job 115059092795). No new EF tables, module use cases, endpoints or frontend screens were added.
 
 CI feedback: after the 36 module commits, five generated entity names ending Attribute/Exception were renamed to satisfy CA1711. Model counts and module ownership are unchanged. See VALIDATION.md.

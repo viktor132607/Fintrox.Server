@@ -3,7 +3,7 @@
 | Task ID | Title | Module | Priority | Dependencies | Status | Acceptance Criteria |
 |---|---|---|---|---|---|---|
 | ENTITIES-001 | Module entity foundation | All 36 | P0 user-directed | ARCH-001 | IMPLEMENTED — CI PENDING | 180 named types, all module boundaries preserved, invariant tests, per-module progress |
-| ENTITIES-EXPANSION | Deepen granular Domain models in all 36 modules | All 36 | P0 user-directed | ENTITIES-001 | IMPLEMENTED — CI PENDING | 756 added; 936 inventoried; per-module commits and documentation, full CI verification pending |
+| ENTITIES-EXPANSION | Deepen granular Domain models in all 36 modules | All 36 | P0 user-directed | ENTITIES-001 | COMPLETE — VERIFIED | 756 added; 936 inventoried; per-module commits/docs; Release build, 2877 tests, EF/PostgreSQL verified in CI 38324236400 |
 | ENTITIES-002 | Integrate entity persistence and use cases | Incremental modules | P1 | ENTITIES-001 | PENDING | EF constraints, authorization, contracts, lifecycle behavior, PostgreSQL and HTTP tests per capability |
 | ARCH-001 | 13 new module scaffolds | Platform | P0 | Baseline | COMPLETE | 36 modules, 186 projects, architecture passes |
 | VERIFY-001 | Verify baseline restore/build/tests | Platform | P0 | ARCH-001 | COMPLETE | CI 37860035722: restore/build/33 tests/migrations pass |

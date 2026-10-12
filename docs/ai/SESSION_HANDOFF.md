@@ -1,7 +1,7 @@
 # Fintrox Session Handoff — 2026-10-13
 
 ## Current milestone
-ENTITIES-EXPANSION: ALL 36 MODULES EXPANDED. 936 total new-era Domain entity classes (including original 180); 32 legacy runtime model types preserved. Build/CI not yet verified for this expansion.
+ENTITIES-EXPANSION: ALL 36 MODULES EXPANDED. 936 total new-era Domain entity classes (including original 180); 32 legacy runtime model types preserved. Release build, 2,877 tests and PostgreSQL/EF checks verified in CI 38324236400.
 
 
 ## Changes
@@ -11,6 +11,7 @@ Earlier foundation milestone (2026-10-11): 180 new domain entity classes across 
 Existing 32 legacy entity/persistence types, financial runtime behavior and migrations preserved. No extra projects or cross-module references.
 
 ## Validation
+Verified code commit 90d601e935c50f8d0874387d8db753962d1e821a: GitHub CI 38324236400, job 115059092795, Release build 0 warnings/errors; 2,877 tests passed (0 failed/skipped), EF snapshot and PostgreSQL migrations passed. Docker publication is independent.
 2026-10-13: CI 38324015336 found five CA1711 analyzer naming failures; all five model types renamed and inventory/docs synchronized. Retesting pending.
 2026-10-13: prior CI 38323676459 exposed invalid keyword parameter operator, now escaped as @operator; new CI result pending.
 2026-10-13: GitHub recursive tree contains 936 unique module Entity .cs paths and the machine inventory lists exactly these 936 paths; 36 module logs and 36 module status rows. Expansion build, tests and CI results are not yet confirmed (see VALIDATION.md).
@@ -21,4 +22,4 @@ Existing 32 legacy entity/persistence types, financial runtime behavior and migr
 Entity foundation only. New types are not yet EF tables, services, DTOs, endpoints or frontend screens. Domain constructor validation is not tenant authorization or reference existence validation. No complete ERP module claimed.
 
 ## Next exact action
-Validate the complete expanded entity inventory and C# build/tests; inspect duplicates and source correctness, then commence module-by-module persistence/use cases (ENTITIES-002) with security and PostgreSQL tests.
+Domain expansion is complete and verified. Before ENTITIES-002 persistence/use cases, review per-module model boundaries and missing value objects. Then implement EF mappings/migrations, application workflows, authorization, endpoints and PostgreSQL/HTTP tests module by module. Frontend still has only 23 shells and no operational business screens; FE-001 remains pending.
