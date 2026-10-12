@@ -10184,6 +10184,526 @@
           "rule": "text"
         }
       ]
+    },
+    {
+      "module": "FixedAssets",
+      "entity": "AssetAcquisition",
+      "path": "src/Modules/FixedAssets/Fintrox.Modules.FixedAssets.Domain/Entities/AssetAcquisition.cs",
+      "fields": [
+        {
+          "name": "FixedAssetId",
+          "rule": "id"
+        },
+        {
+          "name": "SupplierId",
+          "rule": "id"
+        },
+        {
+          "name": "AcquisitionOn",
+          "rule": "date"
+        },
+        {
+          "name": "AcquisitionCost",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "SourceDocumentId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "FixedAssets",
+      "entity": "AssetComponent",
+      "path": "src/Modules/FixedAssets/Fintrox.Modules.FixedAssets.Domain/Entities/AssetComponent.cs",
+      "fields": [
+        {
+          "name": "FixedAssetId",
+          "rule": "id"
+        },
+        {
+          "name": "ComponentCode",
+          "rule": "text"
+        },
+        {
+          "name": "Description",
+          "rule": "text"
+        },
+        {
+          "name": "CapitalizedCost",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "FixedAssets",
+      "entity": "AssetLocation",
+      "path": "src/Modules/FixedAssets/Fintrox.Modules.FixedAssets.Domain/Entities/AssetLocation.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "ResponsibleUserId",
+          "rule": "id"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "FixedAssets",
+      "entity": "AssetLocationHistory",
+      "path": "src/Modules/FixedAssets/Fintrox.Modules.FixedAssets.Domain/Entities/AssetLocationHistory.cs",
+      "fields": [
+        {
+          "name": "FixedAssetId",
+          "rule": "id"
+        },
+        {
+          "name": "AssetLocationId",
+          "rule": "id"
+        },
+        {
+          "name": "MovedOn",
+          "rule": "date"
+        },
+        {
+          "name": "MovedByUserId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "FixedAssets",
+      "entity": "AssetCustodianAssignment",
+      "path": "src/Modules/FixedAssets/Fintrox.Modules.FixedAssets.Domain/Entities/AssetCustodianAssignment.cs",
+      "fields": [
+        {
+          "name": "FixedAssetId",
+          "rule": "id"
+        },
+        {
+          "name": "CustodianUserId",
+          "rule": "id"
+        },
+        {
+          "name": "AssignedOn",
+          "rule": "date"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "FixedAssets",
+      "entity": "AssetDepreciationPolicy",
+      "path": "src/Modules/FixedAssets/Fintrox.Modules.FixedAssets.Domain/Entities/AssetDepreciationPolicy.cs",
+      "fields": [
+        {
+          "name": "FixedAssetId",
+          "rule": "id"
+        },
+        {
+          "name": "Method",
+          "rule": "text"
+        },
+        {
+          "name": "UsefulLifeMonths",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "ResidualValue",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "FixedAssets",
+      "entity": "AssetDepreciationRun",
+      "path": "src/Modules/FixedAssets/Fintrox.Modules.FixedAssets.Domain/Entities/AssetDepreciationRun.cs",
+      "fields": [
+        {
+          "name": "AccountingBookId",
+          "rule": "id"
+        },
+        {
+          "name": "PeriodStartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "PeriodEndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "RunAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "FixedAssets",
+      "entity": "AssetDepreciationRunLine",
+      "path": "src/Modules/FixedAssets/Fintrox.Modules.FixedAssets.Domain/Entities/AssetDepreciationRunLine.cs",
+      "fields": [
+        {
+          "name": "RunId",
+          "rule": "id"
+        },
+        {
+          "name": "FixedAssetId",
+          "rule": "id"
+        },
+        {
+          "name": "DepreciationAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "FixedAssets",
+      "entity": "AssetImpairment",
+      "path": "src/Modules/FixedAssets/Fintrox.Modules.FixedAssets.Domain/Entities/AssetImpairment.cs",
+      "fields": [
+        {
+          "name": "FixedAssetId",
+          "rule": "id"
+        },
+        {
+          "name": "RecognizedOn",
+          "rule": "date"
+        },
+        {
+          "name": "ImpairmentAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "FixedAssets",
+      "entity": "AssetRevaluation",
+      "path": "src/Modules/FixedAssets/Fintrox.Modules.FixedAssets.Domain/Entities/AssetRevaluation.cs",
+      "fields": [
+        {
+          "name": "FixedAssetId",
+          "rule": "id"
+        },
+        {
+          "name": "RevaluedOn",
+          "rule": "date"
+        },
+        {
+          "name": "PreviousValue",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "NewValue",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "FixedAssets",
+      "entity": "AssetMaintenancePlan",
+      "path": "src/Modules/FixedAssets/Fintrox.Modules.FixedAssets.Domain/Entities/AssetMaintenancePlan.cs",
+      "fields": [
+        {
+          "name": "FixedAssetId",
+          "rule": "id"
+        },
+        {
+          "name": "PlanCode",
+          "rule": "text"
+        },
+        {
+          "name": "NextServiceOn",
+          "rule": "date"
+        },
+        {
+          "name": "IntervalDays",
+          "rule": "positiveInt"
+        }
+      ]
+    },
+    {
+      "module": "FixedAssets",
+      "entity": "AssetMaintenanceEvent",
+      "path": "src/Modules/FixedAssets/Fintrox.Modules.FixedAssets.Domain/Entities/AssetMaintenanceEvent.cs",
+      "fields": [
+        {
+          "name": "FixedAssetId",
+          "rule": "id"
+        },
+        {
+          "name": "ServiceDate",
+          "rule": "date"
+        },
+        {
+          "name": "ServiceType",
+          "rule": "text"
+        },
+        {
+          "name": "Cost",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "FixedAssets",
+      "entity": "AssetInsurancePolicy",
+      "path": "src/Modules/FixedAssets/Fintrox.Modules.FixedAssets.Domain/Entities/AssetInsurancePolicy.cs",
+      "fields": [
+        {
+          "name": "FixedAssetId",
+          "rule": "id"
+        },
+        {
+          "name": "PolicyNumber",
+          "rule": "text"
+        },
+        {
+          "name": "ProviderName",
+          "rule": "text"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "FixedAssets",
+      "entity": "AssetTransfer",
+      "path": "src/Modules/FixedAssets/Fintrox.Modules.FixedAssets.Domain/Entities/AssetTransfer.cs",
+      "fields": [
+        {
+          "name": "FixedAssetId",
+          "rule": "id"
+        },
+        {
+          "name": "FromLocationId",
+          "rule": "id"
+        },
+        {
+          "name": "ToLocationId",
+          "rule": "id"
+        },
+        {
+          "name": "TransferredOn",
+          "rule": "date"
+        },
+        {
+          "name": "AuthorizedByUserId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "FixedAssets",
+      "entity": "AssetDisposalLine",
+      "path": "src/Modules/FixedAssets/Fintrox.Modules.FixedAssets.Domain/Entities/AssetDisposalLine.cs",
+      "fields": [
+        {
+          "name": "AssetDisposalId",
+          "rule": "id"
+        },
+        {
+          "name": "FixedAssetId",
+          "rule": "id"
+        },
+        {
+          "name": "Proceeds",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "CarryingValue",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "FixedAssets",
+      "entity": "AssetWriteOff",
+      "path": "src/Modules/FixedAssets/Fintrox.Modules.FixedAssets.Domain/Entities/AssetWriteOff.cs",
+      "fields": [
+        {
+          "name": "FixedAssetId",
+          "rule": "id"
+        },
+        {
+          "name": "WrittenOffOn",
+          "rule": "date"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        },
+        {
+          "name": "Amount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "FixedAssets",
+      "entity": "AssetInventoryCount",
+      "path": "src/Modules/FixedAssets/Fintrox.Modules.FixedAssets.Domain/Entities/AssetInventoryCount.cs",
+      "fields": [
+        {
+          "name": "LocationId",
+          "rule": "id"
+        },
+        {
+          "name": "CountedOn",
+          "rule": "date"
+        },
+        {
+          "name": "CountedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "FixedAssets",
+      "entity": "AssetInventoryCountLine",
+      "path": "src/Modules/FixedAssets/Fintrox.Modules.FixedAssets.Domain/Entities/AssetInventoryCountLine.cs",
+      "fields": [
+        {
+          "name": "CountId",
+          "rule": "id"
+        },
+        {
+          "name": "FixedAssetId",
+          "rule": "id"
+        },
+        {
+          "name": "IsFound",
+          "rule": "bool"
+        },
+        {
+          "name": "Condition",
+          "rule": "text"
+        },
+        {
+          "name": "Notes",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "FixedAssets",
+      "entity": "AssetCapitalization",
+      "path": "src/Modules/FixedAssets/Fintrox.Modules.FixedAssets.Domain/Entities/AssetCapitalization.cs",
+      "fields": [
+        {
+          "name": "FixedAssetId",
+          "rule": "id"
+        },
+        {
+          "name": "CapitalizedOn",
+          "rule": "date"
+        },
+        {
+          "name": "SourceDocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "CapitalizedAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "FixedAssets",
+      "entity": "AssetDepreciationAdjustment",
+      "path": "src/Modules/FixedAssets/Fintrox.Modules.FixedAssets.Domain/Entities/AssetDepreciationAdjustment.cs",
+      "fields": [
+        {
+          "name": "FixedAssetId",
+          "rule": "id"
+        },
+        {
+          "name": "PeriodId",
+          "rule": "id"
+        },
+        {
+          "name": "AdjustmentAmount",
+          "rule": "nonzero"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        }
+      ]
     }
   ]
 }
