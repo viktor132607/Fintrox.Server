@@ -18340,6 +18340,518 @@
           "rule": "nonnegative"
         }
       ]
+    },
+    {
+      "module": "RevenueManagement",
+      "entity": "RevenueRecognitionPolicy",
+      "path": "src/Modules/RevenueManagement/Fintrox.Modules.RevenueManagement.Domain/Entities/RevenueRecognitionPolicy.cs",
+      "fields": [
+        {
+          "name": "PolicyCode",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "Method",
+          "rule": "text"
+        },
+        {
+          "name": "EffectiveFrom",
+          "rule": "date"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "RevenueManagement",
+      "entity": "RevenueAllocationMethod",
+      "path": "src/Modules/RevenueManagement/Fintrox.Modules.RevenueManagement.Domain/Entities/RevenueAllocationMethod.cs",
+      "fields": [
+        {
+          "name": "MethodCode",
+          "rule": "text"
+        },
+        {
+          "name": "Description",
+          "rule": "text"
+        },
+        {
+          "name": "AllocationBasis",
+          "rule": "text"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "RevenueManagement",
+      "entity": "RevenueContractLine",
+      "path": "src/Modules/RevenueManagement/Fintrox.Modules.RevenueManagement.Domain/Entities/RevenueContractLine.cs",
+      "fields": [
+        {
+          "name": "RevenueContractId",
+          "rule": "id"
+        },
+        {
+          "name": "ProductId",
+          "rule": "id"
+        },
+        {
+          "name": "Quantity",
+          "rule": "positive"
+        },
+        {
+          "name": "TransactionPrice",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "RevenueManagement",
+      "entity": "RevenueContractModification",
+      "path": "src/Modules/RevenueManagement/Fintrox.Modules.RevenueManagement.Domain/Entities/RevenueContractModification.cs",
+      "fields": [
+        {
+          "name": "RevenueContractId",
+          "rule": "id"
+        },
+        {
+          "name": "ModificationDate",
+          "rule": "date"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        },
+        {
+          "name": "ChangeAmount",
+          "rule": "nonzero"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "RevenueManagement",
+      "entity": "PerformanceObligationAllocation",
+      "path": "src/Modules/RevenueManagement/Fintrox.Modules.RevenueManagement.Domain/Entities/PerformanceObligationAllocation.cs",
+      "fields": [
+        {
+          "name": "PerformanceObligationId",
+          "rule": "id"
+        },
+        {
+          "name": "ContractLineId",
+          "rule": "id"
+        },
+        {
+          "name": "AllocatedPrice",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "RevenueManagement",
+      "entity": "PerformanceObligationMilestone",
+      "path": "src/Modules/RevenueManagement/Fintrox.Modules.RevenueManagement.Domain/Entities/PerformanceObligationMilestone.cs",
+      "fields": [
+        {
+          "name": "PerformanceObligationId",
+          "rule": "id"
+        },
+        {
+          "name": "MilestoneCode",
+          "rule": "text"
+        },
+        {
+          "name": "DueOn",
+          "rule": "date"
+        },
+        {
+          "name": "CompletionPercent",
+          "rule": "percent"
+        }
+      ]
+    },
+    {
+      "module": "RevenueManagement",
+      "entity": "RevenueRecognitionSchedule",
+      "path": "src/Modules/RevenueManagement/Fintrox.Modules.RevenueManagement.Domain/Entities/RevenueRecognitionSchedule.cs",
+      "fields": [
+        {
+          "name": "RevenueContractId",
+          "rule": "id"
+        },
+        {
+          "name": "AccountingBookId",
+          "rule": "id"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "RevenueManagement",
+      "entity": "RevenueRecognitionScheduleLine",
+      "path": "src/Modules/RevenueManagement/Fintrox.Modules.RevenueManagement.Domain/Entities/RevenueRecognitionScheduleLine.cs",
+      "fields": [
+        {
+          "name": "ScheduleId",
+          "rule": "id"
+        },
+        {
+          "name": "PerformanceObligationId",
+          "rule": "id"
+        },
+        {
+          "name": "RecognizeOn",
+          "rule": "date"
+        },
+        {
+          "name": "Amount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "RevenueManagement",
+      "entity": "RevenueRecognitionEvent",
+      "path": "src/Modules/RevenueManagement/Fintrox.Modules.RevenueManagement.Domain/Entities/RevenueRecognitionEvent.cs",
+      "fields": [
+        {
+          "name": "ScheduleLineId",
+          "rule": "id"
+        },
+        {
+          "name": "JournalEntryId",
+          "rule": "id"
+        },
+        {
+          "name": "RecognizedOn",
+          "rule": "date"
+        },
+        {
+          "name": "RecognizedAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "RevenueManagement",
+      "entity": "DeferredRevenueBalance",
+      "path": "src/Modules/RevenueManagement/Fintrox.Modules.RevenueManagement.Domain/Entities/DeferredRevenueBalance.cs",
+      "fields": [
+        {
+          "name": "RevenueContractId",
+          "rule": "id"
+        },
+        {
+          "name": "AsOfDate",
+          "rule": "date"
+        },
+        {
+          "name": "DeferredAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "RevenueManagement",
+      "entity": "AccruedRevenueBalance",
+      "path": "src/Modules/RevenueManagement/Fintrox.Modules.RevenueManagement.Domain/Entities/AccruedRevenueBalance.cs",
+      "fields": [
+        {
+          "name": "RevenueContractId",
+          "rule": "id"
+        },
+        {
+          "name": "AsOfDate",
+          "rule": "date"
+        },
+        {
+          "name": "AccruedAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "RevenueManagement",
+      "entity": "RevenueRecognitionAdjustment",
+      "path": "src/Modules/RevenueManagement/Fintrox.Modules.RevenueManagement.Domain/Entities/RevenueRecognitionAdjustment.cs",
+      "fields": [
+        {
+          "name": "RecognitionEventId",
+          "rule": "id"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        },
+        {
+          "name": "AdjustmentAmount",
+          "rule": "nonzero"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "AdjustedOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "RevenueManagement",
+      "entity": "RevenueRecognitionReversal",
+      "path": "src/Modules/RevenueManagement/Fintrox.Modules.RevenueManagement.Domain/Entities/RevenueRecognitionReversal.cs",
+      "fields": [
+        {
+          "name": "OriginalRecognitionEventId",
+          "rule": "id"
+        },
+        {
+          "name": "ReversalJournalId",
+          "rule": "id"
+        },
+        {
+          "name": "ReversedOn",
+          "rule": "date"
+        },
+        {
+          "name": "Amount",
+          "rule": "positive"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "RevenueManagement",
+      "entity": "RevenueContractDiscount",
+      "path": "src/Modules/RevenueManagement/Fintrox.Modules.RevenueManagement.Domain/Entities/RevenueContractDiscount.cs",
+      "fields": [
+        {
+          "name": "RevenueContractId",
+          "rule": "id"
+        },
+        {
+          "name": "DiscountType",
+          "rule": "text"
+        },
+        {
+          "name": "Amount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "RevenueManagement",
+      "entity": "RevenueContractVariableConsideration",
+      "path": "src/Modules/RevenueManagement/Fintrox.Modules.RevenueManagement.Domain/Entities/RevenueContractVariableConsideration.cs",
+      "fields": [
+        {
+          "name": "RevenueContractId",
+          "rule": "id"
+        },
+        {
+          "name": "ConsiderationType",
+          "rule": "text"
+        },
+        {
+          "name": "EstimatedAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "EstimatedOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "RevenueManagement",
+      "entity": "RevenueContractCurrencyRate",
+      "path": "src/Modules/RevenueManagement/Fintrox.Modules.RevenueManagement.Domain/Entities/RevenueContractCurrencyRate.cs",
+      "fields": [
+        {
+          "name": "RevenueContractId",
+          "rule": "id"
+        },
+        {
+          "name": "ConversionOn",
+          "rule": "date"
+        },
+        {
+          "name": "SourceCurrency",
+          "rule": "currency"
+        },
+        {
+          "name": "TargetCurrency",
+          "rule": "currency"
+        },
+        {
+          "name": "AppliedRate",
+          "rule": "positive"
+        }
+      ]
+    },
+    {
+      "module": "RevenueManagement",
+      "entity": "RevenueContractCost",
+      "path": "src/Modules/RevenueManagement/Fintrox.Modules.RevenueManagement.Domain/Entities/RevenueContractCost.cs",
+      "fields": [
+        {
+          "name": "RevenueContractId",
+          "rule": "id"
+        },
+        {
+          "name": "CostType",
+          "rule": "text"
+        },
+        {
+          "name": "Amount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "IncurredOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "RevenueManagement",
+      "entity": "RevenueContractCostAmortization",
+      "path": "src/Modules/RevenueManagement/Fintrox.Modules.RevenueManagement.Domain/Entities/RevenueContractCostAmortization.cs",
+      "fields": [
+        {
+          "name": "RevenueContractCostId",
+          "rule": "id"
+        },
+        {
+          "name": "AmortizationOn",
+          "rule": "date"
+        },
+        {
+          "name": "Amount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "RevenueManagement",
+      "entity": "RevenueRecognitionAudit",
+      "path": "src/Modules/RevenueManagement/Fintrox.Modules.RevenueManagement.Domain/Entities/RevenueRecognitionAudit.cs",
+      "fields": [
+        {
+          "name": "RevenueContractId",
+          "rule": "id"
+        },
+        {
+          "name": "EventCode",
+          "rule": "text"
+        },
+        {
+          "name": "ActorUserId",
+          "rule": "id"
+        },
+        {
+          "name": "OccurredAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Description",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "RevenueManagement",
+      "entity": "RevenueRecognitionDisclosure",
+      "path": "src/Modules/RevenueManagement/Fintrox.Modules.RevenueManagement.Domain/Entities/RevenueRecognitionDisclosure.cs",
+      "fields": [
+        {
+          "name": "AccountingPeriodId",
+          "rule": "id"
+        },
+        {
+          "name": "DisclosureType",
+          "rule": "text"
+        },
+        {
+          "name": "Amount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "Comment",
+          "rule": "text"
+        }
+      ]
     }
   ]
 }

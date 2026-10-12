@@ -55,3 +55,9 @@ See [architecture](../../../docs/architecture.md) and [master roadmap](../../../
 `RevenueRecognitionRule`, `RevenueContract`, `PerformanceObligation`, `RevenueScheduleLine`, `RevenueAdjustment`.
 
 Models live in this module Domain/Entities directory; foreign objects are referenced by IDs. These are domain types, not registered database tables or endpoints. Existing legacy workflows remain in core projects. See [module progress](../../../docs/ai/MODULE_STATUS.md) for inventory and remaining work.
+
+## Domain expansion — 2026-10-13
+
+Added 20 immutable constructor-validated entity models (25 total): `RevenueRecognitionPolicy`, `RevenueAllocationMethod`, `RevenueContractLine`, `RevenueContractModification`, `PerformanceObligationAllocation`, `PerformanceObligationMilestone`, `RevenueRecognitionSchedule`, `RevenueRecognitionScheduleLine`, `RevenueRecognitionEvent`, `DeferredRevenueBalance`, `AccruedRevenueBalance`, `RevenueRecognitionAdjustment`, `RevenueRecognitionReversal`, `RevenueContractDiscount`, `RevenueContractVariableConsideration`, `RevenueContractCurrencyRate`, `RevenueContractCost`, `RevenueContractCostAmortization`, `RevenueRecognitionAudit`, `RevenueRecognitionDisclosure`.
+
+Cross-module IDs require application authorization; persistence, use cases, DTOs, controllers, migrations and accounting tests remain pending.
