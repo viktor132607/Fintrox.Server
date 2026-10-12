@@ -17319,6 +17319,543 @@
           "rule": "id"
         }
       ]
+    },
+    {
+      "module": "Reporting",
+      "entity": "ReportDataset",
+      "path": "src/Modules/Reporting/Fintrox.Modules.Reporting.Domain/Entities/ReportDataset.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "OwnerModuleCode",
+          "rule": "text"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Reporting",
+      "entity": "ReportDatasetField",
+      "path": "src/Modules/Reporting/Fintrox.Modules.Reporting.Domain/Entities/ReportDatasetField.cs",
+      "fields": [
+        {
+          "name": "DatasetId",
+          "rule": "id"
+        },
+        {
+          "name": "FieldCode",
+          "rule": "text"
+        },
+        {
+          "name": "DataType",
+          "rule": "text"
+        },
+        {
+          "name": "IsSensitive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Reporting",
+      "entity": "ReportParameter",
+      "path": "src/Modules/Reporting/Fintrox.Modules.Reporting.Domain/Entities/ReportParameter.cs",
+      "fields": [
+        {
+          "name": "ReportDefinitionId",
+          "rule": "id"
+        },
+        {
+          "name": "ParameterCode",
+          "rule": "text"
+        },
+        {
+          "name": "DataType",
+          "rule": "text"
+        },
+        {
+          "name": "DefaultValue",
+          "rule": "text"
+        },
+        {
+          "name": "IsRequired",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Reporting",
+      "entity": "ReportFilter",
+      "path": "src/Modules/Reporting/Fintrox.Modules.Reporting.Domain/Entities/ReportFilter.cs",
+      "fields": [
+        {
+          "name": "ReportDefinitionId",
+          "rule": "id"
+        },
+        {
+          "name": "FieldCode",
+          "rule": "text"
+        },
+        {
+          "name": "FilterOperator",
+          "rule": "text"
+        },
+        {
+          "name": "Value",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Reporting",
+      "entity": "ReportSortRule",
+      "path": "src/Modules/Reporting/Fintrox.Modules.Reporting.Domain/Entities/ReportSortRule.cs",
+      "fields": [
+        {
+          "name": "ReportDefinitionId",
+          "rule": "id"
+        },
+        {
+          "name": "FieldCode",
+          "rule": "text"
+        },
+        {
+          "name": "Direction",
+          "rule": "text"
+        },
+        {
+          "name": "Priority",
+          "rule": "nonnegativeInt"
+        }
+      ]
+    },
+    {
+      "module": "Reporting",
+      "entity": "ReportGrouping",
+      "path": "src/Modules/Reporting/Fintrox.Modules.Reporting.Domain/Entities/ReportGrouping.cs",
+      "fields": [
+        {
+          "name": "ReportDefinitionId",
+          "rule": "id"
+        },
+        {
+          "name": "FieldCode",
+          "rule": "text"
+        },
+        {
+          "name": "GroupingLevel",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "IsCollapsed",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Reporting",
+      "entity": "ReportCalculatedField",
+      "path": "src/Modules/Reporting/Fintrox.Modules.Reporting.Domain/Entities/ReportCalculatedField.cs",
+      "fields": [
+        {
+          "name": "ReportDefinitionId",
+          "rule": "id"
+        },
+        {
+          "name": "FieldCode",
+          "rule": "text"
+        },
+        {
+          "name": "Formula",
+          "rule": "text"
+        },
+        {
+          "name": "DataType",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Reporting",
+      "entity": "ReportLayout",
+      "path": "src/Modules/Reporting/Fintrox.Modules.Reporting.Domain/Entities/ReportLayout.cs",
+      "fields": [
+        {
+          "name": "ReportDefinitionId",
+          "rule": "id"
+        },
+        {
+          "name": "LayoutType",
+          "rule": "text"
+        },
+        {
+          "name": "LayoutJson",
+          "rule": "json"
+        },
+        {
+          "name": "VersionNumber",
+          "rule": "positiveInt"
+        }
+      ]
+    },
+    {
+      "module": "Reporting",
+      "entity": "ReportColumn",
+      "path": "src/Modules/Reporting/Fintrox.Modules.Reporting.Domain/Entities/ReportColumn.cs",
+      "fields": [
+        {
+          "name": "ReportLayoutId",
+          "rule": "id"
+        },
+        {
+          "name": "FieldCode",
+          "rule": "text"
+        },
+        {
+          "name": "Header",
+          "rule": "text"
+        },
+        {
+          "name": "Position",
+          "rule": "nonnegativeInt"
+        },
+        {
+          "name": "IsVisible",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Reporting",
+      "entity": "ReportSection",
+      "path": "src/Modules/Reporting/Fintrox.Modules.Reporting.Domain/Entities/ReportSection.cs",
+      "fields": [
+        {
+          "name": "ReportLayoutId",
+          "rule": "id"
+        },
+        {
+          "name": "SectionCode",
+          "rule": "text"
+        },
+        {
+          "name": "Title",
+          "rule": "text"
+        },
+        {
+          "name": "Position",
+          "rule": "nonnegativeInt"
+        }
+      ]
+    },
+    {
+      "module": "Reporting",
+      "entity": "ReportRun",
+      "path": "src/Modules/Reporting/Fintrox.Modules.Reporting.Domain/Entities/ReportRun.cs",
+      "fields": [
+        {
+          "name": "ReportDefinitionId",
+          "rule": "id"
+        },
+        {
+          "name": "RequestedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "RequestedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Reporting",
+      "entity": "ReportRunParameter",
+      "path": "src/Modules/Reporting/Fintrox.Modules.Reporting.Domain/Entities/ReportRunParameter.cs",
+      "fields": [
+        {
+          "name": "ReportRunId",
+          "rule": "id"
+        },
+        {
+          "name": "ParameterCode",
+          "rule": "text"
+        },
+        {
+          "name": "Value",
+          "rule": "text"
+        },
+        {
+          "name": "IsSensitive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Reporting",
+      "entity": "ReportResultSnapshot",
+      "path": "src/Modules/Reporting/Fintrox.Modules.Reporting.Domain/Entities/ReportResultSnapshot.cs",
+      "fields": [
+        {
+          "name": "ReportRunId",
+          "rule": "id"
+        },
+        {
+          "name": "RowCount",
+          "rule": "nonnegativeLong"
+        },
+        {
+          "name": "GeneratedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "StorageReference",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Reporting",
+      "entity": "ReportExport",
+      "path": "src/Modules/Reporting/Fintrox.Modules.Reporting.Domain/Entities/ReportExport.cs",
+      "fields": [
+        {
+          "name": "ReportRunId",
+          "rule": "id"
+        },
+        {
+          "name": "ExportFormat",
+          "rule": "text"
+        },
+        {
+          "name": "DocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "ExportedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Reporting",
+      "entity": "ReportSubscription",
+      "path": "src/Modules/Reporting/Fintrox.Modules.Reporting.Domain/Entities/ReportSubscription.cs",
+      "fields": [
+        {
+          "name": "ReportDefinitionId",
+          "rule": "id"
+        },
+        {
+          "name": "RecipientUserId",
+          "rule": "id"
+        },
+        {
+          "name": "DeliveryChannel",
+          "rule": "text"
+        },
+        {
+          "name": "IsEnabled",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Reporting",
+      "entity": "ReportDistributionList",
+      "path": "src/Modules/Reporting/Fintrox.Modules.Reporting.Domain/Entities/ReportDistributionList.cs",
+      "fields": [
+        {
+          "name": "Code",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "OwnerUserId",
+          "rule": "id"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Reporting",
+      "entity": "ReportDistributionMember",
+      "path": "src/Modules/Reporting/Fintrox.Modules.Reporting.Domain/Entities/ReportDistributionMember.cs",
+      "fields": [
+        {
+          "name": "DistributionListId",
+          "rule": "id"
+        },
+        {
+          "name": "RecipientUserId",
+          "rule": "id"
+        },
+        {
+          "name": "JoinedOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Reporting",
+      "entity": "ReportAccessPolicy",
+      "path": "src/Modules/Reporting/Fintrox.Modules.Reporting.Domain/Entities/ReportAccessPolicy.cs",
+      "fields": [
+        {
+          "name": "ReportDefinitionId",
+          "rule": "id"
+        },
+        {
+          "name": "RoleCode",
+          "rule": "text"
+        },
+        {
+          "name": "AccessLevel",
+          "rule": "text"
+        },
+        {
+          "name": "IsAllowed",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Reporting",
+      "entity": "KpiTarget",
+      "path": "src/Modules/Reporting/Fintrox.Modules.Reporting.Domain/Entities/KpiTarget.cs",
+      "fields": [
+        {
+          "name": "KpiDefinitionId",
+          "rule": "id"
+        },
+        {
+          "name": "TargetValue",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "MeasurementUnit",
+          "rule": "text"
+        },
+        {
+          "name": "EffectiveFrom",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Reporting",
+      "entity": "KpiSnapshot",
+      "path": "src/Modules/Reporting/Fintrox.Modules.Reporting.Domain/Entities/KpiSnapshot.cs",
+      "fields": [
+        {
+          "name": "KpiDefinitionId",
+          "rule": "id"
+        },
+        {
+          "name": "MeasuredAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "MeasuredValue",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "TargetValue",
+          "rule": "nonnegative"
+        }
+      ]
+    },
+    {
+      "module": "Reporting",
+      "entity": "FinancialStatementTemplate",
+      "path": "src/Modules/Reporting/Fintrox.Modules.Reporting.Domain/Entities/FinancialStatementTemplate.cs",
+      "fields": [
+        {
+          "name": "TemplateCode",
+          "rule": "text"
+        },
+        {
+          "name": "StatementType",
+          "rule": "text"
+        },
+        {
+          "name": "DisplayCurrency",
+          "rule": "currency"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Reporting",
+      "entity": "FinancialStatementRow",
+      "path": "src/Modules/Reporting/Fintrox.Modules.Reporting.Domain/Entities/FinancialStatementRow.cs",
+      "fields": [
+        {
+          "name": "TemplateId",
+          "rule": "id"
+        },
+        {
+          "name": "LineCode",
+          "rule": "text"
+        },
+        {
+          "name": "Label",
+          "rule": "text"
+        },
+        {
+          "name": "Formula",
+          "rule": "text"
+        },
+        {
+          "name": "SortOrder",
+          "rule": "nonnegativeInt"
+        }
+      ]
+    },
+    {
+      "module": "Reporting",
+      "entity": "FinancialStatementSnapshot",
+      "path": "src/Modules/Reporting/Fintrox.Modules.Reporting.Domain/Entities/FinancialStatementSnapshot.cs",
+      "fields": [
+        {
+          "name": "TemplateId",
+          "rule": "id"
+        },
+        {
+          "name": "AccountingPeriodId",
+          "rule": "id"
+        },
+        {
+          "name": "GeneratedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "DocumentId",
+          "rule": "id"
+        }
+      ]
     }
   ]
 }
