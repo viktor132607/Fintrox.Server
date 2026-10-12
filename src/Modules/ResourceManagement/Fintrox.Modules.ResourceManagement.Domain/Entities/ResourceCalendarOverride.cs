@@ -1,9 +1,9 @@
 namespace Fintrox.Modules.ResourceManagement.Domain.Entities;
 
-/// <summary>Organization-scoped immutable ResourceCalendarException model; no cross-module navigations.</summary>
-public sealed class ResourceCalendarException : OrganizationEntity
+/// <summary>Organization-scoped immutable ResourceCalendarOverride model; no cross-module navigations.</summary>
+public sealed class ResourceCalendarOverride : OrganizationEntity
 {
-    public ResourceCalendarException(
+    public ResourceCalendarOverride(
         Guid id, Guid organizationId, DateTimeOffset createdAtUtc,
         Guid calendarId,
         DateOnly exceptionDate,

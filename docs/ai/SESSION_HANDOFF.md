@@ -11,6 +11,7 @@ Earlier foundation milestone (2026-10-11): 180 new domain entity classes across 
 Existing 32 legacy entity/persistence types, financial runtime behavior and migrations preserved. No extra projects or cross-module references.
 
 ## Validation
+2026-10-13: CI 38324015336 found five CA1711 analyzer naming failures; all five model types renamed and inventory/docs synchronized. Retesting pending.
 2026-10-13: prior CI 38323676459 exposed invalid keyword parameter operator, now escaped as @operator; new CI result pending.
 2026-10-13: GitHub recursive tree contains 936 unique module Entity .cs paths and the machine inventory lists exactly these 936 paths; 36 module logs and 36 module status rows. Expansion build, tests and CI results are not yet confirmed (see VALIDATION.md).
 

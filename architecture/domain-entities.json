@@ -12470,8 +12470,8 @@
     },
     {
       "module": "Inventory",
-      "entity": "InventoryAttribute",
-      "path": "src/Modules/Inventory/Fintrox.Modules.Inventory.Domain/Entities/InventoryAttribute.cs",
+      "entity": "InventoryAttributeDefinition",
+      "path": "src/Modules/Inventory/Fintrox.Modules.Inventory.Domain/Entities/InventoryAttributeDefinition.cs",
       "fields": [
         {
           "name": "Code",
@@ -12874,8 +12874,8 @@
     },
     {
       "module": "Inventory",
-      "entity": "InventoryLotAttribute",
-      "path": "src/Modules/Inventory/Fintrox.Modules.Inventory.Domain/Entities/InventoryLotAttribute.cs",
+      "entity": "InventoryLotProperty",
+      "path": "src/Modules/Inventory/Fintrox.Modules.Inventory.Domain/Entities/InventoryLotProperty.cs",
       "fields": [
         {
           "name": "InventoryLotId",
@@ -13366,8 +13366,8 @@
     },
     {
       "module": "Manufacturing",
-      "entity": "ProductionScheduleException",
-      "path": "src/Modules/Manufacturing/Fintrox.Modules.Manufacturing.Domain/Entities/ProductionScheduleException.cs",
+      "entity": "ProductionScheduleConflict",
+      "path": "src/Modules/Manufacturing/Fintrox.Modules.Manufacturing.Domain/Entities/ProductionScheduleConflict.cs",
       "fields": [
         {
           "name": "ProductionScheduleId",
@@ -13824,8 +13824,8 @@
     },
     {
       "module": "OrderManagement",
-      "entity": "OrderException",
-      "path": "src/Modules/OrderManagement/Fintrox.Modules.OrderManagement.Domain/Entities/OrderException.cs",
+      "entity": "OrderFulfillmentIssue",
+      "path": "src/Modules/OrderManagement/Fintrox.Modules.OrderManagement.Domain/Entities/OrderFulfillmentIssue.cs",
       "fields": [
         {
           "name": "FulfillmentOrderId",
@@ -18024,8 +18024,8 @@
     },
     {
       "module": "ResourceManagement",
-      "entity": "ResourceCalendarException",
-      "path": "src/Modules/ResourceManagement/Fintrox.Modules.ResourceManagement.Domain/Entities/ResourceCalendarException.cs",
+      "entity": "ResourceCalendarOverride",
+      "path": "src/Modules/ResourceManagement/Fintrox.Modules.ResourceManagement.Domain/Entities/ResourceCalendarOverride.cs",
       "fields": [
         {
           "name": "CalendarId",

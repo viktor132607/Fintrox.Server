@@ -1,9 +1,9 @@
 namespace Fintrox.Modules.Inventory.Domain.Entities;
 
-/// <summary>Immutable tenant-owned InventoryLotAttribute domain record; references checked in application layer.</summary>
-public sealed class InventoryLotAttribute : OrganizationEntity
+/// <summary>Immutable tenant-owned InventoryLotProperty domain record; references checked in application layer.</summary>
+public sealed class InventoryLotProperty : OrganizationEntity
 {
-    public InventoryLotAttribute(
+    public InventoryLotProperty(
         Guid id, Guid organizationId, DateTimeOffset createdAtUtc,
         Guid inventoryLotId,
         string attributeCode,

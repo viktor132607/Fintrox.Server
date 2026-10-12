@@ -58,6 +58,6 @@ Models live in this module Domain/Entities directory; foreign objects are refere
 
 ## Domain expansion — 2026-10-13
 
-Added 24 validated Domain entities (31 total): `BomVersion`, `BomComponentAlternative`, `ProductionWorkOrderLine`, `ProductionMaterialRequirement`, `ProductionMaterialIssue`, `ProductionMaterialReturn`, `ProductionLot`, `ProductionOperationExecution`, `MachineAsset`, `MachineDowntime`, `ProductionShift`, `WorkCenterCapacity`, `ProductionSchedule`, `ProductionScheduleException`, `ProductionQualityCheck`, `ProductionScrapRecord`, `ProductionByproduct`, `ProductionYieldRecord`, `ProductionCostPool`, `ProductionCostAllocation`, `WorkInProgressBalance`, `ProductionVariance`, `ProductionCompletion`, `ManufacturingTraceabilityLink`.
+Added 24 validated Domain entities (31 total): `BomVersion`, `BomComponentAlternative`, `ProductionWorkOrderLine`, `ProductionMaterialRequirement`, `ProductionMaterialIssue`, `ProductionMaterialReturn`, `ProductionLot`, `ProductionOperationExecution`, `MachineAsset`, `MachineDowntime`, `ProductionShift`, `WorkCenterCapacity`, `ProductionSchedule`, `ProductionScheduleConflict`, `ProductionQualityCheck`, `ProductionScrapRecord`, `ProductionByproduct`, `ProductionYieldRecord`, `ProductionCostPool`, `ProductionCostAllocation`, `WorkInProgressBalance`, `ProductionVariance`, `ProductionCompletion`, `ManufacturingTraceabilityLink`.
 
 Records are pure C# types and do not register EF mappings, queries, use cases or HTTP endpoints. References are identifiers without cross-module navigation.

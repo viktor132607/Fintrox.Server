@@ -58,6 +58,6 @@ Models live in this module Domain/Entities directory; foreign objects are refere
 
 ## Domain expansion — 2026-10-13
 
-Added 20 immutable constructor-validated entity models (26 total): `ResourcePool`, `ResourcePoolMembership`, `ResourceCapacityPlan`, `ResourceCapacityAdjustment`, `ResourceBooking`, `ResourceBookingConflict`, `ResourceCalendar`, `ResourceCalendarException`, `ResourceShiftTemplate`, `ResourceLeaveBlock`, `ResourceCompetency`, `ResourceCertification`, `ResourceDemand`, `ResourceDemandMatch`, `ResourceUtilizationSnapshot`, `ResourceCostRate`, `ResourceBillingRate`, `TimesheetApproval`, `TimesheetCorrection`, `ResourceForecast`.
+Added 20 immutable constructor-validated entity models (26 total): `ResourcePool`, `ResourcePoolMembership`, `ResourceCapacityPlan`, `ResourceCapacityAdjustment`, `ResourceBooking`, `ResourceBookingConflict`, `ResourceCalendar`, `ResourceCalendarOverride`, `ResourceShiftTemplate`, `ResourceLeaveBlock`, `ResourceCompetency`, `ResourceCertification`, `ResourceDemand`, `ResourceDemandMatch`, `ResourceUtilizationSnapshot`, `ResourceCostRate`, `ResourceBillingRate`, `TimesheetApproval`, `TimesheetCorrection`, `ResourceForecast`.
 
 Cross-module IDs require application authorization; persistence, use cases, DTOs, controllers, migrations and accounting tests remain pending.

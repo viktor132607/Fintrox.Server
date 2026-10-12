@@ -1,9 +1,9 @@
 namespace Fintrox.Modules.OrderManagement.Domain.Entities;
 
 /// <summary>Immutable, organization-owned OrderException record.</summary>
-public sealed class OrderException : OrganizationEntity
+public sealed class OrderFulfillmentIssue : OrganizationEntity
 {
-    public OrderException(
+    public OrderFulfillmentIssue(
         Guid id, Guid organizationId, DateTimeOffset createdAtUtc,
         Guid fulfillmentOrderId,
         string exceptionCode,

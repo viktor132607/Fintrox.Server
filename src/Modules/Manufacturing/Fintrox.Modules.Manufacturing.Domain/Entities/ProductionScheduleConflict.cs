@@ -1,9 +1,9 @@
 namespace Fintrox.Modules.Manufacturing.Domain.Entities;
 
 /// <summary>Immutable, organization-owned ProductionScheduleException record.</summary>
-public sealed class ProductionScheduleException : OrganizationEntity
+public sealed class ProductionScheduleConflict : OrganizationEntity
 {
-    public ProductionScheduleException(
+    public ProductionScheduleConflict(
         Guid id, Guid organizationId, DateTimeOffset createdAtUtc,
         Guid productionScheduleId,
         string exceptionCode,

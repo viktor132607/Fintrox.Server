@@ -47,3 +47,5 @@ Module-by-module Domain entity expansion, preserving existing 180 entities and t
 - GitHub recursive main tree has 936 matching unique model source files; architecture/domain-entities.json contains those 936 paths and all 36 module names.
 - ENTITY_EXPANSION_LOG.md contains exactly 36 ordered module entries, with a corresponding row in MODULE_STATUS.md for each.
 - .NET build/test/CI verification pending; no EF tables, module use cases, endpoints or frontend screens were added.
+
+CI feedback: after the 36 module commits, five generated entity names ending Attribute/Exception were renamed to satisfy CA1711. Model counts and module ownership are unchanged. See VALIDATION.md.

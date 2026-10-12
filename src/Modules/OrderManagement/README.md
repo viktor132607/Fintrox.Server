@@ -58,6 +58,6 @@ Models live in this module Domain/Entities directory; foreign objects are refere
 
 ## Domain expansion — 2026-10-13
 
-Added 20 validated Domain entities (25 total): `OrderChannel`, `OrderRoutingRule`, `OrderRoutingDecision`, `FulfillmentWave`, `FulfillmentWaveLine`, `FulfillmentAllocation`, `OrderStatusHistory`, `OrderException`, `OrderHold`, `OrderSplit`, `BackorderAllocation`, `ReturnReason`, `ReturnInspection`, `ReturnDisposition`, `ReturnShipment`, `OrderDeliveryConfirmation`, `OrderFulfillmentSla`, `OrderPromise`, `OrderInventoryReservation`, `OrderCancellation`.
+Added 20 validated Domain entities (25 total): `OrderChannel`, `OrderRoutingRule`, `OrderRoutingDecision`, `FulfillmentWave`, `FulfillmentWaveLine`, `FulfillmentAllocation`, `OrderStatusHistory`, `OrderFulfillmentIssue`, `OrderHold`, `OrderSplit`, `BackorderAllocation`, `ReturnReason`, `ReturnInspection`, `ReturnDisposition`, `ReturnShipment`, `OrderDeliveryConfirmation`, `OrderFulfillmentSla`, `OrderPromise`, `OrderInventoryReservation`, `OrderCancellation`.
 
 Records are pure C# types and do not register EF mappings, queries, use cases or HTTP endpoints. References are identifiers without cross-module navigation.

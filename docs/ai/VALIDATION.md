@@ -1,6 +1,7 @@
 # Validation history — 2026-10-13
 
 ## ENTITIES-EXPANSION (2026-10-13)
+- CI run 38324015336 reached the Release build and identified five CA1711 type-naming analyzer errors (entity names ending Attribute / Exception). Renamed those model classes and updated all affected inventory paths and module documentation. New CI pending.
 - First expanded-head CI (38323676459) identified reserved C# keyword used as constructor parameter in Capabilities/CapabilityConstraint.Operator; fixed with escaped @operator in the next commit. Other generated identifiers were scanned against reserved C# keywords. New CI/build result pending.
 - All 36 modules expanded by 756 additional Domain entity classes: 936 total inventoried module model types; the 32 legacy core persistence types remain unchanged.
 - Recursive GitHub tree verified 936 distinct entity model source paths, all matched by the machine inventory; tree result was not truncated.
