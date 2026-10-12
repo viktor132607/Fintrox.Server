@@ -24,3 +24,9 @@ See [architecture](../../../docs/architecture.md) for the current legacy excepti
 `AppRegistration`, `AppVersion`, `AppInstallation`, `ExternalReferenceMapping`.
 
 Models live in this module Domain/Entities directory; foreign objects are referenced by IDs. These are domain types, not registered database tables or endpoints. Existing legacy workflows remain in core projects. See [module progress](../../../docs/ai/MODULE_STATUS.md) for inventory and remaining work.
+
+## Domain expansion — 2026-10-13
+
+Added 24 entities (28 total): `ConnectorDefinition`, `ConnectorVersion`, `ConnectorInstallation`, `ConnectorCredential`, `ConnectorSyncJob`, `ConnectorSyncCheckpoint`, `ConnectorMappingRule`, `ConnectorMappingField`, `WebhookSubscriptionConfig`, `WebhookDeliveryAttempt`, `WebhookDeliveryReceipt`, `IntegrationSecretRotation`, `IntegrationErrorEvent`, `IntegrationQuota`, `ExternalIdentityMapping`, `IntegrationSubscription`, `IntegrationCapabilityGrant`, `IntegrationPermissionScope`, `IntegrationHealthStatus`, `IntegrationAuditRecord`, `IntegrationReplayRequest`, `ExternalDataContract`, `IntegrationRetryPolicy`, `ExternalEventSchema`.
+
+Module-local immutable records, constructor input validation, no references to other Domain assemblies. Persistence, API, security authorizations and implementation remain pending.

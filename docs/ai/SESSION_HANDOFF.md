@@ -1,7 +1,7 @@
 # Fintrox Session Handoff — 2026-10-11
 
 ## Current milestone
-ENTITIES-EXPANSION — Identity updated; 492 inventoried classes. Next: Integrations.
+ENTITIES-EXPANSION — Integrations updated; 516 inventoried classes. Next: Inventory.
 
 
 ## Changes
@@ -15,4 +15,4 @@ Local affected-graph Release build and 604 tests passed; 5 PostgreSQL tests skip
 Entity foundation only. New types are not yet EF tables, services, DTOs, endpoints or frontend screens. Domain constructor validation is not tenant authorization or reference existence validation. No complete ERP module claimed.
 
 ## Next exact action
-Implement Integrations domain records; update machine inventory and MODULE_STATUS, ENTITY_EXPANSION_LOG and README in module-level atomic commit.
+Implement Inventory domain records; update machine inventory and MODULE_STATUS, ENTITY_EXPANSION_LOG and README in module-level atomic commit.

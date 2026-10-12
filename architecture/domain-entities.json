@@ -11856,6 +11856,594 @@
           "rule": "instant"
         }
       ]
+    },
+    {
+      "module": "Integrations",
+      "entity": "ConnectorDefinition",
+      "path": "src/Modules/Integrations/Fintrox.Modules.Integrations.Domain/Entities/ConnectorDefinition.cs",
+      "fields": [
+        {
+          "name": "ConnectorCode",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "Publisher",
+          "rule": "text"
+        },
+        {
+          "name": "ConnectorType",
+          "rule": "text"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Integrations",
+      "entity": "ConnectorVersion",
+      "path": "src/Modules/Integrations/Fintrox.Modules.Integrations.Domain/Entities/ConnectorVersion.cs",
+      "fields": [
+        {
+          "name": "ConnectorDefinitionId",
+          "rule": "id"
+        },
+        {
+          "name": "VersionNumber",
+          "rule": "text"
+        },
+        {
+          "name": "ReleasedOn",
+          "rule": "date"
+        },
+        {
+          "name": "ConfigurationSchemaJson",
+          "rule": "json"
+        }
+      ]
+    },
+    {
+      "module": "Integrations",
+      "entity": "ConnectorInstallation",
+      "path": "src/Modules/Integrations/Fintrox.Modules.Integrations.Domain/Entities/ConnectorInstallation.cs",
+      "fields": [
+        {
+          "name": "ConnectorDefinitionId",
+          "rule": "id"
+        },
+        {
+          "name": "VersionId",
+          "rule": "id"
+        },
+        {
+          "name": "InstalledByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "InstalledAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "IsEnabled",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Integrations",
+      "entity": "ConnectorCredential",
+      "path": "src/Modules/Integrations/Fintrox.Modules.Integrations.Domain/Entities/ConnectorCredential.cs",
+      "fields": [
+        {
+          "name": "ConnectorInstallationId",
+          "rule": "id"
+        },
+        {
+          "name": "SecretReference",
+          "rule": "text"
+        },
+        {
+          "name": "ExpiresAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Integrations",
+      "entity": "ConnectorSyncJob",
+      "path": "src/Modules/Integrations/Fintrox.Modules.Integrations.Domain/Entities/ConnectorSyncJob.cs",
+      "fields": [
+        {
+          "name": "ConnectorInstallationId",
+          "rule": "id"
+        },
+        {
+          "name": "StartedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        },
+        {
+          "name": "ProcessedCount",
+          "rule": "nonnegativeInt"
+        }
+      ]
+    },
+    {
+      "module": "Integrations",
+      "entity": "ConnectorSyncCheckpoint",
+      "path": "src/Modules/Integrations/Fintrox.Modules.Integrations.Domain/Entities/ConnectorSyncCheckpoint.cs",
+      "fields": [
+        {
+          "name": "ConnectorInstallationId",
+          "rule": "id"
+        },
+        {
+          "name": "CursorValue",
+          "rule": "text"
+        },
+        {
+          "name": "SynchronizedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "RecordCount",
+          "rule": "nonnegativeLong"
+        }
+      ]
+    },
+    {
+      "module": "Integrations",
+      "entity": "ConnectorMappingRule",
+      "path": "src/Modules/Integrations/Fintrox.Modules.Integrations.Domain/Entities/ConnectorMappingRule.cs",
+      "fields": [
+        {
+          "name": "ConnectorInstallationId",
+          "rule": "id"
+        },
+        {
+          "name": "LocalEntityType",
+          "rule": "text"
+        },
+        {
+          "name": "ExternalEntityType",
+          "rule": "text"
+        },
+        {
+          "name": "Direction",
+          "rule": "text"
+        },
+        {
+          "name": "IsEnabled",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Integrations",
+      "entity": "ConnectorMappingField",
+      "path": "src/Modules/Integrations/Fintrox.Modules.Integrations.Domain/Entities/ConnectorMappingField.cs",
+      "fields": [
+        {
+          "name": "MappingRuleId",
+          "rule": "id"
+        },
+        {
+          "name": "LocalProperty",
+          "rule": "text"
+        },
+        {
+          "name": "ExternalProperty",
+          "rule": "text"
+        },
+        {
+          "name": "TransformType",
+          "rule": "text"
+        },
+        {
+          "name": "IsRequired",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Integrations",
+      "entity": "WebhookSubscriptionConfig",
+      "path": "src/Modules/Integrations/Fintrox.Modules.Integrations.Domain/Entities/WebhookSubscriptionConfig.cs",
+      "fields": [
+        {
+          "name": "ConnectorInstallationId",
+          "rule": "id"
+        },
+        {
+          "name": "CallbackUri",
+          "rule": "text"
+        },
+        {
+          "name": "EventName",
+          "rule": "text"
+        },
+        {
+          "name": "SecretReference",
+          "rule": "text"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Integrations",
+      "entity": "WebhookDeliveryAttempt",
+      "path": "src/Modules/Integrations/Fintrox.Modules.Integrations.Domain/Entities/WebhookDeliveryAttempt.cs",
+      "fields": [
+        {
+          "name": "SubscriptionConfigId",
+          "rule": "id"
+        },
+        {
+          "name": "EventReferenceId",
+          "rule": "id"
+        },
+        {
+          "name": "AttemptNumber",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "AttemptAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "StatusCode",
+          "rule": "nonnegativeInt"
+        }
+      ]
+    },
+    {
+      "module": "Integrations",
+      "entity": "WebhookDeliveryReceipt",
+      "path": "src/Modules/Integrations/Fintrox.Modules.Integrations.Domain/Entities/WebhookDeliveryReceipt.cs",
+      "fields": [
+        {
+          "name": "DeliveryAttemptId",
+          "rule": "id"
+        },
+        {
+          "name": "ReceivedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "AcknowledgmentCode",
+          "rule": "text"
+        },
+        {
+          "name": "IsAccepted",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Integrations",
+      "entity": "IntegrationSecretRotation",
+      "path": "src/Modules/Integrations/Fintrox.Modules.Integrations.Domain/Entities/IntegrationSecretRotation.cs",
+      "fields": [
+        {
+          "name": "ConnectorCredentialId",
+          "rule": "id"
+        },
+        {
+          "name": "RotatedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "RotatedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Integrations",
+      "entity": "IntegrationErrorEvent",
+      "path": "src/Modules/Integrations/Fintrox.Modules.Integrations.Domain/Entities/IntegrationErrorEvent.cs",
+      "fields": [
+        {
+          "name": "ConnectorInstallationId",
+          "rule": "id"
+        },
+        {
+          "name": "EventCode",
+          "rule": "text"
+        },
+        {
+          "name": "ErrorMessage",
+          "rule": "text"
+        },
+        {
+          "name": "OccurredAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Severity",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Integrations",
+      "entity": "IntegrationQuota",
+      "path": "src/Modules/Integrations/Fintrox.Modules.Integrations.Domain/Entities/IntegrationQuota.cs",
+      "fields": [
+        {
+          "name": "ConnectorInstallationId",
+          "rule": "id"
+        },
+        {
+          "name": "QuotaName",
+          "rule": "text"
+        },
+        {
+          "name": "LimitPerDay",
+          "rule": "nonnegativeLong"
+        },
+        {
+          "name": "IsEnforced",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Integrations",
+      "entity": "ExternalIdentityMapping",
+      "path": "src/Modules/Integrations/Fintrox.Modules.Integrations.Domain/Entities/ExternalIdentityMapping.cs",
+      "fields": [
+        {
+          "name": "ConnectorInstallationId",
+          "rule": "id"
+        },
+        {
+          "name": "ExternalSubject",
+          "rule": "text"
+        },
+        {
+          "name": "LocalPrincipalId",
+          "rule": "id"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Integrations",
+      "entity": "IntegrationSubscription",
+      "path": "src/Modules/Integrations/Fintrox.Modules.Integrations.Domain/Entities/IntegrationSubscription.cs",
+      "fields": [
+        {
+          "name": "ConnectorInstallationId",
+          "rule": "id"
+        },
+        {
+          "name": "SubscriptionName",
+          "rule": "text"
+        },
+        {
+          "name": "EventType",
+          "rule": "text"
+        },
+        {
+          "name": "SubscribedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Integrations",
+      "entity": "IntegrationCapabilityGrant",
+      "path": "src/Modules/Integrations/Fintrox.Modules.Integrations.Domain/Entities/IntegrationCapabilityGrant.cs",
+      "fields": [
+        {
+          "name": "ConnectorInstallationId",
+          "rule": "id"
+        },
+        {
+          "name": "CapabilityCode",
+          "rule": "text"
+        },
+        {
+          "name": "GrantedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "GrantedAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Integrations",
+      "entity": "IntegrationPermissionScope",
+      "path": "src/Modules/Integrations/Fintrox.Modules.Integrations.Domain/Entities/IntegrationPermissionScope.cs",
+      "fields": [
+        {
+          "name": "ConnectorInstallationId",
+          "rule": "id"
+        },
+        {
+          "name": "ScopeCode",
+          "rule": "text"
+        },
+        {
+          "name": "ResourceType",
+          "rule": "text"
+        },
+        {
+          "name": "IsGranted",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Integrations",
+      "entity": "IntegrationHealthStatus",
+      "path": "src/Modules/Integrations/Fintrox.Modules.Integrations.Domain/Entities/IntegrationHealthStatus.cs",
+      "fields": [
+        {
+          "name": "ConnectorInstallationId",
+          "rule": "id"
+        },
+        {
+          "name": "CheckedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "HealthCode",
+          "rule": "text"
+        },
+        {
+          "name": "LatencyMilliseconds",
+          "rule": "nonnegativeInt"
+        }
+      ]
+    },
+    {
+      "module": "Integrations",
+      "entity": "IntegrationAuditRecord",
+      "path": "src/Modules/Integrations/Fintrox.Modules.Integrations.Domain/Entities/IntegrationAuditRecord.cs",
+      "fields": [
+        {
+          "name": "ConnectorInstallationId",
+          "rule": "id"
+        },
+        {
+          "name": "ActorId",
+          "rule": "id"
+        },
+        {
+          "name": "Action",
+          "rule": "text"
+        },
+        {
+          "name": "OccurredAtUtc",
+          "rule": "instant"
+        }
+      ]
+    },
+    {
+      "module": "Integrations",
+      "entity": "IntegrationReplayRequest",
+      "path": "src/Modules/Integrations/Fintrox.Modules.Integrations.Domain/Entities/IntegrationReplayRequest.cs",
+      "fields": [
+        {
+          "name": "ExternalEventId",
+          "rule": "id"
+        },
+        {
+          "name": "RequestedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "RequestedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "ReplayReason",
+          "rule": "text"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Integrations",
+      "entity": "ExternalDataContract",
+      "path": "src/Modules/Integrations/Fintrox.Modules.Integrations.Domain/Entities/ExternalDataContract.cs",
+      "fields": [
+        {
+          "name": "ConnectorDefinitionId",
+          "rule": "id"
+        },
+        {
+          "name": "ContractCode",
+          "rule": "text"
+        },
+        {
+          "name": "SchemaVersion",
+          "rule": "text"
+        },
+        {
+          "name": "SchemaJson",
+          "rule": "json"
+        }
+      ]
+    },
+    {
+      "module": "Integrations",
+      "entity": "IntegrationRetryPolicy",
+      "path": "src/Modules/Integrations/Fintrox.Modules.Integrations.Domain/Entities/IntegrationRetryPolicy.cs",
+      "fields": [
+        {
+          "name": "ConnectorInstallationId",
+          "rule": "id"
+        },
+        {
+          "name": "MaxAttempts",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "RetryDelaySeconds",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "IsEnabled",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Integrations",
+      "entity": "ExternalEventSchema",
+      "path": "src/Modules/Integrations/Fintrox.Modules.Integrations.Domain/Entities/ExternalEventSchema.cs",
+      "fields": [
+        {
+          "name": "ConnectorDefinitionId",
+          "rule": "id"
+        },
+        {
+          "name": "EventType",
+          "rule": "text"
+        },
+        {
+          "name": "SchemaVersion",
+          "rule": "text"
+        },
+        {
+          "name": "SchemaJson",
+          "rule": "json"
+        }
+      ]
     }
   ]
 }
