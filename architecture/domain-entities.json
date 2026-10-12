@@ -21033,6 +21033,688 @@
           "rule": "nonnegative"
         }
       ]
+    },
+    {
+      "module": "Tax",
+      "entity": "TaxRuleVersion",
+      "path": "src/Modules/Tax/Fintrox.Modules.Tax.Domain/Entities/TaxRuleVersion.cs",
+      "fields": [
+        {
+          "name": "JurisdictionId",
+          "rule": "id"
+        },
+        {
+          "name": "RuleCode",
+          "rule": "text"
+        },
+        {
+          "name": "VersionNumber",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "EffectiveFrom",
+          "rule": "date"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Tax",
+      "entity": "TaxRateHistory",
+      "path": "src/Modules/Tax/Fintrox.Modules.Tax.Domain/Entities/TaxRateHistory.cs",
+      "fields": [
+        {
+          "name": "TaxRateId",
+          "rule": "id"
+        },
+        {
+          "name": "PreviousPercent",
+          "rule": "percent"
+        },
+        {
+          "name": "NewPercent",
+          "rule": "percent"
+        },
+        {
+          "name": "ChangedOn",
+          "rule": "date"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Tax",
+      "entity": "TaxCalculationContext",
+      "path": "src/Modules/Tax/Fintrox.Modules.Tax.Domain/Entities/TaxCalculationContext.cs",
+      "fields": [
+        {
+          "name": "SourceDocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "DocumentType",
+          "rule": "text"
+        },
+        {
+          "name": "TaxPointOn",
+          "rule": "date"
+        },
+        {
+          "name": "SupplyCountryCode",
+          "rule": "country"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Tax",
+      "entity": "TaxDeterminationRule",
+      "path": "src/Modules/Tax/Fintrox.Modules.Tax.Domain/Entities/TaxDeterminationRule.cs",
+      "fields": [
+        {
+          "name": "JurisdictionId",
+          "rule": "id"
+        },
+        {
+          "name": "TaxCategoryId",
+          "rule": "id"
+        },
+        {
+          "name": "TransactionType",
+          "rule": "text"
+        },
+        {
+          "name": "Priority",
+          "rule": "nonnegativeInt"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Tax",
+      "entity": "TaxCodeAssignment",
+      "path": "src/Modules/Tax/Fintrox.Modules.Tax.Domain/Entities/TaxCodeAssignment.cs",
+      "fields": [
+        {
+          "name": "SourceDocumentLineId",
+          "rule": "id"
+        },
+        {
+          "name": "TaxCategoryId",
+          "rule": "id"
+        },
+        {
+          "name": "TaxRateId",
+          "rule": "id"
+        },
+        {
+          "name": "AppliedOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Tax",
+      "entity": "TaxGroup",
+      "path": "src/Modules/Tax/Fintrox.Modules.Tax.Domain/Entities/TaxGroup.cs",
+      "fields": [
+        {
+          "name": "GroupCode",
+          "rule": "text"
+        },
+        {
+          "name": "Name",
+          "rule": "text"
+        },
+        {
+          "name": "JurisdictionId",
+          "rule": "id"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Tax",
+      "entity": "TaxGroupMember",
+      "path": "src/Modules/Tax/Fintrox.Modules.Tax.Domain/Entities/TaxGroupMember.cs",
+      "fields": [
+        {
+          "name": "TaxGroupId",
+          "rule": "id"
+        },
+        {
+          "name": "TaxCategoryId",
+          "rule": "id"
+        },
+        {
+          "name": "ValidFrom",
+          "rule": "date"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Tax",
+      "entity": "VatInvoiceRegistration",
+      "path": "src/Modules/Tax/Fintrox.Modules.Tax.Domain/Entities/VatInvoiceRegistration.cs",
+      "fields": [
+        {
+          "name": "SourceInvoiceId",
+          "rule": "id"
+        },
+        {
+          "name": "VatRegisterPeriodId",
+          "rule": "id"
+        },
+        {
+          "name": "TaxPointOn",
+          "rule": "date"
+        },
+        {
+          "name": "TaxableBase",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "TaxAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Tax",
+      "entity": "VatInputRegisterLine",
+      "path": "src/Modules/Tax/Fintrox.Modules.Tax.Domain/Entities/VatInputRegisterLine.cs",
+      "fields": [
+        {
+          "name": "SourceInvoiceId",
+          "rule": "id"
+        },
+        {
+          "name": "TaxCode",
+          "rule": "text"
+        },
+        {
+          "name": "InputTaxAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "DeductibleTaxAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Tax",
+      "entity": "VatOutputRegisterLine",
+      "path": "src/Modules/Tax/Fintrox.Modules.Tax.Domain/Entities/VatOutputRegisterLine.cs",
+      "fields": [
+        {
+          "name": "SourceInvoiceId",
+          "rule": "id"
+        },
+        {
+          "name": "TaxCode",
+          "rule": "text"
+        },
+        {
+          "name": "TaxableBase",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "OutputTaxAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Tax",
+      "entity": "VatReturn",
+      "path": "src/Modules/Tax/Fintrox.Modules.Tax.Domain/Entities/VatReturn.cs",
+      "fields": [
+        {
+          "name": "VatReturnPeriodId",
+          "rule": "id"
+        },
+        {
+          "name": "ReturnReference",
+          "rule": "text"
+        },
+        {
+          "name": "PreparedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Tax",
+      "entity": "VatReturnLine",
+      "path": "src/Modules/Tax/Fintrox.Modules.Tax.Domain/Entities/VatReturnLine.cs",
+      "fields": [
+        {
+          "name": "VatReturnId",
+          "rule": "id"
+        },
+        {
+          "name": "BoxCode",
+          "rule": "text"
+        },
+        {
+          "name": "TaxableAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "TaxAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Tax",
+      "entity": "VatReturnSubmission",
+      "path": "src/Modules/Tax/Fintrox.Modules.Tax.Domain/Entities/VatReturnSubmission.cs",
+      "fields": [
+        {
+          "name": "VatReturnId",
+          "rule": "id"
+        },
+        {
+          "name": "SubmissionReference",
+          "rule": "text"
+        },
+        {
+          "name": "SubmittedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "SubmittedByUserId",
+          "rule": "id"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
+    },
+    {
+      "module": "Tax",
+      "entity": "VatReturnCorrection",
+      "path": "src/Modules/Tax/Fintrox.Modules.Tax.Domain/Entities/VatReturnCorrection.cs",
+      "fields": [
+        {
+          "name": "OriginalVatReturnId",
+          "rule": "id"
+        },
+        {
+          "name": "CorrectionNumber",
+          "rule": "positiveInt"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        },
+        {
+          "name": "CorrectedOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Tax",
+      "entity": "TaxExemptionCertificate",
+      "path": "src/Modules/Tax/Fintrox.Modules.Tax.Domain/Entities/TaxExemptionCertificate.cs",
+      "fields": [
+        {
+          "name": "CounterpartyId",
+          "rule": "id"
+        },
+        {
+          "name": "CertificateNumber",
+          "rule": "text"
+        },
+        {
+          "name": "StartsOn",
+          "rule": "date"
+        },
+        {
+          "name": "EndsOn",
+          "rule": "date"
+        },
+        {
+          "name": "DocumentId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "Tax",
+      "entity": "TaxExemptionUsage",
+      "path": "src/Modules/Tax/Fintrox.Modules.Tax.Domain/Entities/TaxExemptionUsage.cs",
+      "fields": [
+        {
+          "name": "ExemptionCertificateId",
+          "rule": "id"
+        },
+        {
+          "name": "SourceDocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "UsedOn",
+          "rule": "date"
+        },
+        {
+          "name": "ExemptAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Tax",
+      "entity": "TaxWithholdingRule",
+      "path": "src/Modules/Tax/Fintrox.Modules.Tax.Domain/Entities/TaxWithholdingRule.cs",
+      "fields": [
+        {
+          "name": "JurisdictionId",
+          "rule": "id"
+        },
+        {
+          "name": "RuleCode",
+          "rule": "text"
+        },
+        {
+          "name": "WithholdingPercent",
+          "rule": "percent"
+        },
+        {
+          "name": "EffectiveFrom",
+          "rule": "date"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Tax",
+      "entity": "TaxWithholdingEntry",
+      "path": "src/Modules/Tax/Fintrox.Modules.Tax.Domain/Entities/TaxWithholdingEntry.cs",
+      "fields": [
+        {
+          "name": "SourcePaymentId",
+          "rule": "id"
+        },
+        {
+          "name": "WithholdingRuleId",
+          "rule": "id"
+        },
+        {
+          "name": "WithheldAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        },
+        {
+          "name": "WithheldOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Tax",
+      "entity": "TaxJurisdictionRegistration",
+      "path": "src/Modules/Tax/Fintrox.Modules.Tax.Domain/Entities/TaxJurisdictionRegistration.cs",
+      "fields": [
+        {
+          "name": "JurisdictionId",
+          "rule": "id"
+        },
+        {
+          "name": "RegistrationNumber",
+          "rule": "text"
+        },
+        {
+          "name": "RegisteredOn",
+          "rule": "date"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Tax",
+      "entity": "TaxRateOverride",
+      "path": "src/Modules/Tax/Fintrox.Modules.Tax.Domain/Entities/TaxRateOverride.cs",
+      "fields": [
+        {
+          "name": "TaxRateId",
+          "rule": "id"
+        },
+        {
+          "name": "SourceDocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "OverridePercent",
+          "rule": "percent"
+        },
+        {
+          "name": "Reason",
+          "rule": "text"
+        },
+        {
+          "name": "ApprovedByUserId",
+          "rule": "id"
+        }
+      ]
+    },
+    {
+      "module": "Tax",
+      "entity": "ReverseChargeEntry",
+      "path": "src/Modules/Tax/Fintrox.Modules.Tax.Domain/Entities/ReverseChargeEntry.cs",
+      "fields": [
+        {
+          "name": "SourceInvoiceId",
+          "rule": "id"
+        },
+        {
+          "name": "JurisdictionId",
+          "rule": "id"
+        },
+        {
+          "name": "TaxableBase",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "ReverseTaxAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Tax",
+      "entity": "TaxReconciliation",
+      "path": "src/Modules/Tax/Fintrox.Modules.Tax.Domain/Entities/TaxReconciliation.cs",
+      "fields": [
+        {
+          "name": "VatReturnPeriodId",
+          "rule": "id"
+        },
+        {
+          "name": "AccountingBookId",
+          "rule": "id"
+        },
+        {
+          "name": "AsOfDate",
+          "rule": "date"
+        },
+        {
+          "name": "RegisterTax",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "LedgerTax",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Tax",
+      "entity": "TaxAuditEvidence",
+      "path": "src/Modules/Tax/Fintrox.Modules.Tax.Domain/Entities/TaxAuditEvidence.cs",
+      "fields": [
+        {
+          "name": "SourceDocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "JurisdictionId",
+          "rule": "id"
+        },
+        {
+          "name": "EvidenceDocumentId",
+          "rule": "id"
+        },
+        {
+          "name": "CollectedOn",
+          "rule": "date"
+        }
+      ]
+    },
+    {
+      "module": "Tax",
+      "entity": "TaxLocalizationPack",
+      "path": "src/Modules/Tax/Fintrox.Modules.Tax.Domain/Entities/TaxLocalizationPack.cs",
+      "fields": [
+        {
+          "name": "CountryCode",
+          "rule": "country"
+        },
+        {
+          "name": "PackVersion",
+          "rule": "text"
+        },
+        {
+          "name": "EffectiveFrom",
+          "rule": "date"
+        },
+        {
+          "name": "ConfigurationJson",
+          "rule": "json"
+        },
+        {
+          "name": "IsActive",
+          "rule": "bool"
+        }
+      ]
+    },
+    {
+      "module": "Tax",
+      "entity": "FiscalReceiptRecord",
+      "path": "src/Modules/Tax/Fintrox.Modules.Tax.Domain/Entities/FiscalReceiptRecord.cs",
+      "fields": [
+        {
+          "name": "SourceSaleId",
+          "rule": "id"
+        },
+        {
+          "name": "FiscalReceiptNumber",
+          "rule": "text"
+        },
+        {
+          "name": "IssuedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "TaxAmount",
+          "rule": "nonnegative"
+        },
+        {
+          "name": "Currency",
+          "rule": "currency"
+        }
+      ]
+    },
+    {
+      "module": "Tax",
+      "entity": "ElectronicInvoiceSubmission",
+      "path": "src/Modules/Tax/Fintrox.Modules.Tax.Domain/Entities/ElectronicInvoiceSubmission.cs",
+      "fields": [
+        {
+          "name": "SourceInvoiceId",
+          "rule": "id"
+        },
+        {
+          "name": "SubmissionReference",
+          "rule": "text"
+        },
+        {
+          "name": "SubmittedAtUtc",
+          "rule": "instant"
+        },
+        {
+          "name": "ProviderCode",
+          "rule": "text"
+        },
+        {
+          "name": "Status",
+          "rule": "text"
+        }
+      ]
     }
   ]
 }

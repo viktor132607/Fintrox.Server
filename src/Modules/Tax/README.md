@@ -24,3 +24,9 @@ See [architecture](../../../docs/architecture.md) for the current legacy excepti
 `TaxJurisdiction`, `TaxCategory`, `TaxRate`, `VatReturnPeriod`, `VatRegisterEntry`.
 
 Models live in this module Domain/Entities directory; foreign objects are referenced by IDs. These are domain types, not registered database tables or endpoints. Existing legacy workflows remain in core projects. See [module progress](../../../docs/ai/MODULE_STATUS.md) for inventory and remaining work.
+
+## Domain expansion — 2026-10-13
+
+Added 26 Domain entities (31 total): `TaxRuleVersion`, `TaxRateHistory`, `TaxCalculationContext`, `TaxDeterminationRule`, `TaxCodeAssignment`, `TaxGroup`, `TaxGroupMember`, `VatInvoiceRegistration`, `VatInputRegisterLine`, `VatOutputRegisterLine`, `VatReturn`, `VatReturnLine`, `VatReturnSubmission`, `VatReturnCorrection`, `TaxExemptionCertificate`, `TaxExemptionUsage`, `TaxWithholdingRule`, `TaxWithholdingEntry`, `TaxJurisdictionRegistration`, `TaxRateOverride`, `ReverseChargeEntry`, `TaxReconciliation`, `TaxAuditEvidence`, `TaxLocalizationPack`, `FiscalReceiptRecord`, `ElectronicInvoiceSubmission`.
+
+Model-only classes with typed constructor properties and invariant guards. Persistence, tenant authorization/reference checks, lifecycle use cases, endpoints, localization logic and UI are pending.
