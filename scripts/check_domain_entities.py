@@ -6,6 +6,17 @@ import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
 
+# Inventory field types must match public immutable C# properties.
+RULE_TYPES = {
+    'id': 'Guid', 'text': 'string', 'currency': 'string', 'country': 'string',
+    'json': 'string', 'hash': 'string', 'sha256': 'string',
+    'date': 'DateOnly', 'instant': 'DateTimeOffset',
+    'decimal': 'decimal', 'positive': 'decimal', 'nonnegative': 'decimal',
+    'nonzero': 'decimal', 'percent': 'decimal', 'hours': 'decimal',
+    'positiveInt': 'int', 'nonnegativeInt': 'int', 'scale': 'int', 'level': 'int',
+    'nonnegativeLong': 'long', 'bool': 'bool',
+}
+
 
 def validate(root=ROOT):
     errors = []
@@ -31,6 +42,16 @@ def validate(root=ROOT):
             errors.append(f'Wrong ownership/declaration: {path}')
         if re.search(r'\b(float|double)\b|public\s+set\s*;', source):
             errors.append(f'Unsafe numeric type or public mutation: {path}')
+        field_names = set()
+        for field in entry.get('fields', []):
+            field_name, rule = field['name'], field['rule']
+            if field_name in field_names:
+                errors.append(f'Duplicate inventoried field: {module}.{entity}.{field_name}')
+            field_names.add(field_name)
+            expected_type = RULE_TYPES.get(rule, rule)  # enum rules use their enum type
+            expected_property = f'public {expected_type} {field_name} {{ get; }}'
+            if expected_property not in source:
+                errors.append(f'Missing/mismatched property: {module}.{entity}.{field_name} ({expected_type})')
         project = path.parent.parent / f'Fintrox.Modules.{module}.Domain.csproj'
         if project.resolve() not in refs:
             errors.append(f'Missing test reference: {module}')

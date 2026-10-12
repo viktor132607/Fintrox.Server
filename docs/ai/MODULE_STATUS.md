@@ -1,6 +1,6 @@
 # Module status — 2026-10-13
 
-ENTITIES-001: initial 180 entities; ENTITIES-EXPANSION: 936 module Domain models covering all 36 modules. No new EF mappings or API; .NET CI pending.
+ENTITIES-EXPANSION: 936 Domain model classes across all 36 modules (180 initial + 756 new on 2026-10-13). All 36 module-level commits are in ENTITY_EXPANSION_LOG.md. Machine-inventory/tree and documentation counts checked; .NET build/tests/CI still pending. No module EF mapping/API integration.
 
 The new types have immutable IDs/organization ownership, constructor validation and typed business fields. They are not yet mapped in EF or exposed through APIs. No complete ERP workflow, database tenant isolation, authorization or cross-reference existence checks are claimed by these model classes.
 

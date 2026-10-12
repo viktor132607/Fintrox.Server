@@ -40,3 +40,10 @@ Module-by-module Domain entity expansion, preserving existing 180 entities and t
 | 34 | Tax | 26 | 31 | Source and inventory only; full .NET CI pending | Domain expanded; EF/API pending |
 | 35 | WarehouseManagement | 26 | 34 | Source and inventory only; full .NET CI pending | Domain expanded; EF/API pending |
 | 36 | Workflows | 25 | 30 | Source and inventory only; full .NET CI pending | Domain expanded; EF/API pending |
+
+## Completion and verification status
+
+- 36/36 module updates committed separately: 756 added C# Domain entity types; 936 module-owned Entity classes in total (initial 180 included).
+- GitHub recursive main tree has 936 matching unique model source files; architecture/domain-entities.json contains those 936 paths and all 36 module names.
+- ENTITY_EXPANSION_LOG.md contains exactly 36 ordered module entries, with a corresponding row in MODULE_STATUS.md for each.
+- .NET build/test/CI verification pending; no EF tables, module use cases, endpoints or frontend screens were added.

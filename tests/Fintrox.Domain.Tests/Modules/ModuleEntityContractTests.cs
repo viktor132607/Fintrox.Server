@@ -115,7 +115,7 @@ public sealed class ModuleEntityContractTests
         if (type == typeof(string))
         {
             if (name.EndsWith("Currency", StringComparison.OrdinalIgnoreCase)) return "EUR";
-            if (name == "countryCode") return "BG";
+            if (name.EndsWith("CountryCode", StringComparison.OrdinalIgnoreCase) || name == "nationalityCode") return "BG";
             if (name is "sha256" or "tokenHash" || name.EndsWith("Sha256", StringComparison.OrdinalIgnoreCase) || name.EndsWith("Hash", StringComparison.OrdinalIgnoreCase)) return new string('a', 64);
             if (name.EndsWith("Json", StringComparison.Ordinal)) return "{}";
             if (name == "email") return "test@example.test";

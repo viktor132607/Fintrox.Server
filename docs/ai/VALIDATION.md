@@ -1,4 +1,13 @@
-# Validation history — 2026-10-09
+# Validation history — 2026-10-13
+
+## ENTITIES-EXPANSION (2026-10-13)
+- All 36 modules expanded by 756 additional Domain entity classes: 936 total inventoried module model types; the 32 legacy core persistence types remain unchanged.
+- Recursive GitHub tree verified 936 distinct entity model source paths, all matched by the machine inventory; tree result was not truncated.
+- Verified 36 sequential per-module progress records and 36 module-status rows.
+- Expanded the inventory checker to verify field-property names/types and fixed dynamic reflection test samples for nationality and supply-country codes.
+- No local .NET SDK: build, tests and GitHub CI are not yet confirmed for this expansion. Previous 604 local passing tests below predate the new models.
+- Domain definitions only. EF mappings, migrations, authorization, application services, APIs and UI remain pending.
+
 
 ## ENTITIES-001 current validation
 - Static architecture and full 180-entity/36-module inventory checks PASSED.
