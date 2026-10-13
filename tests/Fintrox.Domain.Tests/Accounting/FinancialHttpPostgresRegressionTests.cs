@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using Fintrox.Api.Authentication;
+using Fintrox.Application.Identity;
 using Fintrox.Contracts.Accounting;
 using Fintrox.Domain.Accounting;
 using Fintrox.Domain.Organizations;
@@ -348,14 +348,9 @@ public sealed class FinancialHttpPostgresRegressionTests
         return client;
     }
 
-    private static string Token(Guid userId) => new JwtAccessTokenService(
-        new JwtOptions
-        {
-            Issuer = "Fintrox",
-            Audience = "Fintrox.Client",
-            SigningKey = TestKey,
-            AccessTokenMinutes = 20
-        }, TimeProvider.System).Create(userId, $"user-{userId}@example.test", "Finance tester").Value;
+    private string Token(Guid userId) => factory!.Services
+        .GetRequiredService<IAccessTokenService>()
+        .Create(userId, $"user-{userId}@example.test", "Finance tester").Value;
 
     private async Task<JournalEntryResponse> CreateDraftAsync(
         HttpClient client, decimal debit, decimal credit)
