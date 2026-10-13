@@ -1,6 +1,8 @@
 # Fintrox Session Handoff — 2026-10-13
 
 ## Current milestone
+2026-10-13: **ORG-001 COMPLETE — VERIFIED**. Existing legacy OrganizationMemberService now wraps member additions, role changes and removals in a transaction, locks the affected `core.organizations` row with PostgreSQL `FOR UPDATE`, and rechecks manager permissions/target/last-owner count after lock. Added 4 real PostgreSQL concurrency tests, CI **38428892598** (2,895 passing; 0 warnings/errors; EF/Postgres checks passed). Details: `docs/organization-owner-concurrency.md`. Next uncompleted foundation task: TEST-001.
+
 2026-10-13 INT-001 complete and verified: strict outbound webhook URL policy, local/IP/special-use address blocking, DNS answer validation with direct pinned-IP sockets, automatic redirect/proxy/cookie disabled, and unsafe persisted legacy URL protection. 7 tests added; CI run 38399255676 passed 2,891 tests, Release build 0 warnings/errors, EF snapshot and Postgres migrations. Security spec: docs/webhook-security.md. The next P1 queue item is ORG-001 (concurrent last-owner safety).
 
 2026-10-13: user requires the **complete enterprise financial lifecycle inside Fintrox**, without competing ledgers in external apps. Binding cross-module contract: `docs/financial-system-of-record.md`. FIN-SOR-001 specified, actual financial domain flows not implemented as a result of this specification.

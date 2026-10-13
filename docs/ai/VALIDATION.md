@@ -1,5 +1,14 @@
 # Validation history — 2026-10-13
 
+## ORG-001 / Organizations last-owner concurrency protection
+- VERIFIED in code commit `8ec105e1cd1727ef38a0c9a081728da8f30d26d9`, GitHub CI **38428892598**, Build/Test/Migrations job: Release build 0 warnings, 0 errors; **2,895 of 2,895 tests passed**, 0 skipped/failed; EF snapshot and PostgreSQL migration application/listing checks passed.
+- All mutating membership operations take a PostgreSQL `FOR UPDATE` lock on the organization's `core.organizations` row via the existing transaction runner, then recheck manager and target before owner-count/persistence changes.
+- Added 4 real PostgreSQL tests: simultaneous owner self-deactivations, owner demotions, duplicate member additions and lock waits/release-on-commit. These tests require `FINTROX_TEST_POSTGRES` and use isolated disposable databases.
+- First CI attempt (38428124190) found the prior access-test repository fake lacked the new locking contract; second (38428507039) found manually initiated transactions in one test incompatible with enabled EF retries; the final run passed after correcting both. No database schema changes made.
+- Detailed behavior, remaining boundaries: [organization-owner-concurrency](../organization-owner-concurrency.md).
+
+
+
 ## INT-001 / Integrations webhook SSRF
 - VERIFIED in Server code commit `cb0c54384e57608e1937f803d4c99c0b30b1a1ba`, GitHub Actions run **38399255676**, Build/Test/Migrations job: Release build 0 warnings, 0 errors; **2,891 of 2,891** tests passed (0 skipped/failed); EF model snapshot and PostgreSQL migration application/listing passed.
 - 7 new webhook URL/DNS/transport tests added. Validation includes reserved/private/mapped/special-use addresses, local DNS, mixed public/private answers, public-only pinned answers, no redirects/proxies and reject-before-DNS.

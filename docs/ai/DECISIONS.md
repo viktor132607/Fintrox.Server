@@ -30,3 +30,7 @@ User directive: all finance-related business processes and the complete money fl
 ## 2026-10-13 — INT-001 outbound webhook security boundary
 
 Accept **only publicly routable HTTP(S) webhook targets**. Validate at subscription registration/update and again at delivery. New outbound connections resolve each hostname and pin a validated public IP directly to the socket, disallowing DNS rebinding and mixed public/private answers; never follow redirects or use environment proxies/cookies. Existing legacy subscriptions must not bypass validation. Blocked destinations fail permanently, not as retryable network faults. Verified in CI 38399255676 (2,891 tests, 0 failed/skipped). See `docs/webhook-security.md`. INT-002 (durable multi-worker delivery) remains separate.
+
+## 2026-10-13 — ORG-001 transactional owner protection
+
+All member-creation, role-update and deactivation operations on an organization must take a PostgreSQL `FOR UPDATE` lock on `core.organizations` and revalidate acting user permissions, target membership and owner count **within the same transaction**; the lock must remain until commit/rollback. Use existing `EfTransactionRunner` execution strategy. Single-row locking, not a process-local mutex, protects simultaneous API requests across instances. Implemented in legacy Organizations runtime; 4 real PostgreSQL tests, CI 38428892598 passed 2,895 tests and EF/PostgreSQL checks. See `docs/organization-owner-concurrency.md`.

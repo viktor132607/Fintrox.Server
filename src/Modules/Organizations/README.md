@@ -38,3 +38,9 @@ The **existing operational legacy** `OrganizationAccessService` now checks organ
 ### ORG-002 verification
 
 CI run 38329276594 passed 2,884 tests, 0 skipped/failed, Release build without warnings/errors, EF snapshot and PostgreSQL migrations. This is a verified **legacy security boundary**, not yet a complete migrated Organizations module.
+
+## 2026-10-13 — ORG-001 concurrent last-owner consistency
+
+The **operational legacy** `OrganizationMemberService` now uses a transaction and a PostgreSQL `FOR UPDATE` lock on each organization's `core.organizations` row for Add / ChangeRole / Deactivate, re-checking manager authority and active owner count after taking the lock. Simultaneous demotions or deactivations cannot remove every active owner through these service paths. This was verified in [CI 38428892598](https://github.com/viktor132607/Fintrox.Server/actions/runs/38428892598): **2,895 tests passed**, 0 skipped/failed, Release build without warnings/errors, EF model and PostgreSQL migrations passed. Four new real PostgreSQL concurrent write tests. [Detailed design](../../../docs/organization-owner-concurrency.md).
+
+**Migration not implied:** the new Organizations module Domain entities still lack runtime ownership, persistence and API integration, and external direct DB writes are not protected by application locking contracts.

@@ -4,7 +4,7 @@
 
 
 Phase 0 COMPLETE: scaffold plus successful CI restore/build/33 tests/EF snapshot/PostgreSQL migrations.
-Phase 1 active: AUDIT-001, AUTH-001, AUTH-002, ORG-002 and INT-001 completed and validated. ENTITIES-EXPANSION completed across 36 modules (936 Domain models). ORG-001 and platform hardening remain pending. Phases 2–10 pending; see AUDIT.md for existing legacy functionality.
+Phase 1 active: AUDIT-001, AUTH-001, AUTH-002, ORG-002 and INT-001 completed and validated. ENTITIES-EXPANSION completed across 36 modules (936 Domain models). ORG-001 completed and verified (real PostgreSQL locking/concurrency, CI 38428892598); TEST-001, INT-002, API-001 and platform hardening remain pending. Phases 2–10 pending; see AUDIT.md for existing legacy functionality.
 The user authorized continuation after the model switch. Detailed business specification: MASTER_PROMPT.md.
 
 След архитектурното разширение изпълнявай следните фази.

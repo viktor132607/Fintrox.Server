@@ -6,6 +6,8 @@ Legacy list: [32 existing runtime/persistence models](LEGACY_MODEL_INVENTORY.md)
 
 2026-10-13 Integrations security milestone: INT-001 webhook SSRF prevention implemented in the operational **legacy** runtime. Public-only DNS answers are pinned to the actual outbound connection; private/metadata/local targets and automatic redirects/proxies are blocked. 7 new tests, 2,891 tests passing in CI 38399255676. Target Integrations module persistence/API remains PENDING. Details: [webhook security](../webhook-security.md).
 
+2026-10-13 Organizations safety milestone: **ORG-001 verified** in CI 38428892598 (2,895 tests). Operational legacy membership writes now use PostgreSQL organization-row transaction locks and current-permission checks, preventing simultaneous owner removal/demotion leaving zero owners. New Organizations module entity scaffolds are still not wired to runtime EF/API. See [owner concurrency](../organization-owner-concurrency.md).
+
 The new types have immutable IDs/organization ownership, constructor validation and typed business fields. They are not yet mapped in EF or exposed through APIs. No complete ERP workflow, database tenant isolation, authorization or cross-reference existence checks are claimed by these model classes.
 
 Every module keeps five projects. Domain=PARTIAL; Application/Contracts/Infrastructure/Presentation=SCAFFOLD. Frontend remains 23 shells (13 new module shells missing). Entity constructors do not activate a module.

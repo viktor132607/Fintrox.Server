@@ -12,7 +12,7 @@
 | AUTH-001 | Revalidate issued bearer tokens against current state | Identity/Integrations | P0 | AUDIT-001 | COMPLETE | Commit 79ee090; CI build, 46 tests and PostgreSQL migrations pass |
 | AUTH-002 | Atomic single-use refresh-token rotation | Identity | P0 | AUTH-001 | COMPLETE | 422cc38: one winner, revoke ordering, rollback; CI 51/51 tests and migrations pass |
 | INT-001 | Webhook SSRF prevention | Integrations | P0 | AUDIT-001 | COMPLETE — CI VERIFIED | Domain URL policy, mixed-DNS rejection, connect-time IP pinning, no redirect/proxy, 7 security tests; 2,891 passed; CI 38399255676 |
-| ORG-001 | Concurrent last-owner protection | Organizations | P1 | AUDIT-001 | PENDING | Simultaneous removal/demotion cannot leave no active owner |
+| ORG-001 | Concurrent last-owner protection | Organizations | P1 | AUDIT-001 | COMPLETE — CI VERIFIED | Organization-row PostgreSQL FOR UPDATE lock, transactional membership changes and 4 PostgreSQL concurrency tests; 2,895 passing, CI 38428892598 |
 | ORG-002 | Inactive-tenant business access policy | Identity/Organizations | P1 | AUDIT-001 | COMPLETE — CI VERIFIED | Active membership and organization required; deactivated tenant only owner reactivation; 7 regression tests; CI 38329276594 (2884 passing) |
 | TEST-001 | Financial/tenant/HTTP regression coverage | Accounting/Platform | P1 | AUDIT-001 | PENDING | Real PostgreSQL posting/reversal, balance/period and cross-tenant isolation tests |
 | INT-002 | Durable multi-worker webhook claim/recovery | Integrations | P1 | INT-001 | PENDING | Atomic claims, expired-lease recovery, retry/duplicate-delivery tests |
