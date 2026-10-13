@@ -130,7 +130,7 @@ public sealed class OrganizationService(
         Guid id,
         CancellationToken cancellationToken)
     {
-        await EnsureManagePermissionAsync(id, cancellationToken);
+        await EnsureReactivatePermissionAsync(id, cancellationToken);
 
         var organization = await repository.GetAsync(id, true, cancellationToken);
 
@@ -144,8 +144,19 @@ public sealed class OrganizationService(
         return Map(organization);
     }
 
-    private async Task EnsureManagePermissionAsync(
+    private Task EnsureManagePermissionAsync(
         Guid organizationId,
+        CancellationToken cancellationToken) =>
+        EnsurePermissionAsync(organizationId, Permissions.OrganizationsManage, cancellationToken);
+
+    private Task EnsureReactivatePermissionAsync(
+        Guid organizationId,
+        CancellationToken cancellationToken) =>
+        EnsurePermissionAsync(organizationId, Permissions.OrganizationsReactivate, cancellationToken);
+
+    private async Task EnsurePermissionAsync(
+        Guid organizationId,
+        string requiredPermission,
         CancellationToken cancellationToken)
     {
         var userId = currentUser.RequireUserId();
@@ -153,11 +164,11 @@ public sealed class OrganizationService(
         if (!await access.HasPermissionAsync(
                 userId,
                 organizationId,
-                Permissions.OrganizationsManage,
+                requiredPermission,
                 cancellationToken))
         {
             throw new ForbiddenOperationException(
-                "The current user cannot manage this organization.");
+                "The current user cannot perform this organization action.");
         }
     }
 

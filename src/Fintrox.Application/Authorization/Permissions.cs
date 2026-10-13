@@ -4,6 +4,7 @@ public static class Permissions
 {
     public const string OrganizationsRead = "organizations.read";
     public const string OrganizationsManage = "organizations.manage";
+    public const string OrganizationsReactivate = "organizations.reactivate";
     public const string MembersManage = "members.manage";
 
     public const string AccountingRead = "accounting.read";
@@ -35,6 +36,7 @@ public static class Permissions
     [
         OrganizationsRead,
         OrganizationsManage,
+        OrganizationsReactivate,
         MembersManage,
         AccountingRead,
         AccountingWrite,

@@ -1,5 +1,10 @@
 # Validation history — 2026-10-13
 
+## ORG-002 / Identity–Organizations foundation
+- Changes: live tenant-activity check in OrganizationAccessService, explicit owner-only reactivation permission in OrganizationService, and 7 regression tests.
+- Build/tests/CI not yet verified for this change. The 2,877-test result below predates ORG-002.
+
+
 ## ENTITIES-EXPANSION (2026-10-13)
 - VERIFIED for code commit 90d601e935c50f8d0874387d8db753962d1e821a in GitHub Actions run 38324236400, Build/Test/Migrations job 115059092795: Release build succeeded with 0 warnings, 0 errors; 2,877 tests passed, 0 failed, 0 skipped; EF model snapshot verification passed; PostgreSQL migrations applied and listed successfully. Docker publish job is separate.
 

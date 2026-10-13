@@ -12,7 +12,7 @@
 | AUTH-002 | Atomic single-use refresh-token rotation | Identity | P0 | AUTH-001 | COMPLETE | 422cc38: one winner, revoke ordering, rollback; CI 51/51 tests and migrations pass |
 | INT-001 | Webhook SSRF prevention | Integrations | P0 | AUDIT-001 | PENDING | Private/loopback/metadata targets and redirect/DNS bypass rejected; safe public delivery tested |
 | ORG-001 | Concurrent last-owner protection | Organizations | P1 | AUDIT-001 | PENDING | Simultaneous removal/demotion cannot leave no active owner |
-| ORG-002 | Inactive-tenant business access policy | Organizations | P1 | AUDIT-001 | PENDING | Deny inactive tenant business operations while preserving authorized reactivation |
+| ORG-002 | Inactive-tenant business access policy | Identity/Organizations | P1 | AUDIT-001 | IMPLEMENTED — CI PENDING | Deny all inactive tenant financial/business operations; owner-only reactivation; permission regression tests |
 | TEST-001 | Financial/tenant/HTTP regression coverage | Accounting/Platform | P1 | AUDIT-001 | PENDING | Real PostgreSQL posting/reversal, balance/period and cross-tenant isolation tests |
 | INT-002 | Durable multi-worker webhook claim/recovery | Integrations | P1 | INT-001 | PENDING | Atomic claims, expired-lease recovery, retry/duplicate-delivery tests |
 | API-001 | Configured CORS and endpoint throttling | API | P1 | Authentication hardening | PENDING | Explicit origins, preflight and auth endpoint rate tests |

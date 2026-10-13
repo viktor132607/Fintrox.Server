@@ -30,3 +30,7 @@ Models live in this module Domain/Entities directory; foreign objects are refere
 Added 18 validated Domain entities (23 total): `OrganizationLegalEntity`, `OrganizationAddress`, `OrganizationContact`, `OrganizationHierarchy`, `OrganizationMemberProfile`, `OrganizationMemberRole`, `OrganizationMembershipInvitation`, `OrganizationSettingVersion`, `OrganizationBranding`, `OrganizationFiscalPreference`, `OrganizationLocale`, `OrganizationOperatingLocation`, `OrganizationCostCenterAssignment`, `OrganizationSubscription`, `OrganizationModuleEntitlement`, `OrganizationLifecycleEvent`, `OrganizationComplianceRegistration`, `OrganizationBankAccountLink`.
 
 Records are pure C# types and do not register EF mappings, queries, use cases or HTTP endpoints. References are identifiers without cross-module navigation.
+
+## 2026-10-13 — Foundation stabilization / ORG-002
+
+The **existing operational legacy** `OrganizationAccessService` now checks organization activity in addition to active membership and role permission on every protected organization operation. For a deactivated organization, **all business/financial reads and mutations are denied**. The only authorized exception is `organizations.reactivate` for its active **Owner**, used solely by `OrganizationService.ActivateAsync`; administrators/integrations do not receive this role permission. Re-activation does not erase existing financial data. New module Domain assembly remains model-only. See `docs/financial-system-of-record.md`.

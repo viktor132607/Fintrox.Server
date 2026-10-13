@@ -1,6 +1,8 @@
 # Fintrox Session Handoff — 2026-10-13
 
 ## Current milestone
+2026-10-13: ORG-002 financial tenant safety guard implemented in legacy authorization; inactivated org denies all business permissions, only an active owner can reactivate using new organizations.reactivate permission. 7 regression tests added; CI pending. See docs/financial-system-of-record.md.
+
 ENTITIES-EXPANSION: ALL 36 MODULES EXPANDED. 936 total new-era Domain entity classes (including original 180); 32 legacy runtime model types preserved. Release build, 2,877 tests and PostgreSQL/EF checks verified in CI 38324236400.
 
 
