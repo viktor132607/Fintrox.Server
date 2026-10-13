@@ -129,7 +129,7 @@ public sealed class OrganizationOwnerConcurrencyTests
     [TestMethod]
     public async Task LockRequiresTransactionAndIsReleasedOnCommit()
     {
-        await using var firstDb = CreateDb();
+        await using var firstDb = CreateDb(retry: false);
         var firstRepo = new OrganizationMembershipRepository(firstDb);
         await Assert.ThrowsExactlyAsync<InvalidOperationException>(() =>
             firstRepo.LockOrganizationForMembershipChangeAsync(organizationId, CancellationToken.None));
@@ -137,7 +137,7 @@ public sealed class OrganizationOwnerConcurrencyTests
         await using var firstTx = await firstDb.Database.BeginTransactionAsync();
         await firstRepo.LockOrganizationForMembershipChangeAsync(organizationId, CancellationToken.None);
 
-        await using var secondDb = CreateDb();
+        await using var secondDb = CreateDb(retry: false);
         await using var secondTx = await secondDb.Database.BeginTransactionAsync();
         var started = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         var secondLock = Task.Run(async () =>
@@ -216,12 +216,21 @@ public sealed class OrganizationOwnerConcurrencyTests
                              m.Role == OrganizationRole.Owner));
     }
 
-    private FintroxDbContext CreateDb()
+    private FintroxDbContext CreateDb(bool retry = true)
     {
-        var options = new DbContextOptionsBuilder<FintroxDbContext>()
-            .UseNpgsql(connectionString, npgsql => npgsql.EnableRetryOnFailure())
-            .Options;
-        return new FintroxDbContext(options);
+        var builder = new DbContextOptionsBuilder<FintroxDbContext>();
+        if (retry)
+        {
+            builder.UseNpgsql(connectionString, npgsql => npgsql.EnableRetryOnFailure());
+        }
+        else
+        {
+            // Manual lock-test transactions are deliberately outside the
+            // EF execution strategy, unlike actual service transactions.
+            builder.UseNpgsql(connectionString);
+        }
+
+        return new FintroxDbContext(builder.Options);
     }
 
     private static ApplicationUser User(Guid id, string email, DateTimeOffset now) => new()
