@@ -1,8 +1,10 @@
+using Fintrox.Api.Security;
 using Fintrox.Application.Common.Interfaces;
 using Fintrox.Application.Identity;
 using Fintrox.Contracts.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Fintrox.Api.Controllers;
 
@@ -14,6 +16,8 @@ public sealed class AuthController(
 {
     [AllowAnonymous]
     [HttpPost("register")]
+    [EnableRateLimiting(ApiRequestSecurity.RegisterLimit)]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
     [ProducesResponseType<AuthTokenResponse>(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     public async Task<ActionResult<AuthTokenResponse>> Register(
@@ -41,6 +45,8 @@ public sealed class AuthController(
 
     [AllowAnonymous]
     [HttpPost("login")]
+    [EnableRateLimiting(ApiRequestSecurity.LoginLimit)]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
     [ProducesResponseType<AuthTokenResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<AuthTokenResponse>> Login(
@@ -66,6 +72,8 @@ public sealed class AuthController(
 
     [AllowAnonymous]
     [HttpPost("refresh")]
+    [EnableRateLimiting(ApiRequestSecurity.RefreshLimit)]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
     [ProducesResponseType<AuthTokenResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<AuthTokenResponse>> Refresh(
@@ -91,6 +99,8 @@ public sealed class AuthController(
 
     [AllowAnonymous]
     [HttpPost("revoke")]
+    [EnableRateLimiting(ApiRequestSecurity.RevokeLimit)]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Revoke(
         RevokeRefreshTokenRequest request,
