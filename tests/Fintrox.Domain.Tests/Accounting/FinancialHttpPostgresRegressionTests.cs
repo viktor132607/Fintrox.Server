@@ -366,7 +366,8 @@ public sealed class FinancialHttpPostgresRegressionTests
                 [new CreateJournalLineRequest(assetA, debit, 0m, "Debit"),
                  new CreateJournalLineRequest(revenueA, 0m, credit, "Credit")]));
         Assert.AreEqual(HttpStatusCode.Created, response.StatusCode,
-            await response.Content.ReadAsStringAsync());
+            "WWW-Authenticate: " + string.Join("; ", response.Headers.WwwAuthenticate)
+            + " Body: " + await response.Content.ReadAsStringAsync());
         var result = await response.Content.ReadFromJsonAsync<JournalEntryResponse>();
         Assert.IsNotNull(result);
         return result;
