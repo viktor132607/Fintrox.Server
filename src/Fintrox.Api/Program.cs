@@ -5,6 +5,7 @@ using Fintrox.Api.Authorization;
 using Fintrox.Api.Health;
 using Fintrox.Api.Integrations;
 using Fintrox.Api.Organizations;
+using Fintrox.Api.Security;
 using Fintrox.Application;
 using Fintrox.Application.Authorization;
 using Fintrox.Application.Common.Interfaces;
@@ -118,6 +119,7 @@ builder.Services.AddScoped<ICurrentOrganization, HttpCurrentOrganization>();
 builder.Services.AddScoped<IAuditContext, HttpAuditContext>();
 builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
 
+builder.Services.AddApiRequestSecurity(builder.Configuration);
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddProblemDetails();
@@ -151,6 +153,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseRouting();
+app.UseCors(ApiRequestSecurity.CorsPolicy);
+app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<IntegrationIdempotencyMiddleware>();
