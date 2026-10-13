@@ -1,7 +1,9 @@
+using Fintrox.Api.Security;
 using Fintrox.Application.Integrations;
 using Fintrox.Contracts.Integrations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Fintrox.Api.Controllers;
 
@@ -12,6 +14,8 @@ public sealed class IntegrationTokenController(
 {
     [AllowAnonymous]
     [HttpPost("token")]
+    [EnableRateLimiting(ApiRequestSecurity.IntegrationTokenLimit)]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
     public async Task<ActionResult<IntegrationTokenResponse>> Token(
         IntegrationTokenRequest request,
         CancellationToken cancellationToken)
