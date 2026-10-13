@@ -131,7 +131,7 @@ public sealed class OrganizationAccessActivityTests
             throw new NotSupportedException();
         public Task SaveChangesAsync(CancellationToken cancellationToken) =>
             throw new NotSupportedException();
-        public Task<IReadOnlyList<Organization>> ListForUserAsync(
+        Task<IReadOnlyList<Organization>> IOrganizationRepository.ListForUserAsync(
             Guid userId, CancellationToken cancellationToken) => throw new NotSupportedException();
         public Task<bool> SlugExistsAsync(
             string slug, CancellationToken cancellationToken) => throw new NotSupportedException();
