@@ -134,6 +134,24 @@ public sealed class WebhookDeliveryWorker(
             return;
         }
 
+        try
+        {
+            // Recheck existing stored subscriptions too: unsafe legacy URLs
+            // are never allowed to reach the network.
+            WebhookTargetPolicy.Normalize(subscription.TargetUrl);
+        }
+        catch (ArgumentException)
+        {
+            await FailPermanentlyAsync(
+                repository,
+                delivery,
+                integrationEvent.PayloadJson,
+                "Webhook destination is blocked by outbound security policy.",
+                statusCode: null,
+                cancellationToken);
+            return;
+        }
+
         var now = timeProvider.GetUtcNow();
         delivery.StartAttempt(now);
         await repository.SaveChangesAsync(cancellationToken);
@@ -198,6 +216,16 @@ public sealed class WebhookDeliveryWorker(
             when (cancellationToken.IsCancellationRequested)
         {
             throw;
+        }
+        catch (WebhookTargetBlockedException)
+        {
+            await FailPermanentlyAsync(
+                repository,
+                delivery,
+                integrationEvent.PayloadJson,
+                "Webhook DNS resolution returned a blocked destination.",
+                statusCode: null,
+                cancellationToken);
         }
         catch (Exception exception)
         {

@@ -23,7 +23,7 @@ public sealed class WebhookSubscription
             name,
             nameof(name),
             160);
-        TargetUrl = NormalizeUrl(targetUrl);
+        TargetUrl = WebhookTargetPolicy.Normalize(targetUrl);
         EventTypes = NormalizeRequired(
             eventTypes,
             nameof(eventTypes),
@@ -82,7 +82,7 @@ public sealed class WebhookSubscription
             name,
             nameof(name),
             160);
-        TargetUrl = NormalizeUrl(targetUrl);
+        TargetUrl = WebhookTargetPolicy.Normalize(targetUrl);
         EventTypes = NormalizeRequired(
             eventTypes,
             nameof(eventTypes),
@@ -141,28 +141,6 @@ public sealed class WebhookSubscription
                              item,
                              normalized,
                              StringComparison.Ordinal));
-    }
-
-    private static string NormalizeUrl(string value)
-    {
-        var normalized = NormalizeRequired(
-            value,
-            nameof(value),
-            2048);
-
-        if (!Uri.TryCreate(
-                normalized,
-                UriKind.Absolute,
-                out var uri) ||
-            (uri.Scheme != Uri.UriSchemeHttps &&
-             uri.Scheme != Uri.UriSchemeHttp))
-        {
-            throw new ArgumentException(
-                "Webhook target URL must be an absolute HTTP or HTTPS URL.",
-                nameof(value));
-        }
-
-        return uri.AbsoluteUri;
     }
 
     private static string NormalizeRequired(

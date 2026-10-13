@@ -11,6 +11,7 @@ using Fintrox.Application.Common.Interfaces;
 using Fintrox.Application.Identity;
 using Fintrox.Application.Integrations;
 using Fintrox.Infrastructure;
+using Fintrox.Infrastructure.Integrations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -125,7 +126,8 @@ builder.Services.AddHttpClient(
     client =>
     {
         client.Timeout = TimeSpan.FromSeconds(30);
-    });
+    })
+    .ConfigurePrimaryHttpMessageHandler(WebhookOutboundTransport.CreateHandler);
 builder.Services.AddHostedService<WebhookDeliveryWorker>();
 
 builder.Services
