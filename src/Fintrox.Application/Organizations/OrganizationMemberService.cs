@@ -39,7 +39,6 @@ public sealed class OrganizationMemberService(
         AddOrganizationMemberRequest request,
         CancellationToken cancellationToken)
     {
-
         return await transactions.ExecuteAsync(async transactionToken =>
         {
             // Serialize ALL membership changes for this organization, including
@@ -47,53 +46,53 @@ public sealed class OrganizationMemberService(
             await memberships.LockOrganizationForMembershipChangeAsync(
                 organizationId, transactionToken);
 
-                var manager = await EnsureManagerAsync(organizationId, cancellationToken);
-                var targetRole = ParseRole(request.Role);
-                EnsureCanAssign(manager.Role, targetRole);
+            var manager = await EnsureManagerAsync(organizationId, cancellationToken);
+            var targetRole = ParseRole(request.Role);
+            EnsureCanAssign(manager.Role, targetRole);
 
-                var user = await users.FindByEmailAsync(request.Email.Trim());
+            var user = await users.FindByEmailAsync(request.Email.Trim());
 
-                if (user is null || !user.IsActive)
-                {
-                    throw new OrganizationMembershipConflictException(
-                        "No active Fintrox user exists with this email.");
-                }
+            if (user is null || !user.IsActive)
+            {
+                throw new OrganizationMembershipConflictException(
+                    "No active Fintrox user exists with this email.");
+            }
 
-                var existing = await memberships.GetAsync(
+            var existing = await memberships.GetAsync(
+                organizationId,
+                user.Id,
+                trackChanges: true,
+                cancellationToken);
+
+            var now = timeProvider.GetUtcNow();
+
+            if (existing is { IsActive: true })
+            {
+                throw new OrganizationMembershipConflictException(
+                    "The user is already an active member of this organization.");
+            }
+
+            OrganizationMembership membership;
+
+            if (existing is null)
+            {
+                membership = OrganizationMembership.Create(
                     organizationId,
                     user.Id,
-                    trackChanges: true,
-                    cancellationToken);
+                    targetRole,
+                    now);
 
-                var now = timeProvider.GetUtcNow();
+                await memberships.AddAsync(membership, cancellationToken);
+            }
+            else
+            {
+                existing.ChangeRole(targetRole, now);
+                existing.Activate(now);
+                membership = existing;
+            }
 
-                if (existing is { IsActive: true })
-                {
-                    throw new OrganizationMembershipConflictException(
-                        "The user is already an active member of this organization.");
-                }
-
-                OrganizationMembership membership;
-
-                if (existing is null)
-                {
-                    membership = OrganizationMembership.Create(
-                        organizationId,
-                        user.Id,
-                        targetRole,
-                        now);
-
-                    await memberships.AddAsync(membership, cancellationToken);
-                }
-                else
-                {
-                    existing.ChangeRole(targetRole, now);
-                    existing.Activate(now);
-                    membership = existing;
-                }
-
-                await memberships.SaveChangesAsync(cancellationToken);
-                return Map(membership, user);
+            await memberships.SaveChangesAsync(cancellationToken);
+            return Map(membership, user);
         }, cancellationToken);
     }
 
@@ -103,7 +102,6 @@ public sealed class OrganizationMemberService(
         UpdateOrganizationMemberRoleRequest request,
         CancellationToken cancellationToken)
     {
-
         return await transactions.ExecuteAsync(async transactionToken =>
         {
             // Serialize ALL membership changes for this organization, including
@@ -111,37 +109,37 @@ public sealed class OrganizationMemberService(
             await memberships.LockOrganizationForMembershipChangeAsync(
                 organizationId, transactionToken);
 
-                var manager = await EnsureManagerAsync(organizationId, cancellationToken);
-                var target = await memberships.GetAsync(
-                    organizationId,
-                    userId,
-                    trackChanges: true,
-                    cancellationToken);
+            var manager = await EnsureManagerAsync(organizationId, cancellationToken);
+            var target = await memberships.GetAsync(
+                organizationId,
+                userId,
+                trackChanges: true,
+                cancellationToken);
 
-                if (target is null)
-                {
-                    return null;
-                }
+            if (target is null)
+            {
+                return null;
+            }
 
-                EnsureCanManageMember(manager, target);
+            EnsureCanManageMember(manager, target);
 
-                var targetRole = ParseRole(request.Role);
-                EnsureCanAssign(manager.Role, targetRole);
+            var targetRole = ParseRole(request.Role);
+            EnsureCanAssign(manager.Role, targetRole);
 
-                if (target.IsActive &&
-                    target.Role == OrganizationRole.Owner &&
-                    targetRole != OrganizationRole.Owner)
-                {
-                    await EnsureNotLastOwnerAsync(organizationId, cancellationToken);
-                }
+            if (target.IsActive &&
+                target.Role == OrganizationRole.Owner &&
+                targetRole != OrganizationRole.Owner)
+            {
+                await EnsureNotLastOwnerAsync(organizationId, cancellationToken);
+            }
 
-                target.ChangeRole(targetRole, timeProvider.GetUtcNow());
-                await memberships.SaveChangesAsync(cancellationToken);
+            target.ChangeRole(targetRole, timeProvider.GetUtcNow());
+            await memberships.SaveChangesAsync(cancellationToken);
 
-                var directory = await users.ListByIdsAsync([target.UserId], cancellationToken);
-                return directory.TryGetValue(target.UserId, out var user)
-                    ? Map(target, user)
-                    : null;
+            var directory = await users.ListByIdsAsync([target.UserId], cancellationToken);
+            return directory.TryGetValue(target.UserId, out var user)
+                ? Map(target, user)
+                : null;
         }, cancellationToken);
     }
 
@@ -150,7 +148,6 @@ public sealed class OrganizationMemberService(
         Guid userId,
         CancellationToken cancellationToken)
     {
-
         return await transactions.ExecuteAsync(async transactionToken =>
         {
             // Serialize ALL membership changes for this organization, including
@@ -158,28 +155,28 @@ public sealed class OrganizationMemberService(
             await memberships.LockOrganizationForMembershipChangeAsync(
                 organizationId, transactionToken);
 
-                var manager = await EnsureManagerAsync(organizationId, cancellationToken);
-                var target = await memberships.GetAsync(
-                    organizationId,
-                    userId,
-                    trackChanges: true,
-                    cancellationToken);
+            var manager = await EnsureManagerAsync(organizationId, cancellationToken);
+            var target = await memberships.GetAsync(
+                organizationId,
+                userId,
+                trackChanges: true,
+                cancellationToken);
 
-                if (target is null)
-                {
-                    return false;
-                }
+            if (target is null)
+            {
+                return false;
+            }
 
-                EnsureCanManageMember(manager, target);
+            EnsureCanManageMember(manager, target);
 
-                if (target.IsActive && target.Role == OrganizationRole.Owner)
-                {
-                    await EnsureNotLastOwnerAsync(organizationId, cancellationToken);
-                }
+            if (target.IsActive && target.Role == OrganizationRole.Owner)
+            {
+                await EnsureNotLastOwnerAsync(organizationId, cancellationToken);
+            }
 
-                target.Deactivate(timeProvider.GetUtcNow());
-                await memberships.SaveChangesAsync(cancellationToken);
-                return true;
+            target.Deactivate(timeProvider.GetUtcNow());
+            await memberships.SaveChangesAsync(cancellationToken);
+            return true;
         }, cancellationToken);
     }
 
