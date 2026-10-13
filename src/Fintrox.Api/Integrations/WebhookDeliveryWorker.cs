@@ -65,37 +65,52 @@ public sealed class WebhookDeliveryWorker(
         var secretProtector = scope.ServiceProvider
             .GetRequiredService<IWebhookSecretProtector>();
 
-        var due = await repository.ListDueDeliveriesAsync(
-            timeProvider.GetUtcNow(),
-            take: 20,
-            cancellationToken);
+        var transactions = scope.ServiceProvider
+            .GetRequiredService<Fintrox.Application.Common.Interfaces.ITransactionRunner>();
 
-        foreach (var candidate in due)
+        // Claim only when ready to process; reserving a whole batch before
+        // HTTP I/O could let leases expire while later items wait.
+        for (var index = 0; index < 20; index++)
         {
+            var claim = await repository.ClaimNextDueDeliveryAsync(
+                timeProvider.GetUtcNow(),
+                TimeSpan.FromMinutes(2),
+                MaxAttempts,
+                cancellationToken);
+
+            if (claim is null)
+            {
+                break;
+            }
+
             await ProcessDeliveryAsync(
                 repository,
+                transactions,
                 secretProtector,
-                candidate,
+                claim,
                 cancellationToken);
         }
     }
 
     private async Task ProcessDeliveryAsync(
         IIntegrationWorkflowRepository repository,
+        Fintrox.Application.Common.Interfaces.ITransactionRunner transactions,
         IWebhookSecretProtector secretProtector,
-        WebhookDelivery candidate,
+        WebhookDeliveryClaim claim,
         CancellationToken cancellationToken)
     {
-        var delivery = await repository.GetDeliveryAsync(
-            candidate.OrganizationId,
-            candidate.Id,
-            trackChanges: true,
-            cancellationToken);
+        // The repository returns a detached snapshot of a lease obtained with
+        // a single conditional PostgreSQL UPDATE. No tracked stale entity
+        // is ever saved over a newer claim.
+        var delivery = claim.Delivery;
+        var leaseExpiresAt = delivery.NextAttemptAtUtc;
 
-        if (delivery is null ||
-            delivery.Status != WebhookDeliveryStatus.Pending ||
-            delivery.NextAttemptAtUtc > timeProvider.GetUtcNow())
+        if (claim.IsExhausted)
         {
+            await FailPermanentlyAsync(
+                repository, transactions, delivery, leaseExpiresAt,
+                "{}", "Webhook attempt limit reached after an expired lease.",
+                statusCode: null, cancellationToken);
             return;
         }
 
@@ -113,8 +128,7 @@ public sealed class WebhookDeliveryWorker(
         if (integrationEvent is null || subscription is null)
         {
             await FailPermanentlyAsync(
-                repository,
-                delivery,
+                repository, transactions, delivery, leaseExpiresAt,
                 integrationEvent?.PayloadJson ?? "{}",
                 "Webhook event or subscription no longer exists.",
                 statusCode: null,
@@ -125,8 +139,7 @@ public sealed class WebhookDeliveryWorker(
         if (!subscription.IsActive)
         {
             await FailPermanentlyAsync(
-                repository,
-                delivery,
+                repository, transactions, delivery, leaseExpiresAt,
                 integrationEvent.PayloadJson,
                 "Webhook subscription is inactive.",
                 statusCode: null,
@@ -143,18 +156,13 @@ public sealed class WebhookDeliveryWorker(
         catch (ArgumentException)
         {
             await FailPermanentlyAsync(
-                repository,
-                delivery,
+                repository, transactions, delivery, leaseExpiresAt,
                 integrationEvent.PayloadJson,
                 "Webhook destination is blocked by outbound security policy.",
                 statusCode: null,
                 cancellationToken);
             return;
         }
-
-        var now = timeProvider.GetUtcNow();
-        delivery.StartAttempt(now);
-        await repository.SaveChangesAsync(cancellationToken);
 
         var body = BuildBody(
             integrationEvent,
@@ -197,7 +205,8 @@ public sealed class WebhookDeliveryWorker(
                 delivery.Succeed(
                     (int)response.StatusCode,
                     timeProvider.GetUtcNow());
-                await repository.SaveChangesAsync(cancellationToken);
+                await repository.TryPersistClaimedDeliveryAsync(
+                    delivery, leaseExpiresAt, cancellationToken);
                 return;
             }
 
@@ -205,8 +214,7 @@ public sealed class WebhookDeliveryWorker(
                 cancellationToken);
 
             await HandleFailureAsync(
-                repository,
-                delivery,
+                repository, transactions, delivery, leaseExpiresAt,
                 integrationEvent.PayloadJson,
                 (int)response.StatusCode,
                 $"Webhook endpoint returned HTTP {(int)response.StatusCode}: {responseBody}",
@@ -222,8 +230,7 @@ public sealed class WebhookDeliveryWorker(
         {
             // HttpClient may wrap exceptions thrown by ConnectCallback.
             await FailPermanentlyAsync(
-                repository,
-                delivery,
+                repository, transactions, delivery, leaseExpiresAt,
                 integrationEvent.PayloadJson,
                 "Webhook DNS resolution returned a blocked destination.",
                 statusCode: null,
@@ -232,8 +239,7 @@ public sealed class WebhookDeliveryWorker(
         catch (Exception exception)
         {
             await HandleFailureAsync(
-                repository,
-                delivery,
+                repository, transactions, delivery, leaseExpiresAt,
                 integrationEvent.PayloadJson,
                 statusCode: null,
                 exception.Message,
@@ -243,7 +249,9 @@ public sealed class WebhookDeliveryWorker(
 
     private async Task HandleFailureAsync(
         IIntegrationWorkflowRepository repository,
+        Fintrox.Application.Common.Interfaces.ITransactionRunner transactions,
         WebhookDelivery delivery,
+        DateTimeOffset leaseExpiresAt,
         string payloadJson,
         int? statusCode,
         string error,
@@ -254,8 +262,7 @@ public sealed class WebhookDeliveryWorker(
         if (delivery.AttemptCount >= MaxAttempts)
         {
             await FailPermanentlyAsync(
-                repository,
-                delivery,
+                repository, transactions, delivery, leaseExpiresAt,
                 payloadJson,
                 error,
                 statusCode,
@@ -273,12 +280,15 @@ public sealed class WebhookDeliveryWorker(
             now.Add(RetryDelays[delayIndex]),
             now);
 
-        await repository.SaveChangesAsync(cancellationToken);
+        await repository.TryPersistClaimedDeliveryAsync(
+            delivery, leaseExpiresAt, cancellationToken);
     }
 
     private async Task FailPermanentlyAsync(
         IIntegrationWorkflowRepository repository,
+        Fintrox.Application.Common.Interfaces.ITransactionRunner transactions,
         WebhookDelivery delivery,
+        DateTimeOffset leaseExpiresAt,
         string payloadJson,
         string error,
         int? statusCode,
@@ -286,47 +296,46 @@ public sealed class WebhookDeliveryWorker(
     {
         var now = timeProvider.GetUtcNow();
 
-        if (delivery.Status == WebhookDeliveryStatus.Pending)
+        delivery.Fail(statusCode, error, now);
+
+        await transactions.ExecuteAsync(async token =>
         {
-            if (delivery.LastAttemptAtUtc is null)
+            // A stale worker cannot overwrite a claim recovered by another
+            // worker. The failure record is committed atomically with the
+            // winning terminal state transition.
+            if (!await repository.TryPersistClaimedDeliveryAsync(
+                    delivery, leaseExpiresAt, token))
             {
-                delivery.StartAttempt(now);
+                return false;
             }
 
-            delivery.Fail(
-                statusCode,
-                error,
-                now);
-        }
+            var failure = await repository.GetOpenFailureAsync(
+                delivery.OrganizationId,
+                IntegrationFailureKind.WebhookDelivery,
+                delivery.Id,
+                trackChanges: true,
+                token);
 
-        var failure = await repository.GetOpenFailureAsync(
-            delivery.OrganizationId,
-            IntegrationFailureKind.WebhookDelivery,
-            delivery.Id,
-            trackChanges: true,
-            cancellationToken);
+            if (failure is null)
+            {
+                await repository.AddFailureAsync(
+                    IntegrationFailure.Create(
+                        delivery.OrganizationId,
+                        IntegrationFailureKind.WebhookDelivery,
+                        delivery.Id,
+                        error,
+                        payloadJson,
+                        now),
+                    token);
+            }
+            else
+            {
+                failure.RecordRetry(error, payloadJson, now);
+            }
 
-        if (failure is null)
-        {
-            await repository.AddFailureAsync(
-                IntegrationFailure.Create(
-                    delivery.OrganizationId,
-                    IntegrationFailureKind.WebhookDelivery,
-                    delivery.Id,
-                    error,
-                    payloadJson,
-                    now),
-                cancellationToken);
-        }
-        else
-        {
-            failure.RecordRetry(
-                error,
-                payloadJson,
-                now);
-        }
-
-        await repository.SaveChangesAsync(cancellationToken);
+            await repository.SaveChangesAsync(token);
+            return true;
+        }, cancellationToken);
     }
 
     private static bool IsBlockedDestination(Exception exception)

@@ -65,6 +65,25 @@ public interface IIntegrationWorkflowRepository
         Guid deliveryId,
         bool trackChanges,
         CancellationToken cancellationToken);
+    
+    /// <summary>
+    /// Atomically reserves a due delivery before network I/O. A lease is
+    /// recoverable after its deadline; claims are global across API instances.
+    /// </summary>
+    Task<WebhookDeliveryClaim?> ClaimNextDueDeliveryAsync(
+        DateTimeOffset now,
+        TimeSpan leaseDuration,
+        int maxAttempts,
+        CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Writes a result only if the caller still holds the claimed attempt
+    /// generation and original lease deadline. False means lost ownership.
+    /// </summary>
+    Task<bool> TryPersistClaimedDeliveryAsync(
+        WebhookDelivery delivery,
+        DateTimeOffset claimedLeaseExpiresAt,
+        CancellationToken cancellationToken);
 
     Task<IReadOnlyList<WebhookDelivery>> ListDeliveriesAsync(
         Guid organizationId,

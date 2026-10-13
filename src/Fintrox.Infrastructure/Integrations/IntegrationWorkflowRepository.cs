@@ -198,6 +198,95 @@ public sealed class IntegrationWorkflowRepository(
             cancellationToken);
     }
 
+    public async Task<WebhookDeliveryClaim?> ClaimNextDueDeliveryAsync(
+        DateTimeOffset now,
+        TimeSpan leaseDuration,
+        int maxAttempts,
+        CancellationToken cancellationToken)
+    {
+        if (leaseDuration <= TimeSpan.Zero || maxAttempts <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(leaseDuration));
+        }
+
+        // A candidate query only improves fairness. The conditional UPDATE is
+        // the atomic claim; competing workers can observe identical candidates
+        // but only one can update a given still-due row.
+        var candidates = await dbContext.WebhookDeliveries
+            .AsNoTracking()
+            .Where(item => item.Status == WebhookDeliveryStatus.Pending &&
+                           item.NextAttemptAtUtc <= now)
+            .OrderBy(item => item.NextAttemptAtUtc)
+            .ThenBy(item => item.CreatedAtUtc)
+            .Select(item => new { item.Id, item.OrganizationId, item.AttemptCount })
+            .Take(30)
+            .ToArrayAsync(cancellationToken);
+
+        var deadline = now.Add(leaseDuration);
+        foreach (var candidate in candidates)
+        {
+            var updated = await dbContext.WebhookDeliveries
+                .Where(item => item.Id == candidate.Id &&
+                               item.OrganizationId == candidate.OrganizationId &&
+                               item.Status == WebhookDeliveryStatus.Pending &&
+                               item.NextAttemptAtUtc <= now)
+                .ExecuteUpdateAsync(setters => setters
+                    .SetProperty(item => item.AttemptCount,
+                        item => item.AttemptCount < maxAttempts
+                            ? item.AttemptCount + 1 : item.AttemptCount)
+                    .SetProperty(item => item.LastAttemptAtUtc, now)
+                    .SetProperty(item => item.NextAttemptAtUtc, deadline)
+                    .SetProperty(item => item.UpdatedAtUtc, now),
+                    cancellationToken);
+
+            if (updated == 0)
+            {
+                continue;
+            }
+
+            var delivery = await dbContext.WebhookDeliveries
+                .AsNoTracking()
+                .SingleAsync(item => item.Id == candidate.Id &&
+                                     item.OrganizationId == candidate.OrganizationId,
+                    cancellationToken);
+
+            return new WebhookDeliveryClaim(
+                delivery, candidate.AttemptCount >= maxAttempts);
+        }
+
+        return null;
+    }
+
+    public async Task<bool> TryPersistClaimedDeliveryAsync(
+        WebhookDelivery delivery,
+        DateTimeOffset claimedLeaseExpiresAt,
+        CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(delivery);
+
+        var updated = await dbContext.WebhookDeliveries
+            .Where(item => item.Id == delivery.Id &&
+                           item.OrganizationId == delivery.OrganizationId &&
+                           item.Status == WebhookDeliveryStatus.Pending &&
+                           item.AttemptCount == delivery.AttemptCount &&
+                           item.NextAttemptAtUtc == claimedLeaseExpiresAt &&
+                           item.LastAttemptAtUtc == delivery.LastAttemptAtUtc)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(item => item.Status, delivery.Status)
+                .SetProperty(item => item.NextAttemptAtUtc,
+                    delivery.NextAttemptAtUtc)
+                .SetProperty(item => item.LastStatusCode,
+                    delivery.LastStatusCode)
+                .SetProperty(item => item.LastError, delivery.LastError)
+                .SetProperty(item => item.DeliveredAtUtc,
+                    delivery.DeliveredAtUtc)
+                .SetProperty(item => item.UpdatedAtUtc,
+                    delivery.UpdatedAtUtc),
+                cancellationToken);
+
+        return updated == 1;
+    }
+
     public async Task<IReadOnlyList<WebhookDelivery>> ListDeliveriesAsync(
         Guid organizationId,
         Guid? subscriptionId,
