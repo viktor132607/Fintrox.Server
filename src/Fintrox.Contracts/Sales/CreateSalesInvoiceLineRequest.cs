@@ -3,10 +3,10 @@ using System.ComponentModel.DataAnnotations;
 namespace Fintrox.Contracts.Sales;
 
 public sealed record CreateSalesInvoiceLineRequest(
-    [property: MaxLength(100)] string? ItemCode,
-    [property: Required, MaxLength(500)] string Description,
-    [property: Range(typeof(decimal), "0.000001", "999999999999.999999")] decimal Quantity,
-    [property: MaxLength(32)] string? UnitOfMeasure,
-    [property: Range(typeof(decimal), "0", "999999999999999.9999")] decimal UnitPrice,
-    [property: Range(typeof(decimal), "0", "100")] decimal DiscountPercent,
+    [param: MaxLength(100)] string? ItemCode,
+    [param: Required, MaxLength(500)] string Description,
+    [param: Range(typeof(decimal), "0.000001", "999999999999.999999")] decimal Quantity,
+    [param: MaxLength(32)] string? UnitOfMeasure,
+    [param: Range(typeof(decimal), "0", "999999999999999.9999")] decimal UnitPrice,
+    [param: Range(typeof(decimal), "0", "100")] decimal DiscountPercent,
     Guid VatCodeId);

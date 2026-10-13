@@ -7,5 +7,5 @@ public sealed record CreateSalesInvoiceRequest(
     DateOnly InvoiceDate,
     DateOnly? DueDate,
     Guid CurrencyId,
-    [property: MaxLength(1000)] string? Notes,
+    [param: MaxLength(1000)] string? Notes,
     IReadOnlyList<CreateSalesInvoiceLineRequest>? Lines);
