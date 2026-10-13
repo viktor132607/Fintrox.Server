@@ -32,3 +32,8 @@ Reuse verified findings and inspect changed files only until the explicitly sche
 Update concise project memory after each milestone; continue from the next verified foundation task; the user authorized continuation after the model switch.
 
 User direction 2026-10-11: prioritize adding module entities and record per-module progress in MODULE_STATUS.md instead of repeating inventories in chat. Security backlog remains tracked; do not silently mark it complete.
+
+## 2026-10-13 — Mandatory financial source of truth and first foundation gate
+- User requires *all* enterprise financial management and money flows (AP, AR, GL, billing, bank/cash, taxes, payroll, assets, cost accounting, forecasts, consolidation and reports) to reside in Fintrox. Connected user projects may hold operational data but must submit/receive finance through Fintrox integrations. **Accounting is single GL owner**, modules own source documents; no second financial ledger outside Fintrox. See `docs/financial-system-of-record.md` and MASTER_PROMPT.md.
+- First stabilization milestone ORG-002: the operational legacy OrganizationAccessService checks both active membership and organization activity; inactive tenant is denied all business permissions; only active owner can use new `organizations.reactivate` for reactivation. 7 regression tests and .NET CI run 38329276594 passed (2,884 tests, 0 failed/skipped), EF snapshot and PostgreSQL migrations. Existing modular Domain 936 entity inventory unchanged.
+- Next: implement operational Identity/Organizations migration and Accounting source-to-posting capabilities one verified slice at a time; preserve previous legacy financial behavior until parity tests pass.
