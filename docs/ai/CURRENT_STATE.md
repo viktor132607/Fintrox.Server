@@ -12,3 +12,5 @@
 - AUTH-002 COMPLETE at 422cc38dd2a20200ca3a5e1ee91a8c6c78d876dd: transactional conditional refresh consumption and revocation. CI 38012762635 / job 114096261806 passed Release build (0 warnings/errors), 51/51 tests (0 skipped), EF snapshot and PostgreSQL migrations. Five real database regressions cover concurrency, revoke ordering, ownership and rollback. No migration or new project.
 
 - ENTITIES-001: domain foundation implemented in all 36 modules; local affected-graph Release build and 604 tests passed; 5 PostgreSQL tests await CI. Per-module names and remaining work: MODULE_STATUS.md. New models are not yet runtime tables/APIs. Existing legacy entities, financial engines and migrations are unchanged.
+
+- 2026-10-14: INT-002 verified (2,906 tests, CI 38475619708). API-001 implemented (explicit-origin CORS, IP-auth endpoint rate limits, 6 in-process HTTP tests) with build/CI verification pending. Next planned item ACCOUNTING-001. See TASK_QUEUE.md and VALIDATION.md; new module EF/API mappings are still pending.
