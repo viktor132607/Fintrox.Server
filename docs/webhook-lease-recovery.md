@@ -2,7 +2,7 @@
 
 **Implementation commit:** `3920ceb8975959023590093743602daf8fe59536` (code) and `f1004bfafb5ab874792d4f61387ff9026a3601fd` (real PostgreSQL tests), with timestamp-boundary test correction `ec7261f01ad99dd8184d985d5b96c0072438f730`.
 
-**Status:** Implemented; CI validation pending. Track [run 38475619708](https://github.com/viktor132607/Fintrox.Server/actions/runs/38475619708) before declaring complete.
+**Status:** COMPLETE — CI VERIFIED. Source commit `ec7261f01ad99dd8184d985d5b96c0072438f730`, [GitHub Actions 38475619708](https://github.com/viktor132607/Fintrox.Server/actions/runs/38475619708): .NET 10 Release build 0 warnings/errors, **2,906/2,906** tests passed (0 failed/skipped), EF model snapshot, migration application and migration list checks passed on real PostgreSQL. The Docker image publish job is separate.
 
 ## Problem
 

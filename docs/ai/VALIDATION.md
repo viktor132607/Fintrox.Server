@@ -1,4 +1,13 @@
-# Validation history — 2026-10-13
+# Validation history — 2026-10-14
+
+## INT-002 / webhook atomic claims and expired lease recovery
+- VERIFIED code commit `ec7261f01ad99dd8184d985d5b96c0072438f730`, GitHub Actions **38475619708**, Build/Test/Migrations job: Release build **0 warnings, 0 errors**, **2,906/2,906 tests passed**, zero failed or skipped, EF model snapshot and PostgreSQL migration application/listing passed.
+- Added 4 PostgreSQL integration tests on disposable **migrated PostgreSQL** databases: competing worker claims only one winner; expired lease takeover fences stale results; retry is not available early; expired sixth attempt is terminal and not counted as a seventh HTTP attempt.
+- Existing `integration.webhook_deliveries` columns implement the lease: `NextAttemptAtUtc` marks expiry, `AttemptCount` generation, `LastAttemptAtUtc` last claim. Atomic ExecuteUpdateAsync claims across worker instances; conditional finalization prevents a stale worker from overwriting another. Terminal failure and failure evidence share an EF transaction.
+- No new migrations or schema changes. See [webhook-lease-recovery](../webhook-lease-recovery.md).
+- Important limitation: at-least-once semantics; lost responses and expired in-flight requests can cause duplicate physical HTTP sends. Downstream consumers must process stable delivery/event IDs idempotently.
+
+
 
 ## TEST-001 / full-stack accounting PostgreSQL and HTTP
 - VERIFIED source commit `1a03dc25bfaf530dc7d6f880a71116c77410f555`, GitHub Actions **38437997153**, successful Release build **0 errors / 0 warnings**, **2,902 tests passed** (0 failed/skipped), EF model snapshot and real PostgreSQL migration application/listing passed.

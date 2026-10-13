@@ -10,6 +10,8 @@ Legacy list: [32 existing runtime/persistence models](LEGACY_MODEL_INVENTORY.md)
 
 2026-10-13 Accounting regression milestone: **TEST-001 verified**. Seven full-stack HTTP + real migrated PostgreSQL tests exercise balancing/numbering, double-reversal prevention, period closure, tenant isolation, JWT/permissions and database immutability; 2,902/2,902 pass in CI 38437997153. Found and fixed 44 positional request DTO DataAnnotations targets across finance/API contracts. The **legacy** Accounting runtime is tested; new module EF/API migration remains PENDING. See [financial regression test specification](../financial-http-postgres-regression.md).
 
+2026-10-14 Integrations durability milestone: **INT-002 CI VERIFIED** in run 38475619708 (2,906 tests). Legacy webhook worker and repository now use PostgreSQL atomic claims, expiring leases and CAS-fenced results with transactional failure reporting; four real PostgreSQL regression tests. The new Integrations module's Domain models still await full Infrastructure/Application/Presentation migration. Details: [webhook lease recovery](../webhook-lease-recovery.md).
+
 The new types have immutable IDs/organization ownership, constructor validation and typed business fields. They are not yet mapped in EF or exposed through APIs. No complete ERP workflow, database tenant isolation, authorization or cross-reference existence checks are claimed by these model classes.
 
 Every module keeps five projects. Domain=PARTIAL; Application/Contracts/Infrastructure/Presentation=SCAFFOLD. Frontend remains 23 shells (13 new module shells missing). Entity constructors do not activate a module.
