@@ -6,6 +6,7 @@ using Fintrox.Contracts.Accounting;
 using Fintrox.Domain.Accounting;
 using Fintrox.Domain.Organizations;
 using Fintrox.Infrastructure.Identity;
+using Fintrox.Infrastructure.Audit;
 using Fintrox.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -13,6 +14,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Npgsql;
@@ -121,6 +123,15 @@ public sealed class FinancialHttpPostgresRegressionTests
                 }));
             builder.ConfigureTestServices(services =>
             {
+                // Override DbContext options registered by the real API host:
+                // test app and fixture must use the SAME migrated disposable DB.
+                services.RemoveAll<DbContextOptions<FintroxDbContext>>();
+                services.AddDbContext<FintroxDbContext>((provider, options) =>
+                {
+                    options.UseNpgsql(connectionString, npgsql => npgsql.EnableRetryOnFailure());
+                    options.AddInterceptors(provider.GetRequiredService<AuditSaveChangesInterceptor>());
+                });
+
                 // Background webhook delivery is unrelated to finance HTTP testing.
                 var worker = services.FirstOrDefault(descriptor =>
                     descriptor.ServiceType == typeof(IHostedService) &&
@@ -128,6 +139,11 @@ public sealed class FinancialHttpPostgresRegressionTests
                 if (worker is not null) services.Remove(worker);
             });
         });
+
+        using var verifyScope = factory.Services.CreateScope();
+        var configuredDb = verifyScope.ServiceProvider.GetRequiredService<FintroxDbContext>();
+        Assert.AreEqual(databaseName, configuredDb.Database.GetDbConnection().Database,
+            "The HTTP host must use the migrated disposable test database.");
     }
 
     [TestCleanup]
