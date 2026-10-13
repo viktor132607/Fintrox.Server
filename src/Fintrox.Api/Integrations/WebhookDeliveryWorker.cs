@@ -217,8 +217,10 @@ public sealed class WebhookDeliveryWorker(
         {
             throw;
         }
-        catch (WebhookTargetBlockedException)
+        catch (HttpRequestException exception)
+            when (IsBlockedDestination(exception))
         {
+            // HttpClient may wrap exceptions thrown by ConnectCallback.
             await FailPermanentlyAsync(
                 repository,
                 delivery,
@@ -325,6 +327,19 @@ public sealed class WebhookDeliveryWorker(
         }
 
         await repository.SaveChangesAsync(cancellationToken);
+    }
+
+    private static bool IsBlockedDestination(Exception exception)
+    {
+        for (Exception? inner = exception; inner is not null; inner = inner.InnerException)
+        {
+            if (inner is WebhookTargetBlockedException)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static string BuildBody(
