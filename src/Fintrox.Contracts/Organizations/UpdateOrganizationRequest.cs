@@ -3,10 +3,10 @@ using System.ComponentModel.DataAnnotations;
 namespace Fintrox.Contracts.Organizations;
 
 public sealed record UpdateOrganizationRequest(
-    [property: Required, MaxLength(160)] string Name,
-    [property: MaxLength(200)] string? LegalName,
-    [property: Required, RegularExpression("^[A-Za-z]{2}$")] string CountryCode,
-    [property: Required, RegularExpression("^[A-Za-z]{3}$")] string BaseCurrencyCode,
-    [property: Required, MaxLength(64)] string TimeZoneId,
-    [property: MaxLength(64)] string? RegistrationNumber,
-    [property: MaxLength(64)] string? VatNumber);
+    [param: Required, MaxLength(160)] string Name,
+    [param: MaxLength(200)] string? LegalName,
+    [param: Required, RegularExpression("^[A-Za-z]{2}$")] string CountryCode,
+    [param: Required, RegularExpression("^[A-Za-z]{3}$")] string BaseCurrencyCode,
+    [param: Required, MaxLength(64)] string TimeZoneId,
+    [param: MaxLength(64)] string? RegistrationNumber,
+    [param: MaxLength(64)] string? VatNumber);
