@@ -126,6 +126,8 @@ public sealed class OrganizationAccessActivityTests
             Guid organizationId, CancellationToken cancellationToken) => throw new NotSupportedException();
         public Task<int> CountActiveOwnersAsync(
             Guid organizationId, CancellationToken cancellationToken) => throw new NotSupportedException();
+        public Task LockOrganizationForMembershipChangeAsync(
+            Guid organizationId, CancellationToken cancellationToken) => throw new NotSupportedException();
         public Task AddAsync(
             OrganizationMembership membership, CancellationToken cancellationToken) =>
             throw new NotSupportedException();
