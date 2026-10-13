@@ -1,8 +1,9 @@
 # Validation history — 2026-10-13
 
 ## ORG-002 / Identity–Organizations foundation
+- VERIFIED: Server commit 829cddeadb49202ecc17fa88d1876eb0596f138d, GitHub CI 38329276594, Build/Test/Migrations: Release build 0 warnings/errors, 2,884 tests passing (0 failed/skipped), EF snapshot passed, PostgreSQL migrations applied/listed successfully.
 - Changes: live tenant-activity check in OrganizationAccessService, explicit owner-only reactivation permission in OrganizationService, and 7 regression tests.
-- Build/tests/CI not yet verified for this change. The 2,877-test result below predates ORG-002.
+- The original 2,877-test milestone below predates ORG-002; 2,884-test CI has now passed.
 
 
 ## ENTITIES-EXPANSION (2026-10-13)

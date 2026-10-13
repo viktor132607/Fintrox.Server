@@ -34,3 +34,7 @@ Module-local immutable records, constructor input validation, no references to o
 ## Finance-wide authorization foundation — 2026-10-13
 
 Every financial read, write, authorization, posting and reversal requires current organization/actor permissions. The currently operational legacy `OrganizationAccessService` now denies inactive-tenant business permission checks; a separate owner-only `organizations.reactivate` path preserves restoration. Full Identity module persistence and finer-grained financial approvals are still pending. See [financial system-of-record contract](../../../docs/financial-system-of-record.md).
+
+### ORG-002 verification
+
+The legacy Identity/Organizations authorization enforcement was verified in CI run 38329276594 (Release build 0 warnings, 0 errors; 2,884 tests passed; PostgreSQL migration checks passed). The new Identity module's own storage/use cases are still pending.
