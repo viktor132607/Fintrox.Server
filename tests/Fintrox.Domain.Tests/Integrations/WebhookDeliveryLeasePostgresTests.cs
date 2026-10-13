@@ -117,7 +117,7 @@ public sealed class WebhookDeliveryLeasePostgresTests
         await using var workerB = CreateDb();
         var repoB = new IntegrationWorkflowRepository(workerB);
         Assert.IsNull(await repoB.ClaimNextDueDeliveryAsync(
-            now.Add(leaseDuration).AddTicks(-1), leaseDuration, 6, CancellationToken.None));
+            now.Add(leaseDuration).AddMilliseconds(-1), leaseDuration, 6, CancellationToken.None));
 
         var second = await repoB.ClaimNextDueDeliveryAsync(
             now.Add(leaseDuration).AddSeconds(1), leaseDuration, 6, CancellationToken.None);
