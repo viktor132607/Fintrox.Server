@@ -30,3 +30,9 @@ Models live in this module Domain/Entities directory; foreign objects are refere
 Added 24 entities (28 total): `ConnectorDefinition`, `ConnectorVersion`, `ConnectorInstallation`, `ConnectorCredential`, `ConnectorSyncJob`, `ConnectorSyncCheckpoint`, `ConnectorMappingRule`, `ConnectorMappingField`, `WebhookSubscriptionConfig`, `WebhookDeliveryAttempt`, `WebhookDeliveryReceipt`, `IntegrationSecretRotation`, `IntegrationErrorEvent`, `IntegrationQuota`, `ExternalIdentityMapping`, `IntegrationSubscription`, `IntegrationCapabilityGrant`, `IntegrationPermissionScope`, `IntegrationHealthStatus`, `IntegrationAuditRecord`, `IntegrationReplayRequest`, `ExternalDataContract`, `IntegrationRetryPolicy`, `ExternalEventSchema`.
 
 Module-local immutable records, constructor input validation, no references to other Domain assemblies. Persistence, API, security authorizations and implementation remain pending.
+
+## 2026-10-13 — INT-001 live webhook SSRF hardening
+
+The existing **legacy runtime** under `src/Fintrox.Domain/Integrations`, `src/Fintrox.Infrastructure/Integrations` and `src/Fintrox.Api/Integrations` now rejects private/local/metadata webhook targets, validates all DNS answers at socket creation, pins socket connections to validated IP addresses and disables HTTP redirects, proxies and cookies. Existing persisted subscriptions are checked again before delivery; unsafe targets fail permanently. The feature is CI verified in run **38399255676**: 2,891 passing tests, 0 skipped/failed, Release build 0 warnings/errors and EF/Postgres migration checks. Details: [webhook security](../../../docs/webhook-security.md).
+
+**Not migrated into module assemblies:** new Integrations module Domain types are still models; their Infrastructure/Application/Presentation integration, migrations and API are pending. INT-002 worker claim/recovery also remains pending.

@@ -4,6 +4,8 @@ Legacy list: [32 existing runtime/persistence models](LEGACY_MODEL_INVENTORY.md)
 
 2026-10-13 security milestone: the operational **legacy Identity/Organizations authorization** now blocks all permissions for inactive organizations except a new owner-only `organizations.reactivate` permission. ORG-002 verified in CI 38329276594 (2,884 tests). This does not change the target modules' EF/API status. Finance-wide requirements: [financial system of record](../financial-system-of-record.md).
 
+2026-10-13 Integrations security milestone: INT-001 webhook SSRF prevention implemented in the operational **legacy** runtime. Public-only DNS answers are pinned to the actual outbound connection; private/metadata/local targets and automatic redirects/proxies are blocked. 7 new tests, 2,891 tests passing in CI 38399255676. Target Integrations module persistence/API remains PENDING. Details: [webhook security](../webhook-security.md).
+
 The new types have immutable IDs/organization ownership, constructor validation and typed business fields. They are not yet mapped in EF or exposed through APIs. No complete ERP workflow, database tenant isolation, authorization or cross-reference existence checks are claimed by these model classes.
 
 Every module keeps five projects. Domain=PARTIAL; Application/Contracts/Infrastructure/Presentation=SCAFFOLD. Frontend remains 23 shells (13 new module shells missing). Entity constructors do not activate a module.

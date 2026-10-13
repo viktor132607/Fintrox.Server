@@ -4,13 +4,14 @@
 |---|---|---|---|---|---|---|
 | ENTITIES-001 | Module entity foundation | All 36 | P0 user-directed | ARCH-001 | IMPLEMENTED — CI PENDING | 180 named types, all module boundaries preserved, invariant tests, per-module progress |
 | ENTITIES-EXPANSION | Deepen granular Domain models in all 36 modules | All 36 | P0 user-directed | ENTITIES-001 | COMPLETE — VERIFIED | 756 added; 936 inventoried; per-module commits/docs; Release build, 2877 tests, EF/PostgreSQL verified in CI 38324236400 |
-| FIN-SOR-001 | Central enterprise financial system of record contract | All financial modules | P0 user-directed | Architecture | SPECIFIED — DELIVERY IN PHASES | Trace all money events to a single Fintrox ledger with authorized, idempotent source-to-posting process; see docs/financial-system-of-record.md |\n| ENTITIES-002 | Integrate entity persistence and use cases | Incremental modules | P1 | ENTITIES-001 | PENDING | EF constraints, authorization, contracts, lifecycle behavior, PostgreSQL and HTTP tests per capability |
+| FIN-SOR-001 | Central enterprise financial system of record contract | All financial modules | P0 user-directed | Architecture | SPECIFIED — DELIVERY IN PHASES | Trace all money events to a single Fintrox ledger with authorized, idempotent source-to-posting process; see docs/financial-system-of-record.md |
+| ENTITIES-002 | Integrate entity persistence and use cases | Incremental modules | P1 | ENTITIES-001 | PENDING | EF constraints, authorization, contracts, lifecycle behavior, PostgreSQL and HTTP tests per capability |
 | ARCH-001 | 13 new module scaffolds | Platform | P0 | Baseline | COMPLETE | 36 modules, 186 projects, architecture passes |
 | VERIFY-001 | Verify baseline restore/build/tests | Platform | P0 | ARCH-001 | COMPLETE | CI 37860035722: restore/build/33 tests/migrations pass |
 | AUDIT-001 | Audit Server and Client | All | P0 | VERIFY-001 | COMPLETE | AUDIT.md covers all modules, layers, frontend and concrete gaps |
 | AUTH-001 | Revalidate issued bearer tokens against current state | Identity/Integrations | P0 | AUDIT-001 | COMPLETE | Commit 79ee090; CI build, 46 tests and PostgreSQL migrations pass |
 | AUTH-002 | Atomic single-use refresh-token rotation | Identity | P0 | AUTH-001 | COMPLETE | 422cc38: one winner, revoke ordering, rollback; CI 51/51 tests and migrations pass |
-| INT-001 | Webhook SSRF prevention | Integrations | P0 | AUDIT-001 | PENDING | Private/loopback/metadata targets and redirect/DNS bypass rejected; safe public delivery tested |
+| INT-001 | Webhook SSRF prevention | Integrations | P0 | AUDIT-001 | COMPLETE — CI VERIFIED | Domain URL policy, mixed-DNS rejection, connect-time IP pinning, no redirect/proxy, 7 security tests; 2,891 passed; CI 38399255676 |
 | ORG-001 | Concurrent last-owner protection | Organizations | P1 | AUDIT-001 | PENDING | Simultaneous removal/demotion cannot leave no active owner |
 | ORG-002 | Inactive-tenant business access policy | Identity/Organizations | P1 | AUDIT-001 | COMPLETE — CI VERIFIED | Active membership and organization required; deactivated tenant only owner reactivation; 7 regression tests; CI 38329276594 (2884 passing) |
 | TEST-001 | Financial/tenant/HTTP regression coverage | Accounting/Platform | P1 | AUDIT-001 | PENDING | Real PostgreSQL posting/reversal, balance/period and cross-tenant isolation tests |

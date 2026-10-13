@@ -26,3 +26,7 @@
 ## 2026-10-13 — FIN-SOR-001: all enterprise finance within Fintrox
 
 User directive: all finance-related business processes and the complete money flow for the enterprise belong in one Fintrox ERP platform. Accounting owns the single GL/posting engine; source financial facts belong to specialized Fintrox modules and flow via versioned, tenant-authorized, idempotent contracts. External products are producers/consumers, not competing accounting systems. No new shared DbContext or cross-module direct database writes. Specification and acceptance gates: `docs/financial-system-of-record.md`. Status: architectural decision and ordered delivery plan; not fully implemented.
+
+## 2026-10-13 — INT-001 outbound webhook security boundary
+
+Accept **only publicly routable HTTP(S) webhook targets**. Validate at subscription registration/update and again at delivery. New outbound connections resolve each hostname and pin a validated public IP directly to the socket, disallowing DNS rebinding and mixed public/private answers; never follow redirects or use environment proxies/cookies. Existing legacy subscriptions must not bypass validation. Blocked destinations fail permanently, not as retryable network faults. Verified in CI 38399255676 (2,891 tests, 0 failed/skipped). See `docs/webhook-security.md`. INT-002 (durable multi-worker delivery) remains separate.

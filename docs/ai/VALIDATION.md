@@ -1,5 +1,13 @@
 # Validation history — 2026-10-13
 
+## INT-001 / Integrations webhook SSRF
+- VERIFIED in Server code commit `cb0c54384e57608e1937f803d4c99c0b30b1a1ba`, GitHub Actions run **38399255676**, Build/Test/Migrations job: Release build 0 warnings, 0 errors; **2,891 of 2,891** tests passed (0 skipped/failed); EF model snapshot and PostgreSQL migration application/listing passed.
+- 7 new webhook URL/DNS/transport tests added. Validation includes reserved/private/mapped/special-use addresses, local DNS, mixed public/private answers, public-only pinned answers, no redirects/proxies and reject-before-DNS.
+- Initial CI runs 38398418239/38398639909 found C# overload/CA1865 conflicts; 38398866280 found that `.svc` service-discovery names were allowed by initial structural URL validation. All issues were fixed and the final run passed.
+- No external public network integration test was performed; the public-target behavior is verified deterministically via policy and injectable DNS resolver tests. Docker publication is a separate CI job.
+- No EF model or database schema change was required. Details: [webhook security](../webhook-security.md).
+
+
 ## ORG-002 / Identity–Organizations foundation
 - VERIFIED: Server commit 829cddeadb49202ecc17fa88d1876eb0596f138d, GitHub CI 38329276594, Build/Test/Migrations: Release build 0 warnings/errors, 2,884 tests passing (0 failed/skipped), EF snapshot passed, PostgreSQL migrations applied/listed successfully.
 - Changes: live tenant-activity check in OrganizationAccessService, explicit owner-only reactivation permission in OrganizationService, and 7 regression tests.
