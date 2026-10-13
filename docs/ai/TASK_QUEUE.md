@@ -16,7 +16,7 @@
 | ORG-002 | Inactive-tenant business access policy | Identity/Organizations | P1 | AUDIT-001 | COMPLETE — CI VERIFIED | Active membership and organization required; deactivated tenant only owner reactivation; 7 regression tests; CI 38329276594 (2884 passing) |
 | TEST-001 | Financial/tenant/HTTP regression coverage | Accounting/Platform | P1 | AUDIT-001 | COMPLETE — CI VERIFIED | 7 full-stack HTTP + migrated PostgreSQL scenarios: posting, reversal, balance, period, tenant, auth and DB immutability; 2902 tests passing; CI 38437997153 |
 | INT-002 | Durable multi-worker webhook claim/recovery | Integrations | P1 | INT-001 | COMPLETE — CI VERIFIED | Atomic PostgreSQL lease/CAS outcomes, expiry recovery and max-attempt handling; 4 real PostgreSQL tests, CI 38475619708, 2,906 passed; docs/webhook-lease-recovery.md |
-| API-001 | Configured CORS and endpoint throttling | API | P1 | Authentication hardening | PENDING | Explicit origins, preflight and auth endpoint rate tests |
+| API-001 | Configured CORS and endpoint throttling | API | P1 | Authentication hardening | IMPLEMENTED — CI PENDING | Explicit origins, preflight and auth endpoint rate tests |
 | ACCOUNTING-001 | Complete audited accounting gaps | Accounting/Tax/Currencies | P1 | Foundation/tests | PENDING | See AUDIT.md and MASTER_ROADMAP phases 2–3 |
 | FE-001 | Align 36 frontend shells/manifests | Client | P2 | ARCH-001 | PENDING | Module parity and TS architecture/typecheck/build |
 | ERP-001 | Operational/new module business implementation | All | P2 | Accounting foundation | PENDING | Incremental use cases with auth/persistence/API/tests |
