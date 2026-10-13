@@ -1,5 +1,11 @@
 # Validation history — 2026-10-14
 
+## API-001 / exact CORS policy and auth endpoint rate limits
+- IMPLEMENTED, **CI verification pending**. Source files: `src/Fintrox.Api/Security/ApiRequestSecurity.cs`, `src/Fintrox.Api/Program.cs`, auth and integration-token controllers, default `appsettings.json` deny list.
+- Six WebApplicationFactory HTTP regression tests added under `tests/Fintrox.Domain.Tests/Api/ApiRequestSecurityHttpTests.cs`; intended coverage: configured/unconfigured/unknown CORS origins, preflight, 429 login/register/integration-token quotas, isolation of unrelated endpoints, and forwarded-IP header spoofing resistance.
+- Server rules: explicit `Cors:AllowedOrigins`, no wildcard/credentials, per-observed-IP 5 registration/hour, 10 login/minute, 30 refresh/minute, 30 revoke/minute, 20 integration token/minute. See [API request security](../api-request-security.md).
+- **No CI, .NET build or HTTP test execution result claimed yet**. No local dotnet SDK available. No migration or schema changes.
+
 ## INT-002 / webhook atomic claims and expired lease recovery
 - VERIFIED code commit `ec7261f01ad99dd8184d985d5b96c0072438f730`, GitHub Actions **38475619708**, Build/Test/Migrations job: Release build **0 warnings, 0 errors**, **2,906/2,906 tests passed**, zero failed or skipped, EF model snapshot and PostgreSQL migration application/listing passed.
 - Added 4 PostgreSQL integration tests on disposable **migrated PostgreSQL** databases: competing worker claims only one winner; expired lease takeover fences stale results; retry is not available early; expired sixth attempt is terminal and not counted as a seventh HTTP attempt.
