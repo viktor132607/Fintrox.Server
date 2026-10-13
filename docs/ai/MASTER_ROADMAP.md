@@ -1,4 +1,4 @@
-# Master roadmap
+# Master roadmap\n\n**Cross-cutting financial goal:** Fintrox must be the system of record for *all* enterprise financial streams (GL, AP/AR, payments, banking, tax, payroll, inventory valuation, fixed assets, projects, budgeting, revenue recognition, consolidation and reporting). Modules stay separately owned; external apps must integrate through secure versioned contracts and must not maintain a second authoritative financial ledger. See [Financial System of Record](../financial-system-of-record.md). Implement and test by phases; this requirement is not satisfied by Entity scaffolds alone.\n
 
 Phase 0 COMPLETE: scaffold plus successful CI restore/build/33 tests/EF snapshot/PostgreSQL migrations.
 Phase 1 active: AUDIT-001 and AUTH-001 completed and validated; AUTH-002 completed. User-prioritized ENTITIES-001 adds module-owned models; INT-001 remains pending. Phases 2–10 pending; see AUDIT.md for existing legacy functionality.

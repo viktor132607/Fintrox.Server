@@ -22,3 +22,7 @@
 - Existing 32 legacy entity/persistence classes and their runtime consumers are preserved. New models fill missing concepts (e.g. quotations/orders rather than a duplicate invoice/posting engine). Future migration of existing types requires parity tests.
 - No new project/shared kernel or cross-module dependencies. Each Domain has local OrganizationEntity/DomainRules; module entities are immutable constructor-validated models. Foreign IDs require application-level ownership/existence checks before persistence; constructor validation alone is not authorization.
 - New types are not registered in the legacy DbContext. EF mapping, indexes, financial precision, database concurrency and application/API integration remain explicit ENTITIES-002 work. No payroll/tax/revenue legal calculation rules are invented.
+
+## 2026-10-13 — FIN-SOR-001: all enterprise finance within Fintrox
+
+User directive: all finance-related business processes and the complete money flow for the enterprise belong in one Fintrox ERP platform. Accounting owns the single GL/posting engine; source financial facts belong to specialized Fintrox modules and flow via versioned, tenant-authorized, idempotent contracts. External products are producers/consumers, not competing accounting systems. No new shared DbContext or cross-module direct database writes. Specification and acceptance gates: `docs/financial-system-of-record.md`. Status: architectural decision and ordered delivery plan; not fully implemented.

@@ -30,3 +30,7 @@ Models live in this module Domain/Entities directory; foreign objects are refere
 Added 22 entities (27 total): `UserProfile`, `UserEmailAddress`, `UserPhoneNumber`, `UserMfaFactor`, `UserMfaRecoveryCode`, `UserPasswordHistory`, `UserSecurityEvent`, `UserTrustedDevice`, `UserApiToken`, `UserConsent`, `RoleAssignment`, `PermissionPolicy`, `PermissionPolicyRule`, `RoleScopeAssignment`, `InvitationAcceptance`, `ServiceAccountCredential`, `IdentityVerificationRequest`, `LoginChallenge`, `SessionSecurityContext`, `AccountLockout`, `OrganizationSsoConfiguration`, `IdentityProviderMapping`.
 
 Module-local immutable records, constructor input validation, no references to other Domain assemblies. Persistence, API, security authorizations and implementation remain pending.
+
+## Finance-wide authorization foundation — 2026-10-13
+
+Every financial read, write, authorization, posting and reversal requires current organization/actor permissions. The currently operational legacy `OrganizationAccessService` now denies inactive-tenant business permission checks; a separate owner-only `organizations.reactivate` path preserves restoration. Full Identity module persistence and finer-grained financial approvals are still pending. See [financial system-of-record contract](../../../docs/financial-system-of-record.md).

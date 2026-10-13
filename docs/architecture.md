@@ -1,4 +1,4 @@
-# Fintrox modular monolith
+# Fintrox modular monolith\n\n**Financial ownership requirement:** the entire enterprise financial lifecycle is consolidated within Fintrox; only Accounting is the authoritative general ledger, with Sales/Purchases/Payments/Banking/Payroll/Inventory/Tax/etc. owning their source records and communicating by approved contracts. External projects integrate through Fintrox, not direct ledger writes. See [Financial System of Record](financial-system-of-record.md).\n
 
 ## Scope of this change
 

@@ -1,6 +1,6 @@
 # Fintrox Session Handoff — 2026-10-13
 
-## Current milestone
+## Current milestone\n2026-10-13: user requires the **complete enterprise financial lifecycle inside Fintrox**, without competing ledgers in external apps. Binding cross-module contract: `docs/financial-system-of-record.md`. FIN-SOR-001 specified, actual financial domain flows not implemented as a result of this specification.\n
 2026-10-13: ORG-002 financial tenant safety guard implemented in legacy authorization; inactivated org denies all business permissions, only an active owner can reactivate using new organizations.reactivate permission. 7 regression tests added; CI pending. See docs/financial-system-of-record.md.
 
 ENTITIES-EXPANSION: ALL 36 MODULES EXPANDED. 936 total new-era Domain entity classes (including original 180); 32 legacy runtime model types preserved. Release build, 2,877 tests and PostgreSQL/EF checks verified in CI 38324236400.
@@ -24,5 +24,5 @@ Verified code commit 90d601e935c50f8d0874387d8db753962d1e821a: GitHub CI 3832423
 ## Scope
 Entity foundation only. New types are not yet EF tables, services, DTOs, endpoints or frontend screens. Domain constructor validation is not tenant authorization or reference existence validation. No complete ERP module claimed.
 
-## Next exact action
+## Next exact action\nFollow phases 1-3, then later operational and financial modules in dependency order. Before feature coding, apply the financial source-of-truth and transaction/idempotency rules from docs/financial-system-of-record.md.\n
 Domain expansion is complete and verified. Before ENTITIES-002 persistence/use cases, review per-module model boundaries and missing value objects. Then implement EF mappings/migrations, application workflows, authorization, endpoints and PostgreSQL/HTTP tests module by module. Frontend still has only 23 shells and no operational business screens; FE-001 remains pending.
