@@ -8,6 +8,8 @@ Legacy list: [32 existing runtime/persistence models](LEGACY_MODEL_INVENTORY.md)
 
 2026-10-13 Organizations safety milestone: **ORG-001 verified** in CI 38428892598 (2,895 tests). Operational legacy membership writes now use PostgreSQL organization-row transaction locks and current-permission checks, preventing simultaneous owner removal/demotion leaving zero owners. New Organizations module entity scaffolds are still not wired to runtime EF/API. See [owner concurrency](../organization-owner-concurrency.md).
 
+2026-10-13 Accounting regression milestone: **TEST-001 verified**. Seven full-stack HTTP + real migrated PostgreSQL tests exercise balancing/numbering, double-reversal prevention, period closure, tenant isolation, JWT/permissions and database immutability; 2,902/2,902 pass in CI 38437997153. Found and fixed 44 positional request DTO DataAnnotations targets across finance/API contracts. The **legacy** Accounting runtime is tested; new module EF/API migration remains PENDING. See [financial regression test specification](../financial-http-postgres-regression.md).
+
 The new types have immutable IDs/organization ownership, constructor validation and typed business fields. They are not yet mapped in EF or exposed through APIs. No complete ERP workflow, database tenant isolation, authorization or cross-reference existence checks are claimed by these model classes.
 
 Every module keeps five projects. Domain=PARTIAL; Application/Contracts/Infrastructure/Presentation=SCAFFOLD. Frontend remains 23 shells (13 new module shells missing). Entity constructors do not activate a module.

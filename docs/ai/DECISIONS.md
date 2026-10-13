@@ -34,3 +34,7 @@ Accept **only publicly routable HTTP(S) webhook targets**. Validate at subscript
 ## 2026-10-13 — ORG-001 transactional owner protection
 
 All member-creation, role-update and deactivation operations on an organization must take a PostgreSQL `FOR UPDATE` lock on `core.organizations` and revalidate acting user permissions, target membership and owner count **within the same transaction**; the lock must remain until commit/rollback. Use existing `EfTransactionRunner` execution strategy. Single-row locking, not a process-local mutex, protects simultaneous API requests across instances. Implemented in legacy Organizations runtime; 4 real PostgreSQL tests, CI 38428892598 passed 2,895 tests and EF/PostgreSQL checks. See `docs/organization-owner-concurrency.md`.
+
+## 2026-10-13 — TEST-001 full-stack financial invariants
+
+Financial test acceptance uses migrated disposable PostgreSQL and **actual ASP.NET Core HTTP endpoints**, with tenant-aware real JWT and direct DB verification. Cover posting/reversal, debit=credit, closed periods, cross-tenant access, authentication and immutability triggers before calling finance capabilities production-ready. Seven initial scenarios are verified in CI 38437997153 (2,902 passed, 0 failures/skips, EF/PostgreSQL passed). The tests found positional DTO DataAnnotations incorrectly targeted to properties in 44 request records: move validation to `[param:]`, preserving JSON fields. See `docs/financial-http-postgres-regression.md`. Existing legacy Accounting remains runtime authoritative; migration is pending.

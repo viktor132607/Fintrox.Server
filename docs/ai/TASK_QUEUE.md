@@ -14,7 +14,7 @@
 | INT-001 | Webhook SSRF prevention | Integrations | P0 | AUDIT-001 | COMPLETE — CI VERIFIED | Domain URL policy, mixed-DNS rejection, connect-time IP pinning, no redirect/proxy, 7 security tests; 2,891 passed; CI 38399255676 |
 | ORG-001 | Concurrent last-owner protection | Organizations | P1 | AUDIT-001 | COMPLETE — CI VERIFIED | Organization-row PostgreSQL FOR UPDATE lock, transactional membership changes and 4 PostgreSQL concurrency tests; 2,895 passing, CI 38428892598 |
 | ORG-002 | Inactive-tenant business access policy | Identity/Organizations | P1 | AUDIT-001 | COMPLETE — CI VERIFIED | Active membership and organization required; deactivated tenant only owner reactivation; 7 regression tests; CI 38329276594 (2884 passing) |
-| TEST-001 | Financial/tenant/HTTP regression coverage | Accounting/Platform | P1 | AUDIT-001 | PENDING | Real PostgreSQL posting/reversal, balance/period and cross-tenant isolation tests |
+| TEST-001 | Financial/tenant/HTTP regression coverage | Accounting/Platform | P1 | AUDIT-001 | COMPLETE — CI VERIFIED | 7 full-stack HTTP + migrated PostgreSQL scenarios: posting, reversal, balance, period, tenant, auth and DB immutability; 2902 tests passing; CI 38437997153 |
 | INT-002 | Durable multi-worker webhook claim/recovery | Integrations | P1 | INT-001 | PENDING | Atomic claims, expired-lease recovery, retry/duplicate-delivery tests |
 | API-001 | Configured CORS and endpoint throttling | API | P1 | Authentication hardening | PENDING | Explicit origins, preflight and auth endpoint rate tests |
 | ACCOUNTING-001 | Complete audited accounting gaps | Accounting/Tax/Currencies | P1 | Foundation/tests | PENDING | See AUDIT.md and MASTER_ROADMAP phases 2–3 |

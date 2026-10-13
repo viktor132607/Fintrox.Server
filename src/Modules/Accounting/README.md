@@ -34,3 +34,9 @@ These are model definitions only. Existing core ledger and posting engine remain
 ## Financial system-of-record ownership — 2026-10-13
 
 Fintrox manages the complete organization's financial flow. **Accounting** alone owns the authoritative GL, journal posting, reversals, accounting books and fiscal closing. Sales, Purchases, Payments, Banking, Payroll, Inventory, Commerce etc. own their operational source records and invoke approved accounting contracts; none may write journal lines into this module's tables. The existing legacy posting engine remains authoritative until parity-tested cutover. Architecture acceptance matrix: [financial system of record](../../../docs/financial-system-of-record.md).
+
+## 2026-10-13 — TEST-001 full-stack financial regression baseline
+
+The **existing legacy Accounting runtime** is now protected by 7 HTTP integration tests running the real API/JWT/tenant-permission flow against isolated temporary PostgreSQL databases with **real EF migrations and journal triggers**. Tests verify balanced posting and numbering, unbalanced denial, reversal and duplicate reversal prevention, closed-period posting denial, cross-company access rejection, 401/403 and posted-journal line immutability at SQL level. CI **38437997153**: 2,902 passing, 0 skipped/failed, Release build 0 warnings/errors and EF/Postgres checks passed. Fixed 44 incorrect positional request record validation-attribute targets across API contracts uncovered by HTTP tests. Details: [financial regression tests](../../../docs/financial-http-postgres-regression.md).
+
+The Accounting module's own Infrastructure/Application/Presentation assemblies remain skeletons; this is a tested existing runtime, **not** a completed migration of the new 35 Domain Entities.

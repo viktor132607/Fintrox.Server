@@ -1,5 +1,15 @@
 # Validation history — 2026-10-13
 
+## TEST-001 / full-stack accounting PostgreSQL and HTTP
+- VERIFIED source commit `1a03dc25bfaf530dc7d6f880a71116c77410f555`, GitHub Actions **38437997153**, successful Release build **0 errors / 0 warnings**, **2,902 tests passed** (0 failed/skipped), EF model snapshot and real PostgreSQL migration application/listing passed.
+- 7 integration tests added under `tests/Fintrox.Domain.Tests/Accounting/FinancialHttpPostgresRegressionTests.cs`. The actual ASP.NET Core API and JWT/tenant authorization execute against one **migrated disposable PostgreSQL database per test** (not an in-memory DB), with financial state asserted in PostgreSQL afterward.
+- Validated: debit/credit balance and numbering, rollback of unbalanced post, reversal swaps and double-reversal denial, period closure, cross-tenant read/post/reversal denial, cross-tenant account reference denial, 401/403, database trigger that forbids deleting posted lines.
+- Found and fixed actual ASP.NET Core contract bug: 44 positional record request DTOs had validation attributes with `[property:]` instead of `[param:]`, previously causing HTTP 500 before controllers ran.
+- Earlier CI iterations uncovered test harness token-signing mismatch and API/test database mismatch; both were fixed. No production schema/data changed.
+- Details: [financial HTTP/PostgreSQL regression coverage](../financial-http-postgres-regression.md).
+
+
+
 ## ORG-001 / Organizations last-owner concurrency protection
 - VERIFIED in code commit `8ec105e1cd1727ef38a0c9a081728da8f30d26d9`, GitHub CI **38428892598**, Build/Test/Migrations job: Release build 0 warnings, 0 errors; **2,895 of 2,895 tests passed**, 0 skipped/failed; EF snapshot and PostgreSQL migration application/listing checks passed.
 - All mutating membership operations take a PostgreSQL `FOR UPDATE` lock on the organization's `core.organizations` row via the existing transaction runner, then recheck manager and target before owner-count/persistence changes.
