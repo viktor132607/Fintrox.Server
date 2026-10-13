@@ -47,6 +47,11 @@ public static class WebhookTargetPolicy
             normalized.EndsWith(".local", StringComparison.OrdinalIgnoreCase) ||
             normalized.EndsWith(".localhost", StringComparison.OrdinalIgnoreCase) ||
             normalized.EndsWith(".internal", StringComparison.OrdinalIgnoreCase) ||
+            normalized.EndsWith(".svc", StringComparison.OrdinalIgnoreCase) ||
+            normalized.EndsWith(".cluster", StringComparison.OrdinalIgnoreCase) ||
+            normalized.EndsWith(".consul", StringComparison.OrdinalIgnoreCase) ||
+            normalized.EndsWith(".docker", StringComparison.OrdinalIgnoreCase) ||
+            normalized.EndsWith(".localdomain", StringComparison.OrdinalIgnoreCase) ||
             normalized.EndsWith(".lan", StringComparison.OrdinalIgnoreCase) ||
             normalized.EndsWith(".test", StringComparison.OrdinalIgnoreCase) ||
             normalized.EndsWith(".invalid", StringComparison.OrdinalIgnoreCase) ||
