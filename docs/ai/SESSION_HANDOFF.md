@@ -5,6 +5,7 @@ ENTITIES-EXPANSION: ALL 36 MODULES EXPANDED. 936 total new-era Domain entity cla
 
 
 ## Changes
+- Legacy inventory: [`LEGACY_MODEL_INVENTORY.md`](LEGACY_MODEL_INVENTORY.md) lists all 32 existing runtime/persistence classes with exact source paths, target modules and cutover requirements; no legacy classes moved or deleted.
 2026-10-13: completed the sequential expansion of all 36 Domain modules: 756 new C# entity classes, 936 module-owned total. Each module has an atomic commit with code, updated machine inventory and documentation; see ENTITY_EXPANSION_LOG.md. No new runtime integration, EF mappings or API endpoints. The reflection test input helper and property-inventory checks were strengthened.
 
 Earlier foundation milestone (2026-10-11): 180 new domain entity classes across all 36 modules, 36 module-local identity/tenant bases and validation helpers, typed enums, executable invariant tests, machine-readable inventory and CI completeness check. Full list: MODULE_STATUS.md / architecture/domain-entities.json.

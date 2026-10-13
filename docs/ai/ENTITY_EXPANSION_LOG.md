@@ -1,6 +1,6 @@
 # Entity expansion — 2026-10-13
 
-Module-by-module Domain entity expansion, preserving existing 180 entities and the 32 legacy runtime types. Each module has its own atomic commit with inventory, code and documentation.
+Module-by-module Domain entity expansion, preserving existing 180 entities and the [32 legacy runtime/persistence records](LEGACY_MODEL_INVENTORY.md). Each module has its own atomic commit with inventory, code and documentation.
 
 | Sequence | Module | Added | Module total | Verification | State |
 |---:|---|---:|---:|---|---|
