@@ -1,6 +1,8 @@
 # Fintrox Session Handoff — 2026-10-13
 
 ## Current milestone
+2026-10-14: INT-002 implemented in legacy Integrations: atomic DB claims with two-minute lease, per-attempt CAS-fenced outcome, crash expiry recovery, no seventh HTTP send, terminal failure + failure record in transaction; four PostgreSQL regression tests committed. CI run 38475619708 pending; do not mark complete until green. docs/webhook-lease-recovery.md. Next after validation: API-001.
+
 2026-10-13: **TEST-001 COMPLETE — CI VERIFIED**: 7 real HTTP + migrated PostgreSQL financial tests with 2 tenant organizations and real JWT auth. Posting, balancing, reversal, closed periods, cross-tenant isolation, 401/403 and migrated journal immutability triggers verified. Discovered and fixed 44 incorrectly property-annotated positional record request DTOs (`[property:]` -> `[param:]`), which otherwise produced HTTP 500. CI **38437997153**: 2,902/2,902 tests passed, 0 warnings/errors, EF/Postgres checks passed. Details: `docs/financial-http-postgres-regression.md`. **Next: INT-002**; API-001 and ACCOUNTING-001 pending.
 
 2026-10-13: **ORG-001 COMPLETE — VERIFIED**. Existing legacy OrganizationMemberService now wraps member additions, role changes and removals in a transaction, locks the affected `core.organizations` row with PostgreSQL `FOR UPDATE`, and rechecks manager permissions/target/last-owner count after lock. Added 4 real PostgreSQL concurrency tests, CI **38428892598** (2,895 passing; 0 warnings/errors; EF/Postgres checks passed). Details: `docs/organization-owner-concurrency.md`. Next uncompleted foundation task: TEST-001.
