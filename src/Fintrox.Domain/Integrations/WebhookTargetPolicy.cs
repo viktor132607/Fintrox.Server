@@ -43,7 +43,7 @@ public static class WebhookTargetPolicy
         // Only fully qualified public DNS hostnames. Do not accept search-domain
         // aliases, local namespaces, or alternate numeric forms of IP literals.
         if (!normalized.Contains('.', StringComparison.Ordinal) ||
-            normalized.StartsWith(".", StringComparison.Ordinal) ||
+            normalized.StartsWith('.') ||
             normalized.EndsWith(".local", StringComparison.OrdinalIgnoreCase) ||
             normalized.EndsWith(".localhost", StringComparison.OrdinalIgnoreCase) ||
             normalized.EndsWith(".internal", StringComparison.OrdinalIgnoreCase) ||
