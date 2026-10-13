@@ -11,8 +11,8 @@ Legacy means **current working implementation in the original horizontal** `src/
 | 1 | `Account` | [`src/Fintrox.Domain/Accounting/Account.cs`](../../src/Fintrox.Domain/Accounting/Account.cs) | `Accounting` |
 | 2 | `AccountingPeriod` | [`src/Fintrox.Domain/Accounting/AccountingPeriod.cs`](../../src/Fintrox.Domain/Accounting/AccountingPeriod.cs) | `Accounting` |
 | 3 | `AutoPostingRule` | [`src/Fintrox.Domain/Accounting/AutoPostingRule.cs`](../../src/Fintrox.Domain/Accounting/AutoPostingRule.cs) | `Accounting` |
-| 4 | `Currency` | [`src/Fintrox.Domain/Accounting/Currency.cs`](../../src/Fintrox.Domain/Accounting/Currency.cs) | `Accounting` |
-| 5 | `ExchangeRate` | [`src/Fintrox.Domain/Accounting/ExchangeRate.cs`](../../src/Fintrox.Domain/Accounting/ExchangeRate.cs) | `Accounting` |
+| 4 | `Currency` | [`src/Fintrox.Domain/Accounting/Currency.cs`](../../src/Fintrox.Domain/Accounting/Currency.cs) | `Currencies` |
+| 5 | `ExchangeRate` | [`src/Fintrox.Domain/Accounting/ExchangeRate.cs`](../../src/Fintrox.Domain/Accounting/ExchangeRate.cs) | `Currencies` |
 | 6 | `FiscalYear` | [`src/Fintrox.Domain/Accounting/FiscalYear.cs`](../../src/Fintrox.Domain/Accounting/FiscalYear.cs) | `Accounting` |
 | 7 | `JournalEntry` | [`src/Fintrox.Domain/Accounting/JournalEntry.cs`](../../src/Fintrox.Domain/Accounting/JournalEntry.cs) | `Accounting` |
 | 8 | `JournalLine` | [`src/Fintrox.Domain/Accounting/JournalLine.cs`](../../src/Fintrox.Domain/Accounting/JournalLine.cs) | `Accounting` |
@@ -43,7 +43,7 @@ Legacy means **current working implementation in the original horizontal** `src/
 
 ## Totals by legacy subsystem
 
-- **Accounting: 8** — intended target: `Accounting`.
+- **Accounting: 8** — six target `Accounting`; `Currency` and `ExchangeRate` target `Currencies`.
 - **Integrations: 7** — intended target: `Integrations`.
 - **Organizations: 2** — intended target: `Organizations`.
 - **Counterparties: 1** — intended target: `Counterparties`.
@@ -70,7 +70,7 @@ Legacy means **current working implementation in the original horizontal** `src/
 
 ### Classification notes
 
-- Accounting's `Currency` and `ExchangeRate` logically relate to target `Currencies`, but currently live in legacy Accounting. Their precise ownership should be decided before migration to avoid duplicate currency master data.
+- Accounting's legacy `Currency` and `ExchangeRate` are targeted to the `Currencies` module, where the authoritative currency/rate aggregates must be reconciled before migration to avoid duplicate master data.
 - `JournalNumberSequence`, `PaymentNumberSequence`, `PurchaseDocumentNumberSequence`, and `SalesInvoiceNumberSequence` live under Infrastructure/Persistence/Models rather than the Domain project. They are counted in the 32 migration records, **not** as new modular Domain Entity types.
 - `ApplicationUser`, `RefreshToken` and `AuditLogEntry` are infrastructure-owned records with target module boundaries `Identity` and `Audit`.
 - Legacy enums, abstract base classes, interfaces, DTOs, services, EF configuration classes, and other infrastructure machinery are **not part of this exact 32-class count**. They still require a separate dependency audit during each module migration.
