@@ -54,6 +54,32 @@ public sealed class OrganizationMembershipRepository(
             .ToArrayAsync(cancellationToken);
     }
 
+    public async Task LockOrganizationForMembershipChangeAsync(
+        Guid organizationId,
+        CancellationToken cancellationToken)
+    {
+        if (dbContext.Database.CurrentTransaction is null)
+        {
+            throw new InvalidOperationException(
+                "Organization membership changes require an active transaction.");
+        }
+
+        // PostgreSQL row lock serializes all membership mutations across
+        // instances/processes. No LINQ composition around FOR UPDATE.
+        // This table is the already-migrated legacy core organizations table.
+        var locked = await dbContext.Organizations
+            .FromSqlInterpolated(
+                $"SELECT * FROM core.organizations WHERE id = {organizationId} FOR UPDATE")
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+
+        if (locked.Count != 1)
+        {
+            throw new OrganizationMembershipConflictException(
+                "Organization does not exist.");
+        }
+    }
+
     public Task<int> CountActiveOwnersAsync(
         Guid organizationId,
         CancellationToken cancellationToken)
