@@ -99,7 +99,7 @@ public sealed partial class BankReconciliationService
                   AND e.status IN ('Posted','Reversed')
                 """, ("org", tenant), ("ledger", bankGlId), ("cutoff", cutoff)))
                 if (Convert.ToInt64(
-                    await laterLedger.ExecuteScalarAsync(cancellationToken)) != 0)
+                    await laterLedger.ExecuteScalarAsync(cancellationToken), System.Globalization.CultureInfo.InvariantCulture) != 0)
                     throw new BankReconciliationConflictException(
                         "Later bank GL movements depend on this cutoff. Use coordinated multi-period correction.");
 
