@@ -1219,6 +1219,52 @@ public sealed class FinancialHttpPostgresRegressionTests
             (await db.JournalEntries.SingleAsync(x => x.Id == draft.Id)).Status);
     }
 
+    [TestMethod]
+    public async Task YearEndZeroNetResultClosesProfitLossWithoutAnEquityLine()
+    {
+        var calendar = await PrepareYearEndCalendarAsync();
+        using var client = Client(userA, organizationA);
+        await PostProfitLossTransactionAsync(client, revenue: 50m, expense: 50m);
+        await CloseMarchAsync(client, calendar.YearId, calendar.MarchPeriodId);
+
+        using var response = await client.PostAsJsonAsync(
+            $"/api/v1/accounting/fiscal-years/{calendar.YearId}/close-profit-loss",
+            new CloseProfitLossRequest(retainedA));
+        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        var result = await response.Content.ReadFromJsonAsync<ProfitLossCloseResponse>();
+        Assert.IsNotNull(result);
+        Assert.AreEqual(0m, result.NetIncome);
+
+        await using var db = CreateDb();
+        var lines = await db.JournalLines.AsNoTracking()
+            .Where(line => line.JournalEntryId == result.JournalEntryId).ToArrayAsync();
+        Assert.HasCount(2, lines);
+        Assert.IsFalse(lines.Any(line => line.AccountId == retainedA));
+        Assert.AreEqual(0m, await ProfitLossNetAsync(db, calendar.YearId));
+    }
+
+    [TestMethod]
+    public async Task YearEndReplayWithDifferentEquityDestinationIsRejected()
+    {
+        var calendar = await PrepareYearEndCalendarAsync();
+        using var client = Client(userA, organizationA);
+        await PostProfitLossTransactionAsync(client, revenue: 40m, expense: 15m);
+        await CloseMarchAsync(client, calendar.YearId, calendar.MarchPeriodId);
+        var url = $"/api/v1/accounting/fiscal-years/{calendar.YearId}/close-profit-loss";
+
+        using (var first = await client.PostAsJsonAsync(
+            url, new CloseProfitLossRequest(retainedA)))
+            Assert.AreEqual(HttpStatusCode.OK, first.StatusCode);
+        using var changedDestination = await client.PostAsJsonAsync(
+            url, new CloseProfitLossRequest(equityA));
+        Assert.AreEqual(HttpStatusCode.Conflict, changedDestination.StatusCode);
+
+        await using var db = CreateDb();
+        Assert.AreEqual(1, await db.JournalEntries.CountAsync(entry =>
+            entry.OrganizationId == organizationA &&
+            entry.ExternalReference == $"profit-loss-close:v1:{calendar.YearId:N}"));
+    }
+
     private async Task<(Guid YearId, Guid MarchPeriodId, Guid FinalPeriodId)>
         PrepareYearEndCalendarAsync()
     {
