@@ -26,7 +26,7 @@ namespace Fintrox.Domain.Tests.Accounting;
 /// database with the repository's real EF migrations and journal triggers.
 /// </summary>
 [TestClass]
-public sealed class FinancialHttpPostgresRegressionTests
+public sealed partial class FinancialHttpPostgresRegressionTests
 {
     private const string Endpoint = "/api/v1/accounting/journal";
     private const string TestKey = "TEST_ONLY_financial_http_postgres_signing_key_very_long_and_random_123456";
