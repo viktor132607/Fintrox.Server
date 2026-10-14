@@ -40,3 +40,20 @@ Fintrox manages the complete organization's financial flow. **Accounting** alone
 The **existing legacy Accounting runtime** is now protected by 7 HTTP integration tests running the real API/JWT/tenant-permission flow against isolated temporary PostgreSQL databases with **real EF migrations and journal triggers**. Tests verify balanced posting and numbering, unbalanced denial, reversal and duplicate reversal prevention, closed-period posting denial, cross-company access rejection, 401/403 and posted-journal line immutability at SQL level. CI **38437997153**: 2,902 passing, 0 skipped/failed, Release build 0 warnings/errors and EF/Postgres checks passed. Fixed 44 incorrect positional request record validation-attribute targets across API contracts uncovered by HTTP tests. Details: [financial regression tests](../../../docs/financial-http-postgres-regression.md).
 
 The Accounting module's own Infrastructure/Application/Presentation assemblies remain skeletons; this is a tested existing runtime, **not** a completed migration of the new 35 Domain Entities.
+
+## 2026-10-14 — ACCOUNTING-001A, journal posting/closing concurrency
+
+Implemented in the **existing legacy runtime** (`Fintrox.Application/Accounting`,
+`Fintrox.Infrastructure/Accounting`): tenant-scoped PostgreSQL exclusive journal
+row locks and shared fiscal-year/accounting-period row locks inside posting
+transactions. Manual and source-generated postings now validate the fiscal
+calendar after waiting on concurrent close, and competing post/reversal
+requests for the same original are serialized. Four new real HTTP + migrated
+PostgreSQL regression cases cover simultaneous posting, simultaneous
+reversal, period close and fiscal-year soft-close races.
+
+**Status: implemented, CI unverified.** No new module EF mappings, migrations,
+services or endpoints are claimed. Full Accounting migration and remaining
+opening-balance/closing/accrual features are still pending. See
+[posting concurrency](../../../docs/accounting-posting-concurrency.md) and
+[validation](../../../docs/ai/VALIDATION.md).
