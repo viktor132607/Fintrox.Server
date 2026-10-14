@@ -61,6 +61,27 @@ public sealed class FinancialOpenItemReconciliationService(
                 document => (document.SourceType, document.Id));
             var allocatedByDocument = new Dictionary<(string Kind, Guid Id), decimal>();
 
+            // The same payment may allocate to multiple documents.
+            // Compare payment-currency allocation rows with its immutable
+            // Confirmed header's allocation summary before attributing open items.
+            foreach (var paymentRows in allocations
+                         .Where(row => row.PaymentStatus == "Confirmed")
+                         .GroupBy(row => row.PaymentId))
+            {
+                var header = paymentRows.First();
+                var rowTotal = paymentRows.Sum(row => row.PaymentAmount);
+                if (rowTotal != header.PaymentAllocatedAmount ||
+                    rowTotal < 0m ||
+                    rowTotal > header.PaymentGrossAmount)
+                {
+                    var kind = header.Direction == "Incoming"
+                        ? "Receivables" : "Payables";
+                    AddIssue("PaymentAllocationMismatch", kind, null,
+                        paymentRows.Key,
+                        "Confirmed payment allocation rows do not match the declared payment-currency allocated amount.");
+                }
+            }
+
             foreach (var allocation in allocations)
             {
                 // A Draft or Cancelled payment must not settle an open item.
