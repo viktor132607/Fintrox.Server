@@ -82,13 +82,14 @@ public sealed class FinancialSourceReconciliationRepository(
                 ids.Contains(x.JournalEntryId))
             .Select(x => new
             {
-                x.JournalEntryId, x.LineNumber, x.Debit, x.Credit,
+                x.JournalEntryId, x.LineNumber, x.AccountId, x.Debit, x.Credit,
                 x.Description
             })
             .ToArrayAsync(cancellationToken);
         var byEntry = lines.GroupBy(x => x.JournalEntryId)
             .ToDictionary(x => x.Key, x => x.OrderBy(y => y.LineNumber)
                 .Select(y => new FinancialSourceJournalLineSnapshot(
+                    y.LineNumber, y.AccountId,
                     y.Debit, y.Credit, y.Description)).ToArray());
 
         return entries.Select(x => new FinancialSourceJournalSnapshot(
@@ -119,19 +120,45 @@ public sealed class FinancialSourceReconciliationRepository(
         ).ToArrayAsync(cancellationToken);
     }
 
-    public async Task<IReadOnlySet<Guid>> GetPostedReversalIdsAsync(
-        Guid organizationId, IReadOnlyList<Guid> ids,
-        CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<FinancialPostedReversalSnapshot>>
+        GetPostedReversalsAsync(
+            Guid organizationId, IReadOnlyList<Guid> originalIds,
+            CancellationToken cancellationToken)
     {
-        if (ids.Count == 0)
-            return new HashSet<Guid>();
+        if (originalIds.Count == 0) return [];
 
-        var matching = await dbContext.JournalEntries.AsNoTracking()
-            .Where(x => x.OrganizationId == organizationId &&
-                ids.Contains(x.Id) &&
-                x.Status == JournalEntryStatus.Posted &&
-                x.ReversalOfJournalEntryId != null)
-            .Select(x => x.Id).ToArrayAsync(cancellationToken);
-        return matching.ToHashSet();
+        var entries = await dbContext.JournalEntries.AsNoTracking()
+            .Where(entry => entry.OrganizationId == organizationId &&
+                entry.Status == JournalEntryStatus.Posted &&
+                entry.ReversalOfJournalEntryId != null &&
+                originalIds.Contains(entry.ReversalOfJournalEntryId.Value))
+            .Select(entry => new
+            {
+                entry.Id, entry.ReversalOfJournalEntryId
+            })
+            .ToArrayAsync(cancellationToken);
+        var journalIds = entries.Select(entry => entry.Id).ToArray();
+        var lines = await dbContext.JournalLines.AsNoTracking()
+            .Where(line => line.OrganizationId == organizationId &&
+                journalIds.Contains(line.JournalEntryId))
+            .Select(line => new
+            {
+                line.JournalEntryId, line.LineNumber, line.AccountId,
+                line.Debit, line.Credit, line.Description
+            })
+            .ToArrayAsync(cancellationToken);
+
+        var byEntry = lines.GroupBy(line => line.JournalEntryId)
+            .ToDictionary(group => group.Key, group => group
+                .OrderBy(line => line.LineNumber)
+                .Select(line => new FinancialSourceJournalLineSnapshot(
+                    line.LineNumber, line.AccountId,
+                    line.Debit, line.Credit, line.Description))
+                .ToArray());
+
+        return entries.Select(entry => new FinancialPostedReversalSnapshot(
+            entry.Id, entry.ReversalOfJournalEntryId!.Value,
+            byEntry.TryGetValue(entry.Id, out var reversalLines)
+                ? reversalLines : [])).ToArray();
     }
 }
