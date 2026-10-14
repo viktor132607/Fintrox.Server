@@ -148,7 +148,7 @@ public sealed class BankReconciliationService(
                     if (reader.GetString(1) != hash)
                         throw new BankReconciliationConflictException(
                             "Statement reference was already imported with different contents.");
-                    var oldCount = reader.GetInt32(2);
+                    var oldCount = checked((int)reader.GetInt64(2));
                     await tx.CommitAsync(cancellationToken);
                     return new BankStatementImportResponse(
                         existingId, accountId, externalId!,
