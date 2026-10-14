@@ -187,6 +187,40 @@ public sealed class JournalRepository(
             cancellationToken);
     }
 
+    public async Task LockFiscalYearForOpeningBalancesAsync(
+        Guid organizationId,
+        Guid fiscalYearId,
+        CancellationToken cancellationToken)
+    {
+        EnsurePostingTransaction();
+
+        // An exclusive year lock serializes the first-book import against
+        // ordinary postings (which hold FOR SHARE on the same year).
+        await dbContext.Database.ExecuteSqlInterpolatedAsync(
+            $"""
+            SELECT id FROM accounting.fiscal_years
+            WHERE organization_id = {organizationId} AND id = {fiscalYearId}
+            FOR UPDATE
+            """,
+            cancellationToken);
+    }
+
+    public Task<bool> HasPostedEntriesForFiscalYearAsync(
+        Guid organizationId,
+        Guid fiscalYearId,
+        CancellationToken cancellationToken)
+    {
+        return dbContext.JournalEntries.AsNoTracking().AnyAsync(
+            entry => entry.OrganizationId == organizationId &&
+                (entry.Status == JournalEntryStatus.Posted ||
+                 entry.Status == JournalEntryStatus.Reversed) &&
+                dbContext.AccountingPeriods.Any(period =>
+                    period.OrganizationId == organizationId &&
+                    period.Id == entry.FiscalPeriodId &&
+                    period.FiscalYearId == fiscalYearId),
+            cancellationToken);
+    }
+
     private void EnsurePostingTransaction()
     {
         if (dbContext.Database.CurrentTransaction is null)
