@@ -46,13 +46,13 @@ public sealed class FinancialSourceReconciliationRepository(
             sales.Length + purchases.Length + payments.Length);
         result.AddRange(sales.Select(x => new FinancialSourcePostingSnapshot(
             x.Id, "SalesInvoice", x.Status.ToString(), x.Date,
-            x.Amount, x.ExchangeRate, null)));
+            x.Amount, x.ExchangeRate, null, null)));
         result.AddRange(purchases.Select(x => new FinancialSourcePostingSnapshot(
             x.Id, "PurchaseDocument", x.Status.ToString(), x.Date,
             x.Amount, x.ExchangeRate, null)));
         result.AddRange(payments.Select(x => new FinancialSourcePostingSnapshot(
             x.Id, "Payment", x.Status.ToString(), x.Date,
-            x.Amount, x.ExchangeRate, x.Direction.ToString())));
+            x.Amount, x.ExchangeRate, x.Direction.ToString(), x.AllocatedAmount)));
         return result;
     }
 
@@ -98,6 +98,25 @@ public sealed class FinancialSourceReconciliationRepository(
             byEntry.TryGetValue(x.Id, out var journalLines)
                 ? journalLines
                 : [])).ToArray();
+    }
+
+    public async Task<IReadOnlyList<FinancialPaymentAllocationSnapshot>>
+        ListPaymentAllocationsAsync(
+            Guid organizationId, DateOnly from, DateOnly to,
+            CancellationToken cancellationToken)
+    {
+        return await (
+            from allocation in dbContext.PaymentAllocations.AsNoTracking()
+            join payment in dbContext.Payments.AsNoTracking()
+                on new { allocation.PaymentId, allocation.OrganizationId }
+                equals new { PaymentId = payment.Id, payment.OrganizationId }
+            where allocation.OrganizationId == organizationId &&
+                payment.PaymentDate >= from && payment.PaymentDate <= to
+            select new FinancialPaymentAllocationSnapshot(
+                allocation.PaymentId, allocation.PaymentAmount,
+                allocation.DocumentAmount,
+                allocation.SalesInvoiceId, allocation.PurchaseDocumentId)
+        ).ToArrayAsync(cancellationToken);
     }
 
     public async Task<IReadOnlySet<Guid>> GetPostedReversalIdsAsync(
