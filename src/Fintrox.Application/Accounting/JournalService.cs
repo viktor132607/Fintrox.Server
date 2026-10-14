@@ -303,6 +303,11 @@ public sealed class JournalService(
         var postedEntry = await transactionRunner.ExecuteAsync(
             async transactionCancellationToken =>
             {
+                await journalRepository.LockJournalForPostingAsync(
+                    organizationId,
+                    journalEntryId,
+                    transactionCancellationToken);
+
                 var entry = await journalRepository.GetEntryAsync(
                     organizationId,
                     journalEntryId,
@@ -366,6 +371,11 @@ public sealed class JournalService(
         var reversalEntry = await transactionRunner.ExecuteAsync(
             async transactionCancellationToken =>
             {
+                await journalRepository.LockJournalForPostingAsync(
+                    organizationId,
+                    journalEntryId,
+                    transactionCancellationToken);
+
                 var original = await journalRepository.GetEntryAsync(
                     organizationId,
                     journalEntryId,
@@ -580,23 +590,46 @@ public sealed class JournalService(
             Guid? expectedPeriodId,
             CancellationToken cancellationToken)
     {
-        var period = await fiscalCalendarRepository.FindPeriodByDateAsync(
+        var initialPeriod = await fiscalCalendarRepository.FindPeriodByDateAsync(
             organizationId,
             postingDate,
             trackChanges: false,
             cancellationToken);
 
-        if (period is null)
+        if (initialPeriod is null)
         {
             throw new JournalConflictException(
                 "No accounting period contains the requested posting date.");
         }
 
         if (expectedPeriodId.HasValue &&
-            period.Id != expectedPeriodId.Value)
+            initialPeriod.Id != expectedPeriodId.Value)
         {
             throw new JournalConflictException(
                 "The journal entry fiscal period does not match its posting date.");
+        }
+
+        // The first read only locates the rows; its status is not trusted.
+        // Lock year then period inside the caller's transaction, and re-read
+        // both AFTER waiting for any concurrent close/reopen to commit.
+        await journalRepository.LockPostingCalendarAsync(
+            organizationId,
+            initialPeriod.FiscalYearId,
+            initialPeriod.Id,
+            cancellationToken);
+
+        var period = await fiscalCalendarRepository.FindPeriodByDateAsync(
+            organizationId,
+            postingDate,
+            trackChanges: false,
+            cancellationToken);
+
+        if (period is null ||
+            period.Id != initialPeriod.Id ||
+            period.FiscalYearId != initialPeriod.FiscalYearId)
+        {
+            throw new JournalConflictException(
+                "The accounting period changed during posting. Retry after reviewing the fiscal calendar.");
         }
 
         if (period.Status != AccountingPeriodStatus.Open)
