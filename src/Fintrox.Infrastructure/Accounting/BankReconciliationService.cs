@@ -490,13 +490,34 @@ public sealed partial class BankReconciliationService(
 
             var unmatched = new List<Guid>();
             int matched = 0;
+            int feePosted = 0;
             decimal movement = 0;
             await using (var cmd = Command(cn, tx, """
-                SELECT id,signed_amount,matched_payment_id
-                FROM banking.bank_statement_lines
-                WHERE statement_id=@id AND organization_id=@org
-                ORDER BY value_date,id
-                """, ("id", statementId), ("org", tenant)))
+                SELECT l.id,l.signed_amount,l.matched_payment_id,
+                    CASE WHEN fee.journal_entry_id IS NOT NULL
+                      AND e.status='Posted' AND e.source='System'
+                      AND e.external_reference='bank-fee:v1:' ||
+                          replace(l.id::text,'-','')
+                      AND e.posting_date=l.value_date
+                      AND (
+                          SELECT count(*) FROM accounting.journal_lines j
+                          WHERE j.organization_id=l.organization_id
+                            AND j.journal_entry_id=e.id
+                            AND j.account_id=@ledger
+                            AND j.debit=0 AND j.credit=-l.signed_amount
+                      )=1
+                      THEN true ELSE false END AS fee_valid
+                FROM banking.bank_statement_lines l
+                LEFT JOIN banking.bank_fee_postings fee
+                  ON fee.statement_line_id=l.id
+                 AND fee.organization_id=l.organization_id
+                LEFT JOIN accounting.journal_entries e
+                  ON e.id=fee.journal_entry_id
+                 AND e.organization_id=fee.organization_id
+                WHERE l.statement_id=@id AND l.organization_id=@org
+                ORDER BY l.value_date,l.id
+                """, ("id", statementId), ("org", tenant),
+                ("ledger", glAccountId)))
             await using (var reader = await cmd.ExecuteReaderAsync(cancellationToken))
             {
                 while (await reader.ReadAsync(cancellationToken))
@@ -508,6 +529,10 @@ public sealed partial class BankReconciliationService(
                         // Check current state in a separate query below; don't
                         // count invalid/cancelled matches as reconciled.
                         matched++;
+                    }
+                    else if (reader.GetBoolean(3))
+                    {
+                        feePosted++;
                     }
                     else unmatched.Add(lineId);
                 }
@@ -607,13 +632,13 @@ public sealed partial class BankReconciliationService(
             return new BankReconciliationResponse(
                 statementId, accountId, currency, endDate, opening, closing,
                 expectedClosing, glBalance, difference,
-                matched + unmatched.Count, matched, unmatched.Count,
+                matched + feePosted + unmatched.Count, matched, unmatched.Count,
                 bookUncleared.Count,
                 statementBalanced, matchedFully,
                 difference == 0m,
                 statementBalanced && matchedFully && difference == 0m &&
                     bookUncleared.Count == 0,
-                unmatched, bookUncleared);
+                unmatched, bookUncleared, feePosted);
         });
     }
 
