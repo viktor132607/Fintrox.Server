@@ -63,9 +63,7 @@ Inside one EF/PostgreSQL database transaction:
 4. Check exact audit-link replay first; same actor/date/reason/original
    returns same original reversal ID, even if the period subsequently
    closes. A changed replay conflicts.
-5. Resolve requested correction fiscal period and acquire GL fiscal-year
-   then period locks, preventing concurrent close, before taking the
-   original GL journal posting lock.
+5. Resolve requested correction fiscal period and acquire GL fiscal-year then period locks, preventing concurrent close, before taking the original GL journal posting lock. The original journal must belong to **that same still-open period**, so no closed historical period is mutated.
 6. Create a normal immutable **system reversal** via
    `JournalEntry.CreateReversalDraft`; reverse **every** original
    journal line in full (swap DR and CR, preserve line numbers/accounts),
