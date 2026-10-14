@@ -456,7 +456,7 @@ public sealed partial class BankReconciliationService(
                 ("end", statementEnd)))
             {
                 if (Convert.ToInt64(
-                    await evidence.ExecuteScalarAsync(cancellationToken)) != 1L)
+                    await evidence.ExecuteScalarAsync(cancellationToken), System.Globalization.CultureInfo.InvariantCulture) != 1L)
                     throw new BankReconciliationConflictException(
                         "No unique posted payment journal line matches this bank GL account and amount.");
             }
