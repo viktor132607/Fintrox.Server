@@ -180,6 +180,22 @@ public sealed partial class FinancialHttpPostgresRegressionTests
     }
 
     [TestMethod]
+    public async Task BankRevaluationRejectsOverdraftWithoutLiabilityPolicy()
+    {
+        var setup = await SetupFxBankAsync();
+        using var client = Client(userA, organizationA);
+        var statement = await ImportFxStatementAsync(client, setup.Bank.Id, -120m);
+        var line = await BankLineIdAsync(statement.Id);
+        using (var posted = await client.PostAsJsonAsync(
+            FxUrl(statement.Id, line), FxRequest(setup, -120m, 95m)))
+            Assert.AreEqual(HttpStatusCode.OK, posted.StatusCode);
+        var rate = await CreateEndRateAsync(1m);
+        using var denied = await client.PostAsJsonAsync(
+            ValuationUrl(statement.Id), RevaluationRequest(rate, -120m, -100m));
+        Assert.AreEqual(HttpStatusCode.Conflict, denied.StatusCode);
+    }
+
+    [TestMethod]
     public async Task BankRevaluationConcurrentSameRequestHasOneJournal()
     {
         var setup = await SetupValuationAsync(1m);
