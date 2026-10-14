@@ -79,6 +79,16 @@ public sealed partial class BankReconciliationService
                 """, ("org", tenant), ("account", accountId)))
                 await bankLock.ExecuteScalarAsync(cancellationToken);
 
+            // A historical v1 replay must not masquerade as the current
+            // valuation after an audited amendment replaced it.
+            await using (var amended = Command(cn, tx, """
+                SELECT EXISTS(SELECT 1 FROM banking.bank_fx_revaluation_amendments
+                    WHERE organization_id=@org AND statement_id=@statement)
+                """, ("org", tenant), ("statement", statementId)))
+                if ((bool)(await amended.ExecuteScalarAsync(cancellationToken))!)
+                    throw new BankReconciliationConflictException(
+                        "The original cutoff valuation has newer audited versions. Review the latest FX bank close evidence.");
+
             // Immutable revaluation replay is checked before period status.
             // This preserves idempotency after a legitimate later close.
             await using (var existing = Command(cn, tx, """
@@ -305,24 +315,37 @@ public sealed partial class BankReconciliationService
                 WHERE j.organization_id=@org AND j.account_id=@ledger
                   AND e.posting_date<=@cutoff
                   AND e.status IN ('Posted','Reversed')
-                  AND (e.status<>'Posted' OR
-                      NOT EXISTS (
-                          SELECT 1 FROM banking.bank_fx_settlements fx
-                          JOIN banking.bank_statement_lines l
-                            ON l.id=fx.statement_line_id
-                           AND l.organization_id=fx.organization_id
-                          JOIN banking.bank_statements s
-                            ON s.id=l.statement_id
-                           AND s.organization_id=l.organization_id
-                          WHERE fx.organization_id=@org
-                            AND fx.journal_entry_id=e.id
-                            AND s.bank_account_id=@account
-                      ) AND NOT EXISTS (
-                          SELECT 1 FROM banking.bank_fx_revaluations rv
-                          WHERE rv.organization_id=@org
-                            AND rv.journal_entry_id=e.id
-                            AND rv.bank_account_id=@account
-                      ))
+                  AND NOT (
+                    (e.status='Posted' AND EXISTS (
+                        SELECT 1 FROM banking.bank_fx_settlements fx
+                        JOIN banking.bank_statement_lines l
+                          ON l.id=fx.statement_line_id
+                         AND l.organization_id=fx.organization_id
+                        JOIN banking.bank_statements s
+                          ON s.id=l.statement_id
+                         AND s.organization_id=l.organization_id
+                        WHERE fx.organization_id=@org AND fx.journal_entry_id=e.id
+                          AND s.bank_account_id=@account))
+                    OR EXISTS (
+                        SELECT 1 FROM banking.bank_fx_revaluations rv
+                        WHERE rv.organization_id=@org AND rv.journal_entry_id=e.id
+                          AND rv.bank_account_id=@account
+                          AND (e.status='Posted' OR
+                               (e.status='Reversed' AND EXISTS (
+                                   SELECT 1 FROM banking.bank_fx_revaluation_amendments am
+                                   WHERE am.organization_id=@org
+                                     AND am.previous_journal_id=e.id))))
+                    OR EXISTS (
+                        SELECT 1 FROM banking.bank_fx_revaluation_amendments am
+                        WHERE am.organization_id=@org AND am.bank_account_id=@account
+                          AND ((am.replacement_journal_id=e.id AND
+                                  (e.status='Posted' OR
+                                   (e.status='Reversed' AND EXISTS (
+                                       SELECT 1 FROM banking.bank_fx_revaluation_amendments later
+                                       WHERE later.organization_id=@org
+                                         AND later.previous_journal_id=e.id))))
+                            OR (am.reversal_journal_id=e.id AND e.status='Posted')))
+                  )
                 """, ("org", tenant), ("ledger", glId),
                 ("cutoff", cutoff), ("account", accountId)))
             {
