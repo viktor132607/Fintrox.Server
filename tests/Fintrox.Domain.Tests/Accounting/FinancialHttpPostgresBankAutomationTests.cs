@@ -184,11 +184,11 @@ public sealed partial class FinancialHttpPostgresRegressionTests
     }
 
     private static ImportCsvBankStatementRequest CsvStatement(
-        string externalId, string csv)
+        string externalId, string csv, decimal closingBalance = 25.5000m)
     {
         return new ImportCsvBankStatementRequest(
             externalId, new DateOnly(2026, 3, 1),
             new DateOnly(2026, 3, 31), 0m,
-            25.5000m, csv);
+            closingBalance, csv);
     }
 }
