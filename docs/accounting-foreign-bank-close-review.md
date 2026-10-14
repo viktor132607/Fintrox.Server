@@ -29,7 +29,7 @@ Unlike the old generic bank report, this **does not directly subtract native ban
 
 `20261014000500_ForeignBankCloseApprovals` adds `banking.bank_fx_close_preparations` and `banking.bank_fx_close_approvals`, with tenant-composite statement/account/preparation foreign keys, one preparation per statement and one approval per preparation, maker/reviewer IDs, review notes, SHA-256 checksum of stable reconciliation evidence and database immutability triggers.
 
-At **prepare**, the service acquires the tenant's bank-account `FOR UPDATE` lock followed by its fiscal-calendar posting lock; it then recomputes the native/base bridge and rejects incomplete/misbalanced evidence. Stores who prepared, the statement cutoff and balances, plus the evidence fingerprint. Identical replay is safe; changed preparer/note/evidence conflicts.
+At **prepare**, the service acquires the tenant's bank-account `FOR UPDATE` lock followed by **exclusive** fiscal-year then accounting-period `FOR UPDATE` locks, which block concurrent standard journal posting (`FOR SHARE`) while approval evidence is computed; it then recomputes the native/base bridge and rejects incomplete/misbalanced evidence. Stores who prepared, the statement cutoff and balances, plus the evidence fingerprint. Identical replay is safe; changed preparer/note/evidence conflicts.
 
 At **approve**, it again locks and recomputes the report, requires all internal validations still pass, verifies the originally prepared SHA-256 fingerprint, requires another authenticated user, and then atomically writes separate immutable approval evidence. Exact reviewer/note replay succeeds; another reviewer or changed terms conflicts. Approval does **not** post any GL journals or change imported bank statement evidence.
 
