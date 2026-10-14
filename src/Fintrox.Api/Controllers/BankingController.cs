@@ -111,6 +111,56 @@ public sealed class BankingController(IBankReconciliationService service)
         return result is null ? NotFound() : Ok(result);
     }
 
+    [HttpGet("statements/{statementId:guid}/foreign-close-evidence")]
+    [Authorize(Policy = Permissions.AccountingRead)]
+    public async Task<ActionResult<ForeignBankCloseEvidenceResponse>> ForeignCloseEvidence(
+        Guid statementId, CancellationToken cancellationToken)
+    {
+        var report = await service.GetForeignCloseEvidenceAsync(
+            statementId, cancellationToken);
+        return report is null ? NotFound() : Ok(report);
+    }
+
+    [HttpPost("statements/{statementId:guid}/prepare-foreign-close")]
+    [Authorize(Policy = Permissions.AccountingWrite)]
+    [Authorize(Policy = Permissions.AccountingPost)]
+    public async Task<ActionResult<ForeignBankCloseDecisionResponse>> PrepareForeignClose(
+        Guid statementId, PrepareForeignBankCloseRequest request,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var decision = await service.PrepareForeignCloseAsync(
+                statementId, request, cancellationToken);
+            return decision is null ? NotFound() : Ok(decision);
+        }
+        catch (BankReconciliationConflictException ex)
+        {
+            return Conflict(Problem(StatusCodes.Status409Conflict,
+                "Foreign bank close preparation conflict", ex.Message));
+        }
+    }
+
+    [HttpPost("statements/{statementId:guid}/approve-foreign-close")]
+    [Authorize(Policy = Permissions.AccountingPost)]
+    [Authorize(Policy = Permissions.OrganizationsManage)]
+    public async Task<ActionResult<ForeignBankCloseDecisionResponse>> ApproveForeignClose(
+        Guid statementId, ApproveForeignBankCloseRequest request,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var decision = await service.ApproveForeignCloseAsync(
+                statementId, request, cancellationToken);
+            return decision is null ? NotFound() : Ok(decision);
+        }
+        catch (BankReconciliationConflictException ex)
+        {
+            return Conflict(Problem(StatusCodes.Status409Conflict,
+                "Foreign bank close independent approval conflict", ex.Message));
+        }
+    }
+
     [HttpPost("statements/{statementId:guid}/revalue-foreign")]
     [Authorize(Policy = Permissions.AccountingWrite)]
     [Authorize(Policy = Permissions.AccountingPost)]
