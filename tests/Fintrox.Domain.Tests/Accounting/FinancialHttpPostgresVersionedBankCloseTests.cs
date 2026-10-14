@@ -273,6 +273,38 @@ public sealed partial class FinancialHttpPostgresRegressionTests
     }
 
     [TestMethod]
+    public async Task GenericJournalReverseCannotBypassVersionedFxCorrection()
+    {
+        var setup = await SetupValuationAsync(1m);
+        using var client = Client(userA, organizationA);
+        await PostTestValuationAsync(client, setup.StatementId, setup.RateId);
+        var previous = await LookupOriginalRevaluationJournalAsync(setup.StatementId);
+        await CorrectExistingCutoffRateAsync(setup.RateId, 1.5m);
+        using var changed = await client.PostAsJsonAsync(
+            AmendUrl(setup.StatementId),
+            AmendRateRequest(setup.RateId, 1, previous));
+        Assert.AreEqual(HttpStatusCode.OK, changed.StatusCode);
+        var amend = await changed.Content
+            .ReadFromJsonAsync<ForeignBankRevaluationAmendmentResponse>();
+        Assert.IsNotNull(amend);
+        Assert.IsNotNull(amend.ReplacementJournalEntryId);
+        Assert.IsNotNull(amend.ReversalJournalEntryId);
+
+        foreach (var protectedId in new[] {
+            amend.ReplacementJournalEntryId.Value,
+            amend.ReversalJournalEntryId.Value
+        })
+        {
+            using var denied = await client.PostAsJsonAsync(
+                $"/api/v1/accounting/journal/{protectedId}/reverse",
+                new ReverseJournalEntryRequest(
+                    new DateOnly(2026, 3, 31),
+                    "Generic reversal must not bypass audited FX cutoff corrections"));
+            Assert.AreEqual(HttpStatusCode.Conflict, denied.StatusCode);
+        }
+    }
+
+    [TestMethod]
     public async Task ConcurrentAmendmentsProduceOneVersionAndOneReplay()
     {
         var setup = await SetupValuationAsync(1m);
