@@ -79,6 +79,26 @@ public sealed record ForeignBankSettlementResponse(
     decimal ClearingBaseAmount, decimal RealizedGainBase,
     decimal RealizedLossBase, bool AlreadyPosted);
 
+/// <summary>
+/// Explicit year/period end bank FX valuation. Two expected balances protect
+/// against changes to the original statement and cumulative base-currency GL.
+/// Quote rate is foreign units per one organization base-currency unit.
+/// </summary>
+public sealed record PostForeignBankRevaluationRequest(
+    Guid ExchangeRateId,
+    Guid FxGainAccountId,
+    Guid FxLossAccountId,
+    decimal ExpectedNativeClosingBalance,
+    decimal ExpectedLedgerBaseBalance);
+
+public sealed record ForeignBankRevaluationResponse(
+    Guid StatementId, Guid BankAccountId, Guid? JournalEntryId,
+    DateOnly CutoffDate, string CurrencyCode,
+    decimal NativeClosingBalance, decimal ApprovedRate,
+    decimal PreviousLedgerBaseBalance, decimal TargetBaseBalance,
+    decimal SignedAdjustmentBase, decimal UnrealizedGainBase,
+    decimal UnrealizedLossBase, bool AlreadyRevalued);
+
 public sealed record BankStatementMatchResponse(
     Guid StatementId, Guid LineId, Guid PaymentId, bool AlreadyMatched);
 
