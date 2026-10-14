@@ -127,6 +127,18 @@ public sealed class FiscalYearsController(
         }
     }
 
+    [HttpGet("{fiscalYearId:guid}/open-item-reconciliation")]
+    [Authorize(Policy = Permissions.AccountingRead)]
+    public async Task<ActionResult<FinancialOpenItemReconciliationResponse>>
+        OpenItemReconciliation(
+            Guid fiscalYearId,
+            CancellationToken cancellationToken)
+    {
+        var report = await openItems.ReconcileAsync(
+            fiscalYearId, cancellationToken);
+        return report is null ? NotFound() : Ok(report);
+    }
+
     [HttpGet("{fiscalYearId:guid}/source-reconciliation")]
     [Authorize(Policy = Permissions.AccountingRead)]
     public async Task<ActionResult<FinancialSourceReconciliationResponse>>
