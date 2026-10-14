@@ -34,6 +34,17 @@ public sealed record BankStatementImportResponse(
 
 public sealed record MatchBankStatementLineRequest(Guid PaymentId);
 
+public sealed record BankStatementLineResponse(
+    Guid Id, string ExternalId, DateOnly ValueDate,
+    decimal SignedAmount, string Description,
+    Guid? MatchedPaymentId);
+
+public sealed record BankStatementResponse(
+    Guid Id, Guid BankAccountId, string ExternalId,
+    DateOnly FromDate, DateOnly ToDate,
+    decimal OpeningBalance, decimal ClosingBalance,
+    IReadOnlyList<BankStatementLineResponse> Lines);
+
 public sealed record BankStatementMatchResponse(
     Guid StatementId, Guid LineId, Guid PaymentId, bool AlreadyMatched);
 
