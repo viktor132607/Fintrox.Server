@@ -16,7 +16,8 @@ namespace Fintrox.Infrastructure.Accounting;
 public sealed partial class BankReconciliationService
 {
     private sealed record ForeignCloseSnapshot(
-        ForeignBankCloseEvidenceResponse Report, string Fingerprint);
+        ForeignBankCloseEvidenceResponse Report, string Fingerprint,
+        Guid? AmendmentId);
 
     public async Task<ForeignBankCloseEvidenceResponse?> GetForeignCloseEvidenceAsync(
         Guid statementId, CancellationToken cancellationToken)
@@ -315,6 +316,37 @@ public sealed partial class BankReconciliationService
             }
         }
 
+        // The original cutoff row is immutable. A restatement creates an
+        // append-only amendment; current financial valuation is always its
+        // highest version. Old maker/checker records remain historical only.
+        var version = 1;
+        Guid? amendmentId = null;
+        await using (var amended = Command(cn, tx, """
+            SELECT id,version_number,exchange_rate_id,approved_rate,
+                   replacement_target_base,ledger_base_before,
+                   replacement_adjustment_base,replacement_journal_id,
+                   gain_account_id,loss_account_id
+            FROM banking.bank_fx_revaluation_amendments
+            WHERE organization_id=@org AND statement_id=@statement
+            ORDER BY version_number DESC LIMIT 1
+            """, ("org", tenant), ("statement", statementId)))
+        await using (var reader = await amended.ExecuteReaderAsync(ct))
+        {
+            if (await reader.ReadAsync(ct))
+            {
+                amendmentId = reader.GetGuid(0);
+                version = reader.GetInt32(1);
+                rateId = reader.GetGuid(2);
+                rate = reader.GetDecimal(3);
+                target = reader.GetDecimal(4);
+                previousGl = reader.GetDecimal(5);
+                adjustment = reader.GetDecimal(6);
+                valuationJournal = reader.IsDBNull(7) ? null : reader.GetGuid(7);
+                gainAccount = reader.GetGuid(8);
+                lossAccount = reader.GetGuid(9);
+            }
+        }
+
         var issues = new List<string>();
         if (currency == baseCurrency) issues.Add("BankNotForeignCurrency");
         if (rateId is null || rate <= 0m) issues.Add("MissingFxCutoffRevaluation");
@@ -453,7 +485,7 @@ public sealed partial class BankReconciliationService
                          AND j.debit-j.credit=-@adjustment)=1
                 """, ("journal", valuationJournal.Value), ("org", tenant),
                 ("cutoff", cutoff),
-                ("ref", $"bank-fx-revaluation:v1:{account:N}:{cutoff:yyyyMMdd}"),
+                ("ref", $"bank-fx-revaluation:v{version}:{account:N}:{cutoff:yyyyMMdd}"),
                 ("ledger", bankGl), ("adjustment", adjustment),
                 ("gainAccount", gainAccount!.Value),
                 ("lossAccount", lossAccount!.Value));
@@ -497,6 +529,8 @@ public sealed partial class BankReconciliationService
             tenant.ToString("N"), statementId.ToString("N"),
             account.ToString("N"), cutoff.ToString("yyyyMMdd",
                 CultureInfo.InvariantCulture), statementHash,
+            version.ToString(CultureInfo.InvariantCulture),
+            amendmentId?.ToString("N") ?? "",
             rateId?.ToString("N") ?? "", Dec(rate), Dec(native),
             Dec(target), Dec(previousGl), Dec(adjustment),
             valuationJournal?.ToString("N") ?? "", Dec(actualGl),
@@ -516,7 +550,7 @@ public sealed partial class BankReconciliationService
             actualGl, actualGl - target, chainValid, invalidLines == 0,
             validValuation, unknownJournalLines == 0,
             issues.Count == 0, prepared, approved,
-            maker, checker, issues);
-        return new ForeignCloseSnapshot(report, hash);
+            maker, checker, issues, version);
+        return new ForeignCloseSnapshot(report, hash, amendmentId);
     }
 }
