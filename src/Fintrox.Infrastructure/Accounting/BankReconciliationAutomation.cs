@@ -52,7 +52,7 @@ public sealed partial class BankReconciliationService
                   AND matched_payment_id IS NULL
                 """, ("org", tenant), ("statement", statementId)))
                 unmatched = checked(Convert.ToInt32(
-                    await count.ExecuteScalarAsync(cancellationToken)));
+                    await count.ExecuteScalarAsync(cancellationToken), System.Globalization.CultureInfo.InvariantCulture));
 
             var raw = new List<BankMatchSuggestionResponse>();
             await using (var cmd = Command(cn, tx, """
