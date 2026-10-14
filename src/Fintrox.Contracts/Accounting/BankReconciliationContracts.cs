@@ -58,6 +58,26 @@ public sealed record BankFeePostingResponse(
     Guid JournalEntryId, Guid ExpenseAccountId,
     decimal FeeAmount, string Reason, bool AlreadyPosted);
 
+/// <summary>
+/// Debit/credit settlement against a real foreign currency bank line.
+/// ExchangeRate.Rate means quote units per one base-currency unit.
+/// ClearingBaseAmount is the ledger carrying value of the AR/AP amount paid.
+/// </summary>
+public sealed record PostForeignBankSettlementRequest(
+    Guid ExchangeRateId,
+    Guid ClearingAccountId,
+    decimal ClearingBaseAmount,
+    Guid FxGainAccountId,
+    Guid FxLossAccountId,
+    decimal ExpectedSignedForeignAmount);
+
+public sealed record ForeignBankSettlementResponse(
+    Guid StatementId, Guid StatementLineId, Guid JournalEntryId,
+    string CurrencyCode, decimal NativeAmount,
+    decimal BookedRate, decimal BankBaseAmount,
+    decimal ClearingBaseAmount, decimal RealizedGainBase,
+    decimal RealizedLossBase, bool AlreadyPosted);
+
 public sealed record BankStatementMatchResponse(
     Guid StatementId, Guid LineId, Guid PaymentId, bool AlreadyMatched);
 
