@@ -10,6 +10,7 @@ public interface IProfitLossClosingService
 
     Task<ProfitLossReopenResponse?> ReopenForCorrectionAsync(
         Guid fiscalYearId,
+        Guid expectedClosingJournalEntryId,
         string reason,
         CancellationToken cancellationToken);
 
