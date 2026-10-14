@@ -64,14 +64,14 @@ public sealed class BankReconciliationService(
                 INSERT INTO banking.bank_accounts
                     (id, organization_id, iban, name, currency_code, gl_account_id)
                 VALUES (@id, @org, @iban, @name, @currency, @account)
-                ON CONFLICT (organization_id, iban) DO NOTHING
+                ON CONFLICT DO NOTHING
                 RETURNING id
                 """, ("id", id), ("org", tenant), ("iban", iban), ("name", name!),
                 ("currency", currency!), ("account", request.LedgerAccountId)))
             {
                 if (await command.ExecuteScalarAsync(cancellationToken) is not Guid)
                     throw new BankReconciliationConflictException(
-                        "A bank account with this IBAN already exists in the organization.");
+                        "This IBAN or dedicated bank ledger account already belongs to a bank account.");
             }
 
             await tx.CommitAsync(cancellationToken);
@@ -223,11 +223,12 @@ public sealed class BankReconciliationService(
             Guid accountId;
             Guid glAccountId;
             string currency;
+            DateOnly statementEnd;
             decimal amount;
             Guid? matchedId;
             // Account row lock is the global order with statement import.
             await using (var lookup = Command(cn, tx, """
-                SELECT a.id,a.gl_account_id,a.currency_code
+                SELECT a.id,a.gl_account_id,a.currency_code,s.to_date
                 FROM banking.bank_statements s
                 JOIN banking.bank_accounts a
                   ON a.id=s.bank_account_id AND a.organization_id=s.organization_id
@@ -239,6 +240,7 @@ public sealed class BankReconciliationService(
                 accountId = reader.GetGuid(0);
                 glAccountId = reader.GetGuid(1);
                 currency = reader.GetString(2);
+                statementEnd = reader.GetFieldValue<DateOnly>(3);
             }
             await using (var bankLock = Command(cn, tx, """
                 SELECT id FROM banking.bank_accounts WHERE id=@id
@@ -271,7 +273,7 @@ public sealed class BankReconciliationService(
             // Require confirmed bank transfer with exact original signed
             // statement amount in the account's base currency.
             await using (var payment = Command(cn, tx, """
-                SELECT direction,currency_code,amount,exchange_rate
+                SELECT direction,currency_code,amount,exchange_rate,payment_date
                 FROM payments.payments
                 WHERE id=@payment AND organization_id=@org
                   AND status='Confirmed' AND method='BankTransfer'
@@ -286,10 +288,12 @@ public sealed class BankReconciliationService(
                 var paymentCurrency = reader.GetString(1);
                 var originalAmount = reader.GetDecimal(2);
                 var rate = reader.IsDBNull(3) ? 0m : reader.GetDecimal(3);
+                var paymentDate = reader.GetFieldValue<DateOnly>(4);
                 var signed = direction == "Incoming" ? originalAmount : -originalAmount;
-                if (paymentCurrency != currency || signed != amount || rate != 1m)
+                if (paymentCurrency != currency || signed != amount ||
+                    rate != 1m || paymentDate > statementEnd)
                     throw new BankReconciliationConflictException(
-                        "Statement sign, currency, amount or base exchange rate differs from the confirmed payment.");
+                        "Statement sign, currency, amount, date or base exchange rate differs from the confirmed payment.");
             }
 
             // Payment -> original immutable posted system journal -> exact bank
@@ -304,10 +308,12 @@ public sealed class BankReconciliationService(
                   AND e.source='System'
                   AND e.status='Posted'
                   AND e.external_reference=@ref
+                  AND e.posting_date<=@end
                   AND l.account_id=@ledger
                   AND (l.debit-l.credit)=@signed
                 """, ("org", tenant), ("ref", $"payment:{paymentId:N}"),
-                ("ledger", glAccountId), ("signed", amount)))
+                ("ledger", glAccountId), ("signed", amount),
+                ("end", statementEnd)))
             {
                 if (Convert.ToInt64(
                     await evidence.ExecuteScalarAsync(cancellationToken)) != 1L)
@@ -419,6 +425,7 @@ public sealed class BankReconciliationService(
                        OR (CASE WHEN p.direction='Incoming' THEN p.amount
                                 ELSE -p.amount END) <> l.signed_amount
                        OR p.exchange_rate <> 1
+                       OR p.payment_date > @end
                        OR NOT EXISTS (
                            SELECT 1 FROM accounting.journal_entries e
                            JOIN accounting.journal_lines j
@@ -427,11 +434,13 @@ public sealed class BankReconciliationService(
                              AND e.status='Posted'
                              AND e.external_reference='payment:' ||
                                 replace(p.id::text, '-', '')
+                             AND e.posting_date<=@end
                              AND j.account_id=@ledger
                              AND (j.debit-j.credit)=l.signed_amount
                        ))
                 """, ("org", tenant), ("id", statementId),
-                ("currency", currency), ("ledger", glAccountId)))
+                ("currency", currency), ("ledger", glAccountId),
+                ("end", endDate)))
             await using (var reader = await cmd.ExecuteReaderAsync(cancellationToken))
             {
                 while (await reader.ReadAsync(cancellationToken))
