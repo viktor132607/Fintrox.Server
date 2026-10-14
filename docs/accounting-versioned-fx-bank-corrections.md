@@ -11,7 +11,7 @@ rate, deleting the first revaluation or reversing its bank GL without a
 replacement. This bounded workflow generates an explicit **new cutoff
 version**, an inverse of the old FX P&L and bank entry, a new balanced
 replacement valuation, and a **fresh independent maker/checker review
-for that same version**. Earlier review evidence stays in the database but
+for that same version**. The generic journal reversal route protects **every** `bank-fx-revaluation:vN:` source and its linked compensating reversal; only the controlled amendment API can change this accounting chain. Earlier review evidence stays in the database but
 never counts as approval of a subsequent version.
 
 ## Secure API
@@ -135,7 +135,7 @@ untouched; migration is additive.
 
 ## Authored regressions — NOT executed
 
-Eight new authenticated HTTP/migrated PostgreSQL test methods in
+Nine new authenticated HTTP/migrated PostgreSQL test methods in
 `tests/Fintrox.Domain.Tests/Accounting/FinancialHttpPostgresVersionedBankCloseTests.cs`:
 
 1. EUR bank v1 target120 from USD120 @1 and initial EUR100;
@@ -153,7 +153,7 @@ Eight new authenticated HTTP/migrated PostgreSQL test methods in
 6. Two concurrent identical amended requests serialize to one GL
    reversal and one replacement version.
 7. Previously zero-delta v1 valuation gets v2 adjustment without creating a fictitious reverse journal.
-8. A second correction creates v3 and can return to zero delta without a dummy replacement journal.
+8. A second correction creates v3 and can return to zero delta without a dummy replacement journal.\n9. Generic GL reversal cannot reverse a v2 valuation journal or its previous protected bank valuation compensation.
 
 These tests have **not been run**: no local `dotnet` SDK was found
 and available current GitHub status does not establish a passing
