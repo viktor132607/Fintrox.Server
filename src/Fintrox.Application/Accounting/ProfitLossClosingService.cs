@@ -469,8 +469,12 @@ public sealed class ProfitLossClosingService(
             var closingEntries = await journals.ListYearEndClosingEntriesAsync(
                 organizationId, fiscalYearId, ct);
             var (latest, _) = FindLatestClosing(closingEntries, fiscalYearId);
-            var netDebit = profitLoss.Sum(account => account.Debit);
-            var netCredit = profitLoss.Sum(account => account.Credit);
+            // Report outstanding account-level net balances, not gross
+            // historic movements (which remain nonzero after a valid close).
+            var netDebit = profitLoss.Sum(account =>
+                Math.Max(account.Debit - account.Credit, 0m));
+            var netCredit = profitLoss.Sum(account =>
+                Math.Max(account.Credit - account.Debit, 0m));
             var profitLossCleared = profitLoss.All(account =>
                 account.Debit == account.Credit);
             var ledgerBalanced = totals.Debit == totals.Credit;
