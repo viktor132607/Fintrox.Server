@@ -151,6 +151,11 @@ public sealed class ApiRequestSecurityHttpTests
     private static WebApplicationFactory<Program> Factory(bool includeOrigin = true) =>
         new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
         {
+            // CORS is configured while Program registers services, before
+            // late WebApplicationFactory app-configuration callbacks apply.
+            // Supply the allowed test origin through early host settings.
+            if (includeOrigin)
+                builder.UseSetting("Cors:AllowedOrigins:0", AllowedOrigin);
             builder.UseEnvironment("Testing");
             builder.ConfigureAppConfiguration((_, configuration) =>
             {
