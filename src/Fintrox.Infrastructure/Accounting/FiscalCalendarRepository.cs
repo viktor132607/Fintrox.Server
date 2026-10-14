@@ -226,6 +226,21 @@ public sealed class FiscalCalendarRepository(
             cancellationToken);
     }
 
+    public Task<int> CountDraftJournalsInFiscalYearAsync(
+        Guid organizationId,
+        Guid fiscalYearId,
+        CancellationToken cancellationToken)
+    {
+        return dbContext.JournalEntries.AsNoTracking().CountAsync(
+            entry => entry.OrganizationId == organizationId &&
+                entry.Status == JournalEntryStatus.Draft &&
+                dbContext.AccountingPeriods.Any(period =>
+                    period.OrganizationId == organizationId &&
+                    period.Id == entry.FiscalPeriodId &&
+                    period.FiscalYearId == fiscalYearId),
+            cancellationToken);
+    }
+
     public Task<bool> HasDraftJournalsInFiscalYearAsync(
         Guid organizationId,
         Guid fiscalYearId,
