@@ -230,6 +230,49 @@ public sealed class JournalRepository(
         }
     }
 
+    public async Task<IReadOnlyList<JournalEntry>> ListYearEndClosingEntriesAsync(
+        Guid organizationId,
+        Guid fiscalYearId,
+        CancellationToken cancellationToken)
+    {
+        // v1 is retained for the first close, :r2/:r3 for correction cycles.
+        // Match the precise prefix including delimiter, not a different ID.
+        var prefix = $"profit-loss-close:v1:{fiscalYearId:N}";
+        return await dbContext.JournalEntries.AsNoTracking()
+            .Where(entry => entry.OrganizationId == organizationId &&
+                entry.Source == JournalEntrySource.System &&
+                (entry.ExternalReference == prefix ||
+                 (entry.ExternalReference != null &&
+                  entry.ExternalReference.StartsWith(prefix + ":r"))))
+            .OrderBy(entry => entry.CreatedAtUtc)
+            .ToArrayAsync(cancellationToken);
+    }
+
+    public async Task<FiscalLedgerTotals> GetFiscalLedgerTotalsAsync(
+        Guid organizationId,
+        DateOnly fromDate,
+        DateOnly toDate,
+        CancellationToken cancellationToken)
+    {
+        var rows = await (
+            from line in dbContext.JournalLines.AsNoTracking()
+            join entry in dbContext.JournalEntries.AsNoTracking()
+                on new { line.JournalEntryId, line.OrganizationId }
+                equals new { JournalEntryId = entry.Id, entry.OrganizationId }
+            where line.OrganizationId == organizationId &&
+                entry.PostingDate >= fromDate &&
+                entry.PostingDate <= toDate &&
+                (entry.Status == JournalEntryStatus.Posted ||
+                 entry.Status == JournalEntryStatus.Reversed)
+            group line by 1 into totals
+            select new FiscalLedgerTotals(
+                totals.Sum(line => line.Debit),
+                totals.Sum(line => line.Credit),
+                totals.Count())
+        ).SingleOrDefaultAsync(cancellationToken);
+        return rows ?? new FiscalLedgerTotals(0m, 0m, 0);
+    }
+
     public async Task<IReadOnlyList<ProfitLossAccountBalance>> GetProfitLossBalancesAsync(
         Guid organizationId,
         DateOnly fiscalYearStart,
