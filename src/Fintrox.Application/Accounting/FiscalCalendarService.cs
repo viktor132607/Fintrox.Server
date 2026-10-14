@@ -6,6 +6,7 @@ namespace Fintrox.Application.Accounting;
 
 public sealed class FiscalCalendarService(
     IFiscalCalendarRepository repository,
+    ITransactionRunner transactionRunner,
     ICurrentOrganization currentOrganization,
     TimeProvider timeProvider) : IFiscalCalendarService
 {
@@ -119,95 +120,104 @@ public sealed class FiscalCalendarService(
         return MapFiscalYear(fiscalYear);
     }
 
-    public async Task<FiscalYearResponse?> SoftCloseFiscalYearAsync(
+    public Task<FiscalYearResponse?> SoftCloseFiscalYearAsync(
         Guid fiscalYearId,
+        CancellationToken cancellationToken) =>
+        ChangeFiscalYearStatusAsync(
+            fiscalYearId,
+            FiscalYearStatus.SoftClosed,
+            cancellationToken);
+
+    public Task<FiscalYearResponse?> CloseFiscalYearAsync(
+        Guid fiscalYearId,
+        CancellationToken cancellationToken) =>
+        ChangeFiscalYearStatusAsync(
+            fiscalYearId,
+            FiscalYearStatus.Closed,
+            cancellationToken);
+
+    public Task<FiscalYearResponse?> ReopenFiscalYearAsync(
+        Guid fiscalYearId,
+        CancellationToken cancellationToken) =>
+        ChangeFiscalYearStatusAsync(
+            fiscalYearId,
+            FiscalYearStatus.Open,
+            cancellationToken);
+
+    private async Task<FiscalYearResponse?> ChangeFiscalYearStatusAsync(
+        Guid fiscalYearId,
+        FiscalYearStatus targetStatus,
         CancellationToken cancellationToken)
     {
-        var (organizationId, fiscalYear) = await GetTrackedFiscalYearAsync(
-            fiscalYearId,
+        var organizationId = currentOrganization.RequireOrganizationId();
+
+        return await transactionRunner.ExecuteAsync(
+            async ct =>
+            {
+                // Exclusive year lock waits for in-flight GL posting and
+                // serializes concurrent close/reopen requests across workers.
+                await repository.LockFiscalYearForCloseAsync(
+                    organizationId, fiscalYearId, ct);
+
+                var fiscalYear = await repository.GetFiscalYearAsync(
+                    organizationId, fiscalYearId, trackChanges: true, ct);
+
+                if (fiscalYear is null)
+                {
+                    return null;
+                }
+
+                if (targetStatus == FiscalYearStatus.Open)
+                {
+                    fiscalYear.Reopen(timeProvider.GetUtcNow());
+                }
+                else
+                {
+                    if (fiscalYear.Status == FiscalYearStatus.Closed &&
+                        targetStatus == FiscalYearStatus.SoftClosed)
+                    {
+                        throw new FiscalCalendarConflictException(
+                            "A closed fiscal year must be reopened before it can be soft-closed.");
+                    }
+
+                    await EnsureFiscalYearHasPeriodsAsync(
+                        organizationId, fiscalYearId, ct);
+
+                    if (await repository.HasDraftJournalsInFiscalYearAsync(
+                            organizationId, fiscalYearId, ct))
+                    {
+                        throw new FiscalCalendarConflictException(
+                            "All draft journal entries must be posted or resolved before fiscal-year closing.");
+                    }
+
+                    if (targetStatus == FiscalYearStatus.SoftClosed)
+                    {
+                        if (await repository.HasOpenPeriodsAsync(
+                                organizationId, fiscalYearId, ct))
+                        {
+                            throw new FiscalCalendarConflictException(
+                                "All accounting periods must be soft-closed or closed before the fiscal year can be soft-closed.");
+                        }
+
+                        fiscalYear.SoftClose(timeProvider.GetUtcNow());
+                    }
+                    else if (targetStatus == FiscalYearStatus.Closed)
+                    {
+                        if (!await repository.AllPeriodsClosedAsync(
+                                organizationId, fiscalYearId, ct))
+                        {
+                            throw new FiscalCalendarConflictException(
+                                "All accounting periods must be closed before the fiscal year can be closed.");
+                        }
+
+                        fiscalYear.Close(timeProvider.GetUtcNow());
+                    }
+                }
+
+                await repository.SaveChangesAsync(ct);
+                return MapFiscalYear(fiscalYear);
+            },
             cancellationToken);
-
-        if (fiscalYear is null)
-        {
-            return null;
-        }
-
-        if (fiscalYear.Status == FiscalYearStatus.Closed)
-        {
-            throw new FiscalCalendarConflictException(
-                "A closed fiscal year must be reopened before it can be soft-closed.");
-        }
-
-        await EnsureFiscalYearHasPeriodsAsync(
-            organizationId,
-            fiscalYearId,
-            cancellationToken);
-
-        if (await repository.HasOpenPeriodsAsync(
-                organizationId,
-                fiscalYearId,
-                cancellationToken))
-        {
-            throw new FiscalCalendarConflictException(
-                "All accounting periods must be soft-closed or closed before the fiscal year can be soft-closed.");
-        }
-
-        fiscalYear.SoftClose(timeProvider.GetUtcNow());
-        await repository.SaveChangesAsync(cancellationToken);
-
-        return MapFiscalYear(fiscalYear);
-    }
-
-    public async Task<FiscalYearResponse?> CloseFiscalYearAsync(
-        Guid fiscalYearId,
-        CancellationToken cancellationToken)
-    {
-        var (organizationId, fiscalYear) = await GetTrackedFiscalYearAsync(
-            fiscalYearId,
-            cancellationToken);
-
-        if (fiscalYear is null)
-        {
-            return null;
-        }
-
-        await EnsureFiscalYearHasPeriodsAsync(
-            organizationId,
-            fiscalYearId,
-            cancellationToken);
-
-        if (!await repository.AllPeriodsClosedAsync(
-                organizationId,
-                fiscalYearId,
-                cancellationToken))
-        {
-            throw new FiscalCalendarConflictException(
-                "All accounting periods must be closed before the fiscal year can be closed.");
-        }
-
-        fiscalYear.Close(timeProvider.GetUtcNow());
-        await repository.SaveChangesAsync(cancellationToken);
-
-        return MapFiscalYear(fiscalYear);
-    }
-
-    public async Task<FiscalYearResponse?> ReopenFiscalYearAsync(
-        Guid fiscalYearId,
-        CancellationToken cancellationToken)
-    {
-        var (_, fiscalYear) = await GetTrackedFiscalYearAsync(
-            fiscalYearId,
-            cancellationToken);
-
-        if (fiscalYear is null)
-        {
-            return null;
-        }
-
-        fiscalYear.Reopen(timeProvider.GetUtcNow());
-        await repository.SaveChangesAsync(cancellationToken);
-
-        return MapFiscalYear(fiscalYear);
     }
 
     public async Task<IReadOnlyList<AccountingPeriodResponse>> ListPeriodsAsync(
@@ -395,51 +405,91 @@ public sealed class FiscalCalendarService(
         CancellationToken cancellationToken)
     {
         var organizationId = currentOrganization.RequireOrganizationId();
-        await RequireOpenFiscalYearAsync(
-            organizationId,
-            fiscalYearId,
-            cancellationToken);
 
-        var period = await repository.GetPeriodAsync(
-            organizationId,
-            fiscalYearId,
-            periodId,
-            trackChanges: true,
-            cancellationToken);
+        return await transactionRunner.ExecuteAsync(
+            async ct =>
+            {
+                // Lock YEAR first, then PERIOD: posting takes the same order.
+                // Recheck both states after any concurrent writer commits.
+                await repository.LockFiscalYearForCloseAsync(
+                    organizationId, fiscalYearId, ct);
 
-        if (period is null)
-        {
-            return null;
-        }
+                var fiscalYear = await repository.GetFiscalYearAsync(
+                    organizationId, fiscalYearId, trackChanges: false, ct);
 
-        var now = timeProvider.GetUtcNow();
-
-        switch (targetStatus)
-        {
-            case AccountingPeriodStatus.Open:
-                period.Reopen(now);
-                break;
-            case AccountingPeriodStatus.SoftClosed:
-                if (period.Status == AccountingPeriodStatus.Closed)
+                if (fiscalYear is null)
                 {
                     throw new FiscalCalendarConflictException(
-                        "A closed accounting period must be reopened before it can be soft-closed.");
+                        "The fiscal year does not exist in this organization.");
                 }
 
-                period.SoftClose(now);
-                break;
-            case AccountingPeriodStatus.Closed:
-                period.Close(now);
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(
-                    nameof(targetStatus),
-                    targetStatus,
-                    "Unsupported accounting period status.");
-        }
+                EnsureFiscalYearOpen(fiscalYear);
 
-        await repository.SaveChangesAsync(cancellationToken);
-        return MapPeriod(period);
+                await repository.LockAccountingPeriodForCloseAsync(
+                    organizationId, fiscalYearId, periodId, ct);
+
+                var accountingPeriod = await repository.GetPeriodAsync(
+                    organizationId, fiscalYearId, periodId, trackChanges: true, ct);
+
+                if (accountingPeriod is null)
+                {
+                    return null;
+                }
+
+                var now = timeProvider.GetUtcNow();
+                switch (targetStatus)
+                {
+                    case AccountingPeriodStatus.Open:
+                        accountingPeriod.Reopen(now);
+                        break;
+                    case AccountingPeriodStatus.SoftClosed:
+                    case AccountingPeriodStatus.Closed:
+                        if (targetStatus == AccountingPeriodStatus.SoftClosed &&
+                            accountingPeriod.Status == AccountingPeriodStatus.Closed)
+                        {
+                            throw new FiscalCalendarConflictException(
+                                "A closed accounting period must be reopened before it can be soft-closed.");
+                        }
+
+                        // Do not certify a closed period with unposted or
+                        // misallocated ledger entries. Both reads are made
+                        // under the same calendar locks as posting.
+                        if (await repository.HasDraftJournalsInPeriodAsync(
+                                organizationId, periodId, ct))
+                        {
+                            throw new FiscalCalendarConflictException(
+                                "Resolve draft journal entries before closing the accounting period.");
+                        }
+
+                        if (await repository.HasMisdatedJournalsInPeriodAsync(
+                                organizationId, periodId,
+                                accountingPeriod.StartDate,
+                                accountingPeriod.EndDate, ct))
+                        {
+                            throw new FiscalCalendarConflictException(
+                                "The accounting period contains journal entries with posting dates outside its date range.");
+                        }
+
+                        if (targetStatus == AccountingPeriodStatus.SoftClosed)
+                        {
+                            accountingPeriod.SoftClose(now);
+                        }
+                        else
+                        {
+                            accountingPeriod.Close(now);
+                        }
+
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(
+                            nameof(targetStatus), targetStatus,
+                            "Unsupported accounting period status.");
+                }
+
+                await repository.SaveChangesAsync(ct);
+                return MapPeriod(accountingPeriod);
+            },
+            cancellationToken);
     }
 
     private async Task EnsureFiscalYearUniqueAsync(
