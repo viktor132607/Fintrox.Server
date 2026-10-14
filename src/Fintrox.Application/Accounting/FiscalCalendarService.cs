@@ -160,6 +160,17 @@ public sealed class FiscalCalendarService(
 
                 if (targetStatus == FiscalYearStatus.Open)
                 {
+                    // A fiscal year with a posted P&L closing journal may
+                    // only reopen together with a compensating journal.
+                    // Status-only reopen leaves retained earnings corrupted.
+                    if (fiscalYear.Status == FiscalYearStatus.Closed &&
+                        (await journals.ListYearEndClosingEntriesAsync(
+                            organizationId, fiscalYearId, ct)).Count > 0)
+                    {
+                        throw new FiscalCalendarConflictException(
+                            "This fiscal year has profit/loss closing journal history. Use reopen-profit-loss with a correction reason.");
+                    }
+
                     fiscalYear.Reopen(timeProvider.GetUtcNow());
                 }
                 else
