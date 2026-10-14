@@ -80,6 +80,39 @@ public sealed partial class FinancialHttpPostgresRegressionTests
     }
 
     [TestMethod]
+    public async Task OpenItemReconciliationDetectsWrongPaymentCounterparty()
+    {
+        await SeedOpenItemLedgerAsync(
+            40m, 10m, wrongCustomerPaymentParty: true);
+        var report = await GetOpenItemReportAsync();
+
+        Assert.IsTrue(report.Issues.Any(issue =>
+            issue.Code == "CounterpartyMismatch" &&
+            issue.SourceType == "SalesInvoice"));
+        Assert.IsFalse(report.AccountsReceivableReconciled);
+        Assert.IsTrue(report.AccountsPayableReconciled);
+    }
+
+    [TestMethod]
+    public async Task OpenItemReconciliationDetectsUnmatchedPayablesLedgerBalance()
+    {
+        var values = await SeedOpenItemLedgerAsync(40m, 10m);
+        await SeedOpenItemJournalAsync(
+            $"manual-control:{Guid.NewGuid():N}",
+            "Extra supplier payable",
+            (expenseA, 5m, 0m, "Unlinked expense"),
+            (values.ApAccountId, 0m, 5m, "Unlinked payable"));
+        var report = await GetOpenItemReportAsync();
+        Assert.IsTrue(report.AccountsReceivableReconciled);
+        Assert.IsFalse(report.AccountsPayableReconciled);
+        var ap = report.ControlAccounts.Single(row =>
+            row.AccountId == values.ApAccountId && row.Type == "Payables");
+        Assert.AreEqual(55m, ap.ActualLedgerBalanceBase);
+        Assert.AreEqual(50m, ap.ExpectedOpenItemsBase);
+        Assert.AreEqual(5m, ap.DifferenceBase);
+    }
+
+    [TestMethod]
     public async Task OpenItemReconciliationRejectsUnconfiguredControlAccounts()
     {
         var report = await GetOpenItemReportAsync();
@@ -150,7 +183,8 @@ public sealed partial class FinancialHttpPostgresRegressionTests
     private async Task<(Guid InvoiceId, Guid PurchaseId, Guid ArAccountId,
         Guid ApAccountId)> SeedOpenItemLedgerAsync(
             decimal customerSettlement, decimal supplierSettlement,
-            decimal customerInvoiceRate = 1m)
+            decimal customerInvoiceRate = 1m,
+            bool wrongCustomerPaymentParty = false)
     {
         Guid invoiceId;
         Guid purchaseId;
@@ -226,7 +260,8 @@ public sealed partial class FinancialHttpPostgresRegressionTests
             db.PurchaseDocuments.Add(purchase);
 
             var incoming = Payment.CreateDraft(
-                organizationA, PaymentDirection.Incoming, customer.Id,
+                organizationA, PaymentDirection.Incoming,
+                wrongCustomerPaymentParty ? supplier.Id : customer.Id,
                 PostingDate, PaymentMethod.BankTransfer,
                 currency.Id, "EUR", paymentBaseAmount, customer.Name,
                 null, null, null, null, now);
