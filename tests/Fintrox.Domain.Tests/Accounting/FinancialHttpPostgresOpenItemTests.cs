@@ -166,6 +166,20 @@ public sealed partial class FinancialHttpPostgresRegressionTests
     }
 
     [TestMethod]
+    public async Task OpenItemReconciliationDetectsDeclaredAllocationWithoutAnyRows()
+    {
+        // The shared migrated-Postgres fixture creates a confirmed payment
+        // with an allocation header amount but no PaymentAllocation children.
+        await SeedPaymentAsync(organizationA, confirmed: true, allocatedAmount: 25m);
+        var report = await GetOpenItemReportAsync();
+
+        Assert.IsTrue(report.Issues.Any(issue =>
+            issue.Code == "PaymentAllocationMismatch" &&
+            issue.SourceType == "Receivables"));
+        Assert.IsFalse(report.AccountsReceivableReconciled);
+    }
+
+    [TestMethod]
     public async Task OpenItemReconciliationKeepsFullySettledDocumentOutOfOpenItems()
     {
         await SeedOpenItemLedgerAsync(100m, 60m);
