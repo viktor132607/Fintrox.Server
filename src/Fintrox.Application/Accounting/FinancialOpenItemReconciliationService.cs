@@ -68,8 +68,9 @@ public sealed class FinancialOpenItemReconciliationService(
                 .ToDictionary(group => group.Key, group => group.ToArray());
             foreach (var payment in payments.Where(p => p.Status == "Confirmed"))
             {
-                var rows = paymentRowsById.TryGetValue(
-                    payment.Id, out var found) ? found : [];
+                FinancialOpenAllocationSnapshot[] rows =
+                    paymentRowsById.TryGetValue(
+                        payment.Id, out var found) ? found : [];
                 var rowTotal = rows.Sum(row => row.PaymentAmount);
                 if (rowTotal != payment.AllocatedAmount ||
                     rowTotal < 0m || rowTotal > payment.GrossAmount)
