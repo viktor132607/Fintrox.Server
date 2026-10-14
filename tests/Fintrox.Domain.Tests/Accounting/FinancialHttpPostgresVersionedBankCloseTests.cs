@@ -210,6 +210,69 @@ public sealed partial class FinancialHttpPostgresRegressionTests
     }
 
     [TestMethod]
+    public async Task ZeroOriginalRevaluationCanBeReplacedWithoutDummyReversal()
+    {
+        var setup = await SetupValuationAsync(1.2m);
+        using var client = Client(userA, organizationA);
+        await PostTestValuationAsync(client, setup.StatementId, setup.RateId);
+        Assert.IsNull(await LookupOriginalRevaluationJournalAsync(setup.StatementId));
+        var correctedRate = await CorrectExistingCutoffRateAsync(setup.RateId, 1m);
+        using var amended = await client.PostAsJsonAsync(
+            AmendUrl(setup.StatementId),
+            AmendRateRequest(correctedRate, 1, null));
+        Assert.AreEqual(HttpStatusCode.OK, amended.StatusCode,
+            await amended.Content.ReadAsStringAsync());
+        var result = await amended.Content
+            .ReadFromJsonAsync<ForeignBankRevaluationAmendmentResponse>();
+        Assert.IsNotNull(result);
+        Assert.AreEqual(2, result.VersionNumber);
+        Assert.IsNull(result.ReversalJournalEntryId);
+        Assert.IsNotNull(result.ReplacementJournalEntryId);
+        Assert.AreEqual(120m, result.ReplacementTargetBase);
+        Assert.IsTrue((await ReadFxCloseAsync(client, setup.StatementId)).InternallyReconciled);
+    }
+
+    [TestMethod]
+    public async Task ThirdValuationVersionCanReturnToZeroWithoutReplacementJournal()
+    {
+        var setup = await SetupValuationAsync(1m);
+        using var client = Client(userA, organizationA);
+        await PostTestValuationAsync(client, setup.StatementId, setup.RateId);
+        var initial = await LookupOriginalRevaluationJournalAsync(setup.StatementId);
+        await CorrectExistingCutoffRateAsync(setup.RateId, 1.5m);
+        using var firstResponse = await client.PostAsJsonAsync(
+            AmendUrl(setup.StatementId),
+            AmendRateRequest(setup.RateId, 1, initial));
+        Assert.AreEqual(HttpStatusCode.OK, firstResponse.StatusCode,
+            await firstResponse.Content.ReadAsStringAsync());
+        var second = await firstResponse.Content
+            .ReadFromJsonAsync<ForeignBankRevaluationAmendmentResponse>();
+        Assert.IsNotNull(second);
+        Assert.AreEqual(2, second.VersionNumber);
+
+        await CorrectExistingCutoffRateAsync(setup.RateId, 1.2m);
+        using var nextResponse = await client.PostAsJsonAsync(
+            AmendUrl(setup.StatementId),
+            AmendRateRequest(setup.RateId, 2, second.ReplacementJournalEntryId));
+        Assert.AreEqual(HttpStatusCode.OK, nextResponse.StatusCode,
+            await nextResponse.Content.ReadAsStringAsync());
+        var third = await nextResponse.Content
+            .ReadFromJsonAsync<ForeignBankRevaluationAmendmentResponse>();
+        Assert.IsNotNull(third);
+        Assert.AreEqual(3, third.VersionNumber);
+        Assert.AreEqual(100m, third.ReplacementTargetBase);
+        Assert.AreEqual(0m, third.ReplacementAdjustmentBase);
+        Assert.IsNotNull(third.ReversalJournalEntryId);
+        Assert.IsNull(third.ReplacementJournalEntryId);
+        var bridge = await ReadFxCloseAsync(client, setup.StatementId);
+        Assert.AreEqual(3, bridge.VersionNumber);
+        Assert.AreEqual(100m, bridge.ActualPostedLedgerBase);
+        Assert.IsTrue(bridge.InternallyReconciled,
+            string.Join(", ", bridge.Issues));
+        Assert.IsFalse(bridge.Approved);
+    }
+
+    [TestMethod]
     public async Task ConcurrentAmendmentsProduceOneVersionAndOneReplay()
     {
         var setup = await SetupValuationAsync(1m);
