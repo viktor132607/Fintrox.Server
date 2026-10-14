@@ -5,6 +5,9 @@ public interface IFinancialOpenItemRepository
     Task<IReadOnlyList<FinancialOpenDocumentSnapshot>> GetDocumentsAsync(
         Guid organizationId, DateOnly cutoff, CancellationToken cancellationToken);
 
+    Task<IReadOnlyList<FinancialPaymentHeaderSnapshot>> GetPaymentsAsync(
+        Guid organizationId, DateOnly cutoff, CancellationToken cancellationToken);
+
     Task<IReadOnlyList<FinancialOpenAllocationSnapshot>> GetAllocationsAsync(
         Guid organizationId, DateOnly cutoff, CancellationToken cancellationToken);
 
