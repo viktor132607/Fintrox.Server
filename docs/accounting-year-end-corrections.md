@@ -58,8 +58,10 @@ returns 409. A delayed retry after reclose to a newer round returns
 The old `POST .../fiscal-years/{id}/reopen` now explicitly **rejects**
 status-only reopening when the year is Closed and has a P&L closing
 journal. The generic `POST .../journal/{id}/reverse` now refuses
-all P&L closing system journals. Other normal fiscal years and
-normal reversal endpoints keep their existing behavior.
+both P&L closing system journals **and their compensating year-end
+reversal journals**, preventing a second standalone reversal from
+corrupting fiscal results. Other normal journal reversals retain
+their existing behavior.
 
 ### POST /api/v1/accounting/fiscal-years/{fiscalYearId}/close-profit-loss
 
