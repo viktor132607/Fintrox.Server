@@ -126,25 +126,37 @@ public sealed partial class FinancialHttpPostgresRegressionTests
     {
         using var client = Client(userA, organizationA);
         var bank = await CreateTestBankAccountAsync(client);
-        using (var positive = await client.PostAsJsonAsync(
+        // A bank account cannot have two overlapping March statements.
+        // Import one statement with both a positive and negative movement,
+        // then independently test fee-sign validation and reason replay.
+        using var importedResponse = await client.PostAsJsonAsync(
             $"/api/v1/banking/accounts/{bank.Id}/statements",
-            Statement("POSITIVE-NOT-FEE", 8m)))
-        {
-            Assert.AreEqual(HttpStatusCode.Created, positive.StatusCode);
-            var imported = await positive.Content
-                .ReadFromJsonAsync<BankStatementImportResponse>();
-            Assert.IsNotNull(imported);
-            var lineId = await BankLineIdAsync(imported.Id);
-            using var rejected = await client.PostAsJsonAsync(
-                FeeUrl(imported.Id, lineId),
-                new PostBankFeeRequest(expenseA, -8m,
-                    "Bank fee with wrong sign"));
+            new ImportBankStatementRequest(
+                "POSITIVE-AND-NEGATIVE-FEE", new DateOnly(2026, 3, 1),
+                new DateOnly(2026, 3, 31), 0m, 4m,
+                [
+                    new BankStatementLineImportRequest(
+                        "POS-NOT-FEE", PostingDate, 8m, "Incoming amount"),
+                    new BankStatementLineImportRequest(
+                        "FEE-REASON-REPLAY", PostingDate, -4m, "Bank fee")
+                ]));
+        Assert.AreEqual(HttpStatusCode.Created, importedResponse.StatusCode);
+        var statement = await importedResponse.Content
+            .ReadFromJsonAsync<BankStatementImportResponse>();
+        Assert.IsNotNull(statement);
+        using var detailsResponse = await client.GetAsync(
+            $"/api/v1/banking/statements/{statement.Id}");
+        var details = await detailsResponse.Content
+            .ReadFromJsonAsync<BankStatementResponse>();
+        Assert.IsNotNull(details);
+        var positiveLine = details.Lines.Single(x => x.SignedAmount == 8m).Id;
+        using (var rejected = await client.PostAsJsonAsync(
+            FeeUrl(statement.Id, positiveLine),
+            new PostBankFeeRequest(expenseA, -8m,
+                "Bank fee with wrong sign")))
             Assert.AreEqual(HttpStatusCode.Conflict, rejected.StatusCode);
-        }
 
-        var statement = await ImportBankFeeStatementAsync(
-            client, bank.Id, "FEE-REASON-REPLAY", -4m);
-        var line = await BankLineIdAsync(statement.Id);
+        var line = details.Lines.Single(x => x.SignedAmount == -4m).Id;
         var url = FeeUrl(statement.Id, line);
         using (var original = await client.PostAsJsonAsync(
             url, new PostBankFeeRequest(
