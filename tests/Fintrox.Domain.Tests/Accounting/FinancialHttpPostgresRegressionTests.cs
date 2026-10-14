@@ -648,7 +648,7 @@ public sealed partial class FinancialHttpPostgresRegressionTests
                 attempts.Select(x => x.Content.ReadFromJsonAsync<JournalEntryResponse>()));
             Assert.IsNotNull(posted[0]);
             Assert.IsNotNull(posted[1]);
-            Assert.AreEqual(posted[0].Id, posted[1].Id);
+            Assert.AreEqual(posted[0]!.Id, posted[1]!.Id);
         }
         finally
         {
@@ -1184,8 +1184,8 @@ public sealed partial class FinancialHttpPostgresRegressionTests
                 x.Content.ReadFromJsonAsync<ProfitLossCloseResponse>()));
             Assert.IsNotNull(results[0]);
             Assert.IsNotNull(results[1]);
-            Assert.AreEqual(results[0].JournalEntryId, results[1].JournalEntryId);
-            Assert.AreEqual(1, results.Count(x => x.AlreadyClosed));
+            Assert.AreEqual(results[0]!.JournalEntryId, results[1]!.JournalEntryId);
+            Assert.AreEqual(1, results.Count(x => x!.AlreadyClosed));
         }
         finally
         {
