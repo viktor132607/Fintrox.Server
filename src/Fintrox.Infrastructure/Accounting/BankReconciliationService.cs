@@ -132,7 +132,11 @@ public sealed partial class BankReconciliationService(
             var sql = """
                 SELECT EXISTS (
                     SELECT 1 FROM core.organizations
-                    WHERE id=@org AND is_active=true AND base_currency_code=@currency),
+                    WHERE id=@org AND is_active=true AND
+                      (base_currency_code=@currency OR EXISTS (
+                        SELECT 1 FROM core.currencies c
+                        WHERE c.organization_id=@org AND c.code=@currency
+                          AND c.is_active=true))),
                     EXISTS (
                     SELECT 1 FROM accounting.accounts
                     WHERE id=@account AND organization_id=@org
@@ -145,7 +149,7 @@ public sealed partial class BankReconciliationService(
                 if (!await reader.ReadAsync(cancellationToken) ||
                     !reader.GetBoolean(0) || !reader.GetBoolean(1))
                     throw new BankReconciliationConflictException(
-                        "Bank account currency must equal active organization's base currency, and ledger account must be an active analytical asset in that organization.");
+                        "Bank currency must be the tenant base or an active configured foreign currency, with a dedicated active analytical Asset GL account.");
             }
 
             var id = Guid.NewGuid();
