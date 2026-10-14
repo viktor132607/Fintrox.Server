@@ -32,6 +32,10 @@ public interface IBankReconciliationService
         CorrectBankPostingRequest request,
         CancellationToken cancellationToken);
 
+    Task<ForeignBankRevaluationAmendmentResponse?> AmendForeignBankRevaluationAsync(
+        Guid statementId, AmendForeignBankRevaluationRequest request,
+        CancellationToken cancellationToken);
+
     Task<ForeignBankCloseEvidenceResponse?> GetForeignCloseEvidenceAsync(
         Guid statementId, CancellationToken cancellationToken);
 
