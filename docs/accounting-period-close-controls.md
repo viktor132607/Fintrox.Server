@@ -60,7 +60,7 @@ an unknown matching period, or 409 for a failed business gate.
 
 ## Added real HTTP + migrated PostgreSQL tests (not yet verified)
 
-Six regressions added to the existing `FinancialHttpPostgresRegressionTests` fixture:
+Eight regressions added to the existing `FinancialHttpPostgresRegressionTests` fixture:
 
 1. Reject close when a Draft exists, then allow close after posting;
    a new draft cannot be created once Closed.
@@ -74,6 +74,10 @@ Six regressions added to the existing `FinancialHttpPostgresRegressionTests` fix
 5. Reject cross-tenant period-close requests.
 6. PostgreSQL lock contention: a second transaction holding a
    fiscal-year `FOR SHARE` row lock blocks period Close until released.
+7. Existing draft header/add-line/update-line/delete-line mutations are all
+   rejected after out-of-band legacy closing of their period.
+8. Final year close detects unresolved drafts even if a legacy period has
+   already been marked Closed outside the new period-close API.
 
 ## Important unimplemented financial closing obligations
 
