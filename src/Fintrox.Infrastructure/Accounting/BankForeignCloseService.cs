@@ -1,0 +1,485 @@
+using System.Data;
+using System.Globalization;
+using System.Security.Cryptography;
+using System.Text;
+using Fintrox.Contracts.Accounting;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using Npgsql;
+
+namespace Fintrox.Infrastructure.Accounting;
+
+/// <summary>
+/// Read-only native/base GL valuation bridge and immutable two-person
+/// internal reconciliation approval. Approval never changes booked journals.
+/// </summary>
+public sealed partial class BankReconciliationService
+{
+    private sealed record ForeignCloseSnapshot(
+        ForeignBankCloseEvidenceResponse Report, string Fingerprint);
+
+    public async Task<ForeignBankCloseEvidenceResponse?> GetForeignCloseEvidenceAsync(
+        Guid statementId, CancellationToken cancellationToken)
+    {
+        var tenant = organization.RequireOrganizationId();
+        return await db.Database.CreateExecutionStrategy().ExecuteAsync(async () =>
+        {
+            await using var tx = await db.Database.BeginTransactionAsync(
+                IsolationLevel.RepeatableRead, cancellationToken);
+            var cn = (NpgsqlConnection)db.Database.GetDbConnection();
+            var snapshot = await ReadForeignCloseAsync(
+                cn, tx, tenant, statementId, cancellationToken);
+            await tx.CommitAsync(cancellationToken);
+            return snapshot?.Report;
+        });
+    }
+
+    public async Task<ForeignBankCloseDecisionResponse?> PrepareForeignCloseAsync(
+        Guid statementId, PrepareForeignBankCloseRequest request,
+        CancellationToken cancellationToken)
+    {
+        var tenant = organization.RequireOrganizationId();
+        var maker = currentUser.RequireUserId();
+        var note = request.ReviewNote?.Trim();
+        if (string.IsNullOrWhiteSpace(note) || note.Length is < 10 or > 500)
+            throw new BankReconciliationConflictException(
+                "A 10-500 character bank reconciliation review note is required.");
+
+        return await db.Database.CreateExecutionStrategy().ExecuteAsync(async () =>
+        {
+            await using var tx = await db.Database.BeginTransactionAsync(cancellationToken);
+            var cn = (NpgsqlConnection)db.Database.GetDbConnection();
+            var accountId = await LockBankAccountForCloseAsync(
+                cn, tx, tenant, statementId, cancellationToken);
+            if (accountId is null) return null;
+
+            await LockCloseCalendarAsync(tenant, statementId, cancellationToken);
+            var evidence = await ReadForeignCloseAsync(
+                cn, tx, tenant, statementId, cancellationToken);
+            if (evidence is null) return null;
+            if (!evidence.Report.InternallyReconciled)
+                throw new BankReconciliationConflictException(
+                    "Bank FX cutoff is not internally reconciled: " +
+                    string.Join(", ", evidence.Report.Issues));
+
+            Guid preparationId;
+            Guid preparedBy;
+            string previousHash;
+            await using (var previous = Command(cn, tx, """
+                SELECT id,prepared_by_user_id,evidence_sha256,review_note
+                FROM banking.bank_fx_close_preparations
+                WHERE organization_id=@org AND statement_id=@statement
+                """, ("org", tenant), ("statement", statementId)))
+            await using (var reader = await previous.ExecuteReaderAsync(cancellationToken))
+            {
+                if (await reader.ReadAsync(cancellationToken))
+                {
+                    preparationId = reader.GetGuid(0);
+                    preparedBy = reader.GetGuid(1);
+                    previousHash = reader.GetString(2);
+                    if (preparedBy != maker || previousHash != evidence.Fingerprint ||
+                        reader.GetString(3) != note)
+                        throw new BankReconciliationConflictException(
+                            "This bank cutoff is already prepared by a different maker or with different evidence.");
+                    return new ForeignBankCloseDecisionResponse(
+                        statementId, accountId.Value, preparationId,
+                        preparedBy, evidence.Report.ApprovedByUserId,
+                        previousHash, evidence.Report.Approved,
+                        AlreadyRecorded: true);
+                }
+            }
+
+            preparationId = Guid.NewGuid();
+            await using (var insert = Command(cn, tx, """
+                INSERT INTO banking.bank_fx_close_preparations (
+                    id,organization_id,statement_id,bank_account_id,cutoff_date,
+                    prepared_by_user_id,evidence_sha256,native_closing_balance,
+                    expected_ledger_base,review_note)
+                VALUES (@id,@org,@statement,@account,@cutoff,@maker,@hash,@native,@base,@note)
+                """, ("id", preparationId), ("org", tenant),
+                ("statement", statementId), ("account", accountId.Value),
+                ("cutoff", evidence.Report.CutoffDate), ("maker", maker),
+                ("hash", evidence.Fingerprint),
+                ("native", evidence.Report.NativeClosingBalance),
+                ("base", evidence.Report.ActualPostedLedgerBase),
+                ("note", note!)))
+                await insert.ExecuteNonQueryAsync(cancellationToken);
+
+            await tx.CommitAsync(cancellationToken);
+            return new ForeignBankCloseDecisionResponse(
+                statementId, accountId.Value, preparationId, maker,
+                null, evidence.Fingerprint, Approved: false,
+                AlreadyRecorded: false);
+        });
+    }
+
+    public async Task<ForeignBankCloseDecisionResponse?> ApproveForeignCloseAsync(
+        Guid statementId, ApproveForeignBankCloseRequest request,
+        CancellationToken cancellationToken)
+    {
+        var tenant = organization.RequireOrganizationId();
+        var checker = currentUser.RequireUserId();
+        var note = request.ApprovalNote?.Trim();
+        if (string.IsNullOrWhiteSpace(note) || note.Length is < 10 or > 500)
+            throw new BankReconciliationConflictException(
+                "A 10-500 character independent approval note is required.");
+
+        return await db.Database.CreateExecutionStrategy().ExecuteAsync(async () =>
+        {
+            await using var tx = await db.Database.BeginTransactionAsync(cancellationToken);
+            var cn = (NpgsqlConnection)db.Database.GetDbConnection();
+            var accountId = await LockBankAccountForCloseAsync(
+                cn, tx, tenant, statementId, cancellationToken);
+            if (accountId is null) return null;
+
+            await LockCloseCalendarAsync(tenant, statementId, cancellationToken);
+            var evidence = await ReadForeignCloseAsync(
+                cn, tx, tenant, statementId, cancellationToken);
+            if (evidence is null) return null;
+            if (!evidence.Report.InternallyReconciled)
+                throw new BankReconciliationConflictException(
+                    "Bank FX evidence has become unbalanced; approval refused.");
+
+            Guid preparationId;
+            Guid maker;
+            string preparedHash;
+            await using (var previous = Command(cn, tx, """
+                SELECT id,prepared_by_user_id,evidence_sha256
+                FROM banking.bank_fx_close_preparations
+                WHERE organization_id=@org AND statement_id=@statement
+                """, ("org", tenant), ("statement", statementId)))
+            await using (var reader = await previous.ExecuteReaderAsync(cancellationToken))
+            {
+                if (!await reader.ReadAsync(cancellationToken))
+                    throw new BankReconciliationConflictException(
+                        "Another authenticated accountant must prepare the FX bank reconciliation first.");
+                preparationId = reader.GetGuid(0);
+                maker = reader.GetGuid(1);
+                preparedHash = reader.GetString(2);
+            }
+            if (maker == checker)
+                throw new BankReconciliationConflictException(
+                    "Maker/checker separation requires two different authenticated users.");
+            if (preparedHash != evidence.Fingerprint)
+                throw new BankReconciliationConflictException(
+                    "The bank/native/GL source evidence changed since the maker prepared this cutoff.");
+
+            await using (var oldApproval = Command(cn, tx, """
+                SELECT approved_by_user_id,evidence_sha256,approval_note
+                FROM banking.bank_fx_close_approvals
+                WHERE organization_id=@org AND preparation_id=@prep
+                """, ("org", tenant), ("prep", preparationId)))
+            await using (var reader = await oldApproval.ExecuteReaderAsync(cancellationToken))
+            {
+                if (await reader.ReadAsync(cancellationToken))
+                {
+                    if (reader.GetGuid(0) != checker ||
+                        reader.GetString(1) != evidence.Fingerprint ||
+                        reader.GetString(2) != note)
+                        throw new BankReconciliationConflictException(
+                            "This bank cutoff has already been independently approved.");
+                    return new ForeignBankCloseDecisionResponse(
+                        statementId, accountId.Value, preparationId, maker,
+                        checker, evidence.Fingerprint, Approved: true,
+                        AlreadyRecorded: true);
+                }
+            }
+
+            await using (var insert = Command(cn, tx, """
+                INSERT INTO banking.bank_fx_close_approvals
+                    (id,organization_id,preparation_id,approved_by_user_id,
+                     evidence_sha256,approval_note)
+                VALUES (@id,@org,@prep,@checker,@hash,@note)
+                """, ("id", Guid.NewGuid()), ("org", tenant),
+                ("prep", preparationId), ("checker", checker),
+                ("hash", evidence.Fingerprint), ("note", note!)))
+                await insert.ExecuteNonQueryAsync(cancellationToken);
+            await tx.CommitAsync(cancellationToken);
+
+            return new ForeignBankCloseDecisionResponse(
+                statementId, accountId.Value, preparationId, maker,
+                checker, evidence.Fingerprint, Approved: true,
+                AlreadyRecorded: false);
+        });
+    }
+
+    private async Task<Guid?> LockBankAccountForCloseAsync(
+        NpgsqlConnection cn, IDbContextTransaction tx, Guid tenant,
+        Guid statementId, CancellationToken ct)
+    {
+        Guid accountId;
+        await using (var statement = Command(cn, tx, """
+            SELECT bank_account_id FROM banking.bank_statements
+            WHERE id=@statement AND organization_id=@org
+            """, ("statement", statementId), ("org", tenant)))
+        {
+            if (await statement.ExecuteScalarAsync(ct) is not Guid id)
+                return null;
+            accountId = id;
+        }
+        await using (var account = Command(cn, tx, """
+            SELECT id FROM banking.bank_accounts
+            WHERE id=@account AND organization_id=@org FOR UPDATE
+            """, ("account", accountId), ("org", tenant)))
+            await account.ExecuteScalarAsync(ct);
+        return accountId;
+    }
+
+    private async Task LockCloseCalendarAsync(
+        Guid tenant, Guid statementId, CancellationToken ct)
+    {
+        // Lookup is tenant guarded and called after the bank-account lock.
+        var toDate = await (
+            from statement in db.Database.SqlQueryRaw<BankCloseDateProjection>(
+                "SELECT to_date AS \"ToDate\" FROM banking.bank_statements WHERE organization_id={0} AND id={1}",
+                tenant, statementId)
+            select statement.ToDate).SingleAsync(ct);
+        var period = await calendars.FindPeriodByDateAsync(
+            tenant, toDate, trackChanges: false, ct);
+        if (period is null || period.EndDate != toDate)
+            throw new BankReconciliationConflictException(
+                "FX bank closing requires an exact accounting period-end date.");
+        await journals.LockPostingCalendarAsync(
+            tenant, period.FiscalYearId, period.Id, ct);
+    }
+
+    private sealed record BankCloseDateProjection(DateOnly ToDate);
+
+    private async Task<ForeignCloseSnapshot?> ReadForeignCloseAsync(
+        NpgsqlConnection cn, IDbContextTransaction tx, Guid tenant,
+        Guid statementId, CancellationToken ct)
+    {
+        Guid account;
+        Guid bankGl;
+        DateOnly cutoff;
+        string currency, baseCurrency, statementHash;
+        decimal native;
+        Guid? rateId = null, valuationJournal = null;
+        decimal rate = 0m, target = 0m, previousGl = 0m, adjustment = 0m;
+        await using (var cmd = Command(cn, tx, """
+            SELECT a.id,a.gl_account_id,a.currency_code,o.base_currency_code,
+                s.to_date,s.closing_balance,s.payload_sha256,
+                rv.exchange_rate_id,rv.approved_rate,
+                rv.target_base_balance,rv.ledger_base_before,
+                rv.adjustment_base,rv.journal_entry_id
+            FROM banking.bank_statements s
+            JOIN banking.bank_accounts a
+              ON a.id=s.bank_account_id AND a.organization_id=s.organization_id
+            JOIN core.organizations o ON o.id=s.organization_id
+            LEFT JOIN banking.bank_fx_revaluations rv
+              ON rv.statement_id=s.id AND rv.organization_id=s.organization_id
+            WHERE s.id=@statement AND s.organization_id=@org
+            """, ("statement", statementId), ("org", tenant)))
+        await using (var reader = await cmd.ExecuteReaderAsync(ct))
+        {
+            if (!await reader.ReadAsync(ct)) return null;
+            account = reader.GetGuid(0);
+            bankGl = reader.GetGuid(1);
+            currency = reader.GetString(2);
+            baseCurrency = reader.GetString(3);
+            cutoff = reader.GetFieldValue<DateOnly>(4);
+            native = reader.GetDecimal(5);
+            statementHash = reader.GetString(6);
+            if (!reader.IsDBNull(7))
+            {
+                rateId = reader.GetGuid(7);
+                rate = reader.GetDecimal(8);
+                target = reader.GetDecimal(9);
+                previousGl = reader.GetDecimal(10);
+                adjustment = reader.GetDecimal(11);
+                valuationJournal = reader.IsDBNull(12) ? null : reader.GetGuid(12);
+            }
+        }
+
+        var issues = new List<string>();
+        if (currency == baseCurrency) issues.Add("BankNotForeignCurrency");
+        if (rateId is null || rate <= 0m) issues.Add("MissingFxCutoffRevaluation");
+        if (native < 0m) issues.Add("ForeignOverdraftRequiresLiabilityPolicy");
+        if (rateId is not null && decimal.Round(native / rate, 4,
+            MidpointRounding.AwayFromZero) != target)
+            issues.Add("CutoffRateTargetMismatch");
+
+        var chain = new List<(Guid Id, DateOnly Start, DateOnly End,
+            decimal Opening, decimal Closing, decimal LineTotal)>();
+        await using (var cmd = Command(cn, tx, """
+            SELECT s.id,s.from_date,s.to_date,
+                s.opening_balance,s.closing_balance,
+                COALESCE((
+                    SELECT SUM(l.signed_amount)
+                    FROM banking.bank_statement_lines l
+                    WHERE l.statement_id=s.id AND l.organization_id=s.organization_id
+                ),0)
+            FROM banking.bank_statements s
+            WHERE s.organization_id=@org AND s.bank_account_id=@account
+              AND s.from_date<=@cutoff
+            ORDER BY s.from_date,s.id
+            """, ("org", tenant), ("account", account), ("cutoff", cutoff)))
+        await using (var reader = await cmd.ExecuteReaderAsync(ct))
+        {
+            while (await reader.ReadAsync(ct))
+                chain.Add((reader.GetGuid(0), reader.GetFieldValue<DateOnly>(1),
+                    reader.GetFieldValue<DateOnly>(2), reader.GetDecimal(3),
+                    reader.GetDecimal(4), reader.GetDecimal(5)));
+        }
+        var chainValid = chain.Count > 0 && chain[^1].Id == statementId &&
+            chain[^1].End == cutoff && chain[0].Opening == 0m;
+        for (var i = 0; i < chain.Count; i++)
+        {
+            if (chain[i].Start > chain[i].End ||
+                chain[i].Opening + chain[i].LineTotal != chain[i].Closing ||
+                (i > 0 && (chain[i].Start != chain[i - 1].End.AddDays(1) ||
+                            chain[i].Opening != chain[i - 1].Closing)))
+                chainValid = false;
+        }
+        if (!chainValid) issues.Add("IncompleteNativeBankStatementChain");
+
+        long invalidLines;
+        await using (var cmd = Command(cn, tx, """
+            SELECT count(*)
+            FROM banking.bank_statement_lines l
+            JOIN banking.bank_statements s
+              ON s.id=l.statement_id AND s.organization_id=l.organization_id
+            LEFT JOIN banking.bank_fx_settlements fx
+              ON fx.statement_line_id=l.id AND fx.organization_id=l.organization_id
+            LEFT JOIN accounting.journal_entries e
+              ON e.id=fx.journal_entry_id AND e.organization_id=fx.organization_id
+            WHERE l.organization_id=@org AND s.bank_account_id=@account
+              AND s.to_date<=@cutoff
+              AND (l.matched_payment_id IS NOT NULL OR fx.id IS NULL
+                OR e.status IS DISTINCT FROM 'Posted'
+                OR e.source IS DISTINCT FROM 'System'
+                OR e.posting_date IS DISTINCT FROM l.value_date
+                OR e.external_reference IS DISTINCT FROM
+                    'bank-fx-settlement:v1:' || replace(l.id::text,'-','')
+                OR (SELECT count(*) FROM accounting.journal_lines j
+                    WHERE j.journal_entry_id=e.id AND j.organization_id=e.organization_id
+                      AND j.account_id=@ledger
+                      AND j.debit-j.credit = CASE WHEN l.signed_amount>0
+                          THEN fx.bank_base_amount ELSE -fx.bank_base_amount END)<>1
+                OR (SELECT COALESCE(SUM(j.debit-j.credit),0)
+                    FROM accounting.journal_lines j
+                    WHERE j.journal_entry_id=e.id AND j.organization_id=e.organization_id)<>0
+                OR EXISTS (SELECT 1 FROM banking.bank_fee_postings fee
+                    WHERE fee.statement_line_id=l.id AND fee.organization_id=l.organization_id))
+            """, ("org", tenant), ("account", account),
+            ("cutoff", cutoff), ("ledger", bankGl)))
+            invalidLines = Convert.ToInt64(await cmd.ExecuteScalarAsync(ct));
+        if (invalidLines != 0) issues.Add("UnpostedOrIncorrectNativeSettlement");
+
+        long unknownJournalLines;
+        await using (var cmd = Command(cn, tx, """
+            SELECT count(*) FROM accounting.journal_lines j
+            JOIN accounting.journal_entries e
+              ON e.id=j.journal_entry_id AND e.organization_id=j.organization_id
+            WHERE j.organization_id=@org AND j.account_id=@ledger
+              AND e.posting_date<=@cutoff
+              AND e.status IN ('Posted','Reversed')
+              AND (e.status<>'Posted' OR
+                (NOT EXISTS (
+                    SELECT 1 FROM banking.bank_fx_settlements fx
+                    JOIN banking.bank_statement_lines l
+                      ON l.id=fx.statement_line_id AND l.organization_id=fx.organization_id
+                    JOIN banking.bank_statements s
+                      ON s.id=l.statement_id AND s.organization_id=l.organization_id
+                    WHERE fx.organization_id=@org AND fx.journal_entry_id=e.id
+                      AND s.bank_account_id=@account
+                 ) AND NOT EXISTS (
+                    SELECT 1 FROM banking.bank_fx_revaluations rv
+                    WHERE rv.organization_id=@org
+                      AND rv.journal_entry_id=e.id AND rv.bank_account_id=@account
+                 )))
+            """, ("org", tenant), ("ledger", bankGl),
+            ("cutoff", cutoff), ("account", account)))
+            unknownJournalLines = Convert.ToInt64(await cmd.ExecuteScalarAsync(ct));
+        if (unknownJournalLines != 0) issues.Add("UnknownOrReversedBankGlEntry");
+
+        decimal actualGl;
+        await using (var cmd = Command(cn, tx, """
+            SELECT COALESCE(SUM(j.debit-j.credit),0)
+            FROM accounting.journal_lines j
+            JOIN accounting.journal_entries e
+              ON e.id=j.journal_entry_id AND e.organization_id=j.organization_id
+            WHERE j.organization_id=@org AND j.account_id=@ledger
+              AND e.posting_date<=@cutoff
+              AND e.status IN ('Posted','Reversed')
+            """, ("org", tenant), ("ledger", bankGl), ("cutoff", cutoff)))
+            actualGl = (decimal)(await cmd.ExecuteScalarAsync(ct))!;
+
+        bool validValuation = rateId is not null &&
+            previousGl + adjustment == target;
+        if (validValuation && valuationJournal.HasValue)
+        {
+            await using var cmd = Command(cn, tx, """
+                SELECT count(*)=1 FROM accounting.journal_entries e
+                WHERE e.id=@journal AND e.organization_id=@org
+                  AND e.status='Posted' AND e.source='System'
+                  AND e.posting_date=@cutoff
+                  AND e.external_reference=@ref
+                  AND (SELECT count(*) FROM accounting.journal_lines j
+                       WHERE j.journal_entry_id=e.id AND j.organization_id=e.organization_id)=2
+                  AND (SELECT SUM(j.debit-j.credit) FROM accounting.journal_lines j
+                       WHERE j.journal_entry_id=e.id AND j.organization_id=e.organization_id)=0
+                  AND (SELECT count(*) FROM accounting.journal_lines j
+                       WHERE j.journal_entry_id=e.id AND j.organization_id=e.organization_id
+                         AND j.account_id=@ledger AND j.debit-j.credit=@adjustment)=1
+                """, ("journal", valuationJournal.Value), ("org", tenant),
+                ("cutoff", cutoff),
+                ("ref", $"bank-fx-revaluation:v1:{account:N}:{cutoff:yyyyMMdd}"),
+                ("ledger", bankGl), ("adjustment", adjustment));
+            validValuation = (bool)(await cmd.ExecuteScalarAsync(ct))!;
+        }
+        else if (validValuation)
+            validValuation = adjustment == 0m;
+        if (!validValuation) issues.Add("MissingOrIncorrectRevaluationJournal");
+        if (actualGl != target || rateId is null)
+            issues.Add("ForeignNativeVsPostedBaseGlDifference");
+
+        Guid? maker = null, checker = null;
+        string? preparedHash = null, approvedHash = null;
+        await using (var cmd = Command(cn, tx, """
+            SELECT p.prepared_by_user_id,p.evidence_sha256,
+                   a.approved_by_user_id,a.evidence_sha256
+            FROM banking.bank_fx_close_preparations p
+            LEFT JOIN banking.bank_fx_close_approvals a
+              ON a.preparation_id=p.id AND a.organization_id=p.organization_id
+            WHERE p.organization_id=@org AND p.statement_id=@statement
+            """, ("org", tenant), ("statement", statementId)))
+        await using (var reader = await cmd.ExecuteReaderAsync(ct))
+        {
+            if (await reader.ReadAsync(ct))
+            {
+                maker = reader.GetGuid(0);
+                preparedHash = reader.GetString(1);
+                if (!reader.IsDBNull(2))
+                {
+                    checker = reader.GetGuid(2);
+                    approvedHash = reader.GetString(3);
+                }
+            }
+        }
+
+        // Fingerprint is over original immutable statement + revaluation IDs
+        // and all critical results. A new GL posting changes the fingerprint.
+        var canonical = FormattableString.Invariant(
+            $"{tenant:N}|{statementId:N}|{account:N}|{cutoff:yyyyMMdd}|" +
+            $"{statementHash}|{rateId}|{rate:G29}|{native:G29}|" +
+            $"{target:G29}|{previousGl:G29}|{adjustment:G29}|" +
+            $"{valuationJournal}|{actualGl:G29}|{invalidLines}|" +
+            $"{unknownJournalLines}|{chain.Count}|" +
+            $"{string.Join(",", issues.OrderBy(x => x, StringComparer.Ordinal))}");
+        var hash = Convert.ToHexString(
+            SHA256.HashData(Encoding.UTF8.GetBytes(canonical))).ToLowerInvariant();
+        var prepared = maker.HasValue && preparedHash == hash;
+        var approved = prepared && checker.HasValue &&
+            checker.Value != maker!.Value && approvedHash == hash;
+        if (maker.HasValue && !prepared) issues.Add("EvidenceChangedAfterPreparation");
+
+        var report = new ForeignBankCloseEvidenceResponse(
+            statementId, account, cutoff, currency, native, rate, target,
+            actualGl, actualGl - target, chainValid, invalidLines == 0,
+            validValuation, unknownJournalLines == 0,
+            issues.Count == 0, prepared, approved,
+            maker, checker, issues);
+        return new ForeignCloseSnapshot(report, hash);
+    }
+}
