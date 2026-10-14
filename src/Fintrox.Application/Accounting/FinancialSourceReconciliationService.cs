@@ -183,7 +183,7 @@ public sealed class FinancialSourceReconciliationService(
                             "Accounts receivable -", StringComparison.Ordinal) == true,
                         "PurchaseDocument" => line.Description?.StartsWith(
                             "Accounts payable -", StringComparison.Ordinal) == true,
-                        "Payment" => source.Direction is "Incoming" or "Outgoing" &&
+                        "Payment" => (source.Direction is "Incoming" or "Outgoing") &&
                             line.Description?.StartsWith(source.Direction + " ",
                                 StringComparison.Ordinal) == true,
                         _ => false
