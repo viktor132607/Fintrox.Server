@@ -51,8 +51,8 @@ public sealed record BankStatementResponse(
 public sealed record PostBankFeeRequest(
     Guid ExpenseAccountId,
     decimal ExpectedSignedAmount,
-    [property: System.ComponentModel.DataAnnotations.Required]
-    [property: System.ComponentModel.DataAnnotations.StringLength(250, MinimumLength = 10)]
+    [param: System.ComponentModel.DataAnnotations.Required]
+    [param: System.ComponentModel.DataAnnotations.StringLength(250, MinimumLength = 10)]
     string Reason);
 
 public sealed record BankFeePostingResponse(
