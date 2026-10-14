@@ -35,12 +35,15 @@ public sealed class FinancialSourceReconciliationService(
                 organizationId, year.StartDate, year.EndDate, ct);
             var journals = await repository.ListSourceJournalsAsync(
                 organizationId, year.StartDate, year.EndDate, ct);
-            var reversalIds = journals
+            var reversedJournalIds = journals
                 .Where(journal => journal.ReversedByJournalEntryId.HasValue)
-                .Select(journal => journal.ReversedByJournalEntryId!.Value)
+                .Select(journal => journal.Id)
                 .Distinct().ToArray();
-            var postedReversalIds = await repository.GetPostedReversalIdsAsync(
-                organizationId, reversalIds, ct);
+            var postedReversals = await repository.GetPostedReversalsAsync(
+                organizationId, reversedJournalIds, ct);
+            var reversalsByOriginal = postedReversals
+                .GroupBy(reversal => reversal.ReversalOfJournalEntryId)
+                .ToDictionary(group => group.Key, group => group.ToArray());
             var allocations = await repository.ListPaymentAllocationsAsync(
                 organizationId, year.StartDate, year.EndDate, ct);
             var allocationsByPayment = allocations.GroupBy(row => row.PaymentId)
@@ -136,12 +139,22 @@ public sealed class FinancialSourceReconciliationService(
                         "Source lifecycle does not match the original journal status.");
                 }
 
-                if (isCancelled &&
-                    (journal.ReversedByJournalEntryId is not Guid reversalId ||
-                     !postedReversalIds.Contains(reversalId)))
+                if (isCancelled)
                 {
-                    AddIssue("MissingReversal",
-                        "Cancelled financial source requires a linked posted reversing journal.");
+                    if (journal.ReversedByJournalEntryId is not Guid reversalId ||
+                        !reversalsByOriginal.TryGetValue(journal.Id, out var reversals) ||
+                        reversals.Length != 1 || reversals[0].Id != reversalId)
+                    {
+                        AddIssue("MissingReversal",
+                            "Cancelled financial source requires a linked posted reversing journal.",
+                            journal.Id);
+                    }
+                    else if (!IsExactReversal(journal.Lines, reversals[0].Lines))
+                    {
+                        AddIssue("ReversalLineMismatch",
+                            "The posted reversal does not offset every original GL account and journal line.",
+                            journal.Id);
+                    }
                 }
 
                 if (journal.Lines.Count < 2 ||
@@ -219,6 +232,26 @@ public sealed class FinancialSourceReconciliationService(
                     .ThenBy(issue => issue.SourceId)
                     .ThenBy(issue => issue.Code).ToArray());
         }, cancellationToken);
+    }
+
+    private static bool IsExactReversal(
+        IReadOnlyList<FinancialSourceJournalLineSnapshot> original,
+        IReadOnlyList<FinancialSourceJournalLineSnapshot> compensation)
+    {
+        if (original.Count == 0 || original.Count != compensation.Count)
+            return false;
+
+        var a = original.OrderBy(line => line.LineNumber).ToArray();
+        var b = compensation.OrderBy(line => line.LineNumber).ToArray();
+        for (var i = 0; i < a.Length; i++)
+        {
+            if (a[i].LineNumber != b[i].LineNumber ||
+                a[i].AccountId != b[i].AccountId ||
+                a[i].Debit != b[i].Credit ||
+                a[i].Credit != b[i].Debit)
+                return false;
+        }
+        return true;
     }
 
     private static string Reference(FinancialSourcePostingSnapshot source)
