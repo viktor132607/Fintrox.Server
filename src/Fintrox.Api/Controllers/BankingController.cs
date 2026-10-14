@@ -68,6 +68,49 @@ public sealed class BankingController(IBankReconciliationService service)
         }
     }
 
+    [HttpPost("accounts/{accountId:guid}/statements/import-csv")]
+    [Authorize(Policy = Permissions.AccountingWrite)]
+    [Authorize(Policy = Permissions.AccountingPost)]
+    public async Task<ActionResult<BankStatementImportResponse>> ImportCsv(
+        Guid accountId, ImportCsvBankStatementRequest request,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var result = await service.ImportCsvStatementAsync(
+                accountId, request, cancellationToken);
+            if (result is null) return NotFound();
+            return StatusCode(result.AlreadyImported
+                ? StatusCodes.Status200OK : StatusCodes.Status201Created, result);
+        }
+        catch (BankReconciliationConflictException ex)
+        {
+            return Conflict(Problem(StatusCodes.Status409Conflict,
+                "Bank CSV import conflict", ex.Message));
+        }
+    }
+
+    [HttpGet("statements/{statementId:guid}/match-suggestions")]
+    [Authorize(Policy = Permissions.AccountingRead)]
+    public async Task<ActionResult<BankMatchSuggestionsResponse>> MatchSuggestions(
+        Guid statementId, CancellationToken cancellationToken)
+    {
+        var result = await service.GetMatchSuggestionsAsync(
+            statementId, cancellationToken);
+        return result is null ? NotFound() : Ok(result);
+    }
+
+    [HttpPost("statements/{statementId:guid}/auto-match")]
+    [Authorize(Policy = Permissions.AccountingWrite)]
+    [Authorize(Policy = Permissions.AccountingPost)]
+    public async Task<ActionResult<AutoMatchBankStatementResponse>> AutoMatch(
+        Guid statementId, CancellationToken cancellationToken)
+    {
+        var result = await service.AutoMatchAsync(
+            statementId, cancellationToken);
+        return result is null ? NotFound() : Ok(result);
+    }
+
     [HttpPost("statements/{statementId:guid}/lines/{lineId:guid}/match")]
     [Authorize(Policy = Permissions.AccountingWrite)]
     [Authorize(Policy = Permissions.AccountingPost)]
