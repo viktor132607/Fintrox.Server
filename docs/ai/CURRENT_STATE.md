@@ -19,4 +19,4 @@
 
 - 2026-10-14: ACCOUNTING-001B opening balance import implemented in operational legacy GL; per-year idempotent balanced posted journal, fiscal year lock and 8 migrated PostgreSQL HTTP tests added. CI verification pending. Module EF/API migrations, AP/AR subledgers, FX and comprehensive period closing remain pending. See docs/accounting-opening-balances.md.
 
-- 2026-10-14: ACCOUNTING-001C transactional period/year close and reopen gates implemented in legacy runtime (year/period row locks, reject draft/misdated journals, guarded draft edits, tighter permissions); 8 migrated PostgreSQL HTTP cases added. Unverified CI. Statutory P&L close, reconciliation and new Accounting module persistence pending. See docs/accounting-period-close-controls.md.
+- 2026-10-14: ACCOUNTING-001C transactional period/year close and reopen gates implemented in legacy runtime (year/period row locks, reject draft/misdated journals, guarded draft edits, tighter permissions and guarded year/period edits); 10 migrated PostgreSQL HTTP cases added. Unverified CI. Statutory P&L close, reconciliation and new Accounting module persistence pending. See docs/accounting-period-close-controls.md.
