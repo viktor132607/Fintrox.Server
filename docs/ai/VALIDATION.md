@@ -1,5 +1,11 @@
 # Validation history — 2026-10-14
 
+## ACCOUNTING-001F4B — bank fee GL posting (CODED; BUILD/CI UNVERIFIED)
+- New PostgreSQL migration `20261014000200_BankFeePosting` creates immutable tenant-scoped fee-to-statement-line/GL journal link with composite foreign keys and uniqueness.
+- Authorized `POST /api/v1/banking/statements/{statementId}/lines/{lineId}/post-fee`: exact negative bank amount, reason and active tenant analytical Expense account. Under bank/line locks and fiscal-year/period posting locks, atomic numbered System journal posts DR Expense / CR bank Asset and links fee evidence. Replays return same journal; changed details and closed periods conflict.
+- Generic reversal of bank-fee journal is blocked; manual payment matching and auto-suggestions exclude fee lines. Statement detail includes fee journal ID and reconciliation validates posted fee bank credit separately from matched payments.
+- **6 new full HTTP/migrated PostgreSQL regression methods written, NOT EXECUTED.** No validated .NET build, CI or migrated database run. Bank FX, VAT policy, controlled corrections and signed approvals PENDING. See [fee spec](../accounting-bank-fee-posting.md).
+
 ## ACCOUNTING-001F4A / bounded CSV import and unambiguous auto-match
 - **CODE AUTHORED IN MAIN; BUILD, GITHUB CI AND MIGRATED POSTGRESQL INTEGRATION SUITE NOT EXECUTED / UNVERIFIED.**
 - `BankStatementCsvParser` handles normalized four-column UTF-8 BOM/CRLF/RFC4180-quoted CSV, ISO yyyy-MM-dd dates, dot-decimal signed amounts, 1-MiB and 10k-row bounds; delegates to F3 transactional/import SHA256 idempotency/statement arithmetic.
