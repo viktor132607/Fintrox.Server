@@ -96,6 +96,26 @@ public sealed partial class FinancialHttpPostgresRegressionTests
     }
 
     [TestMethod]
+    public async Task SourceReconciliationFlagsAllocationSummaryWithoutAllocationRows()
+    {
+        var paymentId = await SeedPaymentAsync(
+            organizationA, confirmed: true, allocatedAmount: 25m);
+        await SeedSourceJournalAsync(
+            organizationA, $"payment:{paymentId:N}", 100m);
+        var fiscal = await MarchCalendarAsync(organizationA);
+        using var client = Client(userA, organizationA);
+        using var response = await client.GetAsync(
+            $"/api/v1/accounting/fiscal-years/{fiscal.YearId}/source-reconciliation");
+        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        var report = await response.Content
+            .ReadFromJsonAsync<FinancialSourceReconciliationResponse>();
+        Assert.IsNotNull(report);
+        Assert.IsTrue(report.Issues.Any(i =>
+            i.SourceType == "Payment" && i.Code == "PaymentAllocationMismatch"));
+        Assert.IsFalse(report.PaymentsPostingIntegrityVerified);
+    }
+
+    [TestMethod]
     public async Task SourceReconciliationDetectsOrphanSystemPaymentJournal()
     {
         await SeedSourceJournalAsync(
@@ -148,7 +168,8 @@ public sealed partial class FinancialHttpPostgresRegressionTests
         Assert.AreEqual(HttpStatusCode.Unauthorized, rejected.StatusCode);
     }
 
-    private async Task<Guid> SeedPaymentAsync(Guid organizationId, bool confirmed)
+    private async Task<Guid> SeedPaymentAsync(
+        Guid organizationId, bool confirmed, decimal allocatedAmount = 0m)
     {
         await using var db = CreateDb();
         var now = DateTimeOffset.UtcNow;
@@ -165,6 +186,8 @@ public sealed partial class FinancialHttpPostgresRegressionTests
             party.Id, PostingDate, PaymentMethod.BankTransfer,
             currency.Id, "EUR", 100m, party.Name,
             null, null, null, null, now);
+        if (allocatedAmount > 0m)
+            payment.SetAllocatedAmount(allocatedAmount, now);
         if (confirmed)
         {
             payment.Confirm(
