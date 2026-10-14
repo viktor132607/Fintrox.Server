@@ -146,7 +146,8 @@ public sealed class FiscalYearsController(
         try
         {
             var result = await profitLoss.ReopenForCorrectionAsync(
-                fiscalYearId, request.Reason, cancellationToken);
+                fiscalYearId, request.ExpectedClosingJournalEntryId,
+                request.Reason, cancellationToken);
             return result is null ? NotFound() : Ok(result);
         }
         catch (FiscalCalendarConflictException exception)
