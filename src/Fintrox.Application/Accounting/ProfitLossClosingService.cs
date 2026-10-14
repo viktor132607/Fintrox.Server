@@ -55,9 +55,21 @@ public sealed class ProfitLossClosingService(
 
                 var previousLines = await journals.ListLinesAsync(
                     organizationId, existing.Id, ct);
-                var previousTransfer = previousLines
-                    .Where(line => line.AccountId == retainedEarningsAccountId)
-                    .ToArray();
+                var previousAccounts = await accounts.ListByIdsAsync(
+                    organizationId, previousLines.Select(line => line.AccountId)
+                        .Distinct().ToArray(), ct);
+                var equityLines = previousLines.Where(line =>
+                    previousAccounts.TryGetValue(line.AccountId, out var account) &&
+                    account.Type == AccountType.Equity).ToArray();
+
+                if (equityLines.Length > 0 &&
+                    equityLines.Any(line => line.AccountId != retainedEarningsAccountId))
+                {
+                    throw new FiscalCalendarConflictException(
+                        "The fiscal year was already closed to a different equity account. Repeated requests must use the original destination.");
+                }
+
+                var previousTransfer = equityLines;
 
                 if (previousTransfer.Length > 1)
                 {
