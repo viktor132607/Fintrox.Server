@@ -322,8 +322,10 @@ public sealed partial class BankReconciliationService(
             bool alreadyFeePosted;
             // Account row lock is the global order with statement import.
             await using (var lookup = Command(cn, tx, """
-                SELECT a.id,a.gl_account_id,a.currency_code,s.to_date
+                SELECT a.id,a.gl_account_id,a.currency_code,s.to_date,
+                    a.currency_code=o.base_currency_code AS is_base
                 FROM banking.bank_statements s
+                JOIN core.organizations o ON o.id=s.organization_id
                 JOIN banking.bank_accounts a
                   ON a.id=s.bank_account_id AND a.organization_id=s.organization_id
                 WHERE s.id=@statement AND s.organization_id=@org
@@ -335,6 +337,9 @@ public sealed partial class BankReconciliationService(
                 glAccountId = reader.GetGuid(1);
                 currency = reader.GetString(2);
                 statementEnd = reader.GetFieldValue<DateOnly>(3);
+                if (!reader.GetBoolean(4))
+                    throw new BankReconciliationConflictException(
+                        "Normal payment matching requires the bank account's base currency. Use explicit FX settlement instead.");
             }
             await using (var bankLock = Command(cn, tx, """
                 SELECT id FROM banking.bank_accounts WHERE id=@id
@@ -365,6 +370,13 @@ public sealed partial class BankReconciliationService(
                 throw new BankReconciliationConflictException(
                     "A bank line already posted as an expense cannot match a payment.");
             }
+            await using (var fx = Command(cn, tx, """
+                SELECT EXISTS (SELECT 1 FROM banking.bank_fx_settlements
+                    WHERE organization_id=@org AND statement_line_id=@line)
+                """, ("org", tenant), ("line", lineId)))
+                if ((bool)(await fx.ExecuteScalarAsync(cancellationToken))!)
+                    throw new BankReconciliationConflictException(
+                        "A foreign-settled bank line cannot be matched to a second payment.");
             if (matchedId.HasValue)
             {
                 if (matchedId.Value != paymentId)
