@@ -41,3 +41,10 @@ public sealed record FinancialControlLedgerSnapshot(
     Guid AccountId,
     decimal Debit,
     decimal Credit);
+
+public sealed record FinancialPaymentHeaderSnapshot(
+    Guid Id,
+    string Status,
+    string Direction,
+    decimal AllocatedAmount,
+    decimal GrossAmount);
