@@ -25,9 +25,9 @@ public sealed partial class BankReconciliationService
         if (statementId == Guid.Empty || statementLineId == Guid.Empty ||
             request.OriginalJournalEntryId == Guid.Empty ||
             sourceKind is not ("BankFee" or "ForeignSettlement") ||
-            string.IsNullOrWhiteSpace(reason) || reason.Length is < 10 or > 500)
+            string.IsNullOrWhiteSpace(reason) || reason.Length is < 10 or > 400)
             throw new BankReconciliationConflictException(
-                "Correction requires an original posted bank source journal, BankFee/ForeignSettlement kind and a 10–500 character reason.");
+                "Correction requires an original posted bank source journal, BankFee/ForeignSettlement kind and a 10–400 character reason.");
 
         return await db.Database.CreateExecutionStrategy().ExecuteAsync(async () =>
         {
