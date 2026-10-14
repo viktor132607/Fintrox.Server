@@ -57,3 +57,7 @@ services or endpoints are claimed. Full Accounting migration and remaining
 opening-balance/closing/accrual features are still pending. See
 [posting concurrency](../../../docs/accounting-posting-concurrency.md) and
 [validation](../../../docs/ai/VALIDATION.md).
+
+## 2026-10-14 — ACCOUNTING-001B, initial general-ledger balances
+
+The active **legacy** GL now implements `POST /api/v1/accounting/opening-balances/import` (both `accounting.write` and `accounting.post`). It creates a single balanced, atomic fiscal-year starting journal, validates active balance-sheet accounts, locks the year against concurrent posting, and uses a unique system external reference to return the original journal for identical retries. Eight migrated PostgreSQL HTTP tests were added. **CI/build/tests unverified**. The 35 new Accounting module Domain entities are still **not** connected to EF persistence, services or endpoints. Detailed limitations and next work: [opening balance specification](../../../docs/accounting-opening-balances.md).
