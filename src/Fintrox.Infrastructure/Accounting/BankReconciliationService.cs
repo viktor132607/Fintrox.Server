@@ -87,12 +87,16 @@ public sealed partial class BankReconciliationService(
             var lines = new List<BankStatementLineResponse>();
             await using (var cmd = Command(cn, tx, """
                 SELECT l.id,l.external_id,l.value_date,l.signed_amount,l.description,
-                    l.matched_payment_id,f.journal_entry_id,fx.journal_entry_id
+                    l.matched_payment_id,f.journal_entry_id,fx.journal_entry_id,
+                    correction.reversal_journal_id
                 FROM banking.bank_statement_lines l
                 LEFT JOIN banking.bank_fee_postings f
                   ON f.statement_line_id=l.id AND f.organization_id=l.organization_id
                 LEFT JOIN banking.bank_fx_settlements fx
                   ON fx.statement_line_id=l.id AND fx.organization_id=l.organization_id
+                LEFT JOIN banking.bank_posting_corrections correction
+                  ON correction.statement_line_id=l.id
+                 AND correction.organization_id=l.organization_id
                 WHERE l.organization_id=@org AND l.statement_id=@id
                 ORDER BY l.value_date,l.external_id
                 """, ("org", tenant), ("id", statementId)))
@@ -105,7 +109,8 @@ public sealed partial class BankReconciliationService(
                         reader.GetDecimal(3), reader.GetString(4),
                         reader.IsDBNull(5) ? null : reader.GetGuid(5),
                         reader.IsDBNull(6) ? null : reader.GetGuid(6),
-                        reader.IsDBNull(7) ? null : reader.GetGuid(7)));
+                        reader.IsDBNull(7) ? null : reader.GetGuid(7),
+                        reader.IsDBNull(8) ? null : reader.GetGuid(8)));
             }
             await tx.CommitAsync(cancellationToken);
             return new BankStatementResponse(
