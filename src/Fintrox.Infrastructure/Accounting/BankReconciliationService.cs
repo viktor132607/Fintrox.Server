@@ -312,6 +312,7 @@ public sealed partial class BankReconciliationService(
             DateOnly statementEnd;
             decimal amount;
             Guid? matchedId;
+            bool alreadyFeePosted;
             // Account row lock is the global order with statement import.
             await using (var lookup = Command(cn, tx, """
                 SELECT a.id,a.gl_account_id,a.currency_code,s.to_date
@@ -335,7 +336,12 @@ public sealed partial class BankReconciliationService(
                 await bankLock.ExecuteScalarAsync(cancellationToken);
 
             await using (var lineLock = Command(cn, tx, """
-                SELECT signed_amount,matched_payment_id
+                SELECT signed_amount,matched_payment_id,
+                    EXISTS (
+                        SELECT 1 FROM banking.bank_fee_postings f
+                        WHERE f.organization_id=@org
+                          AND f.statement_line_id=@line
+                    )
                 FROM banking.bank_statement_lines
                 WHERE organization_id=@org AND statement_id=@statement
                   AND id=@line FOR UPDATE
@@ -345,6 +351,12 @@ public sealed partial class BankReconciliationService(
                 if (!await reader.ReadAsync(cancellationToken)) return null;
                 amount = reader.GetDecimal(0);
                 matchedId = reader.IsDBNull(1) ? null : reader.GetGuid(1);
+                alreadyFeePosted = reader.GetBoolean(2);
+            }
+            if (alreadyFeePosted)
+            {
+                throw new BankReconciliationConflictException(
+                    "A bank line already posted as an expense cannot match a payment.");
             }
             if (matchedId.HasValue)
             {
