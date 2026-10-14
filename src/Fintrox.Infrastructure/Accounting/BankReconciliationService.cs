@@ -506,6 +506,18 @@ public sealed partial class BankReconciliationService(
                             AND j.account_id=@ledger
                             AND j.debit=0 AND j.credit=-l.signed_amount
                       )=1
+                      AND (
+                          SELECT count(*) FROM accounting.journal_lines j
+                          WHERE j.organization_id=l.organization_id
+                            AND j.journal_entry_id=e.id
+                            AND j.account_id=fee.expense_account_id
+                            AND j.credit=0 AND j.debit=-l.signed_amount
+                      )=1
+                      AND (
+                          SELECT count(*) FROM accounting.journal_lines j
+                          WHERE j.organization_id=l.organization_id
+                            AND j.journal_entry_id=e.id
+                      )=2
                       THEN true ELSE false END AS fee_valid
                 FROM banking.bank_statement_lines l
                 LEFT JOIN banking.bank_fee_postings fee
