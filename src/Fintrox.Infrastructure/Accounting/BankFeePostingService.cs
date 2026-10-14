@@ -39,9 +39,12 @@ public sealed partial class BankReconciliationService
             Guid bankAccountId;
             Guid bankGlId;
             await using (var lookup = Command(cn, tx, """
-                SELECT a.id, a.gl_account_id FROM banking.bank_statements s
+                SELECT a.id, a.gl_account_id,
+                    a.currency_code = o.base_currency_code AS is_base
+                FROM banking.bank_statements s
                 JOIN banking.bank_accounts a
                   ON a.id=s.bank_account_id AND a.organization_id=s.organization_id
+                JOIN core.organizations o ON o.id=s.organization_id
                 WHERE s.id=@statement AND s.organization_id=@org
                 """, ("statement", statementId), ("org", tenant)))
             await using (var reader = await lookup.ExecuteReaderAsync(cancellationToken))
@@ -49,6 +52,9 @@ public sealed partial class BankReconciliationService
                 if (!await reader.ReadAsync(cancellationToken)) return null;
                 bankAccountId = reader.GetGuid(0);
                 bankGlId = reader.GetGuid(1);
+                if (!reader.GetBoolean(2))
+                    throw new BankReconciliationConflictException(
+                        "Base-currency fee workflow cannot book foreign statement amounts without an explicit FX rate.");
             }
 
             // Consistent lock order with statement import and manual match.
@@ -82,6 +88,13 @@ public sealed partial class BankReconciliationService
             if (matchedPaymentId is not null)
                 throw new BankReconciliationConflictException(
                     "A bank line already matched to a payment cannot also be posted as a fee.");
+            await using (var fx = Command(cn, tx, """
+                SELECT EXISTS (SELECT 1 FROM banking.bank_fx_settlements
+                    WHERE organization_id=@org AND statement_line_id=@line)
+                """, ("org", tenant), ("line", lineId)))
+                if ((bool)(await fx.ExecuteScalarAsync(cancellationToken))!)
+                    throw new BankReconciliationConflictException(
+                        "Foreign settlement bank line cannot also be a bank fee.");
 
             // Idempotent replay is checked BEFORE the period-open gate:
             // a legitimate retry still works after authorized period close.
