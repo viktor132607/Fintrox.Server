@@ -335,10 +335,10 @@ public sealed partial class FinancialHttpPostgresRegressionTests
                 x.Content.ReadFromJsonAsync<BankPostingCorrectionResponse>()));
             Assert.IsNotNull(results[0]);
             Assert.IsNotNull(results[1]);
-            Assert.AreEqual(results[0].ReversalJournalEntryId,
-                results[1].ReversalJournalEntryId);
-            Assert.AreNotEqual(results[0].AlreadyCorrected,
-                results[1].AlreadyCorrected);
+            Assert.AreEqual(results[0]!.ReversalJournalEntryId,
+                results[1]!.ReversalJournalEntryId);
+            Assert.AreNotEqual(results[0]!.AlreadyCorrected,
+                results[1]!.AlreadyCorrected);
         }
         finally
         {
