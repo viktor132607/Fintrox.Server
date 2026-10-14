@@ -44,6 +44,22 @@ public sealed class FinancialOpenItemRepository(
             .ToArray();
     }
 
+    public async Task<IReadOnlyList<FinancialPaymentHeaderSnapshot>> GetPaymentsAsync(
+        Guid organizationId, DateOnly cutoff, CancellationToken cancellationToken)
+    {
+        var rows = await dbContext.Payments.AsNoTracking()
+            .Where(x => x.OrganizationId == organizationId &&
+                x.PaymentDate <= cutoff)
+            .Select(x => new
+            {
+                x.Id, x.Status, x.Direction, x.AllocatedAmount, x.Amount
+            })
+            .ToArrayAsync(cancellationToken);
+        return rows.Select(x => new FinancialPaymentHeaderSnapshot(
+            x.Id, x.Status.ToString(), x.Direction.ToString(),
+            x.AllocatedAmount, x.Amount)).ToArray();
+    }
+
     public async Task<IReadOnlyList<FinancialOpenAllocationSnapshot>> GetAllocationsAsync(
         Guid organizationId, DateOnly cutoff, CancellationToken cancellationToken)
     {
