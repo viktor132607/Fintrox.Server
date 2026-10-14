@@ -548,14 +548,26 @@ public sealed partial class BankReconciliationService
 
         Guid? maker = null, checker = null;
         string? preparedHash = null, approvedHash = null;
-        await using (var cmd = Command(cn, tx, """
-            SELECT p.prepared_by_user_id,p.evidence_sha256,
-                   a.approved_by_user_id,a.evidence_sha256
-            FROM banking.bank_fx_close_preparations p
-            LEFT JOIN banking.bank_fx_close_approvals a
-              ON a.preparation_id=p.id AND a.organization_id=p.organization_id
-            WHERE p.organization_id=@org AND p.statement_id=@statement
-            """, ("org", tenant), ("statement", statementId)))
+        var reviewSql = amendmentId.HasValue
+            ? """
+              SELECT p.prepared_by_user_id,p.evidence_sha256,
+                     a.approved_by_user_id,a.evidence_sha256
+              FROM banking.bank_fx_amendment_preparations p
+              LEFT JOIN banking.bank_fx_amendment_approvals a
+                ON a.preparation_id=p.id AND a.organization_id=p.organization_id
+              WHERE p.organization_id=@org AND p.amendment_id=@amendment
+              """
+            : """
+              SELECT p.prepared_by_user_id,p.evidence_sha256,
+                     a.approved_by_user_id,a.evidence_sha256
+              FROM banking.bank_fx_close_preparations p
+              LEFT JOIN banking.bank_fx_close_approvals a
+                ON a.preparation_id=p.id AND a.organization_id=p.organization_id
+              WHERE p.organization_id=@org AND p.statement_id=@statement
+              """;
+        await using (var cmd = Command(cn, tx, reviewSql,
+            ("org", tenant), ("statement", statementId),
+            ("amendment", (object?)amendmentId ?? DBNull.Value)))
         await using (var reader = await cmd.ExecuteReaderAsync(ct))
         {
             if (await reader.ReadAsync(ct))
