@@ -81,6 +81,7 @@ public static class DependencyInjection
         services.AddScoped<IJournalRepository, JournalRepository>();
         services.AddScoped<IFinancialSourceReconciliationRepository, FinancialSourceReconciliationRepository>();
         services.AddScoped<IFinancialOpenItemRepository, FinancialOpenItemRepository>();
+        services.AddScoped<IBankReconciliationService, BankReconciliationService>();
         services.AddScoped<IAutoPostingRuleRepository, AutoPostingRuleRepository>();
         services.AddScoped<ICounterpartyRepository, CounterpartyRepository>();
         services.AddScoped<ICurrencyRepository, CurrencyRepository>();
