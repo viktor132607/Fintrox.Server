@@ -59,14 +59,16 @@ public sealed class FinancialOpenItemRepository(
                 allocation.PaymentId, payment.CounterpartyId,
                 allocation.SalesInvoiceId, allocation.PurchaseDocumentId,
                 payment.Status, payment.Direction, payment.PaymentDate,
-                allocation.DocumentAmount, allocation.PaymentAmount
+                allocation.DocumentAmount, allocation.PaymentAmount,
+                payment.AllocatedAmount, payment.Amount
             }).ToArrayAsync(cancellationToken);
 
         return rows.Select(x => new FinancialOpenAllocationSnapshot(
             x.PaymentId, x.CounterpartyId,
             x.SalesInvoiceId, x.PurchaseDocumentId,
             x.Status.ToString(), x.Direction.ToString(),
-            x.PaymentDate, x.DocumentAmount, x.PaymentAmount))
+            x.PaymentDate, x.DocumentAmount, x.PaymentAmount,
+            x.AllocatedAmount, x.Amount))
             .ToArray();
     }
 
