@@ -1,6 +1,9 @@
 # Fintrox Session Handoff — 2026-10-13
 
 ## Current milestone
+2026-10-14: **ACCOUNTING-001F1 CODE IMPLEMENTED — CI / BUILD / POSTGRESQL TESTS PENDING**. New `GET /api/v1/accounting/fiscal-years/{id}/source-reconciliation` (accounting.read) checks current legacy Sales/Purchases/Payment documents against original tenant-scoped System journals, status and exact reversal lines, base-currency control lines, payment allocation consistency, orphan/missing/duplicate original entries; uses fiscal-year row lock. 11 new full HTTP + migrated PostgreSQL test scenarios written in FinancialHttpPostgresSourceReconciliationTests.cs (10) and FinancialHttpPostgresInvoiceReconciliationTests.cs (1), NOT run. Banking module still scaffold, actual bank and aged AR/AP control balance reconciliation NOT implemented; report explicitly does not claim full enterprise reconciliation. Full `ACCOUNTING-001F` remains IN PROGRESS. Next: compile and run suite in CI, implement aging/open-item/control account delta and bank statement matching as later F slices. See `docs/accounting-source-ledger-reconciliation.md`.
+
+
 2026-10-14: **ACCOUNTING-001E IMPLEMENTED — BUILD/CI/POSTGRESQL TESTS UNVERIFIED**. Active legacy Accounting has controlled P&L year reopening by exact closing journal ID and reason, numbered compensating reversal, original marked Reversed, final period and year reopened in same transaction, safe retries, versioned reclose. Status-only reopen and generic reverse reject closing-journal bypass. Read-only GL reconciliation provides annual totals, P&L, draft counts and calendar readiness. Six new PostgreSQL HTTP tests in two partial test files, not executed. `docs/accounting-year-end-corrections.md`. ACCOUNTING-001 incomplete; next validate CI, then implement AP/AR, banking, inventory/tax reconciliation and evidence-based closing, and EF wiring of target-module entities.
 
 
