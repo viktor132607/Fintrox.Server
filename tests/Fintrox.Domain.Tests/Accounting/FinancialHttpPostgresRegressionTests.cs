@@ -1036,6 +1036,274 @@ public sealed class FinancialHttpPostgresRegressionTests
         return (year.Id, period.Id);
     }
 
+    [TestMethod]
+    public async Task YearEndProfitClosesIncomeExpenseAndPostsRetainedEarningsOnce()
+    {
+        var calendar = await PrepareYearEndCalendarAsync();
+        using var client = Client(userA, organizationA);
+        await PostProfitLossTransactionAsync(client, revenue: 125m, expense: 45m);
+        await CloseMarchAsync(client, calendar.YearId, calendar.MarchPeriodId);
+
+        var url = $"/api/v1/accounting/fiscal-years/{calendar.YearId}/close-profit-loss";
+        using var response = await client.PostAsJsonAsync(
+            url, new CloseProfitLossRequest(retainedA));
+        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode,
+            await response.Content.ReadAsStringAsync());
+        var closed = await response.Content.ReadFromJsonAsync<ProfitLossCloseResponse>();
+        Assert.IsNotNull(closed);
+        Assert.IsFalse(closed.AlreadyClosed);
+        Assert.AreEqual(80m, closed.NetIncome);
+        Assert.IsNotNull(closed.JournalEntryId);
+
+        await using (var db = CreateDb())
+        {
+            var journal = await db.JournalEntries.AsNoTracking()
+                .SingleAsync(x => x.Id == closed.JournalEntryId);
+            Assert.AreEqual(JournalEntryStatus.Posted, journal.Status);
+            Assert.AreEqual(new DateOnly(2026, 12, 31), journal.PostingDate);
+            Assert.AreEqual(calendar.FinalPeriodId, journal.FiscalPeriodId);
+            var lines = await db.JournalLines.AsNoTracking()
+                .Where(x => x.JournalEntryId == journal.Id).ToArrayAsync();
+            Assert.HasCount(3, lines);
+            Assert.AreEqual(lines.Sum(x => x.Debit), lines.Sum(x => x.Credit));
+            Assert.AreEqual(125m, lines.Single(x => x.AccountId == revenueA).Debit);
+            Assert.AreEqual(45m, lines.Single(x => x.AccountId == expenseA).Credit);
+            Assert.AreEqual(80m, lines.Single(x => x.AccountId == retainedA).Credit);
+            Assert.AreEqual(AccountingPeriodStatus.Closed,
+                (await db.AccountingPeriods.SingleAsync(x =>
+                    x.Id == calendar.FinalPeriodId)).Status);
+            Assert.AreEqual(FiscalYearStatus.Closed,
+                (await db.FiscalYears.SingleAsync(x =>
+                    x.Id == calendar.YearId)).Status);
+        }
+
+        using var replay = await client.PostAsJsonAsync(
+            url, new CloseProfitLossRequest(retainedA));
+        Assert.AreEqual(HttpStatusCode.OK, replay.StatusCode);
+        var again = await replay.Content.ReadFromJsonAsync<ProfitLossCloseResponse>();
+        Assert.IsNotNull(again);
+        Assert.IsTrue(again.AlreadyClosed);
+        Assert.AreEqual(closed.JournalEntryId, again.JournalEntryId);
+        Assert.AreEqual(80m, again.NetIncome);
+
+        await using var verify = CreateDb();
+        Assert.AreEqual(1, await verify.JournalEntries.CountAsync(x =>
+            x.OrganizationId == organizationA &&
+            x.ExternalReference == $"profit-loss-close:v1:{calendar.YearId:N}"));
+        Assert.AreEqual(0m,
+            await ProfitLossNetAsync(verify, calendar.YearId));
+    }
+
+    [TestMethod]
+    public async Task YearEndLossDebitsRetainedEarningsInsteadOfCrediting()
+    {
+        var calendar = await PrepareYearEndCalendarAsync();
+        using var client = Client(userA, organizationA);
+        await PostProfitLossTransactionAsync(client, revenue: 30m, expense: 95m);
+        await CloseMarchAsync(client, calendar.YearId, calendar.MarchPeriodId);
+
+        using var response = await client.PostAsJsonAsync(
+            $"/api/v1/accounting/fiscal-years/{calendar.YearId}/close-profit-loss",
+            new CloseProfitLossRequest(retainedA));
+        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        var result = await response.Content.ReadFromJsonAsync<ProfitLossCloseResponse>();
+        Assert.IsNotNull(result);
+        Assert.AreEqual(-65m, result.NetIncome);
+
+        await using var db = CreateDb();
+        var equity = await db.JournalLines.AsNoTracking().SingleAsync(x =>
+            x.JournalEntryId == result.JournalEntryId && x.AccountId == retainedA);
+        Assert.AreEqual(65m, equity.Debit);
+        Assert.AreEqual(0m, equity.Credit);
+        Assert.AreEqual(0m, await ProfitLossNetAsync(db, calendar.YearId));
+    }
+
+    [TestMethod]
+    public async Task StatusOnlyFiscalCloseCannotBypassProfitLossTransfer()
+    {
+        var calendar = await PrepareYearEndCalendarAsync();
+        using var client = Client(userA, organizationA);
+        await PostProfitLossTransactionAsync(client, revenue: 90m, expense: 20m);
+        await CloseMarchAsync(client, calendar.YearId, calendar.MarchPeriodId);
+
+        var finalUrl = $"/api/v1/accounting/fiscal-years/{calendar.YearId}/periods/{calendar.FinalPeriodId}";
+        using (var periodClose = await client.PostAsync($"{finalUrl}/close", null))
+            Assert.AreEqual(HttpStatusCode.OK, periodClose.StatusCode);
+        using var direct = await client.PostAsync(
+            $"/api/v1/accounting/fiscal-years/{calendar.YearId}/close", null);
+        Assert.AreEqual(HttpStatusCode.Conflict, direct.StatusCode);
+
+        await using var db = CreateDb();
+        Assert.AreEqual(FiscalYearStatus.Open,
+            (await db.FiscalYears.AsNoTracking().SingleAsync(x =>
+                x.Id == calendar.YearId)).Status);
+    }
+
+    [TestMethod]
+    public async Task YearEndRejectsIncompleteCalendarAndForeignEquity()
+    {
+        var year = await MarchCalendarAsync(organizationA);
+        using var client = Client(userA, organizationA);
+        using (var incomplete = await client.PostAsJsonAsync(
+            $"/api/v1/accounting/fiscal-years/{year.YearId}/close-profit-loss",
+            new CloseProfitLossRequest(retainedA)))
+            Assert.AreEqual(HttpStatusCode.Conflict, incomplete.StatusCode);
+
+        var calendar = await PrepareYearEndCalendarAsync();
+        await PostProfitLossTransactionAsync(client, revenue: 100m, expense: 25m);
+        await CloseMarchAsync(client, calendar.YearId, calendar.MarchPeriodId);
+        using var foreign = await client.PostAsJsonAsync(
+            $"/api/v1/accounting/fiscal-years/{calendar.YearId}/close-profit-loss",
+            new CloseProfitLossRequest(assetB));
+        Assert.AreEqual(HttpStatusCode.Conflict, foreign.StatusCode);
+
+        using var wrongType = await client.PostAsJsonAsync(
+            $"/api/v1/accounting/fiscal-years/{calendar.YearId}/close-profit-loss",
+            new CloseProfitLossRequest(assetA));
+        Assert.AreEqual(HttpStatusCode.Conflict, wrongType.StatusCode);
+    }
+
+    [TestMethod]
+    public async Task ConcurrentYearEndRequestsPostOneClosingJournal()
+    {
+        var calendar = await PrepareYearEndCalendarAsync();
+        using var first = Client(userA, organizationA);
+        using var second = Client(userA, organizationA);
+        await PostProfitLossTransactionAsync(first, revenue: 70m, expense: 15m);
+        await CloseMarchAsync(first, calendar.YearId, calendar.MarchPeriodId);
+        var url = $"/api/v1/accounting/fiscal-years/{calendar.YearId}/close-profit-loss";
+        var attempts = await Task.WhenAll(
+            first.PostAsJsonAsync(url, new CloseProfitLossRequest(retainedA)),
+            second.PostAsJsonAsync(url, new CloseProfitLossRequest(retainedA)));
+        try
+        {
+            Assert.IsTrue(attempts.All(x => x.StatusCode == HttpStatusCode.OK),
+                string.Join(" | ", await Task.WhenAll(
+                    attempts.Select(x => x.Content.ReadAsStringAsync()))));
+            var results = await Task.WhenAll(attempts.Select(x =>
+                x.Content.ReadFromJsonAsync<ProfitLossCloseResponse>()));
+            Assert.IsNotNull(results[0]);
+            Assert.IsNotNull(results[1]);
+            Assert.AreEqual(results[0].JournalEntryId, results[1].JournalEntryId);
+            Assert.AreEqual(1, results.Count(x => x.AlreadyClosed));
+        }
+        finally
+        {
+            foreach (var response in attempts) response.Dispose();
+        }
+
+        await using var db = CreateDb();
+        Assert.AreEqual(1, await db.JournalEntries.CountAsync(x =>
+            x.OrganizationId == organizationA &&
+            x.ExternalReference == $"profit-loss-close:v1:{calendar.YearId:N}"));
+    }
+
+    [TestMethod]
+    public async Task YearEndIsTenantScopedAndRejectsUnsettledDrafts()
+    {
+        var calendar = await PrepareYearEndCalendarAsync();
+        using var client = Client(userA, organizationA);
+        using var foreign = Client(userB, organizationB);
+        using (var crossTenant = await foreign.PostAsJsonAsync(
+            $"/api/v1/accounting/fiscal-years/{calendar.YearId}/close-profit-loss",
+            new CloseProfitLossRequest(retainedA)))
+            Assert.AreEqual(HttpStatusCode.NotFound, crossTenant.StatusCode);
+
+        var draft = await CreateDraftAsync(client, 35m, 35m);
+        using var rejected = await client.PostAsJsonAsync(
+            $"/api/v1/accounting/fiscal-years/{calendar.YearId}/close-profit-loss",
+            new CloseProfitLossRequest(retainedA));
+        Assert.AreEqual(HttpStatusCode.Conflict, rejected.StatusCode);
+        await using var db = CreateDb();
+        Assert.AreEqual(JournalEntryStatus.Draft,
+            (await db.JournalEntries.SingleAsync(x => x.Id == draft.Id)).Status);
+    }
+
+    private async Task<(Guid YearId, Guid MarchPeriodId, Guid FinalPeriodId)>
+        PrepareYearEndCalendarAsync()
+    {
+        await using var db = CreateDb();
+        var year = await db.FiscalYears.SingleAsync(x =>
+            x.OrganizationId == organizationA);
+        var march = await db.AccountingPeriods.SingleAsync(x =>
+            x.OrganizationId == organizationA &&
+            x.StartDate == new DateOnly(2026, 3, 1));
+        var now = DateTimeOffset.UtcNow;
+        var first = AccountingPeriod.Create(
+            organizationA, year.Id, 1, "January-February",
+            new DateOnly(2026, 1, 1), new DateOnly(2026, 2, 28), now);
+        first.Close(now);
+        var last = AccountingPeriod.Create(
+            organizationA, year.Id, 4, "April-December",
+            new DateOnly(2026, 4, 1), new DateOnly(2026, 12, 31), now);
+        db.AccountingPeriods.AddRange(first, last);
+        await db.SaveChangesAsync();
+        return (year.Id, march.Id, last.Id);
+    }
+
+    private async Task PostProfitLossTransactionAsync(
+        HttpClient client, decimal revenue, decimal expense)
+    {
+        using (var revenueDraft = await client.PostAsJsonAsync(
+            Endpoint, new CreateJournalEntryRequest(PostingDate, PostingDate,
+                "Revenue for annual close", null,
+                [
+                    new CreateJournalLineRequest(assetA, revenue, 0m, null),
+                    new CreateJournalLineRequest(revenueA, 0m, revenue, null)
+                ])))
+        {
+            Assert.AreEqual(HttpStatusCode.Created, revenueDraft.StatusCode);
+            var entry = await revenueDraft.Content.ReadFromJsonAsync<JournalEntryResponse>();
+            Assert.IsNotNull(entry);
+            using var post = await client.PostAsync($"{Endpoint}/{entry.Id}/post", null);
+            Assert.AreEqual(HttpStatusCode.OK, post.StatusCode);
+        }
+
+        using (var expenseDraft = await client.PostAsJsonAsync(
+            Endpoint, new CreateJournalEntryRequest(PostingDate, PostingDate,
+                "Expense for annual close", null,
+                [
+                    new CreateJournalLineRequest(expenseA, expense, 0m, null),
+                    new CreateJournalLineRequest(assetA, 0m, expense, null)
+                ])))
+        {
+            Assert.AreEqual(HttpStatusCode.Created, expenseDraft.StatusCode);
+            var entry = await expenseDraft.Content.ReadFromJsonAsync<JournalEntryResponse>();
+            Assert.IsNotNull(entry);
+            using var post = await client.PostAsync($"{Endpoint}/{entry.Id}/post", null);
+            Assert.AreEqual(HttpStatusCode.OK, post.StatusCode);
+        }
+    }
+
+    private static async Task<decimal> ProfitLossNetAsync(
+        FintroxDbContext db, Guid yearId)
+    {
+        var year = await db.FiscalYears.AsNoTracking().SingleAsync(x => x.Id == yearId);
+        var net = await (
+            from line in db.JournalLines.AsNoTracking()
+            join entry in db.JournalEntries.AsNoTracking()
+                on line.JournalEntryId equals entry.Id
+            join account in db.Accounts.AsNoTracking()
+                on line.AccountId equals account.Id
+            where entry.OrganizationId == year.OrganizationId &&
+                entry.PostingDate >= year.StartDate && entry.PostingDate <= year.EndDate &&
+                (entry.Status == JournalEntryStatus.Posted ||
+                 entry.Status == JournalEntryStatus.Reversed) &&
+                (account.Type == AccountType.Revenue || account.Type == AccountType.Expense)
+            select (decimal?)(line.Credit - line.Debit)).SumAsync();
+        return net ?? 0m;
+    }
+
+    private static async Task CloseMarchAsync(
+        HttpClient client, Guid fiscalYearId, Guid marchId)
+    {
+        using var response = await client.PostAsync(
+            $"/api/v1/accounting/fiscal-years/{fiscalYearId}/periods/{marchId}/close",
+            null);
+        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode,
+            await response.Content.ReadAsStringAsync());
+    }
+
     private ImportOpeningBalancesRequest ValidOpeningBalances(Guid fiscalYearId) =>
         new(fiscalYearId,
         [
