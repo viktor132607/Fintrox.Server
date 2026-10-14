@@ -30,7 +30,7 @@ public static class ApiRequestSecurity
                 (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps) ||
                 !string.Equals(
                     uri.GetLeftPart(UriPartial.Authority), origin, StringComparison.Ordinal) ||
-                uri.Host.Contains('*', StringComparison.Ordinal))
+                uri.Host.Contains('*'))
             {
                 throw new InvalidOperationException(
                     "Cors:AllowedOrigins must contain exact HTTP(S) origins without paths, wildcards or trailing slashes.");
