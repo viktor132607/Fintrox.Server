@@ -20,7 +20,7 @@ public sealed partial class FinancialHttpPostgresRegressionTests
         Assert.AreEqual(1, originalEvidence.VersionNumber);
         Assert.IsTrue(originalEvidence.InternallyReconciled);
 
-        var newRate = await CreateEndRateAsync(1.5m);
+        var newRate = await CorrectExistingCutoffRateAsync(setup.RateId, 1.5m);
         var request = AmendRateRequest(newRate, 1, null);
         var originalJournal = await LookupOriginalRevaluationJournalAsync(setup.StatementId);
         request = request with { ExpectedCurrentJournalEntryId = originalJournal };
@@ -106,7 +106,7 @@ public sealed partial class FinancialHttpPostgresRegressionTests
             Assert.AreEqual(HttpStatusCode.OK, approved.StatusCode);
         Assert.IsTrue((await ReadFxCloseAsync(maker, setup.StatementId)).Approved);
 
-        var revised = await CreateEndRateAsync(1.5m);
+        var revised = await CorrectExistingCutoffRateAsync(setup.RateId, 1.5m);
         var prior = await LookupOriginalRevaluationJournalAsync(setup.StatementId);
         using (var amend = await maker.PostAsJsonAsync(
             AmendUrl(setup.StatementId),
@@ -163,7 +163,7 @@ public sealed partial class FinancialHttpPostgresRegressionTests
         using var client = Client(userA, organizationA);
         await PostTestValuationAsync(client, setup.StatementId, setup.RateId);
         var old = await LookupOriginalRevaluationJournalAsync(setup.StatementId);
-        var newRate = await CreateEndRateAsync(1.5m);
+        var newRate = await CorrectExistingCutoffRateAsync(setup.RateId, 1.5m);
         var url = AmendUrl(setup.StatementId);
         using (var wrongVersion = await client.PostAsJsonAsync(
             url, AmendRateRequest(newRate, 2, old)))
@@ -187,7 +187,7 @@ public sealed partial class FinancialHttpPostgresRegressionTests
         using var client = Client(userA, organizationA);
         await PostTestValuationAsync(client, setup.StatementId, setup.RateId);
         var old = await LookupOriginalRevaluationJournalAsync(setup.StatementId);
-        var newRate = await CreateEndRateAsync(1.5m);
+        var newRate = await CorrectExistingCutoffRateAsync(setup.RateId, 1.5m);
         var cal = await MarchCalendarAsync(organizationA);
         await CloseMarchAsync(client, cal.YearId, cal.PeriodId);
         using var result = await client.PostAsJsonAsync(
@@ -202,7 +202,7 @@ public sealed partial class FinancialHttpPostgresRegressionTests
         using var owner = Client(userA, organizationA);
         using var other = Client(userB, organizationB);
         await PostTestValuationAsync(owner, setup.StatementId, setup.RateId);
-        var newRate = await CreateEndRateAsync(1.5m);
+        var newRate = await CorrectExistingCutoffRateAsync(setup.RateId, 1.5m);
         var old = await LookupOriginalRevaluationJournalAsync(setup.StatementId);
         using var denied = await other.PostAsJsonAsync(
             AmendUrl(setup.StatementId), AmendRateRequest(newRate, 1, old));
@@ -216,7 +216,7 @@ public sealed partial class FinancialHttpPostgresRegressionTests
         using var one = Client(userA, organizationA);
         using var two = Client(userA, organizationA);
         await PostTestValuationAsync(one, setup.StatementId, setup.RateId);
-        var rate = await CreateEndRateAsync(1.5m);
+        var rate = await CorrectExistingCutoffRateAsync(setup.RateId, 1.5m);
         var old = await LookupOriginalRevaluationJournalAsync(setup.StatementId);
         var request = AmendRateRequest(rate, 1, old);
         var url = AmendUrl(setup.StatementId);
@@ -241,6 +241,21 @@ public sealed partial class FinancialHttpPostgresRegressionTests
         {
             foreach (var response in responses) response.Dispose();
         }
+    }
+
+    private async Task<Guid> CorrectExistingCutoffRateAsync(
+        Guid rateId, decimal newRate)
+    {
+        // ExchangeRate master is unique per organization/pair/effective day.
+        // Its previous value was already snapshotted immutably by v1.
+        // Editing the master rate does not edit historical booked valuations.
+        await using var db = CreateDb();
+        var rate = await db.ExchangeRates.SingleAsync(x =>
+            x.Id == rateId && x.OrganizationId == organizationA);
+        rate.Update(newRate, "Approved corrected month-end source",
+            DateTimeOffset.UtcNow);
+        await db.SaveChangesAsync();
+        return rateId;
     }
 
     private static string AmendUrl(Guid statementId) =>
