@@ -1,5 +1,10 @@
 # Validation history — 2026-10-14
 
+## ACCOUNTING-001B / first-year opening ledger balances
+- IMPLEMENTED on `main`, **CI/build/real PostgreSQL execution unverified**. Added `ImportOpeningBalancesRequest`, `JournalService.ImportOpeningBalancesAsync`, repository first-year lock and existing-posted check, dedicated authorized HTTP controller; existing `System` source reference uniqueness is used, **no new migration**.
+- Added 8 real migrated PostgreSQL HTTP tests to `FinancialHttpPostgresRegressionTests`: balanced import/idempotent replay, unbalanced/foreign account, already posted year, changed retry, tenant auth, two concurrent identical imports, P&L account restriction and closed calendar rejection.
+- Multi-book, multi-currency, AP/AR subledger balances, bank/inventory matching and module EF migration still pending. See [opening balances](../accounting-opening-balances.md).
+
 ## ACCOUNTING-001A / concurrent posting and fiscal close safety
 - IMPLEMENTED on `main`, **CI/build/test verification pending**; changes in `IJournalRepository`, `JournalRepository`, `JournalService`, `AutoPostingEngine` and `FinancialHttpPostgresRegressionTests`.
 - Four migrated PostgreSQL HTTP tests added: simultaneous post one winner; simultaneous reversal one winner; period close vs posting; fiscal-year soft-close vs posting. Real runs and results must be recorded after CI, not inferred from test code.
