@@ -91,6 +91,24 @@ public sealed partial class FinancialHttpPostgresRegressionTests
     }
 
     [TestMethod]
+    public async Task OpenItemReconciliationUsesInvoiceRateForFxAllocation()
+    {
+        var values = await SeedOpenItemLedgerAsync(
+            25m, 10m, customerInvoiceRate: 1.25m);
+        var report = await GetOpenItemReportAsync();
+        Assert.AreEqual(60m, report.ReceivablesOpenBase);
+        Assert.IsTrue(report.AccountsReceivableReconciled);
+        var invoice = report.OpenItems.Single(x =>
+            x.DocumentId == values.InvoiceId);
+        Assert.AreEqual(75m, invoice.OutstandingDocumentAmount);
+        Assert.AreEqual(60m, invoice.OutstandingBaseAmount);
+        Assert.AreEqual(25m, invoice.AllocatedDocumentAmount);
+        Assert.AreEqual("90+", invoice.AgingBucket);
+        Assert.IsTrue(invoice.DaysOverdue > 90);
+        Assert.IsTrue(report.ControlAccounts.All(x => x.Balanced));
+    }
+
+    [TestMethod]
     public async Task OpenItemReconciliationProtectsTenantBoundary()
     {
         var fiscal = await MarchCalendarAsync(organizationA);
@@ -131,7 +149,8 @@ public sealed partial class FinancialHttpPostgresRegressionTests
 
     private async Task<(Guid InvoiceId, Guid PurchaseId, Guid ArAccountId,
         Guid ApAccountId)> SeedOpenItemLedgerAsync(
-            decimal customerSettlement, decimal supplierSettlement)
+            decimal customerSettlement, decimal supplierSettlement,
+            decimal customerInvoiceRate = 1m)
     {
         Guid invoiceId;
         Guid purchaseId;
@@ -144,6 +163,13 @@ public sealed partial class FinancialHttpPostgresRegressionTests
             var now = DateTimeOffset.UtcNow;
             var currency = Currency.Create(
                 organizationA, "EUR", "Euro", null, 2, true, now);
+            var invoiceCurrency = customerInvoiceRate == 1m
+                ? currency
+                : Currency.Create(
+                    organizationA, "USD", "US Dollar", "$", 2, false, now);
+            var paymentBaseAmount = decimal.Round(
+                customerSettlement / customerInvoiceRate, 4,
+                MidpointRounding.AwayFromZero);
             var customer = Counterparty.Create(
                 organizationA, "AR-CASE", "Open item customer",
                 null, "BG", null, null, true, false, 30,
@@ -161,6 +187,8 @@ public sealed partial class FinancialHttpPostgresRegressionTests
             arId = ar.Id;
             apId = ap.Id;
             db.Currencies.Add(currency);
+            if (invoiceCurrency.Id != currency.Id)
+                db.Currencies.Add(invoiceCurrency);
             db.Counterparties.AddRange(customer, supplier);
             db.Accounts.AddRange(ar, ap);
             db.AutoPostingRules.AddRange(
@@ -173,13 +201,13 @@ public sealed partial class FinancialHttpPostgresRegressionTests
 
             var invoice = SalesInvoice.CreateDraft(
                 organizationA, customer.Id, PostingDate,
-                new DateOnly(2026, 4, 14), currency.Id, customer.Name,
+                new DateOnly(2026, 4, 14), invoiceCurrency.Id, customer.Name,
                 null, null, null, "BG", null, null, null, null,
-                "EUR", null, now);
+                invoiceCurrency.Code, null, now);
             invoice.SetTotals(100m, 0m, 100m, now);
-            invoice.Issue("AR-SRC-01", currency.Id, "EUR", "EUR",
+            invoice.Issue("AR-SRC-01", currency.Id, "EUR", invoiceCurrency.Code,
                 customer.Name, null, null, null, "BG",
-                null, null, null, null, 1m, now);
+                null, null, null, null, customerInvoiceRate, now);
             invoiceId = invoice.Id;
             db.SalesInvoices.Add(invoice);
 
@@ -200,9 +228,9 @@ public sealed partial class FinancialHttpPostgresRegressionTests
             var incoming = Payment.CreateDraft(
                 organizationA, PaymentDirection.Incoming, customer.Id,
                 PostingDate, PaymentMethod.BankTransfer,
-                currency.Id, "EUR", customerSettlement, customer.Name,
+                currency.Id, "EUR", paymentBaseAmount, customer.Name,
                 null, null, null, null, now);
-            incoming.SetAllocatedAmount(customerSettlement, now);
+            incoming.SetAllocatedAmount(paymentBaseAmount, now);
             incoming.Confirm("IN-OPEN-001", currency.Id, "EUR",
                 "EUR", customer.Name, null, null, 1m, now);
             incomePaymentId = incoming.Id;
@@ -210,8 +238,9 @@ public sealed partial class FinancialHttpPostgresRegressionTests
             db.PaymentAllocations.Add(PaymentAllocation.Create(
                 organizationA, incoming.Id, 1,
                 PaymentAllocationTargetType.SalesInvoice,
-                invoice.Id, null, invoice.Number!, currency.Id,
-                "EUR", 1m, customerSettlement, customerSettlement, now));
+                invoice.Id, null, invoice.Number!, invoiceCurrency.Id,
+                invoiceCurrency.Code, customerInvoiceRate,
+                customerSettlement, paymentBaseAmount, now));
 
             var outgoing = Payment.CreateDraft(
                 organizationA, PaymentDirection.Outgoing, supplier.Id,
@@ -233,16 +262,21 @@ public sealed partial class FinancialHttpPostgresRegressionTests
 
         await SeedOpenItemJournalAsync(
             $"sales-invoice:{invoiceId:N}", "Sales invoice issue",
-            (arId, 100m, 0m, "Accounts receivable - Open item customer"),
-            (revenueA, 0m, 100m, "Sales revenue"));
+            (arId, decimal.Round(100m / customerInvoiceRate, 4,
+                MidpointRounding.AwayFromZero), 0m,
+                "Accounts receivable - Open item customer"),
+            (revenueA, 0m, decimal.Round(100m / customerInvoiceRate, 4,
+                MidpointRounding.AwayFromZero), "Sales revenue"));
         await SeedOpenItemJournalAsync(
             $"purchase-document:{purchaseId:N}", "Purchase received",
             (expenseA, 60m, 0m, "Purchase expense"),
             (apId, 0m, 60m, "Accounts payable - Open item supplier"));
         await SeedOpenItemJournalAsync(
             $"payment:{incomePaymentId:N}", "Incoming payment",
-            (assetA, customerSettlement, 0m, "Incoming BankTransfer"),
-            (arId, 0m, customerSettlement, "Settle accounts receivable"));
+            (assetA, decimal.Round(customerSettlement / customerInvoiceRate, 4,
+                MidpointRounding.AwayFromZero), 0m, "Incoming BankTransfer"),
+            (arId, 0m, decimal.Round(customerSettlement / customerInvoiceRate, 4,
+                MidpointRounding.AwayFromZero), "Settle accounts receivable"));
         await SeedOpenItemJournalAsync(
             $"payment:{outgoingPaymentId:N}", "Outgoing payment",
             (apId, supplierSettlement, 0m, "Settle accounts payable"),
