@@ -1,5 +1,12 @@
 # Validation history — 2026-10-14
 
+## ACCOUNTING-001F4A / bounded CSV import and unambiguous auto-match
+- **CODE AUTHORED IN MAIN; BUILD, GITHUB CI AND MIGRATED POSTGRESQL INTEGRATION SUITE NOT EXECUTED / UNVERIFIED.**
+- `BankStatementCsvParser` handles normalized four-column UTF-8 BOM/CRLF/RFC4180-quoted CSV, ISO yyyy-MM-dd dates, dot-decimal signed amounts, 1-MiB and 10k-row bounds; delegates to F3 transactional/import SHA256 idempotency/statement arithmetic.
+- `BankReconciliationService` now provides `ImportCsvStatementAsync`, `GetMatchSuggestionsAsync`, `AutoMatchAsync` behind secured API routes: exact sign, amount, posting/value date, Confirmed BankTransfer, base-currency rate 1, matching Posted original System GL bank-account journal, tenant, uniqueness across both bank-line and payment candidate sets; ambiguous matches are skipped and never guessed. Before each posting of a match, reuses existing transaction-guarded `MatchLineAsync`. Partial batch success is explicitly reported.
+- **5 new real HTTP/migrated PostgreSQL tests and 4 pure parser unit tests written (9 total), NOT RUN**. Cases: quoted import + replay, invalid header/date/quote/locale, unique match and idempotent rerun, ambiguous double-line matches refused, cross-tenant access, plus BOM/quoting/field and CSV size limits.
+- No banking fee expense posting, realized/unrealized FX, camt.053/MT940/bank feed adapters, audit signoff or full enterprise financial closure yet. Mark `ACCOUNTING-001F4A` code-only and `ACCOUNTING-001F4` / `001F` IN PROGRESS. See [CSV / auto-match spec](../accounting-bank-csv-auto-match.md).
+
 ## ACCOUNTING-001F3 / operational base-currency banking statement matching
 - **IMPLEMENTED IN CODE — .NET COMPILATION, CI AND MIGRATED POSTGRESQL TESTS UNVERIFIED.** Raw SQL EF discoverable migration `20261014000100_BankStatementReconciliation` adds tenant-scoped immutable `banking.bank_accounts`, `bank_statements`, `bank_statement_lines` (unique payment match, dedicated GL account, foreign keys, triggers).
 - `IBankReconciliationService` implemented via PostgreSQL transaction-backed repository/service. Authorized endpoints: POST bank account, import structured signed lines with arithmetic consistency and SHA-256 idempotency, exact BankTransfer payment-to-original posted GL bank-account match and GET read-only bank-vs-GL statement reconciliation (repeatable-read snapshot, unmatched bank lines and uncleared posted book payments). Current cancellation is detected in reports. Operations reject cross-tenant ID use.
