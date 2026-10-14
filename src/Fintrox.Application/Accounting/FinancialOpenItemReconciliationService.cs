@@ -229,7 +229,12 @@ public sealed class FinancialOpenItemReconciliationService(
                         document.GrossAmount, settledAmount,
                         outstandingDocument, outstandingBase,
                         controlId, document.DueDate < cutoff &&
-                            outstandingDocument > 0m));
+                            outstandingDocument > 0m,
+                        outstandingDocument > 0m && document.DueDate < cutoff
+                            ? cutoff.DayNumber - document.DueDate.DayNumber : 0,
+                        AgingBucket(
+                            outstandingDocument > 0m && document.DueDate < cutoff
+                                ? cutoff.DayNumber - document.DueDate.DayNumber : 0)));
                 }
             }
 
@@ -244,8 +249,12 @@ public sealed class FinancialOpenItemReconciliationService(
             }
 
             foreach (var shared in arAccounts.Intersect(apAccounts))
+            {
                 AddIssue("SharedControlAccount", "Receivables", null, null,
                     $"Account {shared} is mapped to both AR and AP.");
+                AddIssue("SharedControlAccount", "Payables", null, null,
+                    $"Account {shared} is mapped to both AR and AP.");
+            }
 
             var ids = arAccounts.Concat(apAccounts).Distinct().ToArray();
             var gl = (await repository.GetControlLedgerBalancesAsync(
@@ -283,11 +292,11 @@ public sealed class FinancialOpenItemReconciliationService(
             var receivablesOk = !issues.Any(issue =>
                 issue.SourceType is "Receivables" or "SalesInvoice" ||
                 issue.SourceType == "Payment" &&
-                    issue.Code is "InvalidAllocationTarget" or "MissingAllocatedDocument");
+                    (issue.Code is "InvalidAllocationTarget" or "MissingAllocatedDocument"));
             var payablesOk = !issues.Any(issue =>
                 issue.SourceType is "Payables" or "PurchaseDocument" ||
                 issue.SourceType == "Payment" &&
-                    issue.Code is "InvalidAllocationTarget" or "MissingAllocatedDocument");
+                    (issue.Code is "InvalidAllocationTarget" or "MissingAllocatedDocument"));
 
             return new FinancialOpenItemReconciliationResponse(
                 fiscalYearId, cutoff,
@@ -312,6 +321,16 @@ public sealed class FinancialOpenItemReconciliationService(
                     .ThenBy(issue => issue.Code).ToArray());
         }, cancellationToken);
     }
+
+    private static string AgingBucket(int daysOverdue) =>
+        daysOverdue switch
+        {
+            <= 0 => "Current",
+            <= 30 => "1-30",
+            <= 60 => "31-60",
+            <= 90 => "61-90",
+            _ => "90+"
+        };
 
     private static decimal ToBase(decimal amount, decimal rate) =>
         amount == 0m ? 0m : decimal.Round(
