@@ -125,6 +125,36 @@ public sealed class FiscalYearsController(
         }
     }
 
+    [HttpGet("{fiscalYearId:guid}/close-reconciliation")]
+    [Authorize(Policy = Permissions.AccountingRead)]
+    public async Task<ActionResult<FiscalCloseReconciliationResponse>> CloseReconciliation(
+        Guid fiscalYearId,
+        CancellationToken cancellationToken)
+    {
+        var report = await profitLoss.ReconcileAsync(fiscalYearId, cancellationToken);
+        return report is null ? NotFound() : Ok(report);
+    }
+
+    [HttpPost("{fiscalYearId:guid}/reopen-profit-loss")]
+    [Authorize(Policy = Permissions.AccountingWrite)]
+    [Authorize(Policy = Permissions.AccountingPost)]
+    public async Task<ActionResult<ProfitLossReopenResponse>> ReopenProfitLoss(
+        Guid fiscalYearId,
+        ReopenProfitLossRequest request,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var result = await profitLoss.ReopenForCorrectionAsync(
+                fiscalYearId, request.Reason, cancellationToken);
+            return result is null ? NotFound() : Ok(result);
+        }
+        catch (FiscalCalendarConflictException exception)
+        {
+            return Conflict(ToProblem(exception.Message));
+        }
+    }
+
     [HttpPost("{fiscalYearId:guid}/reopen")]
     [Authorize(Policy = Permissions.AccountingWrite)]
     [Authorize(Policy = Permissions.AccountingPost)]
