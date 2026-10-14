@@ -37,7 +37,7 @@ invalid accounting state/configuration returns 409.
   `FiscalYear.StartDate` through `FiscalYear.EndDate`.
   Every period except the final one must be **Closed**. The final period must
   be **Open** and end on the fiscal year's last day.
-- Requires **zero remaining Draft journals** assigned to any year period.
+- Requires **zero remaining Draft journals** assigned to any year period and rejects any existing journal whose posting date lies outside its assigned period, including older records created before recent close guards.
   Fiscal year and final period locks protect the close state during posting.
 - Read posted **and Reversed** journals within the exact fiscal-year date
   bounds. Group debit/credit totals by active tenant-owned Revenue and Expense
