@@ -276,6 +276,16 @@ public sealed partial class BankReconciliationService
                 throw new BankReconciliationConflictException(
                     "All original foreign bank statement movements must remain posted and unmatched to ordinary payments.");
 
+            // Re-read complete foreign statement/native source and all
+            // GL valuation versions under the exclusive period lock.
+            // Do not restate a partially reconciled or damaged cutoff.
+            var currentEvidence = await ReadForeignCloseAsync(
+                cn, tx, tenant, statementId, cancellationToken);
+            if (currentEvidence is null || !currentEvidence.Report.InternallyReconciled ||
+                currentEvidence.Report.VersionNumber != version)
+                throw new BankReconciliationConflictException(
+                    "The previous native/base bank close evidence is not fully reconciled; historical correction is unsafe.");
+
             var newTarget = decimal.Round(
                 native / fxRate.Rate, 4, MidpointRounding.AwayFromZero);
             var newAdjustment = newTarget - ledgerBase;
