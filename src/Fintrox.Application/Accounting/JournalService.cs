@@ -808,11 +808,13 @@ public sealed class JournalService(
     private static void EnsureReversible(JournalEntry entry)
     {
         if (entry.Source == JournalEntrySource.System &&
-            entry.ExternalReference?.StartsWith(
-                "profit-loss-close:v1:", StringComparison.Ordinal) == true)
+            (entry.ExternalReference?.StartsWith(
+                "profit-loss-close:v1:", StringComparison.Ordinal) == true ||
+             entry.ExternalReference?.StartsWith(
+                "bank-fee:v1:", StringComparison.Ordinal) == true))
         {
             throw new JournalConflictException(
-                "Year-end closing journals can be reversed only using the controlled fiscal-year correction endpoint.");
+                "Protected year-end closing or bank-fee journals require their dedicated controlled correction workflow.");
         }
 
         if (entry.Status == JournalEntryStatus.Reversed ||
