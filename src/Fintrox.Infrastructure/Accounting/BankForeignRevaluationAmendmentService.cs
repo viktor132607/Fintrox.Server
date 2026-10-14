@@ -287,7 +287,7 @@ public sealed partial class BankReconciliationService
                   AND (fx.id IS NULL OR e.status IS DISTINCT FROM 'Posted'
                        OR l.matched_payment_id IS NOT NULL)
                 """, ("org", tenant), ("bank", bankId), ("cutoff", cutoff)))
-                unmatched = Convert.ToInt64(await validation.ExecuteScalarAsync(cancellationToken));
+                unmatched = Convert.ToInt64(await validation.ExecuteScalarAsync(cancellationToken), System.Globalization.CultureInfo.InvariantCulture);
             if (unmatched != 0)
                 throw new BankReconciliationConflictException(
                     "All original foreign bank statement movements must remain posted and unmatched to ordinary payments.");
