@@ -789,6 +789,14 @@ public sealed class JournalService(
 
     private static void EnsureReversible(JournalEntry entry)
     {
+        if (entry.Source == JournalEntrySource.System &&
+            entry.ExternalReference?.StartsWith(
+                "profit-loss-close:v1:", StringComparison.Ordinal) == true)
+        {
+            throw new JournalConflictException(
+                "Year-end closing journals can be reversed only using the controlled fiscal-year correction endpoint.");
+        }
+
         if (entry.Status == JournalEntryStatus.Reversed ||
             entry.ReversedByJournalEntryId is not null)
         {
