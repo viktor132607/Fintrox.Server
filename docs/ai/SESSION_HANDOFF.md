@@ -1,6 +1,8 @@
 # Fintrox Session Handoff — 2026-10-13
 
 ## Current milestone
+2026-10-14: **ACCOUNTING-001C IMPLEMENTED — CI PENDING**. Existing legacy fiscal-period/year close, soft-close and reopen now run in PostgreSQL transactions with year-then-period exclusive locks and no-draft/misdated-date preflight checks; post and draft mutations share calendar lock contract. All 6 closing status endpoints require accounting.write + accounting.post. Six added real PostgreSQL HTTP tests; **not executed / CI unverified**. Detailed scope: `docs/accounting-period-close-controls.md`. No P&L closing entries, statutory signoff or target Accounting EF migration. ACCOUNTING-001 still IN PROGRESS. Next: validate CI, harden P&L/year-end settlement and close evidence.
+
 2026-10-14: **ACCOUNTING-001B IMPLEMENTED — CI PENDING**. Existing GL supports authorized and atomic first-day opening balance import with year-row serialization, duplicate replay and active balance-sheet account validation. Eight additional real PostgreSQL+HTTP tests were written but have not been executed/verified. `docs/accounting-opening-balances.md`. ACCOUNTING-001 overall in progress; API-001 and 001A CI still unverified. Next: verify CI, then period-close and subledger/recurring accounting slices.
 
 2026-10-14: **ACCOUNTING-001A IMPLEMENTED — CI PENDING**. Legacy manual and auto-generated journal posting/reversal now locks original journal and fiscal calendar rows inside transactions, re-reading open status after lock to avoid closing-race stale snapshots. Four added migrated PostgreSQL HTTP race tests; verification not yet obtained. `docs/accounting-posting-concurrency.md`. ACCOUNTING-001 overall still pending other accounting capabilities. API-001 CI result also not yet confirmed.
