@@ -255,6 +255,20 @@ public sealed partial class BankReconciliationService(
                 }
             }
 
+            // An imported historic statement must not rewrite the native
+            // quantity chain of a period already authoritatively revalued.
+            await using (var cutoff = Command(cn, tx, """
+                SELECT EXISTS(SELECT 1 FROM banking.bank_fx_revaluations
+                    WHERE organization_id=@org AND bank_account_id=@account
+                      AND cutoff_date>=@start)
+                """, ("org", tenant), ("account", accountId),
+                ("start", request.FromDate)))
+            {
+                if ((bool)(await cutoff.ExecuteScalarAsync(cancellationToken))!)
+                    throw new BankReconciliationConflictException(
+                        "A certified foreign bank FX cutoff exists after this statement's start. Backdated imports require a controlled correction.");
+            }
+
             await using (var overlap = Command(cn, tx, """
                 SELECT EXISTS (SELECT 1 FROM banking.bank_statements
                   WHERE organization_id=@org AND bank_account_id=@account
