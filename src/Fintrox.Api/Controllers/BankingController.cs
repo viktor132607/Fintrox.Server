@@ -111,6 +111,28 @@ public sealed class BankingController(IBankReconciliationService service)
         return result is null ? NotFound() : Ok(result);
     }
 
+    [HttpPost("statements/{statementId:guid}/lines/{lineId:guid}/post-fee")]
+    [Authorize(Policy = Permissions.AccountingWrite)]
+    [Authorize(Policy = Permissions.AccountingPost)]
+    public async Task<ActionResult<BankFeePostingResponse>> PostBankFee(
+        Guid statementId,
+        Guid lineId,
+        PostBankFeeRequest request,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var result = await service.PostFeeAsync(
+                statementId, lineId, request, cancellationToken);
+            return result is null ? NotFound() : Ok(result);
+        }
+        catch (BankReconciliationConflictException ex)
+        {
+            return Conflict(Problem(StatusCodes.Status409Conflict,
+                "Bank fee posting conflict", ex.Message));
+        }
+    }
+
     [HttpPost("statements/{statementId:guid}/lines/{lineId:guid}/match")]
     [Authorize(Policy = Permissions.AccountingWrite)]
     [Authorize(Policy = Permissions.AccountingPost)]
