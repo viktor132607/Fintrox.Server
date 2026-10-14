@@ -31,7 +31,9 @@ public sealed class BankStatementReconciliation : Migration
                 CONSTRAINT fk_bank_accounts_ledger FOREIGN KEY (gl_account_id, organization_id)
                     REFERENCES accounting.accounts(id, organization_id) ON DELETE RESTRICT
             );
-            CREATE INDEX ix_bank_accounts_tenant_gl
+            -- One distinct GL cash/bank control account per bank account:
+            -- otherwise account-level bank-versus-ledger reconciliation is ambiguous.
+            CREATE UNIQUE INDEX ux_bank_accounts_tenant_gl
                 ON banking.bank_accounts(organization_id, gl_account_id);
 
             CREATE TABLE banking.bank_statements (
