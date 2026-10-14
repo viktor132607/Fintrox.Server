@@ -49,7 +49,7 @@ public sealed class FinancialSourceReconciliationRepository(
             x.Amount, x.ExchangeRate, null, null)));
         result.AddRange(purchases.Select(x => new FinancialSourcePostingSnapshot(
             x.Id, "PurchaseDocument", x.Status.ToString(), x.Date,
-            x.Amount, x.ExchangeRate, null)));
+            x.Amount, x.ExchangeRate, null, null)));
         result.AddRange(payments.Select(x => new FinancialSourcePostingSnapshot(
             x.Id, "Payment", x.Status.ToString(), x.Date,
             x.Amount, x.ExchangeRate, x.Direction.ToString(), x.AllocatedAmount)));
