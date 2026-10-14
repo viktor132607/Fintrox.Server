@@ -35,7 +35,7 @@ All paths begin `/api/v1/banking`:
 5. Another tenant cannot import to the bank account or read/match its statements.
 6. Bank account cannot point to Revenue GL account or use non-base currency.
 7. The same payment cannot be assigned to two separate imported statements.
-8. A previously matched payment cancelled afterward is no longer a valid match for reporting.
+8. A previously matched payment cancelled afterward is no longer a valid match for reporting.\n9. Bank account listing and statement line detail expose only the current tenant's records.
 
 **No successful .NET compilation, PostgreSQL test run, or production rollout is claimed.** Tests and CI must be executed and recorded in `docs/ai/VALIDATION.md`.
 
