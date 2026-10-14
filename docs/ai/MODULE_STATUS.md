@@ -14,6 +14,8 @@ Legacy list: [32 existing runtime/persistence models](LEGACY_MODEL_INVENTORY.md)
 
 2026-10-14 API security milestone: **API-001 IMPLEMENTED — CI PENDING**. Active legacy/API host adds exact configured CORS origins (default deny), per-client-IP endpoint rate limits for registration, login, refresh, revoke and integration token (429), and six WebApplicationFactory HTTP tests. This is cross-cutting API infrastructure; **no new module Entity EF/API migration**. See [API request security](../api-request-security.md) and [validation](VALIDATION.md).
 
+2026-10-14 Accounting concurrency milestone: **ACCOUNTING-001A IMPLEMENTED — CI PENDING**. Operational legacy manual posting/reversal and automatic sales/purchases/payments posting now acquire tenant-scoped PostgreSQL journal/calendar row locks and recheck fiscal status after waiting. Four migrated PostgreSQL HTTP regression tests added. No module entity persistence migration. See [GL posting concurrency](../accounting-posting-concurrency.md).
+
 The new types have immutable IDs/organization ownership, constructor validation and typed business fields. They are not yet mapped in EF or exposed through APIs. No complete ERP workflow, database tenant isolation, authorization or cross-reference existence checks are claimed by these model classes.
 
 Every module keeps five projects. Domain=PARTIAL; Application/Contracts/Infrastructure/Presentation=SCAFFOLD. Frontend remains 23 shells (13 new module shells missing). Entity constructors do not activate a module.
