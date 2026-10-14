@@ -335,6 +335,16 @@ public sealed class FinancialOpenItemReconciliationService(
                 OpenItems: openItems.OrderBy(item => item.CounterpartyId)
                     .ThenBy(item => item.DueDate).ThenBy(item => item.DocumentId)
                     .ToArray(),
+                CounterpartyBalances: openItems
+                    .GroupBy(item => (item.CounterpartyId, item.SourceType))
+                    .Select(group => new FinancialCounterpartyOpenBalanceResponse(
+                        group.Key.CounterpartyId,
+                        group.Key.SourceType == "SalesInvoice" ? "Receivables" : "Payables",
+                        group.Sum(item => item.OutstandingBaseAmount),
+                        group.Count(),
+                        group.Count(item => item.Overdue)))
+                    .OrderBy(item => item.CounterpartyId)
+                    .ThenBy(item => item.Type).ToArray(),
                 ControlAccounts: reconciledControls.OrderBy(item => item.Type)
                     .ThenBy(item => item.AccountId).ToArray(),
                 Issues: issues.OrderBy(issue => issue.SourceType)
