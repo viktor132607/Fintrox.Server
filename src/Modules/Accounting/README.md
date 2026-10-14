@@ -89,3 +89,7 @@ In active legacy Accounting/Banking, backed by new PostgreSQL migration, account
 ## 2026-10-14 — ACCOUNTING-001F4A, bank CSV and deterministic matching
 
 The operational legacy Banking layer now accepts bounded RFC4180 CSV and offers tenant-scoped match suggestions and a protected exact 1:1 auto-match for confirmed base-currency BankTransfers verified against their Posted original GL journal. It reuses the existing database lock/unique match constraints and does **not** post new journal lines. Five migrated PostgreSQL HTTP and four parser unit scenarios written, CI unverified. The fees/FX/bank close remainder of F4 is pending; no company-wide signed finance reconciliation claim. [Scope](../../../docs/accounting-bank-csv-auto-match.md).
+
+## 2026-10-14 — ACCOUNTING-001F4B, approved fee financial effects
+
+Active legacy GL now supports bounded bank-fee posting from immutable negative statement evidence, booking DR analytical Expense / CR dedicated bank Asset in an open fiscal period, with one System journal and unique immutable source link. Replays, tenant access, concurrent close and double matching guarded; six migrated PostgreSQL HTTP tests authored but not executed. Tax, multi-currency fees and controlled bank fee correction remain pending. [Bank fee specification](../../../docs/accounting-bank-fee-posting.md).
