@@ -230,6 +230,34 @@ public sealed class JournalRepository(
         }
     }
 
+    public async Task<IReadOnlyList<ProfitLossAccountBalance>> GetProfitLossBalancesAsync(
+        Guid organizationId,
+        DateOnly fiscalYearStart,
+        DateOnly fiscalYearEnd,
+        CancellationToken cancellationToken)
+    {
+        return await (
+            from line in dbContext.JournalLines.AsNoTracking()
+            join entry in dbContext.JournalEntries.AsNoTracking()
+                on new { line.JournalEntryId, line.OrganizationId }
+                equals new { JournalEntryId = entry.Id, entry.OrganizationId }
+            join account in dbContext.Accounts.AsNoTracking()
+                on new { line.AccountId, line.OrganizationId }
+                equals new { AccountId = account.Id, account.OrganizationId }
+            where line.OrganizationId == organizationId &&
+                entry.PostingDate >= fiscalYearStart &&
+                entry.PostingDate <= fiscalYearEnd &&
+                (entry.Status == JournalEntryStatus.Posted ||
+                 entry.Status == JournalEntryStatus.Reversed) &&
+                (account.Type == AccountType.Revenue || account.Type == AccountType.Expense)
+            group line by line.AccountId into grouped
+            select new ProfitLossAccountBalance(
+                grouped.Key,
+                grouped.Sum(line => line.Debit),
+                grouped.Sum(line => line.Credit))
+        ).ToArrayAsync(cancellationToken);
+    }
+
     public async Task<long> AllocatePostingSequenceAsync(
         Guid organizationId,
         Guid fiscalYearId,
