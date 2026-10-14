@@ -53,7 +53,8 @@ public sealed partial class BankReconciliationService
                 cn, tx, tenant, statementId, cancellationToken);
             if (accountId is null) return null;
 
-            await LockCloseCalendarAsync(tenant, statementId, cancellationToken);
+            await LockCloseCalendarAsync(
+                cn, tx, tenant, statementId, cancellationToken);
             var evidence = await ReadForeignCloseAsync(
                 cn, tx, tenant, statementId, cancellationToken);
             if (evidence is null) return null;
@@ -132,7 +133,8 @@ public sealed partial class BankReconciliationService
                 cn, tx, tenant, statementId, cancellationToken);
             if (accountId is null) return null;
 
-            await LockCloseCalendarAsync(tenant, statementId, cancellationToken);
+            await LockCloseCalendarAsync(
+                cn, tx, tenant, statementId, cancellationToken);
             var evidence = await ReadForeignCloseAsync(
                 cn, tx, tenant, statementId, cancellationToken);
             if (evidence is null) return null;
@@ -226,14 +228,16 @@ public sealed partial class BankReconciliationService
     }
 
     private async Task LockCloseCalendarAsync(
+        NpgsqlConnection cn, IDbContextTransaction tx,
         Guid tenant, Guid statementId, CancellationToken ct)
     {
-        // Lookup is tenant guarded and called after the bank-account lock.
-        var toDate = await (
-            from statement in db.Database.SqlQueryRaw<BankCloseDateProjection>(
-                "SELECT to_date AS \"ToDate\" FROM banking.bank_statements WHERE organization_id={0} AND id={1}",
-                tenant, statementId)
-            select statement.ToDate).SingleAsync(ct);
+        DateOnly toDate;
+        await using (var statement = Command(cn, tx, """
+            SELECT to_date FROM banking.bank_statements
+            WHERE organization_id=@org AND id=@statement
+            """, ("org", tenant), ("statement", statementId)))
+            toDate = (DateOnly)(await statement.ExecuteScalarAsync(ct))!;
+
         var period = await calendars.FindPeriodByDateAsync(
             tenant, toDate, trackChanges: false, ct);
         if (period is null || period.EndDate != toDate)
@@ -242,8 +246,6 @@ public sealed partial class BankReconciliationService
         await journals.LockPostingCalendarAsync(
             tenant, period.FiscalYearId, period.Id, ct);
     }
-
-    private sealed record BankCloseDateProjection(DateOnly ToDate);
 
     private async Task<ForeignCloseSnapshot?> ReadForeignCloseAsync(
         NpgsqlConnection cn, IDbContextTransaction tx, Guid tenant,
@@ -460,13 +462,19 @@ public sealed partial class BankReconciliationService
 
         // Fingerprint is over original immutable statement + revaluation IDs
         // and all critical results. A new GL posting changes the fingerprint.
-        var canonical = FormattableString.Invariant(
-            $"{tenant:N}|{statementId:N}|{account:N}|{cutoff:yyyyMMdd}|" +
-            $"{statementHash}|{rateId}|{rate:G29}|{native:G29}|" +
-            $"{target:G29}|{previousGl:G29}|{adjustment:G29}|" +
-            $"{valuationJournal}|{actualGl:G29}|{invalidLines}|" +
-            $"{unknownJournalLines}|{chain.Count}|" +
-            $"{string.Join(",", issues.OrderBy(x => x, StringComparer.Ordinal))}");
+        static string Dec(decimal x) =>
+            x.ToString("G29", CultureInfo.InvariantCulture);
+        var canonical = string.Join("|",
+            tenant.ToString("N"), statementId.ToString("N"),
+            account.ToString("N"), cutoff.ToString("yyyyMMdd",
+                CultureInfo.InvariantCulture), statementHash,
+            rateId?.ToString("N") ?? "", Dec(rate), Dec(native),
+            Dec(target), Dec(previousGl), Dec(adjustment),
+            valuationJournal?.ToString("N") ?? "", Dec(actualGl),
+            invalidLines.ToString(CultureInfo.InvariantCulture),
+            unknownJournalLines.ToString(CultureInfo.InvariantCulture),
+            chain.Count.ToString(CultureInfo.InvariantCulture),
+            string.Join(",", issues.OrderBy(x => x, StringComparer.Ordinal)));
         var hash = Convert.ToHexString(
             SHA256.HashData(Encoding.UTF8.GetBytes(canonical))).ToLowerInvariant();
         var prepared = maker.HasValue && preparedHash == hash;
