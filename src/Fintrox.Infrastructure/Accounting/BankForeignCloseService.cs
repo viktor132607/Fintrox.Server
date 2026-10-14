@@ -275,13 +275,15 @@ public sealed partial class BankReconciliationService
         string currency, baseCurrency, statementHash;
         decimal native;
         Guid? rateId = null, valuationJournal = null;
+        Guid? gainAccount = null, lossAccount = null;
         decimal rate = 0m, target = 0m, previousGl = 0m, adjustment = 0m;
         await using (var cmd = Command(cn, tx, """
             SELECT a.id,a.gl_account_id,a.currency_code,o.base_currency_code,
                 s.to_date,s.closing_balance,s.payload_sha256,
                 rv.exchange_rate_id,rv.approved_rate,
                 rv.target_base_balance,rv.ledger_base_before,
-                rv.adjustment_base,rv.journal_entry_id
+                rv.adjustment_base,rv.journal_entry_id,
+                rv.gain_account_id,rv.loss_account_id
             FROM banking.bank_statements s
             JOIN banking.bank_accounts a
               ON a.id=s.bank_account_id AND a.organization_id=s.organization_id
@@ -308,6 +310,8 @@ public sealed partial class BankReconciliationService
                 previousGl = reader.GetDecimal(10);
                 adjustment = reader.GetDecimal(11);
                 valuationJournal = reader.IsDBNull(12) ? null : reader.GetGuid(12);
+                gainAccount = reader.GetGuid(13);
+                lossAccount = reader.GetGuid(14);
             }
         }
 
@@ -442,10 +446,17 @@ public sealed partial class BankReconciliationService
                   AND (SELECT count(*) FROM accounting.journal_lines j
                        WHERE j.journal_entry_id=e.id AND j.organization_id=e.organization_id
                          AND j.account_id=@ledger AND j.debit-j.credit=@adjustment)=1
+                  AND (SELECT count(*) FROM accounting.journal_lines j
+                       WHERE j.journal_entry_id=e.id AND j.organization_id=e.organization_id
+                         AND j.account_id=CASE WHEN @adjustment>0
+                             THEN @gainAccount ELSE @lossAccount END
+                         AND j.debit-j.credit=-@adjustment)=1
                 """, ("journal", valuationJournal.Value), ("org", tenant),
                 ("cutoff", cutoff),
                 ("ref", $"bank-fx-revaluation:v1:{account:N}:{cutoff:yyyyMMdd}"),
-                ("ledger", bankGl), ("adjustment", adjustment));
+                ("ledger", bankGl), ("adjustment", adjustment),
+                ("gainAccount", gainAccount!.Value),
+                ("lossAccount", lossAccount!.Value));
             validValuation = (bool)(await cmd.ExecuteScalarAsync(ct))!;
         }
         else if (validValuation)
