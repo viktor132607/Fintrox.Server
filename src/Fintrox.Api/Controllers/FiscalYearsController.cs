@@ -11,7 +11,8 @@ namespace Fintrox.Api.Controllers;
 [Route("api/v1/accounting/fiscal-years")]
 public sealed class FiscalYearsController(
     IFiscalCalendarService service,
-    IProfitLossClosingService profitLoss) : ControllerBase
+    IProfitLossClosingService profitLoss,
+    IFinancialSourceReconciliationService financialSources) : ControllerBase
 {
     [HttpGet]
     [Authorize(Policy = Permissions.AccountingRead)]
@@ -123,6 +124,18 @@ public sealed class FiscalYearsController(
         {
             return Conflict(ToProblem(exception.Message));
         }
+    }
+
+    [HttpGet("{fiscalYearId:guid}/source-reconciliation")]
+    [Authorize(Policy = Permissions.AccountingRead)]
+    public async Task<ActionResult<FinancialSourceReconciliationResponse>>
+        SourceReconciliation(
+            Guid fiscalYearId,
+            CancellationToken cancellationToken)
+    {
+        var report = await financialSources.ReconcileAsync(
+            fiscalYearId, cancellationToken);
+        return report is null ? NotFound() : Ok(report);
     }
 
     [HttpGet("{fiscalYearId:guid}/close-reconciliation")]
