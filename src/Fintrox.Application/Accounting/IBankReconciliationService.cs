@@ -4,6 +4,12 @@ namespace Fintrox.Application.Accounting;
 
 public interface IBankReconciliationService
 {
+    Task<IReadOnlyList<BankAccountResponse>> ListAccountsAsync(
+        CancellationToken cancellationToken);
+
+    Task<BankStatementResponse?> GetStatementAsync(
+        Guid statementId, CancellationToken cancellationToken);
+
     Task<BankAccountResponse> CreateAccountAsync(
         CreateBankAccountRequest request, CancellationToken cancellationToken);
 
