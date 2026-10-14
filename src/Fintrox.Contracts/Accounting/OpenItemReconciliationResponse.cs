@@ -20,6 +20,13 @@ public sealed record FinancialOpenItemResponse(
     int DaysOverdue,
     string AgingBucket);
 
+public sealed record FinancialCounterpartyOpenBalanceResponse(
+    Guid CounterpartyId,
+    string Type,
+    decimal OutstandingBaseAmount,
+    int OpenDocumentCount,
+    int OverdueDocumentCount);
+
 public sealed record FinancialControlAccountReconciliationResponse(
     Guid AccountId,
     string Type,
@@ -46,5 +53,6 @@ public sealed record FinancialOpenItemReconciliationResponse(
     decimal ReceivablesOpenBase,
     decimal PayablesOpenBase,
     IReadOnlyList<FinancialOpenItemResponse> OpenItems,
+    IReadOnlyList<FinancialCounterpartyOpenBalanceResponse> CounterpartyBalances,
     IReadOnlyList<FinancialControlAccountReconciliationResponse> ControlAccounts,
     IReadOnlyList<FinancialOpenItemReconciliationIssue> Issues);
