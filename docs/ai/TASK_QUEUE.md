@@ -17,7 +17,7 @@
 | TEST-001 | Financial/tenant/HTTP regression coverage | Accounting/Platform | P1 | AUDIT-001 | COMPLETE — CI VERIFIED | 7 full-stack HTTP + migrated PostgreSQL scenarios: posting, reversal, balance, period, tenant, auth and DB immutability; 2902 tests passing; CI 38437997153 |
 | INT-002 | Durable multi-worker webhook claim/recovery | Integrations | P1 | INT-001 | COMPLETE — CI VERIFIED | Atomic PostgreSQL lease/CAS outcomes, expiry recovery and max-attempt handling; 4 real PostgreSQL tests, CI 38475619708, 2,906 passed; docs/webhook-lease-recovery.md |
 | API-001 | Configured CORS and endpoint throttling | API | P1 | Authentication hardening | IMPLEMENTED — CI PENDING | Explicit origins, preflight and auth endpoint rate tests |
-| ACCOUNTING-001 | Complete audited accounting gaps | Accounting/Tax/Currencies | P1 | Foundation/tests | IN PROGRESS — 001A-E CODED; 001F1 SOURCE→GL, 001F2 AR/AP & 001F3 BASE-CURRENCY BANKING & 001F4A CSV/EXACT AUTO-MATCH CODED; BANK FEES/FX PENDING; CI PENDING | See AUDIT.md and MASTER_ROADMAP phases 2–3 |
+| ACCOUNTING-001 | Complete audited accounting gaps | Accounting/Tax/Currencies | P1 | Foundation/tests | IN PROGRESS — 001A-E CODED; 001F1 SOURCE→GL, 001F2 AR/AP & 001F3 BASE-CURRENCY BANKING & 001F4A CSV/AUTO-MATCH + 001F4B FEE GL CODED; FEE CORRECTIONS/FX PENDING; CI PENDING | See AUDIT.md and MASTER_ROADMAP phases 2–3 |
 | FE-001 | Align 36 frontend shells/manifests | Client | P2 | ARCH-001 | PENDING | Module parity and TS architecture/typecheck/build |
 | ERP-001 | Operational/new module business implementation | All | P2 | Accounting foundation | PENDING | Incremental use cases with auth/persistence/API/tests |
 | ENTERPRISE-001 | Enterprise/hardening | All | P3 | Core ERP | PENDING | MASTER_ROADMAP phases 9–10 |
