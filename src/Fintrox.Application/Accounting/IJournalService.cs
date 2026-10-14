@@ -19,6 +19,10 @@ public interface IJournalService
         CreateJournalEntryRequest request,
         CancellationToken cancellationToken);
 
+    Task<JournalEntryResponse> ImportOpeningBalancesAsync(
+        ImportOpeningBalancesRequest request,
+        CancellationToken cancellationToken);
+
     Task<JournalEntryResponse?> UpdateAsync(
         Guid journalEntryId,
         UpdateJournalEntryRequest request,
