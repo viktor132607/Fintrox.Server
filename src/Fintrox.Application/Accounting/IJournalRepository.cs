@@ -41,6 +41,21 @@ public interface IJournalRepository
         Guid journalEntryId,
         CancellationToken cancellationToken);
 
+    // Called only inside the posting/reversal transaction to serialize
+    // competing transitions of one journal entry across API instances.
+    Task LockJournalForPostingAsync(
+        Guid organizationId,
+        Guid journalEntryId,
+        CancellationToken cancellationToken);
+
+    // Locks fiscal year before period in a stable order. This coordinates
+    // post/reversal with concurrent period and year status changes.
+    Task LockPostingCalendarAsync(
+        Guid organizationId,
+        Guid fiscalYearId,
+        Guid periodId,
+        CancellationToken cancellationToken);
+
     Task<long> AllocatePostingSequenceAsync(
         Guid organizationId,
         Guid fiscalYearId,
