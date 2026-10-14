@@ -27,6 +27,10 @@ public interface IBankReconciliationService
     Task<AutoMatchBankStatementResponse?> AutoMatchAsync(
         Guid statementId, CancellationToken cancellationToken);
 
+    Task<BankFeePostingResponse?> PostFeeAsync(
+        Guid statementId, Guid lineId, PostBankFeeRequest request,
+        CancellationToken cancellationToken);
+
     Task<BankStatementMatchResponse?> MatchLineAsync(
         Guid statementId, Guid lineId, Guid paymentId,
         CancellationToken cancellationToken);
