@@ -16,7 +16,9 @@ public sealed record FinancialOpenItemResponse(
     decimal OutstandingDocumentAmount,
     decimal OutstandingBaseAmount,
     Guid? ControlAccountId,
-    bool Overdue);
+    bool Overdue,
+    int DaysOverdue,
+    string AgingBucket);
 
 public sealed record FinancialControlAccountReconciliationResponse(
     Guid AccountId,
