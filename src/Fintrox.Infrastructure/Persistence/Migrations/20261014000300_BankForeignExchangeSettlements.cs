@@ -15,6 +15,11 @@ public sealed class BankForeignExchangeSettlements : Migration
     protected override void Up(MigrationBuilder migrationBuilder)
     {
         migrationBuilder.Sql("""
+            -- Enforce that the approved FX rate belongs to the same tenant,
+            -- including for non-API database writers.
+            CREATE UNIQUE INDEX IF NOT EXISTS ux_fx_rate_tenant_identity
+                ON accounting.exchange_rates(id,organization_id);
+
             CREATE TABLE banking.bank_fx_settlements (
                 id uuid PRIMARY KEY,
                 organization_id uuid NOT NULL,
@@ -42,8 +47,8 @@ public sealed class BankForeignExchangeSettlements : Migration
                     REFERENCES accounting.accounts(id,organization_id) ON DELETE RESTRICT,
                 CONSTRAINT fk_bank_fx_loss FOREIGN KEY(loss_account_id,organization_id)
                     REFERENCES accounting.accounts(id,organization_id) ON DELETE RESTRICT,
-                CONSTRAINT fk_bank_fx_rate FOREIGN KEY(exchange_rate_id)
-                    REFERENCES accounting.exchange_rates(id) ON DELETE RESTRICT,
+                CONSTRAINT fk_bank_fx_rate FOREIGN KEY(exchange_rate_id,organization_id)
+                    REFERENCES accounting.exchange_rates(id,organization_id) ON DELETE RESTRICT,
                 CONSTRAINT ck_bank_fx_amounts CHECK (
                     approved_rate > 0 AND clearing_base_amount > 0
                     AND bank_base_amount > 0
@@ -70,6 +75,7 @@ public sealed class BankForeignExchangeSettlements : Migration
         migrationBuilder.Sql("""
             DROP TABLE banking.bank_fx_settlements;
             DROP FUNCTION banking.guard_fx_settlement_immutable();
+            DROP INDEX IF EXISTS accounting.ux_fx_rate_tenant_identity;
             """);
     }
 }
