@@ -266,6 +266,219 @@ public sealed class ProfitLossClosingService(
                 fiscalYearId, entry.Id, netIncome, AlreadyClosed: false);
         }, cancellationToken);
     }
+    public async Task<ProfitLossReopenResponse?> ReopenForCorrectionAsync(
+        Guid fiscalYearId,
+        string reason,
+        CancellationToken cancellationToken)
+    {
+        var trimmedReason = reason?.Trim();
+        if (fiscalYearId == Guid.Empty ||
+            string.IsNullOrWhiteSpace(trimmedReason) ||
+            trimmedReason.Length is < 15 or > 250)
+        {
+            throw new FiscalCalendarConflictException(
+                "A fiscal year and a correction reason of 15-250 characters are required.");
+        }
+
+        var organizationId = currentOrganization.RequireOrganizationId();
+        return await transactions.ExecuteAsync(async ct =>
+        {
+            await calendar.LockFiscalYearForCloseAsync(
+                organizationId, fiscalYearId, ct);
+            var year = await calendar.GetFiscalYearAsync(
+                organizationId, fiscalYearId, trackChanges: true, ct);
+            if (year is null) return null;
+
+            var entries = await journals.ListYearEndClosingEntriesAsync(
+                organizationId, fiscalYearId, ct);
+            var (latest, _) = FindLatestClosing(entries, fiscalYearId);
+            if (latest is null)
+            {
+                throw new FiscalCalendarConflictException(
+                    "There is no posted year-end profit/loss closing entry to reverse.");
+            }
+
+            var description = $"Year-end correction: {trimmedReason}";
+            if (year.Status == FiscalYearStatus.Open &&
+                latest.Status == JournalEntryStatus.Reversed &&
+                latest.ReversedByJournalEntryId is Guid reversedId)
+            {
+                var previousReversal = await journals.GetEntryAsync(
+                    organizationId, reversedId, trackChanges: false, ct);
+                if (previousReversal is null ||
+                    previousReversal.Status != JournalEntryStatus.Posted ||
+                    previousReversal.Description != description)
+                {
+                    throw new FiscalCalendarConflictException(
+                        "The fiscal year was already reopened with a different correction reason.");
+                }
+
+                return new ProfitLossReopenResponse(
+                    fiscalYearId, latest.Id, previousReversal.Id,
+                    AlreadyReopened: true);
+            }
+
+            if (year.Status != FiscalYearStatus.Closed ||
+                latest.Status != JournalEntryStatus.Posted ||
+                latest.ReversedByJournalEntryId is not null)
+            {
+                throw new FiscalCalendarConflictException(
+                    "Only a fully closed year with an unreversed closing journal can be reopened for correction.");
+            }
+
+            var periods = await calendar.ListPeriodsAsync(
+                organizationId, fiscalYearId, ct);
+            var last = periods.SingleOrDefault(period =>
+                period.EndDate == year.EndDate);
+            if (last is null ||
+                last.Id != latest.FiscalPeriodId ||
+                last.Status != AccountingPeriodStatus.Closed)
+            {
+                throw new FiscalCalendarConflictException(
+                    "The year-end closing journal does not belong to the closed final period.");
+            }
+
+            await calendar.LockAccountingPeriodForCloseAsync(
+                organizationId, fiscalYearId, last.Id, ct);
+
+            // This protected journal cannot be reversed via the ordinary
+            // API; it is reversed only together with reopening both statuses.
+            await journals.LockJournalForPostingAsync(
+                organizationId, latest.Id, ct);
+            var original = await journals.GetEntryAsync(
+                organizationId, latest.Id, trackChanges: true, ct);
+            var finalPeriod = await calendar.GetPeriodAsync(
+                organizationId, fiscalYearId, last.Id, trackChanges: true, ct);
+            if (original is null ||
+                original.Status != JournalEntryStatus.Posted ||
+                finalPeriod is null ||
+                finalPeriod.Status != AccountingPeriodStatus.Closed)
+            {
+                throw new FiscalCalendarConflictException(
+                    "The year-end closing state changed during correction.");
+            }
+
+            var originalLines = await journals.ListLinesAsync(
+                organizationId, original.Id, ct);
+            if (originalLines.Count < 2)
+            {
+                throw new FiscalCalendarConflictException(
+                    "The original closing journal has too few lines to reverse.");
+            }
+
+            var now = timeProvider.GetUtcNow();
+            var reversal = JournalEntry.CreateReversalDraft(
+                organizationId,
+                finalPeriod.Id,
+                original.Id,
+                year.EndDate,
+                description,
+                now);
+            await journals.AddEntryAsync(reversal, ct);
+            foreach (var line in originalLines)
+            {
+                await journals.AddLineAsync(
+                    JournalLine.Create(
+                        organizationId, reversal.Id, line.LineNumber,
+                        line.AccountId, line.Credit, line.Debit,
+                        line.Description, now),
+                    ct);
+            }
+
+            await journals.SaveChangesAsync(ct);
+            var sequence = await journals.AllocatePostingSequenceAsync(
+                organizationId, fiscalYearId, ct);
+            reversal.Post(
+                string.Create(CultureInfo.InvariantCulture,
+                    $"{year.StartDate:yyyyMMdd}-{sequence:D6}"), now);
+            original.MarkReversed(reversal.Id, now);
+            finalPeriod.Reopen(now);
+            year.Reopen(now);
+            await journals.SaveChangesAsync(ct);
+
+            return new ProfitLossReopenResponse(
+                fiscalYearId, original.Id, reversal.Id,
+                AlreadyReopened: false);
+        }, cancellationToken);
+    }
+
+    public async Task<FiscalCloseReconciliationResponse?> ReconcileAsync(
+        Guid fiscalYearId,
+        CancellationToken cancellationToken)
+    {
+        var organizationId = currentOrganization.RequireOrganizationId();
+        return await transactions.ExecuteAsync(async ct =>
+        {
+            // Serialize the snapshot against writes to this year's ledger
+            // and fiscal calendar across concurrent API instances.
+            await calendar.LockFiscalYearForCloseAsync(
+                organizationId, fiscalYearId, ct);
+            var year = await calendar.GetFiscalYearAsync(
+                organizationId, fiscalYearId, trackChanges: false, ct);
+            if (year is null) return null;
+
+            var periods = (await calendar.ListPeriodsAsync(
+                organizationId, fiscalYearId, ct))
+                .OrderBy(period => period.StartDate).ToArray();
+            var expected = year.StartDate;
+            var calendarContiguous = periods.Length > 0;
+            for (var i = 0; i < periods.Length; i++)
+            {
+                var period = periods[i];
+                if (period.StartDate != expected ||
+                    period.EndDate < expected ||
+                    period.EndDate > year.EndDate ||
+                    await calendar.HasMisdatedJournalsInPeriodAsync(
+                        organizationId, period.Id,
+                        period.StartDate, period.EndDate, ct))
+                {
+                    calendarContiguous = false;
+                    break;
+                }
+                if (i < periods.Length - 1)
+                {
+                    expected = period.EndDate.AddDays(1);
+                }
+            }
+            if (periods.Length > 0 && periods[^1].EndDate != year.EndDate)
+                calendarContiguous = false;
+
+            var precedingClosed = periods.Length > 0 &&
+                periods.Take(periods.Length - 1)
+                    .All(period => period.Status == AccountingPeriodStatus.Closed);
+            var finalOpen = periods.Length > 0 &&
+                periods[^1].Status == AccountingPeriodStatus.Open;
+
+            var totals = await journals.GetFiscalLedgerTotalsAsync(
+                organizationId, year.StartDate, year.EndDate, ct);
+            var profitLoss = await journals.GetProfitLossBalancesAsync(
+                organizationId, year.StartDate, year.EndDate, ct);
+            var draftCount = await calendar.CountDraftJournalsInFiscalYearAsync(
+                organizationId, fiscalYearId, ct);
+            var closingEntries = await journals.ListYearEndClosingEntriesAsync(
+                organizationId, fiscalYearId, ct);
+            var (latest, _) = FindLatestClosing(closingEntries, fiscalYearId);
+            var netDebit = profitLoss.Sum(account => account.Debit);
+            var netCredit = profitLoss.Sum(account => account.Credit);
+            var profitLossCleared = profitLoss.All(account =>
+                account.Debit == account.Credit);
+            var ledgerBalanced = totals.Debit == totals.Credit;
+
+            return new FiscalCloseReconciliationResponse(
+                fiscalYearId, year.Status.ToString(),
+                totals.Debit, totals.Credit,
+                netDebit, netCredit, draftCount,
+                ledgerBalanced, profitLossCleared, calendarContiguous,
+                precedingClosed && finalOpen,
+                year.Status == FiscalYearStatus.Open &&
+                    calendarContiguous && precedingClosed && finalOpen &&
+                    draftCount == 0 && ledgerBalanced &&
+                    profitLoss.Any(account => account.Debit != account.Credit) &&
+                    (latest is null || latest.Status == JournalEntryStatus.Reversed),
+                latest?.Id);
+        }, cancellationToken);
+    }
+
     private static (JournalEntry? Latest, int Round) FindLatestClosing(
         IReadOnlyList<JournalEntry> entries,
         Guid fiscalYearId)
