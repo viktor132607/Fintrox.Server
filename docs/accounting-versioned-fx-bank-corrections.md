@@ -39,7 +39,7 @@ Example:
 When the previous approved valuation was **exactly zero** and therefore had
 no journal, `expectedCurrentJournalEntryId` is `null`.
 
-The version is an explicit compare-and-swap precondition. Different
+The `ExchangeRate` master enforces **one record per organization/currency pair/effective date**. A corrected cutoff rate therefore uses the existing dated rate record (whose old book rate remains preserved in the immutable v1 snapshot), not an illegal second row for the same pair/day. The version is an explicit compare-and-swap precondition. Different
 inputs, wrong original journal, nonmatching rate/date/currency/account
 or unexpected bank GL balance -> **409**, foreign-tenant source -> **404**.
 An identical replay with the same maker and original terms returns the
@@ -135,7 +135,7 @@ untouched; migration is additive.
 
 ## Authored regressions — NOT executed
 
-Six new authenticated HTTP/migrated PostgreSQL test methods in
+Eight new authenticated HTTP/migrated PostgreSQL test methods in
 `tests/Fintrox.Domain.Tests/Accounting/FinancialHttpPostgresVersionedBankCloseTests.cs`:
 
 1. EUR bank v1 target120 from USD120 @1 and initial EUR100;
@@ -152,6 +152,8 @@ Six new authenticated HTTP/migrated PostgreSQL test methods in
 5. Cross-tenant cutoff -> 404.
 6. Two concurrent identical amended requests serialize to one GL
    reversal and one replacement version.
+7. Previously zero-delta v1 valuation gets v2 adjustment without creating a fictitious reverse journal.
+8. A second correction creates v3 and can return to zero delta without a dummy replacement journal.
 
 These tests have **not been run**: no local `dotnet` SDK was found
 and available current GitHub status does not establish a passing
