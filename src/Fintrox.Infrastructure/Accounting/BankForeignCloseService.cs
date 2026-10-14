@@ -537,8 +537,8 @@ public sealed partial class BankReconciliationService
         await using (var audit = Command(cn, tx, """
             SELECT count(*)
             FROM banking.bank_fx_revaluation_amendments am
-            LEFT JOIN accounting.journal_entries old
-              ON old.id=am.previous_journal_id AND old.organization_id=am.organization_id
+            LEFT JOIN accounting.journal_entries prior_journal
+              ON prior_journal.id=am.previous_journal_id AND prior_journal.organization_id=am.organization_id
             LEFT JOIN accounting.journal_entries inverse
               ON inverse.id=am.reversal_journal_id AND inverse.organization_id=am.organization_id
             LEFT JOIN accounting.journal_entries replacement
@@ -547,12 +547,12 @@ public sealed partial class BankReconciliationService
             WHERE am.organization_id=@org AND am.statement_id=@statement
               AND (
                 (am.previous_adjustment_base<>0 AND (
-                    old.status IS DISTINCT FROM 'Reversed'
-                    OR old.reversed_by_journal_entry_id IS DISTINCT FROM inverse.id
+                    prior_journal.status IS DISTINCT FROM 'Reversed'
+                    OR prior_journal.reversed_by_journal_entry_id IS DISTINCT FROM inverse.id
                     OR inverse.status IS DISTINCT FROM 'Posted'
-                    OR inverse.reversal_of_journal_entry_id IS DISTINCT FROM old.id
+                    OR inverse.reversal_of_journal_entry_id IS DISTINCT FROM prior_journal.id
                     OR (SELECT count(*) FROM accounting.journal_lines j
-                        WHERE j.organization_id=@org AND j.journal_entry_id=old.id
+                        WHERE j.organization_id=@org AND j.journal_entry_id=prior_journal.id
                           AND j.account_id=@ledger
                           AND j.debit-j.credit=am.previous_adjustment_base)<>1
                     OR (SELECT count(*) FROM accounting.journal_lines j
