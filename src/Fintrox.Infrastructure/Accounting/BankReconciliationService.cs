@@ -149,7 +149,8 @@ public sealed class BankReconciliationService(
                         throw new BankReconciliationConflictException(
                             "Statement reference was already imported with different contents.");
                     var oldCount = checked((int)reader.GetInt64(2));
-                    await tx.CommitAsync(cancellationToken);
+                    // No writes in replay case. Disposing the read-only
+                    // transaction rolls it back after the reader is closed.
                     return new BankStatementImportResponse(
                         existingId, accountId, externalId!,
                         request.FromDate, request.ToDate, oldCount,
@@ -395,7 +396,6 @@ public sealed class BankReconciliationService(
                 {
                     var lineId = reader.GetGuid(0);
                     movement += reader.GetDecimal(1);
-                    var valid = false;
                     if (!reader.IsDBNull(2))
                     {
                         // Check current state in a separate query below; don't
