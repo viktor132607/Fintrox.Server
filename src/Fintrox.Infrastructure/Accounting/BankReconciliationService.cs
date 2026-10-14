@@ -17,7 +17,7 @@ namespace Fintrox.Infrastructure.Accounting;
 /// Imported evidence is append-only; only a verified payment match is allowed.
 /// Multi-currency statement conversion is deliberately not inferred.
 /// </summary>
-public sealed class BankReconciliationService(
+public sealed partial class BankReconciliationService(
     FintroxDbContext db,
     ICurrentOrganization organization) : IBankReconciliationService
 {
