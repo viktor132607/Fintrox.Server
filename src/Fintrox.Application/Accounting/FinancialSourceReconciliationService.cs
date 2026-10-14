@@ -71,7 +71,7 @@ public sealed class FinancialSourceReconciliationService(
                     source.Status == "Confirmed" &&
                     source.AllocatedAmount is decimal recordedAmount)
                 {
-                    var rows = allocationsByPayment.TryGetValue(
+                    FinancialPaymentAllocationSnapshot[] rows = allocationsByPayment.TryGetValue(
                         source.Id, out var linked) ? linked : [];
                     var allocatedTotal = rows.Sum(row => row.PaymentAmount);
                     if (allocatedTotal != recordedAmount ||
