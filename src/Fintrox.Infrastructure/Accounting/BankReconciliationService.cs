@@ -3,6 +3,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using Fintrox.Application.Accounting;
+using Fintrox.Domain.Accounting;
 using Fintrox.Application.Common.Interfaces;
 using Fintrox.Contracts.Accounting;
 using Fintrox.Infrastructure.Persistence;
@@ -19,7 +20,10 @@ namespace Fintrox.Infrastructure.Accounting;
 /// </summary>
 public sealed partial class BankReconciliationService(
     FintroxDbContext db,
-    ICurrentOrganization organization) : IBankReconciliationService
+    ICurrentOrganization organization,
+    IJournalRepository journals,
+    IFiscalCalendarRepository calendars,
+    TimeProvider clock) : IBankReconciliationService
 {
     public async Task<IReadOnlyList<BankAccountResponse>> ListAccountsAsync(
         CancellationToken cancellationToken)
