@@ -23,3 +23,21 @@ public sealed record ForeignBankCloseDecisionResponse(
     Guid StatementId, Guid BankAccountId, Guid PreparationId,
     Guid PreparedByUserId, Guid? ApprovedByUserId,
     string EvidenceSha256, bool Approved, bool AlreadyRecorded);
+
+public sealed record AmendForeignBankRevaluationRequest(
+    int ExpectedCurrentVersion,
+    Guid? ExpectedCurrentJournalEntryId,
+    Guid ExchangeRateId,
+    Guid FxGainAccountId,
+    Guid FxLossAccountId,
+    decimal ExpectedNativeClosingBalance,
+    decimal ExpectedLedgerBaseBalance,
+    string Reason);
+
+public sealed record ForeignBankRevaluationAmendmentResponse(
+    Guid StatementId, Guid BankAccountId, int VersionNumber,
+    Guid? PreviousJournalEntryId, Guid? ReversalJournalEntryId,
+    Guid? ReplacementJournalEntryId, decimal OriginalLedgerBase,
+    decimal PreviousTargetBase, decimal ReplacementTargetBase,
+    decimal ReplacementAdjustmentBase, decimal ApprovedRate,
+    Guid CorrectedByUserId, bool AlreadyAmended);
