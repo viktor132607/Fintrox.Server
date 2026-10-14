@@ -110,9 +110,9 @@ public sealed partial class FinancialHttpPostgresRegressionTests
                 r.Content.ReadFromJsonAsync<ProfitLossReopenResponse>()));
             Assert.IsNotNull(records[0]);
             Assert.IsNotNull(records[1]);
-            Assert.AreEqual(records[0].ReversalJournalEntryId,
-                records[1].ReversalJournalEntryId);
-            Assert.AreEqual(1, records.Count(r => r.AlreadyReopened));
+            Assert.AreEqual(records[0]!.ReversalJournalEntryId,
+                records[1]!.ReversalJournalEntryId);
+            Assert.AreEqual(1, records.Count(r => r!.AlreadyReopened));
         }
         finally
         {
