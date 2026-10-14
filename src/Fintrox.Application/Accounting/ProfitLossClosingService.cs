@@ -131,6 +131,17 @@ public sealed class ProfitLossClosingService(
                         "The fiscal calendar has gaps, overlaps or dates outside the fiscal year.");
                 }
 
+                // Legacy/backfilled journals might predate period-close
+                // guards. Refuse certification if any entry's posting date
+                // is outside the fiscal period it references.
+                if (await calendar.HasMisdatedJournalsInPeriodAsync(
+                        organizationId, period.Id,
+                        period.StartDate, period.EndDate, ct))
+                {
+                    throw new FiscalCalendarConflictException(
+                        "A journal entry has a posting date outside its assigned fiscal period.");
+                }
+
                 var last = index == periods.Length - 1;
                 if (last)
                 {
