@@ -117,14 +117,14 @@ public sealed partial class BankReconciliationService
                         throw new BankReconciliationConflictException(
                             "Bank cutoff already revalued with different approved terms or the historical journal is no longer posted.");
 
-                    var delta = reader.GetDecimal(7);
+                    var originalDelta = reader.GetDecimal(7);
                     return new ForeignBankRevaluationResponse(
                         statementId, accountId, recordedJournal, cutoff,
                         quoteCurrency, reader.GetDecimal(3),
                         reader.GetDecimal(5), reader.GetDecimal(4),
-                        reader.GetDecimal(6), delta,
-                        delta > 0m ? delta : 0m,
-                        delta < 0m ? -delta : 0m,
+                        reader.GetDecimal(6), originalDelta,
+                        originalDelta > 0m ? originalDelta : 0m,
+                        originalDelta < 0m ? -originalDelta : 0m,
                         AlreadyRevalued: true);
                 }
             }
