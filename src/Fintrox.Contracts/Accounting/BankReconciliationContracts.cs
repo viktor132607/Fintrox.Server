@@ -45,6 +45,19 @@ public sealed record BankStatementResponse(
     decimal OpeningBalance, decimal ClosingBalance,
     IReadOnlyList<BankStatementLineResponse> Lines);
 
+/// <summary>Explicit approved bank expense mapping and replay precondition.</summary>
+public sealed record PostBankFeeRequest(
+    Guid ExpenseAccountId,
+    decimal ExpectedSignedAmount,
+    [property: System.ComponentModel.DataAnnotations.Required]
+    [property: System.ComponentModel.DataAnnotations.StringLength(250, MinimumLength = 10)]
+    string Reason);
+
+public sealed record BankFeePostingResponse(
+    Guid StatementId, Guid StatementLineId,
+    Guid JournalEntryId, Guid ExpenseAccountId,
+    decimal FeeAmount, string Reason, bool AlreadyPosted);
+
 public sealed record BankStatementMatchResponse(
     Guid StatementId, Guid LineId, Guid PaymentId, bool AlreadyMatched);
 
