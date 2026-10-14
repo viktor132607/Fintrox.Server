@@ -74,6 +74,10 @@ public sealed partial class BankReconciliationService
                 WHERE l.organization_id=@org AND l.statement_id=@statement
                   AND l.matched_payment_id IS NULL
                   AND NOT EXISTS (
+                      SELECT 1 FROM banking.bank_fee_postings fee
+                      WHERE fee.organization_id=@org AND fee.statement_line_id=l.id
+                  )
+                  AND NOT EXISTS (
                       SELECT 1 FROM banking.bank_statement_lines used
                       WHERE used.organization_id=@org
                         AND used.matched_payment_id=p.id
