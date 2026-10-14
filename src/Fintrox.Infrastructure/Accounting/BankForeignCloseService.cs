@@ -529,8 +529,6 @@ public sealed partial class BankReconciliationService
             tenant.ToString("N"), statementId.ToString("N"),
             account.ToString("N"), cutoff.ToString("yyyyMMdd",
                 CultureInfo.InvariantCulture), statementHash,
-            version.ToString(CultureInfo.InvariantCulture),
-            amendmentId?.ToString("N") ?? "",
             rateId?.ToString("N") ?? "", Dec(rate), Dec(native),
             Dec(target), Dec(previousGl), Dec(adjustment),
             valuationJournal?.ToString("N") ?? "", Dec(actualGl),
@@ -538,6 +536,12 @@ public sealed partial class BankReconciliationService
             unknownJournalLines.ToString(CultureInfo.InvariantCulture),
             chain.Count.ToString(CultureInfo.InvariantCulture),
             string.Join(",", issues.OrderBy(x => x, StringComparer.Ordinal)));
+        // Do not change existing v1 approval hashes. Only versioned
+        // amendments add their immutable identity to the canonical scope.
+        if (amendmentId is Guid currentAmendment)
+            canonical += "|amendment:" +
+                version.ToString(CultureInfo.InvariantCulture) + ":" +
+                currentAmendment.ToString("N");
         var hash = Convert.ToHexString(
             SHA256.HashData(Encoding.UTF8.GetBytes(canonical))).ToLowerInvariant();
         var prepared = maker.HasValue && preparedHash == hash;
