@@ -813,10 +813,12 @@ public sealed class JournalService(
              entry.ExternalReference?.StartsWith(
                 "bank-fee:v1:", StringComparison.Ordinal) == true ||
              entry.ExternalReference?.StartsWith(
-                "bank-fx-settlement:v1:", StringComparison.Ordinal) == true))
+                "bank-fx-settlement:v1:", StringComparison.Ordinal) == true ||
+             entry.ExternalReference?.StartsWith(
+                "bank-fx-revaluation:v1:", StringComparison.Ordinal) == true))
         {
             throw new JournalConflictException(
-                "Protected year-end, bank fee or FX settlement journals require a dedicated controlled correction workflow.");
+                "Protected year-end, bank fee, FX settlement or FX revaluation journals require a dedicated correction workflow.");
         }
 
         if (entry.Status == JournalEntryStatus.Reversed ||
