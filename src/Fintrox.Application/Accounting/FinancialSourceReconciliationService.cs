@@ -41,6 +41,11 @@ public sealed class FinancialSourceReconciliationService(
                 .Distinct().ToArray();
             var postedReversalIds = await repository.GetPostedReversalIdsAsync(
                 organizationId, reversalIds, ct);
+            var allocations = await repository.ListPaymentAllocationsAsync(
+                organizationId, year.StartDate, year.EndDate, ct);
+            var allocationsByPayment = allocations.GroupBy(row => row.PaymentId)
+                .ToDictionary(group => group.Key, group => group.ToArray());
+
 
             var issues = new List<FinancialSourceReconciliationIssue>();
             var journalGroups = journals.GroupBy(journal => journal.ExternalReference)
@@ -61,6 +66,31 @@ public sealed class FinancialSourceReconciliationService(
                 var isDraft = source.Status == "Draft";
                 var isCancelled = source.Status == "Cancelled";
                 var active = source.Status is "Issued" or "Received" or "Confirmed";
+
+                if (source.SourceType == "Payment" &&
+                    source.Status == "Confirmed" &&
+                    source.AllocatedAmount is decimal recordedAmount)
+                {
+                    var rows = allocationsByPayment.TryGetValue(
+                        source.Id, out var linked) ? linked : [];
+                    var allocatedTotal = rows.Sum(row => row.PaymentAmount);
+                    if (allocatedTotal != recordedAmount ||
+                        allocatedTotal < 0m ||
+                        allocatedTotal > source.GrossAmount)
+                    {
+                        AddIssue("PaymentAllocationMismatch",
+                            "The declared allocated amount differs from the sum of payment-currency allocation rows or exceeds the payment amount.");
+                    }
+                    if (rows.Any(row => row.PaymentAmount <= 0m ||
+                        row.DocumentAmount <= 0m ||
+                        (source.Direction == "Incoming"
+                            ? row.SalesInvoiceId is null || row.PurchaseDocumentId is not null
+                            : row.PurchaseDocumentId is null || row.SalesInvoiceId is not null)))
+                    {
+                        AddIssue("InvalidAllocationTarget",
+                            "Allocation amount or target type does not match payment direction.");
+                    }
+                }
 
                 if (isDraft)
                 {
