@@ -99,6 +99,26 @@ public sealed record ForeignBankRevaluationResponse(
     decimal SignedAdjustmentBase, decimal UnrealizedGainBase,
     decimal UnrealizedLossBase, bool AlreadyRevalued);
 
+/// <summary>
+/// Explicit compensating correction of a posted bank fee or realized FX
+/// settlement. This does not alter or delete the imported statement line.
+/// </summary>
+public sealed record CorrectBankPostingRequest(
+    string SourceKind,
+    Guid OriginalJournalEntryId,
+    DateOnly CorrectionPostingDate,
+    string Reason);
+
+public sealed record BankPostingCorrectionResponse(
+    Guid StatementId,
+    Guid StatementLineId,
+    string SourceKind,
+    Guid OriginalJournalEntryId,
+    Guid ReversalJournalEntryId,
+    DateOnly CorrectionPostingDate,
+    Guid CorrectedByUserId,
+    bool AlreadyCorrected);
+
 public sealed record BankStatementMatchResponse(
     Guid StatementId, Guid LineId, Guid PaymentId, bool AlreadyMatched);
 
