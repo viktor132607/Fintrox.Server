@@ -5,6 +5,7 @@ using Fintrox.Domain.Accounting;
 using Fintrox.Domain.Partners;
 using Fintrox.Domain.Payments;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Fintrox.Domain.Tests.Accounting;
@@ -138,7 +139,10 @@ public sealed partial class FinancialHttpPostgresRegressionTests
         using var crossTenant = await other.GetAsync(
             $"/api/v1/accounting/fiscal-years/{fiscal.YearId}/source-reconciliation");
         Assert.AreEqual(HttpStatusCode.NotFound, crossTenant.StatusCode);
-        using var anonymous = factory!.CreateClient();
+        using var anonymous = factory!.CreateClient(new WebApplicationFactoryClientOptions
+        {
+            BaseAddress = new Uri("https://localhost")
+        });
         using var rejected = await anonymous.GetAsync(
             $"/api/v1/accounting/fiscal-years/{fiscal.YearId}/source-reconciliation");
         Assert.AreEqual(HttpStatusCode.Unauthorized, rejected.StatusCode);
