@@ -10,7 +10,8 @@ namespace Fintrox.Api.Controllers;
 [Authorize]
 [Route("api/v1/accounting/fiscal-years")]
 public sealed class FiscalYearsController(
-    IFiscalCalendarService service) : ControllerBase
+    IFiscalCalendarService service,
+    IProfitLossClosingService profitLoss) : ControllerBase
 {
     [HttpGet]
     [Authorize(Policy = Permissions.AccountingRead)]
@@ -102,6 +103,26 @@ public sealed class FiscalYearsController(
             () => service.CloseFiscalYearAsync(
                 fiscalYearId,
                 cancellationToken));
+    }
+
+    [HttpPost("{fiscalYearId:guid}/close-profit-loss")]
+    [Authorize(Policy = Permissions.AccountingWrite)]
+    [Authorize(Policy = Permissions.AccountingPost)]
+    public async Task<ActionResult<ProfitLossCloseResponse>> CloseProfitLoss(
+        Guid fiscalYearId,
+        CloseProfitLossRequest request,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var result = await profitLoss.CloseAsync(
+                fiscalYearId, request.RetainedEarningsAccountId, cancellationToken);
+            return result is null ? NotFound() : Ok(result);
+        }
+        catch (FiscalCalendarConflictException exception)
+        {
+            return Conflict(ToProblem(exception.Message));
+        }
     }
 
     [HttpPost("{fiscalYearId:guid}/reopen")]
