@@ -711,6 +711,198 @@ public sealed class FinancialHttpPostgresRegressionTests
             x.OrganizationId == organizationA));
     }
 
+    [TestMethod]
+    public async Task PeriodCloseRejectsDraftThenAllowsCloseAfterPosting()
+    {
+        var calendar = await MarchCalendarAsync(organizationA);
+        using var client = Client(userA, organizationA);
+        var draft = await CreateDraftAsync(client, 100m, 100m);
+        var url = $"/api/v1/accounting/fiscal-years/{calendar.YearId}/periods/{calendar.PeriodId}";
+
+        using (var rejected = await client.PostAsync($"{url}/close", null))
+            Assert.AreEqual(HttpStatusCode.Conflict, rejected.StatusCode);
+
+        await using (var db = CreateDb())
+            Assert.AreEqual(AccountingPeriodStatus.Open,
+                (await db.AccountingPeriods.AsNoTracking()
+                    .SingleAsync(x => x.Id == calendar.PeriodId)).Status);
+
+        using (var posted = await client.PostAsync($"{Endpoint}/{draft.Id}/post", null))
+            Assert.AreEqual(HttpStatusCode.OK, posted.StatusCode);
+
+        using (var closed = await client.PostAsync($"{url}/close", null))
+        {
+            Assert.AreEqual(HttpStatusCode.OK, closed.StatusCode,
+                await closed.Content.ReadAsStringAsync());
+            var period = await closed.Content.ReadFromJsonAsync<AccountingPeriodResponse>();
+            Assert.IsNotNull(period);
+            Assert.AreEqual("Closed", period.Status);
+        }
+
+        // New drafts cannot slip into a closed calendar; the creation path
+        // uses the same transactionally held calendar row locks.
+        using var create = await client.PostAsJsonAsync(Endpoint,
+            new CreateJournalEntryRequest(PostingDate, PostingDate, "Late draft", null,
+            [
+                new CreateJournalLineRequest(assetA, 9m, 0m, null),
+                new CreateJournalLineRequest(revenueA, 0m, 9m, null)
+            ]));
+        Assert.AreEqual(HttpStatusCode.Conflict, create.StatusCode);
+
+        await using var verify = CreateDb();
+        Assert.AreEqual(1, await verify.JournalEntries.CountAsync(x =>
+            x.OrganizationId == organizationA));
+    }
+
+    [TestMethod]
+    public async Task SoftClosedPeriodIsReopenableAndBlocksNewDrafts()
+    {
+        var calendar = await MarchCalendarAsync(organizationA);
+        using var client = Client(userA, organizationA);
+        var draft = await CreateDraftAsync(client, 30m, 30m);
+        var url = $"/api/v1/accounting/fiscal-years/{calendar.YearId}/periods/{calendar.PeriodId}";
+
+        using (var rejected = await client.PostAsync($"{url}/soft-close", null))
+            Assert.AreEqual(HttpStatusCode.Conflict, rejected.StatusCode);
+        using (var posted = await client.PostAsync($"{Endpoint}/{draft.Id}/post", null))
+            Assert.AreEqual(HttpStatusCode.OK, posted.StatusCode);
+        using (var softClosed = await client.PostAsync($"{url}/soft-close", null))
+        {
+            Assert.AreEqual(HttpStatusCode.OK, softClosed.StatusCode);
+            Assert.AreEqual("SoftClosed",
+                (await softClosed.Content.ReadFromJsonAsync<AccountingPeriodResponse>())!.Status);
+        }
+
+        using (var late = await client.PostAsync(Endpoint,
+            JsonContent.Create(new CreateJournalEntryRequest(
+                PostingDate, PostingDate, "Late", null, null))))
+            Assert.AreEqual(HttpStatusCode.Conflict, late.StatusCode);
+
+        using (var reopened = await client.PostAsync($"{url}/reopen", null))
+        {
+            Assert.AreEqual(HttpStatusCode.OK, reopened.StatusCode);
+            Assert.AreEqual("Open",
+                (await reopened.Content.ReadFromJsonAsync<AccountingPeriodResponse>())!.Status);
+        }
+    }
+
+    [TestMethod]
+    public async Task FiscalYearCannotCloseBeforeAllPeriodsClose()
+    {
+        var calendar = await MarchCalendarAsync(organizationA);
+        using var client = Client(userA, organizationA);
+        var yearUrl = $"/api/v1/accounting/fiscal-years/{calendar.YearId}";
+        var periodUrl = $"{yearUrl}/periods/{calendar.PeriodId}";
+
+        using (var rejected = await client.PostAsync($"{yearUrl}/close", null))
+            Assert.AreEqual(HttpStatusCode.Conflict, rejected.StatusCode);
+        using (var rejected = await client.PostAsync($"{yearUrl}/soft-close", null))
+            Assert.AreEqual(HttpStatusCode.Conflict, rejected.StatusCode);
+
+        using (var closed = await client.PostAsync($"{periodUrl}/close", null))
+            Assert.AreEqual(HttpStatusCode.OK, closed.StatusCode);
+        using (var closedYear = await client.PostAsync($"{yearUrl}/close", null))
+        {
+            Assert.AreEqual(HttpStatusCode.OK, closedYear.StatusCode,
+                await closedYear.Content.ReadAsStringAsync());
+            Assert.AreEqual("Closed",
+                (await closedYear.Content.ReadFromJsonAsync<FiscalYearResponse>())!.Status);
+        }
+
+        using (var rejected = await client.PostAsync($"{periodUrl}/reopen", null))
+            Assert.AreEqual(HttpStatusCode.Conflict, rejected.StatusCode);
+
+        using (var reopened = await client.PostAsync($"{yearUrl}/reopen", null))
+            Assert.AreEqual(HttpStatusCode.OK, reopened.StatusCode);
+        using (var reopenedPeriod = await client.PostAsync($"{periodUrl}/reopen", null))
+            Assert.AreEqual(HttpStatusCode.OK, reopenedPeriod.StatusCode);
+    }
+
+    [TestMethod]
+    public async Task FiscalYearSoftCloseRequiresCompletedPeriodStatuses()
+    {
+        var calendar = await MarchCalendarAsync(organizationA);
+        using var client = Client(userA, organizationA);
+        var yearUrl = $"/api/v1/accounting/fiscal-years/{calendar.YearId}";
+        var periodUrl = $"{yearUrl}/periods/{calendar.PeriodId}";
+
+        using (var softClosedPeriod = await client.PostAsync($"{periodUrl}/soft-close", null))
+            Assert.AreEqual(HttpStatusCode.OK, softClosedPeriod.StatusCode);
+        using (var softClosedYear = await client.PostAsync($"{yearUrl}/soft-close", null))
+        {
+            Assert.AreEqual(HttpStatusCode.OK, softClosedYear.StatusCode);
+            Assert.AreEqual("SoftClosed",
+                (await softClosedYear.Content.ReadFromJsonAsync<FiscalYearResponse>())!.Status);
+        }
+
+        using (var cannotHardClose = await client.PostAsync($"{yearUrl}/close", null))
+            Assert.AreEqual(HttpStatusCode.Conflict, cannotHardClose.StatusCode);
+        using (var reopenYear = await client.PostAsync($"{yearUrl}/reopen", null))
+            Assert.AreEqual(HttpStatusCode.OK, reopenYear.StatusCode);
+        using (var closePeriod = await client.PostAsync($"{periodUrl}/close", null))
+            Assert.AreEqual(HttpStatusCode.OK, closePeriod.StatusCode);
+        using (var closeYear = await client.PostAsync($"{yearUrl}/close", null))
+            Assert.AreEqual(HttpStatusCode.OK, closeYear.StatusCode);
+    }
+
+    [TestMethod]
+    public async Task FiscalCloseCannotModifyAnotherTenantCalendar()
+    {
+        var calendar = await MarchCalendarAsync(organizationA);
+        using var other = Client(userB, organizationB);
+        using var request = await other.PostAsync(
+            $"/api/v1/accounting/fiscal-years/{calendar.YearId}/periods/{calendar.PeriodId}/close",
+            null);
+        Assert.IsTrue(
+            request.StatusCode is HttpStatusCode.Conflict or HttpStatusCode.NotFound);
+
+        await using var db = CreateDb();
+        Assert.AreEqual(AccountingPeriodStatus.Open,
+            (await db.AccountingPeriods.AsNoTracking()
+                .SingleAsync(x => x.Id == calendar.PeriodId)).Status);
+    }
+
+    [TestMethod]
+    public async Task ClosingAPeriodWaitsForExistingPostingTransaction()
+    {
+        var calendar = await MarchCalendarAsync(organizationA);
+        using var client = Client(userA, organizationA);
+
+        await using var locker = new NpgsqlConnection(connectionString);
+        await locker.OpenAsync();
+        await using var transaction = await locker.BeginTransactionAsync();
+        await using (var blocking = new NpgsqlCommand(
+            "SELECT id FROM accounting.fiscal_years WHERE organization_id = @org " +
+            "AND id = @year FOR SHARE", locker, transaction))
+        {
+            blocking.Parameters.AddWithValue("org", organizationA);
+            blocking.Parameters.AddWithValue("year", calendar.YearId);
+            await using var reader = await blocking.ExecuteReaderAsync();
+            Assert.IsTrue(await reader.ReadAsync());
+        }
+
+        var url = $"/api/v1/accounting/fiscal-years/{calendar.YearId}/periods/{calendar.PeriodId}/close";
+        var closing = client.PostAsync(url, null);
+        await Task.Delay(200);
+        Assert.IsFalse(closing.IsCompleted, "Closing must wait for the in-flight posting lock.");
+
+        await transaction.CommitAsync();
+        using var response = await closing;
+        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode,
+            await response.Content.ReadAsStringAsync());
+    }
+
+    private async Task<(Guid YearId, Guid PeriodId)> MarchCalendarAsync(Guid organizationId)
+    {
+        await using var db = CreateDb();
+        var year = await db.FiscalYears.AsNoTracking()
+            .SingleAsync(x => x.OrganizationId == organizationId);
+        var period = await db.AccountingPeriods.AsNoTracking()
+            .SingleAsync(x => x.OrganizationId == organizationId &&
+                x.StartDate == new DateOnly(2026, 3, 1));
+        return (year.Id, period.Id);
+    }
+
     private ImportOpeningBalancesRequest ValidOpeningBalances(Guid fiscalYearId) =>
         new(fiscalYearId,
         [
