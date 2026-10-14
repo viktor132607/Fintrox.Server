@@ -111,6 +111,27 @@ public sealed class BankingController(IBankReconciliationService service)
         return result is null ? NotFound() : Ok(result);
     }
 
+    [HttpPost("statements/{statementId:guid}/amend-foreign-revaluation")]
+    [Authorize(Policy = Permissions.AccountingWrite)]
+    [Authorize(Policy = Permissions.AccountingPost)]
+    [Authorize(Policy = Permissions.OrganizationsManage)]
+    public async Task<ActionResult<ForeignBankRevaluationAmendmentResponse>> AmendForeignRevaluation(
+        Guid statementId, AmendForeignBankRevaluationRequest request,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var result = await service.AmendForeignBankRevaluationAsync(
+                statementId, request, cancellationToken);
+            return result is null ? NotFound() : Ok(result);
+        }
+        catch (BankReconciliationConflictException ex)
+        {
+            return Conflict(Problem(StatusCodes.Status409Conflict,
+                "Versioned bank FX cutoff amendment conflict", ex.Message));
+        }
+    }
+
     [HttpGet("statements/{statementId:guid}/foreign-close-evidence")]
     [Authorize(Policy = Permissions.AccountingRead)]
     public async Task<ActionResult<ForeignBankCloseEvidenceResponse>> ForeignCloseEvidence(
