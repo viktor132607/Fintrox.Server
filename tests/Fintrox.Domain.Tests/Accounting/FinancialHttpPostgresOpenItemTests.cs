@@ -94,6 +94,20 @@ public sealed partial class FinancialHttpPostgresRegressionTests
     }
 
     [TestMethod]
+    public async Task OpenItemReconciliationDetectsPaymentHeaderAllocationMismatch()
+    {
+        await SeedOpenItemLedgerAsync(
+            40m, 10m, declaredIncomingAllocatedBase: 20m);
+        var report = await GetOpenItemReportAsync();
+
+        Assert.IsTrue(report.Issues.Any(issue =>
+            issue.SourceType == "Receivables" &&
+            issue.Code == "PaymentAllocationMismatch"));
+        Assert.IsFalse(report.AccountsReceivableReconciled);
+        Assert.IsTrue(report.AccountsPayableReconciled);
+    }
+
+    [TestMethod]
     public async Task OpenItemReconciliationDetectsUnmatchedPayablesLedgerBalance()
     {
         var values = await SeedOpenItemLedgerAsync(40m, 10m);
@@ -184,7 +198,8 @@ public sealed partial class FinancialHttpPostgresRegressionTests
         Guid ApAccountId)> SeedOpenItemLedgerAsync(
             decimal customerSettlement, decimal supplierSettlement,
             decimal customerInvoiceRate = 1m,
-            bool wrongCustomerPaymentParty = false)
+            bool wrongCustomerPaymentParty = false,
+            decimal? declaredIncomingAllocatedBase = null)
     {
         Guid invoiceId;
         Guid purchaseId;
@@ -265,7 +280,8 @@ public sealed partial class FinancialHttpPostgresRegressionTests
                 PostingDate, PaymentMethod.BankTransfer,
                 currency.Id, "EUR", paymentBaseAmount, customer.Name,
                 null, null, null, null, now);
-            incoming.SetAllocatedAmount(paymentBaseAmount, now);
+            incoming.SetAllocatedAmount(
+                declaredIncomingAllocatedBase ?? paymentBaseAmount, now);
             incoming.Confirm("IN-OPEN-001", currency.Id, "EUR",
                 "EUR", customer.Name, null, null, 1m, now);
             incomePaymentId = incoming.Id;
