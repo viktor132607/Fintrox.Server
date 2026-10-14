@@ -26,6 +26,7 @@ public static class DependencyInjection
         services.AddScoped<IJournalService, JournalService>();
         services.AddScoped<IProfitLossClosingService, ProfitLossClosingService>();
         services.AddScoped<IFinancialSourceReconciliationService, FinancialSourceReconciliationService>();
+        services.AddScoped<IFinancialOpenItemReconciliationService, FinancialOpenItemReconciliationService>();
         services.AddScoped<IAutoPostingRuleService, AutoPostingRuleService>();
         services.AddScoped<IAutoPostingEngine, AutoPostingEngine>();
         services.AddScoped<ICounterpartyService, CounterpartyService>();
