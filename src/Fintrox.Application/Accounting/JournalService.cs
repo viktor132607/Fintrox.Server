@@ -120,6 +120,156 @@ public sealed class JournalService(
         return await BuildResponseAsync(entry, cancellationToken);
     }
 
+    /// <summary>
+    /// Imports the first balanced position of a fiscal year exactly once.
+    /// The exclusive fiscal-year lock serializes concurrent opening imports
+    /// against normal posted journals, even across multiple API instances.
+    /// </summary>
+    public async Task<JournalEntryResponse> ImportOpeningBalancesAsync(
+        ImportOpeningBalancesRequest request,
+        CancellationToken cancellationToken)
+    {
+        var tenant = currentOrganization.RequireOrganizationId();
+        if (request.FiscalYearId == Guid.Empty ||
+            request.Lines is null || request.Lines.Count is < 2 or > 1000)
+        {
+            throw new JournalConflictException(
+                "Opening balances require a fiscal year and between 2 and 1000 account lines.");
+        }
+
+        var lines = request.Lines;
+        decimal debitTotal = 0m;
+        decimal creditTotal = 0m;
+        foreach (var line in lines)
+        {
+            ValidateLineAmounts(line.Debit, line.Credit);
+            debitTotal += line.Debit;
+            creditTotal += line.Credit;
+        }
+        if (debitTotal <= 0m || debitTotal != creditTotal)
+        {
+            throw new JournalConflictException(
+                "Opening balances must have equal positive debit and credit totals.");
+        }
+
+        var entry = await transactionRunner.ExecuteAsync(async ct =>
+        {
+            // Year-wide EXCLUSIVE row lock must precede all validation reads.
+            // Ordinary journal posting uses FOR SHARE on the same row.
+            await journalRepository.LockFiscalYearForOpeningBalancesAsync(
+                tenant, request.FiscalYearId, ct);
+
+            var year = await fiscalCalendarRepository.GetFiscalYearAsync(
+                tenant, request.FiscalYearId, trackChanges: false, ct);
+            if (year is null)
+            {
+                throw new JournalConflictException(
+                    "Fiscal year does not exist in the current organization.");
+            }
+
+            var reference = $"opening-balances:v1:{request.FiscalYearId:N}";
+            var existing = await journalRepository.GetSystemEntryByExternalReferenceAsync(
+                tenant, reference, trackChanges: false, ct);
+            if (existing is not null)
+            {
+                var existingLines = await journalRepository.ListLinesAsync(
+                    tenant, existing.Id, ct);
+                if (existing.Status != JournalEntryStatus.Posted ||
+                    existing.PostingDate != year.StartDate ||
+                    existingLines.Count != lines.Count)
+                {
+                    throw new JournalConflictException(
+                        "The existing opening balance journal is not a valid posted import.");
+                }
+
+                for (var i = 0; i < lines.Count; i++)
+                {
+                    var previous = existingLines[i];
+                    var requested = lines[i];
+                    if (previous.LineNumber != i + 1 ||
+                        previous.AccountId != requested.AccountId ||
+                        previous.Debit != requested.Debit ||
+                        previous.Credit != requested.Credit ||
+                        previous.Description != requested.Description)
+                    {
+                        throw new JournalConflictException(
+                            "Opening balances have already been imported with different values.");
+                    }
+                }
+                return existing;
+            }
+
+            if (year.Status != FiscalYearStatus.Open)
+            {
+                throw new JournalConflictException(
+                    "Opening balances require an open fiscal year.");
+            }
+
+            var periods = await fiscalCalendarRepository.ListPeriodsAsync(
+                tenant, year.Id, ct);
+            var first = periods.OrderBy(p => p.StartDate).FirstOrDefault();
+            if (first is null || first.StartDate != year.StartDate ||
+                first.FiscalYearId != year.Id ||
+                first.Status != AccountingPeriodStatus.Open)
+            {
+                throw new JournalConflictException(
+                    "The first accounting period must start on the fiscal-year opening date and remain open.");
+            }
+
+            // The year lock guarantees that another normal PostAsync
+            // transaction cannot enter the ledger before this check/commit.
+            if (await journalRepository.HasPostedEntriesForFiscalYearAsync(
+                tenant, year.Id, ct))
+            {
+                throw new JournalConflictException(
+                    "Opening balances must precede all other posted entries in the fiscal year.");
+            }
+
+            var accountIds = lines.Select(x => x.AccountId).Distinct().ToArray();
+            if (accountIds.Length != lines.Count ||
+                accountIds.Any(x => x == Guid.Empty))
+            {
+                throw new JournalConflictException(
+                    "Opening balances require one line per nonempty account.");
+            }
+            var accounts = await accountRepository.ListByIdsAsync(
+                tenant, accountIds, ct);
+            if (accounts.Count != accountIds.Length ||
+                accounts.Values.Any(account =>
+                    !account.IsActive || !account.IsAnalytical ||
+                    (account.Type != AccountType.Asset &&
+                     account.Type != AccountType.Liability &&
+                     account.Type != AccountType.Equity)))
+            {
+                throw new JournalConflictException(
+                    "Opening balances must use active analytical Asset, Liability or Equity accounts in this organization.");
+            }
+
+            var now = timeProvider.GetUtcNow();
+            var draft = JournalEntry.CreateDraft(
+                tenant, first.Id, year.StartDate, year.StartDate,
+                "Opening balances for " + year.Name,
+                JournalEntrySource.System, reference, now);
+            await journalRepository.AddEntryAsync(draft, ct);
+            var number = 1;
+            foreach (var line in lines)
+            {
+                await journalRepository.AddLineAsync(JournalLine.Create(
+                    tenant, draft.Id, number++, line.AccountId,
+                    line.Debit, line.Credit, line.Description, now), ct);
+            }
+
+            await journalRepository.SaveChangesAsync(ct);
+            var sequence = await journalRepository.AllocatePostingSequenceAsync(
+                tenant, year.Id, ct);
+            draft.Post(FormatJournalNumber(year.StartDate, sequence), now);
+            await journalRepository.SaveChangesAsync(ct);
+            return draft;
+        }, cancellationToken);
+
+        return await BuildResponseAsync(entry, cancellationToken);
+    }
+
     public async Task<JournalEntryResponse?> UpdateAsync(
         Guid journalEntryId,
         UpdateJournalEntryRequest request,
