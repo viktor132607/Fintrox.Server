@@ -13,7 +13,7 @@ public sealed record ForeignBankCloseEvidenceResponse(
     bool RevaluationJournalValid, bool NoUnrecognizedLedgerEntries,
     bool InternallyReconciled, bool Prepared, bool Approved,
     Guid? PreparedByUserId, Guid? ApprovedByUserId,
-    IReadOnlyList<string> Issues);
+    IReadOnlyList<string> Issues, int VersionNumber = 1);
 
 public sealed record PrepareForeignBankCloseRequest(string ReviewNote);
 
@@ -22,7 +22,8 @@ public sealed record ApproveForeignBankCloseRequest(string ApprovalNote);
 public sealed record ForeignBankCloseDecisionResponse(
     Guid StatementId, Guid BankAccountId, Guid PreparationId,
     Guid PreparedByUserId, Guid? ApprovedByUserId,
-    string EvidenceSha256, bool Approved, bool AlreadyRecorded);
+    string EvidenceSha256, bool Approved, bool AlreadyRecorded,
+    int VersionNumber = 1);
 
 public sealed record AmendForeignBankRevaluationRequest(
     int ExpectedCurrentVersion,
