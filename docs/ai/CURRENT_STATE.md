@@ -16,3 +16,5 @@
 - 2026-10-14: INT-002 verified (2,906 tests, CI 38475619708). API-001 implemented (explicit-origin CORS, IP-auth endpoint rate limits, 6 in-process HTTP tests) with build/CI verification pending. Next planned item ACCOUNTING-001. See TASK_QUEUE.md and VALIDATION.md; new module EF/API mappings are still pending.
 
 - 2026-10-14: ACCOUNTING-001A posting/close race guard implemented and 4 real PostgreSQL HTTP regression tests added; CI pending. No accounting Domain module wiring/migrations. ACCOUNTING-001 overall in progress, next opening balances and period/closing workflows. See accounting-posting-concurrency.md.
+
+- 2026-10-14: ACCOUNTING-001B opening balance import implemented in operational legacy GL; per-year idempotent balanced posted journal, fiscal year lock and 8 migrated PostgreSQL HTTP tests added. CI verification pending. Module EF/API migrations, AP/AR subledgers, FX and comprehensive period closing remain pending. See docs/accounting-opening-balances.md.
