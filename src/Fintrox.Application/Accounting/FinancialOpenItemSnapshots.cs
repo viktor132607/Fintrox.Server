@@ -22,7 +22,9 @@ public sealed record FinancialOpenAllocationSnapshot(
     string Direction,
     DateOnly PaymentDate,
     decimal DocumentAmount,
-    decimal PaymentAmount);
+    decimal PaymentAmount,
+    decimal PaymentAllocatedAmount,
+    decimal PaymentGrossAmount);
 
 /// <summary>One original document journal's control account (historical posting evidence).</summary>
 public sealed record FinancialDocumentControlSnapshot(
