@@ -12,7 +12,8 @@ namespace Fintrox.Api.Controllers;
 public sealed class FiscalYearsController(
     IFiscalCalendarService service,
     IProfitLossClosingService profitLoss,
-    IFinancialSourceReconciliationService financialSources) : ControllerBase
+    IFinancialSourceReconciliationService financialSources,
+    IFinancialOpenItemReconciliationService openItems) : ControllerBase
 {
     [HttpGet]
     [Authorize(Policy = Permissions.AccountingRead)]
