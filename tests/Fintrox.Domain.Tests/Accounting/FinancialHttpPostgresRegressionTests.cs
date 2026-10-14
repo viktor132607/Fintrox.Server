@@ -963,6 +963,60 @@ public sealed class FinancialHttpPostgresRegressionTests
             (await verify.JournalEntries.SingleAsync(x => x.Id == draft.Id)).Status);
     }
 
+    [TestMethod]
+    public async Task PeriodCannotBeResizedToExcludeAnExistingPostedEntry()
+    {
+        var calendar = await MarchCalendarAsync(organizationA);
+        using var client = Client(userA, organizationA);
+        var draft = await CreateDraftAsync(client, 30m, 30m);
+
+        using (var posted = await client.PostAsync($"{Endpoint}/{draft.Id}/post", null))
+            Assert.AreEqual(HttpStatusCode.OK, posted.StatusCode);
+
+        var url = $"/api/v1/accounting/fiscal-years/{calendar.YearId}/periods/{calendar.PeriodId}";
+        using var response = await client.PutAsJsonAsync(url,
+            new UpdateAccountingPeriodRequest(3, "March shortened",
+                new DateOnly(2026, 3, 16), new DateOnly(2026, 3, 31)));
+        Assert.AreEqual(HttpStatusCode.Conflict, response.StatusCode);
+
+        await using var db = CreateDb();
+        var period = await db.AccountingPeriods.AsNoTracking()
+            .SingleAsync(x => x.Id == calendar.PeriodId);
+        Assert.AreEqual(new DateOnly(2026, 3, 1), period.StartDate);
+    }
+
+    [TestMethod]
+    public async Task ClosedFiscalYearRefusesNewPeriodsOrYearResizing()
+    {
+        var calendar = await MarchCalendarAsync(organizationA);
+        using var client = Client(userA, organizationA);
+        var baseUrl = $"/api/v1/accounting/fiscal-years/{calendar.YearId}";
+
+        using (var closePeriod = await client.PostAsync(
+            $"{baseUrl}/periods/{calendar.PeriodId}/close", null))
+            Assert.AreEqual(HttpStatusCode.OK, closePeriod.StatusCode);
+        using (var closeYear = await client.PostAsync($"{baseUrl}/close", null))
+            Assert.AreEqual(HttpStatusCode.OK, closeYear.StatusCode);
+
+        using (var newPeriod = await client.PostAsJsonAsync(
+            $"{baseUrl}/periods",
+            new CreateAccountingPeriodRequest(1, "January",
+                new DateOnly(2026, 1, 1), new DateOnly(2026, 1, 31))))
+            Assert.AreEqual(HttpStatusCode.Conflict, newPeriod.StatusCode);
+
+        using (var resize = await client.PutAsJsonAsync(baseUrl,
+            new UpdateFiscalYearRequest("FY changed",
+                new DateOnly(2026, 1, 1), new DateOnly(2026, 12, 31))))
+            Assert.AreEqual(HttpStatusCode.Conflict, resize.StatusCode);
+
+        await using var db = CreateDb();
+        Assert.AreEqual(1, await db.AccountingPeriods.CountAsync(x =>
+            x.OrganizationId == organizationA));
+        Assert.AreEqual(FiscalYearStatus.Closed,
+            (await db.FiscalYears.AsNoTracking()
+                .SingleAsync(x => x.Id == calendar.YearId)).Status);
+    }
+
     private async Task<(Guid YearId, Guid PeriodId)> MarchCalendarAsync(Guid organizationId)
     {
         await using var db = CreateDb();
