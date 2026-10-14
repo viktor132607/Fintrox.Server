@@ -28,9 +28,9 @@ The response `FinancialSourceReconciliationResponse` contains:
 - The PostgreSQL fiscal-year `FOR UPDATE` lock serializes this report with cooperating source automatic postings and financial calendar status transitions to prevent a journal being half-posted at snapshot time. This is a single-database transaction, not a cross-application distributed lock.
 - Detects orphan original system journals within the selected year even where no corresponding active source exists.
 
-## Tests added (12; NOT EXECUTED / CI NOT VERIFIED)
+## Tests added (11; NOT EXECUTED / CI NOT VERIFIED)
 
-Nine initial source HTTP/postgres regressions plus two exact-reversal regressions in
+Eight initial source HTTP/PostgreSQL regressions plus two exact-reversal regressions in
 `FinancialHttpPostgresSourceReconciliationTests.cs`, and one sales/purchase regression in
 `FinancialHttpPostgresInvoiceReconciliationTests.cs`.
 
