@@ -101,10 +101,11 @@ public sealed class ProfitLossClosingService(
                 organizationId, retainedEarningsAccountId,
                 trackChanges: false, ct);
             if (equity is null || !equity.IsActive ||
+                !equity.IsAnalytical ||
                 equity.Type != AccountType.Equity)
             {
                 throw new FiscalCalendarConflictException(
-                    "Select an active, organization-owned equity account for retained earnings.");
+                    "Select an active, analytical, organization-owned equity account for retained earnings.");
             }
 
             var periods = (await calendar.ListPeriodsAsync(
