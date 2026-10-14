@@ -378,11 +378,17 @@ public sealed class JournalService(
                         organizationId, reversedSourceId,
                         trackChanges: false, transactionCancellationToken);
                     if (reversedSource?.Source == JournalEntrySource.System &&
-                        reversedSource.ExternalReference?.StartsWith(
-                            "profit-loss-close:v1:", StringComparison.Ordinal) == true)
+                        (reversedSource.ExternalReference?.StartsWith(
+                            "profit-loss-close:v1:", StringComparison.Ordinal) == true ||
+                         reversedSource.ExternalReference?.StartsWith(
+                            "bank-fee:v1:", StringComparison.Ordinal) == true ||
+                         reversedSource.ExternalReference?.StartsWith(
+                            "bank-fx-settlement:v1:", StringComparison.Ordinal) == true ||
+                         reversedSource.ExternalReference?.StartsWith(
+                            "bank-fx-revaluation:v1:", StringComparison.Ordinal) == true))
                     {
                         throw new JournalConflictException(
-                            "Year-end correction reversals cannot be reversed using the generic journal endpoint.");
+                            "Corrections of protected financial journals cannot be reversed through the generic endpoint.");
                     }
                 }
 
