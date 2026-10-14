@@ -67,6 +67,36 @@ public interface IFiscalCalendarRepository
         Guid? excludingPeriodId,
         CancellationToken cancellationToken);
 
+    // Acquired inside a transaction before any calendar status transition.
+    // UPDATE locks on these rows coordinate with posting's FOR SHARE locks.
+    Task LockFiscalYearForCloseAsync(
+        Guid organizationId,
+        Guid fiscalYearId,
+        CancellationToken cancellationToken);
+
+    Task LockAccountingPeriodForCloseAsync(
+        Guid organizationId,
+        Guid fiscalYearId,
+        Guid periodId,
+        CancellationToken cancellationToken);
+
+    Task<bool> HasDraftJournalsInPeriodAsync(
+        Guid organizationId,
+        Guid periodId,
+        CancellationToken cancellationToken);
+
+    Task<bool> HasDraftJournalsInFiscalYearAsync(
+        Guid organizationId,
+        Guid fiscalYearId,
+        CancellationToken cancellationToken);
+
+    Task<bool> HasMisdatedJournalsInPeriodAsync(
+        Guid organizationId,
+        Guid periodId,
+        DateOnly startDate,
+        DateOnly endDate,
+        CancellationToken cancellationToken);
+
     Task<int> CountPeriodsAsync(
         Guid organizationId,
         Guid fiscalYearId,
