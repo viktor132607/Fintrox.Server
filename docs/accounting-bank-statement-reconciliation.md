@@ -27,7 +27,7 @@ All paths begin `/api/v1/banking`:
 
 ## Test coverage authored but NOT verified
 
-8 additional full HTTP + disposable migrated PostgreSQL integration regressions:
+9 additional full HTTP + disposable migrated PostgreSQL integration regressions:
 1. Successful import -> confirmed bank payment -> original posted system GL journal -> match -> exact bank/GL close and identical match replay.
 2. Identical statement replay keeps the original ID, while changed contents reject with 409.
 3. Bad opening/closing arithmetic and repeated line references reject before persistence.
