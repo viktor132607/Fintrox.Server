@@ -369,7 +369,7 @@ public sealed partial class FinancialHttpPostgresRegressionTests
         var entry = JournalEntry.CreateDraft(
             organizationA, period.Id, PostingDate, PostingDate,
             description,
-            externalReference.StartsWith("manual-control:")
+            externalReference.StartsWith("manual-control:", StringComparison.Ordinal)
                 ? JournalEntrySource.Manual
                 : JournalEntrySource.System,
             externalReference, now);
