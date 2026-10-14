@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using Microsoft.EntityFrameworkCore;
 using Fintrox.Contracts.Accounting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Npgsql;
@@ -195,6 +196,84 @@ public sealed partial class FinancialHttpPostgresRegressionTests
             "/api/v1/banking/accounts", new CreateBankAccountRequest(
                 "BG22BANK01234567890124", "USD Bank", "USD", assetA));
         Assert.AreEqual(HttpStatusCode.Conflict, foreignCurrency.StatusCode);
+    }
+
+    [TestMethod]
+    public async Task BankMatchIsExclusiveAcrossMultipleStatements()
+    {
+        var paymentId = await SeedPaymentAsync(organizationA, confirmed: true);
+        await SeedSourceJournalAsync(organizationA, $"payment:{paymentId:N}", 100m);
+        using var client = Client(userA, organizationA);
+        var bank = await CreateTestBankAccountAsync(client);
+
+        using var march = await client.PostAsJsonAsync(
+            $"/api/v1/banking/accounts/{bank.Id}/statements",
+            Statement("MARCH-EXCLUSIVE", 100m));
+        Assert.AreEqual(HttpStatusCode.Created, march.StatusCode);
+        var marchStatement = await march.Content
+            .ReadFromJsonAsync<BankStatementImportResponse>();
+        Assert.IsNotNull(marchStatement);
+        var marchLine = await BankLineIdAsync(marchStatement.Id);
+        using (var first = await client.PostAsJsonAsync(
+            $"/api/v1/banking/statements/{marchStatement.Id}/lines/{marchLine}/match",
+            new MatchBankStatementLineRequest(paymentId)))
+            Assert.AreEqual(HttpStatusCode.OK, first.StatusCode);
+
+        var april = new ImportBankStatementRequest(
+            "APRIL-EXCLUSIVE", new DateOnly(2026, 4, 1),
+            new DateOnly(2026, 4, 30), 0m, 100m,
+            [new BankStatementLineImportRequest(
+                "APRIL-1", new DateOnly(2026, 4, 3), 100m,
+                "Duplicate receipt on a different bank statement")]);
+        using var secondImport = await client.PostAsJsonAsync(
+            $"/api/v1/banking/accounts/{bank.Id}/statements", april);
+        Assert.AreEqual(HttpStatusCode.Created, secondImport.StatusCode);
+        var later = await secondImport.Content
+            .ReadFromJsonAsync<BankStatementImportResponse>();
+        Assert.IsNotNull(later);
+
+        var aprilLine = await BankLineIdAsync(later.Id);
+        using var duplicate = await client.PostAsJsonAsync(
+            $"/api/v1/banking/statements/{later.Id}/lines/{aprilLine}/match",
+            new MatchBankStatementLineRequest(paymentId));
+        Assert.AreEqual(HttpStatusCode.Conflict, duplicate.StatusCode);
+    }
+
+    [TestMethod]
+    public async Task BankReportFailsWhenMatchedPaymentIsLaterCancelled()
+    {
+        var paymentId = await SeedPaymentAsync(organizationA, confirmed: true);
+        await SeedSourceJournalAsync(organizationA, $"payment:{paymentId:N}", 100m);
+        using var client = Client(userA, organizationA);
+        var bank = await CreateTestBankAccountAsync(client);
+        using var imported = await client.PostAsJsonAsync(
+            $"/api/v1/banking/accounts/{bank.Id}/statements",
+            Statement("CANCELLED-MATCH", 100m));
+        var statement = await imported.Content
+            .ReadFromJsonAsync<BankStatementImportResponse>();
+        Assert.IsNotNull(statement);
+        var line = await BankLineIdAsync(statement.Id);
+        using (var match = await client.PostAsJsonAsync(
+            $"/api/v1/banking/statements/{statement.Id}/lines/{line}/match",
+            new MatchBankStatementLineRequest(paymentId)))
+            Assert.AreEqual(HttpStatusCode.OK, match.StatusCode);
+
+        await using (var db = CreateDb())
+        {
+            var payment = await db.Payments.SingleAsync(p => p.Id == paymentId);
+            payment.Cancel("Reversed after bank reconciliation", DateTimeOffset.UtcNow);
+            await db.SaveChangesAsync();
+        }
+
+        using var result = await client.GetAsync(
+            $"/api/v1/banking/statements/{statement.Id}/reconciliation");
+        Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
+        var report = await result.Content
+            .ReadFromJsonAsync<BankReconciliationResponse>();
+        Assert.IsNotNull(report);
+        Assert.IsFalse(report.FullyReconciled);
+        Assert.AreEqual(1, report.UnmatchedLines);
+        Assert.IsTrue(report.UnmatchedLineIds.Contains(line));
     }
 
     private async Task<BankAccountResponse> CreateTestBankAccountAsync(
