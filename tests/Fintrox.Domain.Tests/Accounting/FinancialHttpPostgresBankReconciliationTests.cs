@@ -276,6 +276,52 @@ public sealed partial class FinancialHttpPostgresRegressionTests
         Assert.IsTrue(report.UnmatchedLineIds.Contains(line));
     }
 
+    [TestMethod]
+    public async Task BankAccountListAndStatementDetailExposeOnlyTenantEvidence()
+    {
+        using var owner = Client(userA, organizationA);
+        using var other = Client(userB, organizationB);
+        var bank = await CreateTestBankAccountAsync(owner);
+
+        using var list = await owner.GetAsync("/api/v1/banking/accounts");
+        Assert.AreEqual(HttpStatusCode.OK, list.StatusCode);
+        var accounts = await list.Content
+            .ReadFromJsonAsync<BankAccountResponse[]>();
+        Assert.IsNotNull(accounts);
+        Assert.HasCount(1, accounts);
+        Assert.AreEqual(bank.Id, accounts[0].Id);
+
+        using var foreignList = await other.GetAsync("/api/v1/banking/accounts");
+        Assert.AreEqual(HttpStatusCode.OK, foreignList.StatusCode);
+        var foreignAccounts = await foreignList.Content
+            .ReadFromJsonAsync<BankAccountResponse[]>();
+        Assert.IsNotNull(foreignAccounts);
+        Assert.HasCount(0, foreignAccounts);
+
+        using var imported = await owner.PostAsJsonAsync(
+            $"/api/v1/banking/accounts/{bank.Id}/statements",
+            Statement("DETAIL-01", 9m));
+        Assert.AreEqual(HttpStatusCode.Created, imported.StatusCode);
+        var response = await imported.Content
+            .ReadFromJsonAsync<BankStatementImportResponse>();
+        Assert.IsNotNull(response);
+
+        using var details = await owner.GetAsync(
+            $"/api/v1/banking/statements/{response.Id}");
+        Assert.AreEqual(HttpStatusCode.OK, details.StatusCode);
+        var statement = await details.Content
+            .ReadFromJsonAsync<BankStatementResponse>();
+        Assert.IsNotNull(statement);
+        Assert.AreEqual(bank.Id, statement.BankAccountId);
+        Assert.HasCount(1, statement.Lines);
+        Assert.AreEqual(9m, statement.Lines[0].SignedAmount);
+        Assert.IsNull(statement.Lines[0].MatchedPaymentId);
+
+        using var foreignDetails = await other.GetAsync(
+            $"/api/v1/banking/statements/{response.Id}");
+        Assert.AreEqual(HttpStatusCode.NotFound, foreignDetails.StatusCode);
+    }
+
     private async Task<BankAccountResponse> CreateTestBankAccountAsync(
         HttpClient client)
     {
