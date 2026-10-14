@@ -86,10 +86,12 @@ public sealed partial class BankReconciliationService(
             var lines = new List<BankStatementLineResponse>();
             await using (var cmd = Command(cn, tx, """
                 SELECT l.id,l.external_id,l.value_date,l.signed_amount,l.description,
-                    l.matched_payment_id,f.journal_entry_id
+                    l.matched_payment_id,f.journal_entry_id,fx.journal_entry_id
                 FROM banking.bank_statement_lines l
                 LEFT JOIN banking.bank_fee_postings f
                   ON f.statement_line_id=l.id AND f.organization_id=l.organization_id
+                LEFT JOIN banking.bank_fx_settlements fx
+                  ON fx.statement_line_id=l.id AND fx.organization_id=l.organization_id
                 WHERE l.organization_id=@org AND l.statement_id=@id
                 ORDER BY l.value_date,l.external_id
                 """, ("org", tenant), ("id", statementId)))
@@ -101,7 +103,8 @@ public sealed partial class BankReconciliationService(
                         reader.GetFieldValue<DateOnly>(2),
                         reader.GetDecimal(3), reader.GetString(4),
                         reader.IsDBNull(5) ? null : reader.GetGuid(5),
-                        reader.IsDBNull(6) ? null : reader.GetGuid(6)));
+                        reader.IsDBNull(6) ? null : reader.GetGuid(6),
+                        reader.IsDBNull(7) ? null : reader.GetGuid(7)));
             }
             await tx.CommitAsync(cancellationToken);
             return new BankStatementResponse(
@@ -482,15 +485,18 @@ public sealed partial class BankReconciliationService(
             Guid accountId;
             Guid glAccountId;
             string currency;
+            bool comparable;
             DateOnly endDate;
             decimal opening;
             decimal closing;
             await using (var cmd = Command(cn, tx, """
                 SELECT a.id,a.gl_account_id,a.currency_code,
-                    s.to_date,s.opening_balance,s.closing_balance
+                    s.to_date,s.opening_balance,s.closing_balance,
+                    a.currency_code=o.base_currency_code
                 FROM banking.bank_statements s
                 JOIN banking.bank_accounts a
                   ON a.id=s.bank_account_id AND a.organization_id=s.organization_id
+                JOIN core.organizations o ON o.id=s.organization_id
                 WHERE s.id=@id AND s.organization_id=@org
                 """, ("id", statementId), ("org", tenant)))
             await using (var reader = await cmd.ExecuteReaderAsync(cancellationToken))
@@ -502,11 +508,13 @@ public sealed partial class BankReconciliationService(
                 endDate = reader.GetFieldValue<DateOnly>(3);
                 opening = reader.GetDecimal(4);
                 closing = reader.GetDecimal(5);
+                comparable = reader.GetBoolean(6);
             }
 
             var unmatched = new List<Guid>();
             int matched = 0;
             int feePosted = 0;
+            int foreignPosted = 0;
             decimal movement = 0;
             await using (var cmd = Command(cn, tx, """
                 SELECT l.id,l.signed_amount,l.matched_payment_id,
@@ -534,7 +542,25 @@ public sealed partial class BankReconciliationService(
                           WHERE j.organization_id=l.organization_id
                             AND j.journal_entry_id=e.id
                       )=2
-                      THEN true ELSE false END AS fee_valid
+                      THEN true ELSE false END AS fee_valid,
+                    CASE WHEN fx.journal_entry_id IS NOT NULL
+                      AND fxJournal.status='Posted' AND fxJournal.source='System'
+                      AND fxJournal.external_reference='bank-fx-settlement:v1:' ||
+                          replace(l.id::text,'-','')
+                      AND fxJournal.posting_date=l.value_date
+                      AND (SELECT count(*) FROM accounting.journal_lines j
+                          WHERE j.organization_id=l.organization_id
+                            AND j.journal_entry_id=fxJournal.id
+                            AND j.account_id=@ledger
+                            AND (j.debit-j.credit) =
+                                CASE WHEN l.signed_amount>0
+                                  THEN fx.bank_base_amount ELSE -fx.bank_base_amount END
+                      )=1
+                      AND (SELECT coalesce(sum(j.debit-j.credit),0)
+                          FROM accounting.journal_lines j
+                          WHERE j.organization_id=l.organization_id
+                            AND j.journal_entry_id=fxJournal.id)=0
+                      THEN true ELSE false END AS fx_valid
                 FROM banking.bank_statement_lines l
                 LEFT JOIN banking.bank_fee_postings fee
                   ON fee.statement_line_id=l.id
@@ -542,6 +568,12 @@ public sealed partial class BankReconciliationService(
                 LEFT JOIN accounting.journal_entries e
                   ON e.id=fee.journal_entry_id
                  AND e.organization_id=fee.organization_id
+                LEFT JOIN banking.bank_fx_settlements fx
+                  ON fx.statement_line_id=l.id
+                 AND fx.organization_id=l.organization_id
+                LEFT JOIN accounting.journal_entries fxJournal
+                  ON fxJournal.id=fx.journal_entry_id
+                 AND fxJournal.organization_id=fx.organization_id
                 WHERE l.statement_id=@id AND l.organization_id=@org
                 ORDER BY l.value_date,l.id
                 """, ("id", statementId), ("org", tenant),
@@ -561,6 +593,10 @@ public sealed partial class BankReconciliationService(
                     else if (reader.GetBoolean(3))
                     {
                         feePosted++;
+                    }
+                    else if (reader.GetBoolean(4))
+                    {
+                        foreignPosted++;
                     }
                     else unmatched.Add(lineId);
                 }
@@ -654,19 +690,23 @@ public sealed partial class BankReconciliationService(
             }
             var expectedClosing = opening + movement;
             var statementBalanced = expectedClosing == closing;
-            var difference = closing - glBalance;
+            // A foreign-native statement cannot be subtracted from a GL
+            // account denominated in the tenant's base currency. A separate
+            // native-quantity closing-balance valuation is still required.
+            decimal? difference = comparable ? closing - glBalance : null;
             var matchedFully = unmatched.Count == 0;
             await tx.CommitAsync(cancellationToken);
             return new BankReconciliationResponse(
                 statementId, accountId, currency, endDate, opening, closing,
                 expectedClosing, glBalance, difference,
-                matched + feePosted + unmatched.Count, matched, unmatched.Count,
+                matched + feePosted + foreignPosted + unmatched.Count, matched, unmatched.Count,
                 bookUncleared.Count,
                 statementBalanced, matchedFully,
-                difference == 0m,
-                statementBalanced && matchedFully && difference == 0m &&
-                    bookUncleared.Count == 0,
-                unmatched, bookUncleared, feePosted);
+                comparable && difference == 0m,
+                comparable && statementBalanced && matchedFully &&
+                    difference == 0m && bookUncleared.Count == 0,
+                unmatched, bookUncleared, feePosted, foreignPosted,
+                comparable);
         });
     }
 
