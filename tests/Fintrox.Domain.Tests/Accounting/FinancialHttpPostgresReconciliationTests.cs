@@ -29,6 +29,8 @@ public sealed partial class FinancialHttpPostgresRegressionTests
         Assert.AreEqual(0, before.DraftJournalCount);
         Assert.IsTrue(before.ReadyForProfitLossClose);
         Assert.IsFalse(before.ProfitLossCleared);
+        Assert.AreEqual(35m, before.OpenProfitLossDebit);
+        Assert.AreEqual(75m, before.OpenProfitLossCredit);
         Assert.AreEqual(before.PostedDebitTotal, before.PostedCreditTotal);
 
         using (var closed = await client.PostAsJsonAsync(
@@ -43,6 +45,8 @@ public sealed partial class FinancialHttpPostgresRegressionTests
         Assert.IsNotNull(after);
         Assert.IsTrue(after.LedgerBalanced);
         Assert.IsTrue(after.ProfitLossCleared);
+        Assert.AreEqual(0m, after.OpenProfitLossDebit);
+        Assert.AreEqual(0m, after.OpenProfitLossCredit);
         Assert.IsFalse(after.ReadyForProfitLossClose);
         Assert.AreEqual("Closed", after.FiscalYearStatus);
         Assert.IsNotNull(after.LatestClosingJournalEntryId);
