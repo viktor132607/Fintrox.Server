@@ -40,21 +40,20 @@ public sealed class ProfitLossClosingService(
                 organizationId, fiscalYearId, trackChanges: true, ct);
             if (year is null) return null;
 
-            var reference = $"profit-loss-close:v1:{fiscalYearId:N}";
-            var existing = await journals.GetSystemEntryByExternalReferenceAsync(
-                organizationId, reference, trackChanges: false, ct);
+            var closingEntries = await journals.ListYearEndClosingEntriesAsync(
+                organizationId, fiscalYearId, ct);
+            var (latest, latestRound) = FindLatestClosing(closingEntries, fiscalYearId);
 
-            if (existing is not null)
+            if (year.Status == FiscalYearStatus.Closed)
             {
-                if (existing.Status != JournalEntryStatus.Posted ||
-                    year.Status != FiscalYearStatus.Closed)
+                if (latest is null || latest.Status != JournalEntryStatus.Posted)
                 {
                     throw new FiscalCalendarConflictException(
-                        "An earlier closing journal exists, but the fiscal year was reopened or its closing state changed. An authorized adjustment is required.");
+                        "The year is closed without a valid active profit/loss closing journal.");
                 }
 
                 var previousLines = await journals.ListLinesAsync(
-                    organizationId, existing.Id, ct);
+                    organizationId, latest.Id, ct);
                 var previousAccounts = await accounts.ListByIdsAsync(
                     organizationId, previousLines.Select(line => line.AccountId)
                         .Distinct().ToArray(), ct);
@@ -66,29 +65,21 @@ public sealed class ProfitLossClosingService(
                     equityLines.Any(line => line.AccountId != retainedEarningsAccountId))
                 {
                     throw new FiscalCalendarConflictException(
-                        "The fiscal year was already closed to a different equity account. Repeated requests must use the original destination.");
+                        "The fiscal year was already closed to another equity account.");
                 }
 
-                var previousTransfer = equityLines;
-
-                if (previousTransfer.Length > 1)
+                if (equityLines.Length > 1)
                 {
                     throw new FiscalCalendarConflictException(
-                        "The previous closing journal has an invalid retained earnings allocation.");
+                        "The previous closing journal has invalid equity allocations.");
                 }
 
-                if (previousTransfer.Length == 0)
-                {
-                    // A balanced, zero-net-income close has no equity line,
-                    // so the original account selection has no ledger effect.
-                    return new ProfitLossCloseResponse(
-                        fiscalYearId, existing.Id, 0m, AlreadyClosed: true);
-                }
-
-                var previousNetIncome = previousTransfer[0].Credit -
-                                        previousTransfer[0].Debit;
                 return new ProfitLossCloseResponse(
-                    fiscalYearId, existing.Id, previousNetIncome, AlreadyClosed: true);
+                    fiscalYearId, latest.Id,
+                    equityLines.Length == 0
+                        ? 0m
+                        : equityLines[0].Credit - equityLines[0].Debit,
+                    AlreadyClosed: true);
             }
 
             if (year.Status != FiscalYearStatus.Open)
@@ -96,6 +87,19 @@ public sealed class ProfitLossClosingService(
                 throw new FiscalCalendarConflictException(
                     "Profit/loss closing requires an open fiscal year.");
             }
+
+            if (latest is not null &&
+                (latest.Status != JournalEntryStatus.Reversed ||
+                 latest.ReversedByJournalEntryId is null))
+            {
+                throw new FiscalCalendarConflictException(
+                    "An earlier closing journal is still active. Use the controlled correction workflow before closing again.");
+            }
+
+            var newRound = latestRound + 1;
+            var reference = newRound == 1
+                ? $"profit-loss-close:v1:{fiscalYearId:N}"
+                : $"profit-loss-close:v1:{fiscalYearId:N}:r{newRound}";
 
             var equity = await accounts.GetAsync(
                 organizationId, retainedEarningsAccountId,
@@ -262,4 +266,49 @@ public sealed class ProfitLossClosingService(
                 fiscalYearId, entry.Id, netIncome, AlreadyClosed: false);
         }, cancellationToken);
     }
+    private static (JournalEntry? Latest, int Round) FindLatestClosing(
+        IReadOnlyList<JournalEntry> entries,
+        Guid fiscalYearId)
+    {
+        var prefix = $"profit-loss-close:v1:{fiscalYearId:N}";
+        var rounds = new List<(JournalEntry Entry, int Round)>();
+        foreach (var entry in entries)
+        {
+            if (entry.ExternalReference is null)
+            {
+                throw new FiscalCalendarConflictException(
+                    "A year-end journal has no external reference.");
+            }
+
+            var value = entry.ExternalReference;
+            int round;
+            if (value == prefix)
+            {
+                round = 1;
+            }
+            else if (value.StartsWith(prefix + ":r", StringComparison.Ordinal) &&
+                int.TryParse(
+                    value.AsSpan(prefix.Length + 2),
+                    NumberStyles.None,
+                    CultureInfo.InvariantCulture,
+                    out var parsed) && parsed >= 2)
+            {
+                round = parsed;
+            }
+            else
+            {
+                throw new FiscalCalendarConflictException(
+                    "An unsupported year-end closing journal reference was found.");
+            }
+
+            rounds.Add((entry, round));
+        }
+
+        var latest = rounds.OrderBy(item => item.Round).LastOrDefault();
+        return latest.Entry is null
+            ? (null, 0)
+            : (latest.Entry, latest.Round);
+    }
+
+
 }
