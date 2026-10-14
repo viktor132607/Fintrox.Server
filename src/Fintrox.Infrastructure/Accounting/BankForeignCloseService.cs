@@ -529,6 +529,58 @@ public sealed partial class BankReconciliationService
             """, ("org", tenant), ("ledger", bankGl), ("cutoff", cutoff)))
             actualGl = (decimal)(await cmd.ExecuteScalarAsync(ct))!;
 
+        // Every predecessor valuation must have a full compensating GL
+        // journal and a linked Reversed state. A missing amendment journal
+        // invalidates all subsequent reviews, even if the net GL accidentally
+        // equals the expected target.
+        long invalidAmendments;
+        await using (var audit = Command(cn, tx, """
+            SELECT count(*)
+            FROM banking.bank_fx_revaluation_amendments am
+            LEFT JOIN accounting.journal_entries old
+              ON old.id=am.previous_journal_id AND old.organization_id=am.organization_id
+            LEFT JOIN accounting.journal_entries inverse
+              ON inverse.id=am.reversal_journal_id AND inverse.organization_id=am.organization_id
+            LEFT JOIN accounting.journal_entries replacement
+              ON replacement.id=am.replacement_journal_id
+             AND replacement.organization_id=am.organization_id
+            WHERE am.organization_id=@org AND am.statement_id=@statement
+              AND (
+                (am.previous_adjustment_base<>0 AND (
+                    old.status IS DISTINCT FROM 'Reversed'
+                    OR old.reversed_by_journal_entry_id IS DISTINCT FROM inverse.id
+                    OR inverse.status IS DISTINCT FROM 'Posted'
+                    OR inverse.reversal_of_journal_entry_id IS DISTINCT FROM old.id
+                    OR (SELECT count(*) FROM accounting.journal_lines j
+                        WHERE j.organization_id=@org AND j.journal_entry_id=old.id
+                          AND j.account_id=@ledger
+                          AND j.debit-j.credit=am.previous_adjustment_base)<>1
+                    OR (SELECT count(*) FROM accounting.journal_lines j
+                        WHERE j.organization_id=@org AND j.journal_entry_id=inverse.id
+                          AND j.account_id=@ledger
+                          AND j.debit-j.credit=-am.previous_adjustment_base)<>1
+                ))
+                OR (am.replacement_adjustment_base<>0 AND (
+                    replacement.status IS DISTINCT FROM 'Posted'
+                    AND NOT EXISTS (
+                        SELECT 1 FROM banking.bank_fx_revaluation_amendments nxt
+                        WHERE nxt.organization_id=@org
+                          AND nxt.previous_journal_id=replacement.id
+                          AND replacement.status='Reversed')
+                    OR (SELECT count(*) FROM accounting.journal_lines j
+                        WHERE j.organization_id=@org
+                          AND j.journal_entry_id=replacement.id
+                          AND j.account_id=@ledger
+                          AND j.debit-j.credit=am.replacement_adjustment_base)<>1
+                ))
+              )
+            """, ("org", tenant), ("statement", statementId),
+            ("ledger", bankGl)))
+            invalidAmendments = Convert.ToInt64(
+                await audit.ExecuteScalarAsync(ct));
+        if (invalidAmendments != 0)
+            issues.Add("BrokenVersionedFxCorrectionEvidence");
+
         bool validValuation = rateId is not null &&
             previousGl + adjustment == target;
         if (validValuation && valuationJournal.HasValue)
