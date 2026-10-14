@@ -255,7 +255,7 @@ public sealed partial class BankReconciliationService
         });
     }
 
-    private async Task<Guid?> LockBankAccountForCloseAsync(
+    private static async Task<Guid?> LockBankAccountForCloseAsync(
         NpgsqlConnection cn, IDbContextTransaction tx, Guid tenant,
         Guid statementId, CancellationToken ct)
     {
@@ -315,7 +315,7 @@ public sealed partial class BankReconciliationService
                     "Fiscal period no longer exists for bank review.");
     }
 
-    private async Task<ForeignCloseSnapshot?> ReadForeignCloseAsync(
+    private static async Task<ForeignCloseSnapshot?> ReadForeignCloseAsync(
         NpgsqlConnection cn, IDbContextTransaction tx, Guid tenant,
         Guid statementId, CancellationToken ct)
     {
@@ -468,7 +468,7 @@ public sealed partial class BankReconciliationService
                     WHERE fee.statement_line_id=l.id AND fee.organization_id=l.organization_id))
             """, ("org", tenant), ("account", account),
             ("cutoff", cutoff), ("ledger", bankGl)))
-            invalidLines = Convert.ToInt64(await cmd.ExecuteScalarAsync(ct));
+            invalidLines = Convert.ToInt64(await cmd.ExecuteScalarAsync(ct), System.Globalization.CultureInfo.InvariantCulture);
         if (invalidLines != 0) issues.Add("UnpostedOrIncorrectNativeSettlement");
 
         long unknownJournalLines;
@@ -514,7 +514,7 @@ public sealed partial class BankReconciliationService
               )
             """, ("org", tenant), ("ledger", bankGl),
             ("cutoff", cutoff), ("account", account)))
-            unknownJournalLines = Convert.ToInt64(await cmd.ExecuteScalarAsync(ct));
+            unknownJournalLines = Convert.ToInt64(await cmd.ExecuteScalarAsync(ct), System.Globalization.CultureInfo.InvariantCulture);
         if (unknownJournalLines != 0) issues.Add("UnknownOrReversedBankGlEntry");
 
         decimal actualGl;
@@ -577,7 +577,7 @@ public sealed partial class BankReconciliationService
             """, ("org", tenant), ("statement", statementId),
             ("ledger", bankGl)))
             invalidAmendments = Convert.ToInt64(
-                await audit.ExecuteScalarAsync(ct));
+                await audit.ExecuteScalarAsync(ct), System.Globalization.CultureInfo.InvariantCulture);
         if (invalidAmendments != 0)
             issues.Add("BrokenVersionedFxCorrectionEvidence");
 
