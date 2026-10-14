@@ -38,7 +38,8 @@ public sealed record BankStatementLineResponse(
     Guid Id, string ExternalId, DateOnly ValueDate,
     decimal SignedAmount, string Description,
     Guid? MatchedPaymentId, Guid? FeeJournalEntryId,
-    Guid? ForeignSettlementJournalEntryId);
+    Guid? ForeignSettlementJournalEntryId,
+    Guid? CorrectionReversalJournalEntryId);
 
 public sealed record BankStatementResponse(
     Guid Id, Guid BankAccountId, string ExternalId,
