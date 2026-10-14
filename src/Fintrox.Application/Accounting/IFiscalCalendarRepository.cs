@@ -85,6 +85,11 @@ public interface IFiscalCalendarRepository
         Guid periodId,
         CancellationToken cancellationToken);
 
+    Task<int> CountDraftJournalsInFiscalYearAsync(
+        Guid organizationId,
+        Guid fiscalYearId,
+        CancellationToken cancellationToken);
+
     Task<bool> HasDraftJournalsInFiscalYearAsync(
         Guid organizationId,
         Guid fiscalYearId,
