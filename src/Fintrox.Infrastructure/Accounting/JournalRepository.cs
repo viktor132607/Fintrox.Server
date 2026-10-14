@@ -140,6 +140,61 @@ public sealed class JournalRepository(
         return (maxLineNumber ?? 0) + 1;
     }
 
+    public async Task LockJournalForPostingAsync(
+        Guid organizationId,
+        Guid journalEntryId,
+        CancellationToken cancellationToken)
+    {
+        EnsurePostingTransaction();
+
+        // SELECT FOR UPDATE (not FOR SHARE) serializes the entire posting
+        // lifecycle. A losing concurrent request must re-read the new status.
+        await dbContext.Database.ExecuteSqlInterpolatedAsync(
+            $"""
+            SELECT id FROM accounting.journal_entries
+            WHERE organization_id = {organizationId} AND id = {journalEntryId}
+            FOR UPDATE
+            """,
+            cancellationToken);
+    }
+
+    public async Task LockPostingCalendarAsync(
+        Guid organizationId,
+        Guid fiscalYearId,
+        Guid periodId,
+        CancellationToken cancellationToken)
+    {
+        EnsurePostingTransaction();
+
+        // The fiscal-year lock must precede the period lock on every posting
+        // path. Closing a year/period acquires the same PostgreSQL row locks
+        // during UPDATE; these locks make the final open-status read current.
+        await dbContext.Database.ExecuteSqlInterpolatedAsync(
+            $"""
+            SELECT id FROM accounting.fiscal_years
+            WHERE organization_id = {organizationId} AND id = {fiscalYearId}
+            FOR UPDATE
+            """,
+            cancellationToken);
+
+        await dbContext.Database.ExecuteSqlInterpolatedAsync(
+            $"""
+            SELECT id FROM accounting.accounting_periods
+            WHERE organization_id = {organizationId} AND id = {periodId}
+            FOR UPDATE
+            """,
+            cancellationToken);
+    }
+
+    private void EnsurePostingTransaction()
+    {
+        if (dbContext.Database.CurrentTransaction is null)
+        {
+            throw new InvalidOperationException(
+                "Posting row locks require an active database transaction.");
+        }
+    }
+
     public async Task<long> AllocatePostingSequenceAsync(
         Guid organizationId,
         Guid fiscalYearId,
