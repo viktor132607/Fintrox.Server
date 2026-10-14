@@ -177,6 +177,13 @@ public sealed partial class BankReconciliationService
             var expectedReference = sourceKind == "BankFee"
                 ? $"bank-fee:v1:{statementLineId:N}"
                 : $"bank-fx-settlement:v1:{statementLineId:N}";
+            // This bounded correction must operate entirely inside the
+            // original still-open fiscal period. A source in a closed
+            // period/year needs a separately governed retrospective
+            // correction, not a journal status mutation across a close.
+            if (original is not null && original.FiscalPeriodId != period.Id)
+                throw new BankReconciliationConflictException(
+                    "Correction must remain in the original open accounting period. Historical close adjustments require a versioned workflow.");
             if (original is null || original.Status != JournalEntryStatus.Posted ||
                 original.Source != JournalEntrySource.System ||
                 original.ExternalReference != expectedReference ||
