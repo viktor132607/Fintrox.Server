@@ -63,6 +63,11 @@ public sealed partial class BankReconciliationService
             if (quoteCurrency == baseCurrency)
                 throw new BankReconciliationConflictException(
                     "Base-currency accounts have no foreign bank revaluation.");
+            // A negative native bank balance represents an overdraft with
+            // liability FX signs, not the Asset FX policy implemented here.
+            if (statementClosing < 0m)
+                throw new BankReconciliationConflictException(
+                    "Foreign bank overdrafts require a separate liability valuation policy.");
             if (statementClosing != request.ExpectedNativeClosingBalance)
                 throw new BankReconciliationConflictException(
                     "Expected native closing balance changed; refresh statement evidence.");
