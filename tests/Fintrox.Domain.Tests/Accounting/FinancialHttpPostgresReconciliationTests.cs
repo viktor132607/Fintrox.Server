@@ -72,7 +72,7 @@ public sealed partial class FinancialHttpPostgresRegressionTests
         using var other = Client(userB, organizationB);
         using var response = await other.PostAsJsonAsync(
             $"/api/v1/accounting/fiscal-years/{calendar.YearId}/reopen-profit-loss",
-            new ReopenProfitLossRequest("Reclassification following year end financial audit"));
+            new ReopenProfitLossRequest(Guid.NewGuid(), "Reclassification following year end financial audit"));
         Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
     }
 
@@ -85,16 +85,18 @@ public sealed partial class FinancialHttpPostgresRegressionTests
         await PostProfitLossTransactionAsync(first, revenue: 100m, expense: 45m);
         await CloseMarchAsync(first, calendar.YearId, calendar.MarchPeriodId);
         var url = $"/api/v1/accounting/fiscal-years/{calendar.YearId}";
-        using (var closed = await first.PostAsJsonAsync(
-            $"{url}/close-profit-loss", new CloseProfitLossRequest(retainedA)))
-            Assert.AreEqual(HttpStatusCode.OK, closed.StatusCode);
+        using var closed = await first.PostAsJsonAsync(
+            $"{url}/close-profit-loss", new CloseProfitLossRequest(retainedA));
+        Assert.AreEqual(HttpStatusCode.OK, closed.StatusCode);
+        var closeResult = await closed.Content.ReadFromJsonAsync<ProfitLossCloseResponse>();
+        Assert.IsNotNull(closeResult);
 
         const string reason = "Correcting annual expense accrual classification";
         var responses = await Task.WhenAll(
             first.PostAsJsonAsync($"{url}/reopen-profit-loss",
-                new ReopenProfitLossRequest(reason)),
+                new ReopenProfitLossRequest(closeResult.JournalEntryId!.Value, reason)),
             second.PostAsJsonAsync($"{url}/reopen-profit-loss",
-                new ReopenProfitLossRequest(reason)));
+                new ReopenProfitLossRequest(closeResult.JournalEntryId!.Value, reason)));
         try
         {
             Assert.IsTrue(responses.All(r => r.StatusCode == HttpStatusCode.OK),
