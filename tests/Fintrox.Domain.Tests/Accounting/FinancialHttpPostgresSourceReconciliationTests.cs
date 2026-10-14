@@ -168,6 +168,68 @@ public sealed partial class FinancialHttpPostgresRegressionTests
         Assert.AreEqual(HttpStatusCode.Unauthorized, rejected.StatusCode);
     }
 
+    [TestMethod]
+    public async Task SourceReconciliationAcceptsExactReversalOfCancelledPayment()
+    {
+        await SeedCancelledPaymentAsync(wrongReversal: false);
+        var fiscal = await MarchCalendarAsync(organizationA);
+        using var client = Client(userA, organizationA);
+        using var response = await client.GetAsync(
+            $"/api/v1/accounting/fiscal-years/{fiscal.YearId}/source-reconciliation");
+        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        var report = await response.Content
+            .ReadFromJsonAsync<FinancialSourceReconciliationResponse>();
+        Assert.IsNotNull(report);
+        Assert.AreEqual(0, report.IssuesCount,
+            string.Join(" | ", report.Issues.Select(x => x.Code)));
+        Assert.IsTrue(report.PaymentsPostingIntegrityVerified);
+    }
+
+    [TestMethod]
+    public async Task SourceReconciliationRejectsBalancedButIncorrectReversalAmounts()
+    {
+        await SeedCancelledPaymentAsync(wrongReversal: true);
+        var fiscal = await MarchCalendarAsync(organizationA);
+        using var client = Client(userA, organizationA);
+        using var response = await client.GetAsync(
+            $"/api/v1/accounting/fiscal-years/{fiscal.YearId}/source-reconciliation");
+        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        var report = await response.Content
+            .ReadFromJsonAsync<FinancialSourceReconciliationResponse>();
+        Assert.IsNotNull(report);
+        Assert.IsTrue(report.Issues.Any(x => x.Code == "ReversalLineMismatch"));
+        Assert.IsFalse(report.PaymentsPostingIntegrityVerified);
+    }
+
+    private async Task SeedCancelledPaymentAsync(bool wrongReversal)
+    {
+        var paymentId = await SeedPaymentAsync(organizationA, confirmed: true);
+        await SeedSourceJournalAsync(
+            organizationA, $"payment:{paymentId:N}", 100m);
+
+        await using var db = CreateDb();
+        var payment = await db.Payments.SingleAsync(x => x.Id == paymentId);
+        var original = await db.JournalEntries.SingleAsync(x =>
+            x.OrganizationId == organizationA &&
+            x.ExternalReference == $"payment:{paymentId:N}");
+        var now = DateTimeOffset.UtcNow;
+        var reversedAmount = wrongReversal ? 90m : 100m;
+        var reversal = JournalEntry.CreateReversalDraft(
+            organizationA, original.FiscalPeriodId,
+            original.Id, PostingDate, "Cancelled test payment", now);
+        db.JournalEntries.Add(reversal);
+        db.JournalLines.AddRange(
+            JournalLine.Create(organizationA, reversal.Id, 1,
+                assetA, 0m, reversedAmount, "Reversed cash", now),
+            JournalLine.Create(organizationA, reversal.Id, 2,
+                equityA, reversedAmount, 0m, "Reversed counterpart", now));
+        await db.SaveChangesAsync();
+        reversal.Post("TEST-SOURCE-REV-002", now);
+        original.MarkReversed(reversal.Id, now);
+        payment.Cancel("Cancelled receipt for financial test", now);
+        await db.SaveChangesAsync();
+    }
+
     private async Task<Guid> SeedPaymentAsync(
         Guid organizationId, bool confirmed, decimal allocatedAmount = 0m)
     {
