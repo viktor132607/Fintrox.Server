@@ -181,6 +181,89 @@ public sealed class FiscalCalendarRepository(
             cancellationToken);
     }
 
+    public async Task LockFiscalYearForCloseAsync(
+        Guid organizationId,
+        Guid fiscalYearId,
+        CancellationToken cancellationToken)
+    {
+        EnsureCloseTransaction();
+        await dbContext.Database.ExecuteSqlInterpolatedAsync(
+            $"""
+            SELECT id FROM accounting.fiscal_years
+            WHERE organization_id = {organizationId} AND id = {fiscalYearId}
+            FOR UPDATE
+            """,
+            cancellationToken);
+    }
+
+    public async Task LockAccountingPeriodForCloseAsync(
+        Guid organizationId,
+        Guid fiscalYearId,
+        Guid periodId,
+        CancellationToken cancellationToken)
+    {
+        EnsureCloseTransaction();
+        await dbContext.Database.ExecuteSqlInterpolatedAsync(
+            $"""
+            SELECT id FROM accounting.accounting_periods
+            WHERE organization_id = {organizationId}
+              AND fiscal_year_id = {fiscalYearId}
+              AND id = {periodId}
+            FOR UPDATE
+            """,
+            cancellationToken);
+    }
+
+    public Task<bool> HasDraftJournalsInPeriodAsync(
+        Guid organizationId,
+        Guid periodId,
+        CancellationToken cancellationToken)
+    {
+        return dbContext.JournalEntries.AsNoTracking().AnyAsync(
+            entry => entry.OrganizationId == organizationId &&
+                entry.FiscalPeriodId == periodId &&
+                entry.Status == JournalEntryStatus.Draft,
+            cancellationToken);
+    }
+
+    public Task<bool> HasDraftJournalsInFiscalYearAsync(
+        Guid organizationId,
+        Guid fiscalYearId,
+        CancellationToken cancellationToken)
+    {
+        return dbContext.JournalEntries.AsNoTracking().AnyAsync(
+            entry => entry.OrganizationId == organizationId &&
+                entry.Status == JournalEntryStatus.Draft &&
+                dbContext.AccountingPeriods.Any(period =>
+                    period.OrganizationId == organizationId &&
+                    period.Id == entry.FiscalPeriodId &&
+                    period.FiscalYearId == fiscalYearId),
+            cancellationToken);
+    }
+
+    public Task<bool> HasMisdatedJournalsInPeriodAsync(
+        Guid organizationId,
+        Guid periodId,
+        DateOnly startDate,
+        DateOnly endDate,
+        CancellationToken cancellationToken)
+    {
+        return dbContext.JournalEntries.AsNoTracking().AnyAsync(
+            entry => entry.OrganizationId == organizationId &&
+                entry.FiscalPeriodId == periodId &&
+                (entry.PostingDate < startDate || entry.PostingDate > endDate),
+            cancellationToken);
+    }
+
+    private void EnsureCloseTransaction()
+    {
+        if (dbContext.Database.CurrentTransaction is null)
+        {
+            throw new InvalidOperationException(
+                "Fiscal close row locks require an active transaction.");
+        }
+    }
+
     public Task<int> CountPeriodsAsync(
         Guid organizationId,
         Guid fiscalYearId,
