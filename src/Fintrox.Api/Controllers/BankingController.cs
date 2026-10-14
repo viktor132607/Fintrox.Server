@@ -12,6 +12,22 @@ namespace Fintrox.Api.Controllers;
 public sealed class BankingController(IBankReconciliationService service)
     : ControllerBase
 {
+    [HttpGet("accounts")]
+    [Authorize(Policy = Permissions.AccountingRead)]
+    public async Task<ActionResult<IReadOnlyList<BankAccountResponse>>> ListAccounts(
+        CancellationToken cancellationToken) =>
+        Ok(await service.ListAccountsAsync(cancellationToken));
+
+    [HttpGet("statements/{statementId:guid}")]
+    [Authorize(Policy = Permissions.AccountingRead)]
+    public async Task<ActionResult<BankStatementResponse>> GetStatement(
+        Guid statementId, CancellationToken cancellationToken)
+    {
+        var statement = await service.GetStatementAsync(
+            statementId, cancellationToken);
+        return statement is null ? NotFound() : Ok(statement);
+    }
+
     [HttpPost("accounts")]
     [Authorize(Policy = Permissions.AccountingWrite)]
     [Authorize(Policy = Permissions.AccountingPost)]
