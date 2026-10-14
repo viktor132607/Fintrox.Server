@@ -141,6 +141,19 @@ public sealed partial class FinancialHttpPostgresRegressionTests
                     "Bank fee with wrong sign"));
             Assert.AreEqual(HttpStatusCode.Conflict, rejected.StatusCode);
         }
+
+        var statement = await ImportBankFeeStatementAsync(
+            client, bank.Id, "FEE-REASON-REPLAY", -4m);
+        var line = await BankLineIdAsync(statement.Id);
+        var url = FeeUrl(statement.Id, line);
+        using (var original = await client.PostAsJsonAsync(
+            url, new PostBankFeeRequest(
+                expenseA, -4m, "Original bank service charge")))
+            Assert.AreEqual(HttpStatusCode.OK, original.StatusCode);
+        using var changed = await client.PostAsJsonAsync(
+            url, new PostBankFeeRequest(
+                expenseA, -4m, "Altered bank service charge"));
+        Assert.AreEqual(HttpStatusCode.Conflict, changed.StatusCode);
     }
 
     [TestMethod]
