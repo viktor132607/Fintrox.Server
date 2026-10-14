@@ -17,6 +17,16 @@ public interface IBankReconciliationService
         Guid accountId, ImportBankStatementRequest request,
         CancellationToken cancellationToken);
 
+    Task<BankStatementImportResponse?> ImportCsvStatementAsync(
+        Guid accountId, ImportCsvBankStatementRequest request,
+        CancellationToken cancellationToken);
+
+    Task<BankMatchSuggestionsResponse?> GetMatchSuggestionsAsync(
+        Guid statementId, CancellationToken cancellationToken);
+
+    Task<AutoMatchBankStatementResponse?> AutoMatchAsync(
+        Guid statementId, CancellationToken cancellationToken);
+
     Task<BankStatementMatchResponse?> MatchLineAsync(
         Guid statementId, Guid lineId, Guid paymentId,
         CancellationToken cancellationToken);
