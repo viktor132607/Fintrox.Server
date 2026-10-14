@@ -38,7 +38,7 @@ public sealed class FinancialSourceReconciliationRepository(
             .Select(x => new
             {
                 x.Id, x.Status, Date = x.PaymentDate, Amount = x.Amount,
-                x.ExchangeRate, x.Direction
+                x.ExchangeRate, x.Direction, x.AllocatedAmount
             })
             .ToArrayAsync(cancellationToken);
 
