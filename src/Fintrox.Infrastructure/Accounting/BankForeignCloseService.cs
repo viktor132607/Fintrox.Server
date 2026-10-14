@@ -167,11 +167,20 @@ public sealed partial class BankReconciliationService
             Guid preparationId;
             Guid maker;
             string preparedHash;
-            await using (var previous = Command(cn, tx, """
-                SELECT id,prepared_by_user_id,evidence_sha256
-                FROM banking.bank_fx_close_preparations
-                WHERE organization_id=@org AND statement_id=@statement
-                """, ("org", tenant), ("statement", statementId)))
+            var approvedVersionPreparationSql = evidence.AmendmentId.HasValue
+                ? """
+                  SELECT id,prepared_by_user_id,evidence_sha256
+                  FROM banking.bank_fx_amendment_preparations
+                  WHERE organization_id=@org AND amendment_id=@amendment
+                  """
+                : """
+                  SELECT id,prepared_by_user_id,evidence_sha256
+                  FROM banking.bank_fx_close_preparations
+                  WHERE organization_id=@org AND statement_id=@statement
+                  """;
+            await using (var previous = Command(cn, tx, approvedVersionPreparationSql,
+                ("org", tenant), ("statement", statementId),
+                ("amendment", (object?)evidence.AmendmentId ?? DBNull.Value)))
             await using (var reader = await previous.ExecuteReaderAsync(cancellationToken))
             {
                 if (!await reader.ReadAsync(cancellationToken))
@@ -188,11 +197,19 @@ public sealed partial class BankReconciliationService
                 throw new BankReconciliationConflictException(
                     "The bank/native/GL source evidence changed since the maker prepared this cutoff.");
 
-            await using (var oldApproval = Command(cn, tx, """
-                SELECT approved_by_user_id,evidence_sha256,approval_note
-                FROM banking.bank_fx_close_approvals
-                WHERE organization_id=@org AND preparation_id=@prep
-                """, ("org", tenant), ("prep", preparationId)))
+            var checkerApprovalLookupSql = evidence.AmendmentId.HasValue
+                ? """
+                  SELECT approved_by_user_id,evidence_sha256,approval_note
+                  FROM banking.bank_fx_amendment_approvals
+                  WHERE organization_id=@org AND preparation_id=@prep
+                  """
+                : """
+                  SELECT approved_by_user_id,evidence_sha256,approval_note
+                  FROM banking.bank_fx_close_approvals
+                  WHERE organization_id=@org AND preparation_id=@prep
+                  """;
+            await using (var oldApproval = Command(cn, tx, checkerApprovalLookupSql,
+                ("org", tenant), ("prep", preparationId)))
             await using (var reader = await oldApproval.ExecuteReaderAsync(cancellationToken))
             {
                 if (await reader.ReadAsync(cancellationToken))
@@ -205,16 +222,26 @@ public sealed partial class BankReconciliationService
                     return new ForeignBankCloseDecisionResponse(
                         statementId, accountId.Value, preparationId, maker,
                         checker, evidence.Fingerprint, Approved: true,
-                        AlreadyRecorded: true);
+                        AlreadyRecorded: true,
+                        VersionNumber: evidence.Report.VersionNumber);
                 }
             }
 
-            await using (var insert = Command(cn, tx, """
-                INSERT INTO banking.bank_fx_close_approvals
-                    (id,organization_id,preparation_id,approved_by_user_id,
-                     evidence_sha256,approval_note)
-                VALUES (@id,@org,@prep,@checker,@hash,@note)
-                """, ("id", Guid.NewGuid()), ("org", tenant),
+            var checkerApprovalInsertSql = evidence.AmendmentId.HasValue
+                ? """
+                  INSERT INTO banking.bank_fx_amendment_approvals
+                      (id,organization_id,preparation_id,approved_by_user_id,
+                       evidence_sha256,approval_note)
+                  VALUES (@id,@org,@prep,@checker,@hash,@note)
+                  """
+                : """
+                  INSERT INTO banking.bank_fx_close_approvals
+                      (id,organization_id,preparation_id,approved_by_user_id,
+                       evidence_sha256,approval_note)
+                  VALUES (@id,@org,@prep,@checker,@hash,@note)
+                  """;
+            await using (var insert = Command(cn, tx, checkerApprovalInsertSql,
+                ("id", Guid.NewGuid()), ("org", tenant),
                 ("prep", preparationId), ("checker", checker),
                 ("hash", evidence.Fingerprint), ("note", note!)))
                 await insert.ExecuteNonQueryAsync(cancellationToken);
