@@ -243,10 +243,12 @@ public sealed class JournalService(
 
                 if (accounts.Count != accountIds.Length ||
                     accounts.Values.Any(account =>
-                        !account.IsActive || !account.AllowManualPosting))
+                        !account.IsActive ||
+                        !account.AllowManualPosting ||
+                        account.Type is AccountType.Revenue or AccountType.Expense or AccountType.OffBalance))
                 {
                     throw new JournalConflictException(
-                        "Opening balances require active, manually postable accounts owned by this organization.");
+                        "Opening balances require active, manually postable balance-sheet accounts owned by this organization.");
                 }
 
                 var now = timeProvider.GetUtcNow();
