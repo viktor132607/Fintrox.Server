@@ -1,6 +1,8 @@
 # Fintrox Session Handoff — 2026-10-13
 
 ## Current milestone
+2026-10-14: **ACCOUNTING-001A IMPLEMENTED — CI PENDING**. Legacy manual and auto-generated journal posting/reversal now locks original journal and fiscal calendar rows inside transactions, re-reading open status after lock to avoid closing-race stale snapshots. Four added migrated PostgreSQL HTTP race tests; verification not yet obtained. `docs/accounting-posting-concurrency.md`. ACCOUNTING-001 overall still pending other accounting capabilities. API-001 CI result also not yet confirmed.
+
 2026-10-14: **API-001 IMPLEMENTED — CI PENDING**. Added explicit `Cors:AllowedOrigins` browser policy (default deny), IP-partitioned fixed-window HTTP 429 limits to five auth/integration token endpoints, six WebApplicationFactory HTTP tests. No financial/data-model changes. See `docs/api-request-security.md` and `docs/ai/VALIDATION.md`. Next accounting hardening is `ACCOUNTING-001`, contingent on this CI gate.
 
 2026-10-14: **INT-002 COMPLETE — CI VERIFIED**. Legacy Integrations: atomic PostgreSQL conditional claims, two-minute lease, attempt-generation CAS-fenced outcome, expired lease recovery, no seventh HTTP send, atomic terminal status/failure evidence. Four real migrated PostgreSQL tests; CI **38475619708** passed **2,906/2,906** tests, 0 warnings/errors, EF snapshot and PostgreSQL migrations. docs/webhook-lease-recovery.md. **Next queued hardening task: API-001**.
