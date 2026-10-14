@@ -32,7 +32,7 @@ invalid accounting state/configuration returns 409.
   posting already acquires `FOR SHARE` on this row. This serializes the
   final result and year status against concurrent postings across instances.
 - Requires fiscal year **Open** and an active tenant-owned
-  **Equity** destination account explicitly selected by the caller.
+  **analytical Equity** destination account explicitly selected by the caller.
 - Requires a contiguous, gap-free, nonoverlapping fiscal calendar from
   `FiscalYear.StartDate` through `FiscalYear.EndDate`.
   Every period except the final one must be **Closed**. The final period must
