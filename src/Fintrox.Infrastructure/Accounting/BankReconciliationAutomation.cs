@@ -62,6 +62,8 @@ public sealed partial class BankReconciliationService
                   ON s.id=l.statement_id AND s.organization_id=l.organization_id
                 JOIN banking.bank_accounts a
                   ON a.id=s.bank_account_id AND a.organization_id=s.organization_id
+                JOIN core.organizations o ON o.id=a.organization_id
+                  AND o.base_currency_code=a.currency_code
                 JOIN payments.payments p
                   ON p.organization_id=l.organization_id
                  AND p.status='Confirmed'
@@ -76,6 +78,10 @@ public sealed partial class BankReconciliationService
                   AND NOT EXISTS (
                       SELECT 1 FROM banking.bank_fee_postings fee
                       WHERE fee.organization_id=@org AND fee.statement_line_id=l.id
+                  )
+                  AND NOT EXISTS (
+                      SELECT 1 FROM banking.bank_fx_settlements fx
+                      WHERE fx.organization_id=@org AND fx.statement_line_id=l.id
                   )
                   AND NOT EXISTS (
                       SELECT 1 FROM banking.bank_statement_lines used
