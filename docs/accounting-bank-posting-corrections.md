@@ -27,9 +27,7 @@ Body example:
 
 `sourceKind` must be exactly `BankFee` or `ForeignSettlement`.
 Reason is mandatory, trimmed, 10–400 characters so the complete
-journal description remains within 500 characters. The posting date must
-not precede the original bank line date and must be in a currently **open**
-fiscal year and accounting period. Missing/other-tenant statement or
+journal description remains within 500 characters. The posting date must not precede the original bank line date and **must remain in the original accounting period**, which must still be open within an open fiscal year. Historical or cross-period corrections require the future versioned workflow. Missing/other-tenant statement or
 line returns 404; mismatched source journal, wrong category, closed
 period or conflicting replay returns 409.
 
