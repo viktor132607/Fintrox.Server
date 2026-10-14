@@ -38,7 +38,7 @@ public sealed class FinancialSourceReconciliationRepository(
             .Select(x => new
             {
                 x.Id, x.Status, Date = x.PaymentDate, Amount = x.Amount,
-                x.ExchangeRate
+                x.ExchangeRate, x.Direction
             })
             .ToArrayAsync(cancellationToken);
 
@@ -46,13 +46,13 @@ public sealed class FinancialSourceReconciliationRepository(
             sales.Length + purchases.Length + payments.Length);
         result.AddRange(sales.Select(x => new FinancialSourcePostingSnapshot(
             x.Id, "SalesInvoice", x.Status.ToString(), x.Date,
-            x.Amount, x.ExchangeRate)));
+            x.Amount, x.ExchangeRate, null)));
         result.AddRange(purchases.Select(x => new FinancialSourcePostingSnapshot(
             x.Id, "PurchaseDocument", x.Status.ToString(), x.Date,
-            x.Amount, x.ExchangeRate)));
+            x.Amount, x.ExchangeRate, null)));
         result.AddRange(payments.Select(x => new FinancialSourcePostingSnapshot(
             x.Id, "Payment", x.Status.ToString(), x.Date,
-            x.Amount, x.ExchangeRate)));
+            x.Amount, x.ExchangeRate, x.Direction.ToString())));
         return result;
     }
 
