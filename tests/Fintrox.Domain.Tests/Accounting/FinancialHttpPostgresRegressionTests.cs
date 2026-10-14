@@ -412,7 +412,7 @@ public sealed class FinancialHttpPostgresRegressionTests
         await using var db = CreateDb();
         Assert.AreEqual(1, await db.JournalEntries.CountAsync(x =>
             x.OrganizationId == organizationA && x.ReversalOfJournalEntryId == draft.Id));
-        Assert.AreEqual(2, await db.JournalNumberSequences
+        Assert.AreEqual(2L, await db.JournalNumberSequences
             .Where(x => x.OrganizationId == organizationA)
             .Select(x => x.LastNumber).SingleAsync());
     }
