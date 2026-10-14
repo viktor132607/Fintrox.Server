@@ -87,6 +87,22 @@ public sealed partial class BankReconciliationService
                     throw new BankReconciliationConflictException(
                         "A later statement/valuation depends on this cutoff. Coordinated multi-period restatement is required.");
 
+            // Other bank GL journals dated after this cutoff depend on the
+            // original historical carrying value. This endpoint does not
+            // recompute later financial periods, so refuse the amendment.
+            await using (var laterLedger = Command(cn, tx, """
+                SELECT count(*) FROM accounting.journal_lines j
+                JOIN accounting.journal_entries e
+                  ON e.id=j.journal_entry_id AND e.organization_id=j.organization_id
+                WHERE j.organization_id=@org AND j.account_id=@ledger
+                  AND e.posting_date>@cutoff
+                  AND e.status IN ('Posted','Reversed')
+                """, ("org", tenant), ("ledger", bankGlId), ("cutoff", cutoff)))
+                if (Convert.ToInt64(
+                    await laterLedger.ExecuteScalarAsync(cancellationToken)) != 0)
+                    throw new BankReconciliationConflictException(
+                        "Later bank GL movements depend on this cutoff. Use coordinated multi-period correction.");
+
             // Always lock year then period EXCLUSIVELY; journal posting
             // normally takes calendar FOR SHARE. No other GL mutation can
             // race this valuation replacement through the normal API.
