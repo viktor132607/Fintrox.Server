@@ -552,9 +552,26 @@ public sealed class AutoPostingEngine(
         string reason,
         CancellationToken cancellationToken)
     {
-        var original = await journalRepository.GetSystemEntryByExternalReferenceAsync(
+        var existing = await journalRepository.GetSystemEntryByExternalReferenceAsync(
             organizationId,
             externalReference,
+            trackChanges: false,
+            cancellationToken);
+
+        if (existing is null)
+        {
+            return;
+        }
+
+        await journalRepository.LockJournalForPostingAsync(
+            organizationId,
+            existing.Id,
+            cancellationToken);
+
+        // Reload after the lock, never validate a tracked pre-lock snapshot.
+        var original = await journalRepository.GetEntryAsync(
+            organizationId,
+            existing.Id,
             trackChanges: true,
             cancellationToken);
 
@@ -638,16 +655,38 @@ public sealed class AutoPostingEngine(
             DateOnly postingDate,
             CancellationToken cancellationToken)
     {
+        var initialPeriod = await fiscalCalendarRepository.FindPeriodByDateAsync(
+            organizationId,
+            postingDate,
+            trackChanges: false,
+            cancellationToken);
+
+        if (initialPeriod is null)
+        {
+            throw new AutoPostingException(
+                "No accounting period contains the posting date.");
+        }
+
+        // The calling sales/purchases/payments service owns the transaction.
+        // Wait for any concurrent close, then re-read the authoritative status.
+        await journalRepository.LockPostingCalendarAsync(
+            organizationId,
+            initialPeriod.FiscalYearId,
+            initialPeriod.Id,
+            cancellationToken);
+
         var period = await fiscalCalendarRepository.FindPeriodByDateAsync(
             organizationId,
             postingDate,
             trackChanges: false,
             cancellationToken);
 
-        if (period is null)
+        if (period is null ||
+            period.Id != initialPeriod.Id ||
+            period.FiscalYearId != initialPeriod.FiscalYearId)
         {
             throw new AutoPostingException(
-                "No accounting period contains the posting date.");
+                "The fiscal period changed during automatic posting.");
         }
 
         if (period.Status != AccountingPeriodStatus.Open)
