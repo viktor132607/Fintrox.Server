@@ -265,6 +265,45 @@ public sealed partial class FinancialHttpPostgresRegressionTests
     }
 
     [TestMethod]
+    public async Task GenericJournalRouteCannotReverseBankCorrectionOrItsSource()
+    {
+        using var client = Client(userA, organizationA);
+        var bank = await CreateTestBankAccountAsync(client);
+        var statement = await ImportBankFeeStatementAsync(
+            client, bank.Id, "CORRECT-REVERSAL-GUARD", -4m);
+        var line = await BankLineIdAsync(statement.Id);
+        using var feeResponse = await client.PostAsJsonAsync(
+            FeeUrl(statement.Id, line),
+            new PostBankFeeRequest(expenseA, -4m,
+                "Original service fee for reversal protection"));
+        var fee = await feeResponse.Content
+            .ReadFromJsonAsync<BankFeePostingResponse>();
+        Assert.IsNotNull(fee);
+
+        using (var direct = await client.PostAsJsonAsync(
+            $"/api/v1/accounting/journal/{fee.JournalEntryId}/reverse",
+            new ReverseJournalEntryRequest(
+                PostingDate, "Bypass protected bank posting correction")))
+            Assert.AreEqual(HttpStatusCode.Conflict, direct.StatusCode);
+
+        using var corrected = await client.PostAsJsonAsync(
+            CorrectionUrl(statement.Id, line),
+            new CorrectBankPostingRequest(
+                "BankFee", fee.JournalEntryId, PostingDate,
+                "Correction requires an immutable bank reversal link"));
+        Assert.AreEqual(HttpStatusCode.OK, corrected.StatusCode);
+        var evidence = await corrected.Content
+            .ReadFromJsonAsync<BankPostingCorrectionResponse>();
+        Assert.IsNotNull(evidence);
+
+        using var reReverse = await client.PostAsJsonAsync(
+            $"/api/v1/accounting/journal/{evidence.ReversalJournalEntryId}/reverse",
+            new ReverseJournalEntryRequest(
+                PostingDate, "Attempt to reverse a protected bank correction"));
+        Assert.AreEqual(HttpStatusCode.Conflict, reReverse.StatusCode);
+    }
+
+    [TestMethod]
     public async Task ConcurrentCorrectionSubmissionsCreateOneCompensatingJournal()
     {
         using var owner = Client(userA, organizationA);
