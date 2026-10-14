@@ -202,6 +202,27 @@ public sealed class BankingController(IBankReconciliationService service)
         }
     }
 
+    [HttpPost("statements/{statementId:guid}/lines/{lineId:guid}/correct-posting")]
+    [Authorize(Policy = Permissions.AccountingWrite)]
+    [Authorize(Policy = Permissions.AccountingPost)]
+    public async Task<ActionResult<BankPostingCorrectionResponse>> CorrectBankPosting(
+        Guid statementId, Guid lineId,
+        CorrectBankPostingRequest request,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var result = await service.CorrectBankPostingAsync(
+                statementId, lineId, request, cancellationToken);
+            return result is null ? NotFound() : Ok(result);
+        }
+        catch (BankReconciliationConflictException ex)
+        {
+            return Conflict(Problem(StatusCodes.Status409Conflict,
+                "Protected bank posting correction conflict", ex.Message));
+        }
+    }
+
     [HttpPost("statements/{statementId:guid}/lines/{lineId:guid}/post-fee")]
     [Authorize(Policy = Permissions.AccountingWrite)]
     [Authorize(Policy = Permissions.AccountingPost)]
