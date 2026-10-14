@@ -1,0 +1,25 @@
+namespace Fintrox.Contracts.Accounting;
+
+/// <summary>
+/// Bridge between the native bank statement and the base-currency GL after
+/// an independently selected cutoff exchange rate and recorded revaluation.
+/// </summary>
+public sealed record ForeignBankCloseEvidenceResponse(
+    Guid StatementId, Guid BankAccountId, DateOnly CutoffDate,
+    string CurrencyCode, decimal NativeClosingBalance,
+    decimal ApprovedCutoffRate, decimal RevaluedTargetBase,
+    decimal ActualPostedLedgerBase, decimal BaseDifference,
+    bool NativeStatementChainValid, bool AllNativeLinesPosted,
+    bool RevaluationJournalValid, bool NoUnrecognizedLedgerEntries,
+    bool InternallyReconciled, bool Prepared, bool Approved,
+    Guid? PreparedByUserId, Guid? ApprovedByUserId,
+    IReadOnlyList<string> Issues);
+
+public sealed record PrepareForeignBankCloseRequest(string ReviewNote);
+
+public sealed record ApproveForeignBankCloseRequest(string ApprovalNote);
+
+public sealed record ForeignBankCloseDecisionResponse(
+    Guid StatementId, Guid BankAccountId, Guid PreparationId,
+    Guid PreparedByUserId, Guid? ApprovedByUserId,
+    string EvidenceSha256, bool Approved, bool AlreadyRecorded);
