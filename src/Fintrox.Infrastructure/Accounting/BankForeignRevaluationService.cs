@@ -248,7 +248,7 @@ public sealed partial class BankReconciliationService
                 """, ("org", tenant), ("ledger", glId),
                 ("start", chain[0].Start)))
             {
-                if (Convert.ToInt64(await earlyGl.ExecuteScalarAsync(cancellationToken)) != 0)
+                if (Convert.ToInt64(await earlyGl.ExecuteScalarAsync(cancellationToken), System.Globalization.CultureInfo.InvariantCulture) != 0)
                     throw new BankReconciliationConflictException(
                         "Bank GL had activity before the first zero-opening statement; migrate and reconcile starting balances first.");
             }
@@ -300,7 +300,7 @@ public sealed partial class BankReconciliationService
                 """, ("org", tenant), ("account", accountId),
                 ("cutoff", cutoff), ("ledger", glId)))
             {
-                if (Convert.ToInt64(await missing.ExecuteScalarAsync(cancellationToken)) != 0)
+                if (Convert.ToInt64(await missing.ExecuteScalarAsync(cancellationToken), System.Globalization.CultureInfo.InvariantCulture) != 0)
                     throw new BankReconciliationConflictException(
                         "Every native bank line up to cutoff must be posted once with valid foreign settlement GL evidence before revaluation.");
             }
@@ -349,7 +349,7 @@ public sealed partial class BankReconciliationService
                 """, ("org", tenant), ("ledger", glId),
                 ("cutoff", cutoff), ("account", accountId)))
             {
-                if (Convert.ToInt64(await unrecognized.ExecuteScalarAsync(cancellationToken)) != 0)
+                if (Convert.ToInt64(await unrecognized.ExecuteScalarAsync(cancellationToken), System.Globalization.CultureInfo.InvariantCulture) != 0)
                     throw new BankReconciliationConflictException(
                         "Bank GL contains unrecognized or reversed entries. Resolve the source-to-ledger reconciliation before revaluation.");
             }
