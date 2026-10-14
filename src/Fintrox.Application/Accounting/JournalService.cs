@@ -368,6 +368,24 @@ public sealed class JournalService(
 
                 EnsureReversible(original);
 
+                // The compensating reversal of a fiscal closing entry is
+                // protected too. Reversing that reversal through this generic
+                // endpoint would change annual P&L without a coordinated
+                // year/final-period state transition.
+                if (original.ReversalOfJournalEntryId is Guid reversedSourceId)
+                {
+                    var reversedSource = await journalRepository.GetEntryAsync(
+                        organizationId, reversedSourceId,
+                        trackChanges: false, transactionCancellationToken);
+                    if (reversedSource?.Source == JournalEntrySource.System &&
+                        reversedSource.ExternalReference?.StartsWith(
+                            "profit-loss-close:v1:", StringComparison.Ordinal) == true)
+                    {
+                        throw new JournalConflictException(
+                            "Year-end correction reversals cannot be reversed using the generic journal endpoint.");
+                    }
+                }
+
                 var (period, fiscalYear) = await ResolveOpenPostingContextAsync(
                     organizationId,
                     request.PostingDate,
