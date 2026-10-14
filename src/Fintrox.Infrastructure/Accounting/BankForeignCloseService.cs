@@ -243,8 +243,26 @@ public sealed partial class BankReconciliationService
         if (period is null || period.EndDate != toDate)
             throw new BankReconciliationConflictException(
                 "FX bank closing requires an exact accounting period-end date.");
-        await journals.LockPostingCalendarAsync(
-            tenant, period.FiscalYearId, period.Id, ct);
+        // The review requires EXCLUSIVE calendar locks: ordinary journal
+        // posting uses FOR SHARE, so another posting cannot change the bank
+        // GL between fingerprint validation and committing approval.
+        await using (var yearLock = Command(cn, tx, """
+            SELECT id FROM accounting.fiscal_years
+            WHERE organization_id=@org AND id=@year FOR UPDATE
+            """, ("org", tenant), ("year", period.FiscalYearId)))
+            if (await yearLock.ExecuteScalarAsync(ct) is not Guid)
+                throw new BankReconciliationConflictException(
+                    "Fiscal year no longer exists for bank review.");
+
+        await using (var periodLock = Command(cn, tx, """
+            SELECT id FROM accounting.accounting_periods
+            WHERE organization_id=@org AND fiscal_year_id=@year
+              AND id=@period FOR UPDATE
+            """, ("org", tenant), ("year", period.FiscalYearId),
+            ("period", period.Id)))
+            if (await periodLock.ExecuteScalarAsync(ct) is not Guid)
+                throw new BankReconciliationConflictException(
+                    "Fiscal period no longer exists for bank review.");
     }
 
     private async Task<ForeignCloseSnapshot?> ReadForeignCloseAsync(
