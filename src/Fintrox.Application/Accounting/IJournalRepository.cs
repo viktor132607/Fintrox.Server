@@ -66,6 +66,17 @@ public interface IJournalRepository
         Guid fiscalYearId,
         CancellationToken cancellationToken);
 
+    Task<IReadOnlyList<JournalEntry>> ListYearEndClosingEntriesAsync(
+        Guid organizationId,
+        Guid fiscalYearId,
+        CancellationToken cancellationToken);
+
+    Task<FiscalLedgerTotals> GetFiscalLedgerTotalsAsync(
+        Guid organizationId,
+        DateOnly fromDate,
+        DateOnly toDate,
+        CancellationToken cancellationToken);
+
     Task<IReadOnlyList<ProfitLossAccountBalance>> GetProfitLossBalancesAsync(
         Guid organizationId,
         DateOnly fiscalYearStart,
