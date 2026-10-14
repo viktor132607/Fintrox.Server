@@ -303,8 +303,6 @@ public sealed partial class FinancialHttpPostgresRegressionTests
                 null, null, null, null, now);
             incoming.SetAllocatedAmount(
                 declaredIncomingAllocatedBase ?? paymentBaseAmount, now);
-            incoming.Confirm("IN-OPEN-001", currency.Id, "EUR",
-                "EUR", customer.Name, null, null, 1m, now);
             incomePaymentId = incoming.Id;
             db.Payments.Add(incoming);
             db.PaymentAllocations.Add(PaymentAllocation.Create(
@@ -320,8 +318,6 @@ public sealed partial class FinancialHttpPostgresRegressionTests
                 currency.Id, "EUR", supplierSettlement, supplier.Name,
                 null, null, null, null, now);
             outgoing.SetAllocatedAmount(supplierSettlement, now);
-            outgoing.Confirm("OUT-OPEN-001", currency.Id, "EUR",
-                "EUR", supplier.Name, null, null, 1m, now);
             outgoingPaymentId = outgoing.Id;
             db.Payments.Add(outgoing);
             db.PaymentAllocations.Add(PaymentAllocation.Create(
@@ -329,6 +325,15 @@ public sealed partial class FinancialHttpPostgresRegressionTests
                 PaymentAllocationTargetType.PurchaseDocument,
                 null, purchase.Id, purchase.InternalNumber!, currency.Id,
                 "EUR", 1m, supplierSettlement, supplierSettlement, now));
+            // Database allocation guards require the payment to remain Draft
+            // while its lines are inserted. Confirm only AFTER all draft
+            // payment and allocation inserts have been committed.
+            await db.SaveChangesAsync();
+
+            incoming.Confirm("IN-OPEN-001", currency.Id, "EUR",
+                "EUR", customer.Name, null, null, 1m, now);
+            outgoing.Confirm("OUT-OPEN-001", currency.Id, "EUR",
+                "EUR", supplier.Name, null, null, 1m, now);
             await db.SaveChangesAsync();
         }
 
