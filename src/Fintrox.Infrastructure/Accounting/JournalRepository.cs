@@ -168,12 +168,13 @@ public sealed class JournalRepository(
 
         // The fiscal-year lock must precede the period lock on every posting
         // path. Closing a year/period acquires the same PostgreSQL row locks
-        // during UPDATE; these locks make the final open-status read current.
+        // during UPDATE. Shared locks allow simultaneous postings but block
+        // status writes until all financial postings in progress commit.
         await dbContext.Database.ExecuteSqlInterpolatedAsync(
             $"""
             SELECT id FROM accounting.fiscal_years
             WHERE organization_id = {organizationId} AND id = {fiscalYearId}
-            FOR UPDATE
+            FOR SHARE
             """,
             cancellationToken);
 
@@ -181,7 +182,7 @@ public sealed class JournalRepository(
             $"""
             SELECT id FROM accounting.accounting_periods
             WHERE organization_id = {organizationId} AND id = {periodId}
-            FOR UPDATE
+            FOR SHARE
             """,
             cancellationToken);
     }
