@@ -1,5 +1,12 @@
 # Validation history — 2026-10-14
 
+## ACCOUNTING-001D / actual P&L year-end journal and net income transfer
+- **IMPLEMENTED IN CODE — BUILD/CI/POSTGRESQL TEST EXECUTION UNVERIFIED**.
+- New `ProfitLossClosingService`, `IProfitLossClosingService`, `ProfitLossAccountBalance` and `IJournalRepository.GetProfitLossBalancesAsync` aggregate posted and reversed tenant income/expense amounts for the exact fiscal-year dates. New `POST /api/v1/accounting/fiscal-years/{id}/close-profit-loss` requires `accounting.write` and `accounting.post` and an explicit retained-earnings equity account.
+- Under an exclusive year row lock: require open year, contiguous periods, prior periods Closed, final period Open, no drafts; create system journal reversing each nonzero P&L account net balance, transfer net income/loss to equity, post the journal and Close the final period and year **in a single transaction**. Unique existing system reference `profit-loss-close:v1:{id:N}` ensures one effect and replay returns the same ID. No migrations.
+- Existing status-only final-year Close now rejects outstanding income/expense account balances. Eight **new, unexecuted** migrated PostgreSQL HTTP regression tests cover profit/loss/zero-result, duplicate and concurrent close, tenant/invalid destination/drafts/calendar failures and manual Close bypass.
+- **Not** statutory year-end sign-off, tax, group consolidation, depreciation, bank/AP/AR/inventory reconciliations, next-year carry-forward, full module migration, or verified production feature. Details: [year-end profit/loss](../accounting-year-end-profit-loss.md).
+
 ## ACCOUNTING-001C / transactional accounting close controls
 - **IMPLEMENTED, CI/.NET/real PostgreSQL execution NOT YET VERIFIED**. Active legacy `FiscalCalendarService` now closes/reopens periods/years within `ITransactionRunner` transactions using year-then-period exclusive PostgreSQL row locks; rejects unresolved Draft journals and period-misdated journals; requires all child periods closed before year hard close, no open periods before year soft close.
 - Fiscal year/period edits and journal draft create/update/line mutations now acquire posting/calendar locks, recheck period/year after waiting and reject edits in closed/soft-closed periods. Six fiscal status-transition endpoints additionally require `accounting.post` alongside `accounting.write`.
