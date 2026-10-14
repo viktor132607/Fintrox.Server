@@ -171,45 +171,35 @@ public sealed class JournalService(
         CancellationToken cancellationToken)
     {
         var organizationId = currentOrganization.RequireOrganizationId();
-        var entry = await journalRepository.GetEntryAsync(
-            organizationId,
-            journalEntryId,
-            trackChanges: false,
+        return await transactionRunner.ExecuteAsync(
+            async ct =>
+            {
+                await journalRepository.LockJournalForPostingAsync(
+                    organizationId, journalEntryId, ct);
+
+                var draft = await journalRepository.GetEntryAsync(
+                    organizationId, journalEntryId, trackChanges: false, ct);
+                if (draft is null) return null;
+                EnsureDraft(draft);
+
+                await ResolveOpenPostingContextAsync(
+                    organizationId, draft.PostingDate, draft.FiscalPeriodId, ct);
+
+                var account = await ValidateManualLineAsync(
+                    organizationId, request.AccountId, request.Debit, request.Credit, ct);
+
+                var number = await journalRepository.GetNextLineNumberAsync(
+                    organizationId, journalEntryId, ct);
+                var line = JournalLine.Create(
+                    organizationId, journalEntryId, number,
+                    request.AccountId, request.Debit, request.Credit,
+                    request.Description, timeProvider.GetUtcNow());
+
+                await journalRepository.AddLineAsync(line, ct);
+                await journalRepository.SaveChangesAsync(ct);
+                return MapLine(line, account);
+            },
             cancellationToken);
-
-        if (entry is null)
-        {
-            return null;
-        }
-
-        EnsureDraft(entry);
-
-        var account = await ValidateManualLineAsync(
-            organizationId,
-            request.AccountId,
-            request.Debit,
-            request.Credit,
-            cancellationToken);
-
-        var lineNumber = await journalRepository.GetNextLineNumberAsync(
-            organizationId,
-            journalEntryId,
-            cancellationToken);
-
-        var line = JournalLine.Create(
-            organizationId,
-            journalEntryId,
-            lineNumber,
-            request.AccountId,
-            request.Debit,
-            request.Credit,
-            request.Description,
-            timeProvider.GetUtcNow());
-
-        await journalRepository.AddLineAsync(line, cancellationToken);
-        await journalRepository.SaveChangesAsync(cancellationToken);
-
-        return MapLine(line, account);
     }
 
     public async Task<JournalLineResponse?> UpdateLineAsync(
@@ -219,47 +209,36 @@ public sealed class JournalService(
         CancellationToken cancellationToken)
     {
         var organizationId = currentOrganization.RequireOrganizationId();
-        var entry = await journalRepository.GetEntryAsync(
-            organizationId,
-            journalEntryId,
-            trackChanges: false,
+        return await transactionRunner.ExecuteAsync(
+            async ct =>
+            {
+                await journalRepository.LockJournalForPostingAsync(
+                    organizationId, journalEntryId, ct);
+
+                var draft = await journalRepository.GetEntryAsync(
+                    organizationId, journalEntryId, trackChanges: false, ct);
+                if (draft is null) return null;
+                EnsureDraft(draft);
+
+                await ResolveOpenPostingContextAsync(
+                    organizationId, draft.PostingDate, draft.FiscalPeriodId, ct);
+
+                var line = await journalRepository.GetLineAsync(
+                    organizationId, journalEntryId, journalLineId,
+                    trackChanges: true, ct);
+                if (line is null) return null;
+
+                var account = await ValidateManualLineAsync(
+                    organizationId, request.AccountId, request.Debit, request.Credit, ct);
+
+                line.Update(
+                    request.AccountId, request.Debit, request.Credit,
+                    request.Description, timeProvider.GetUtcNow());
+
+                await journalRepository.SaveChangesAsync(ct);
+                return MapLine(line, account);
+            },
             cancellationToken);
-
-        if (entry is null)
-        {
-            return null;
-        }
-
-        EnsureDraft(entry);
-
-        var line = await journalRepository.GetLineAsync(
-            organizationId,
-            journalEntryId,
-            journalLineId,
-            trackChanges: true,
-            cancellationToken);
-
-        if (line is null)
-        {
-            return null;
-        }
-
-        var account = await ValidateManualLineAsync(
-            organizationId,
-            request.AccountId,
-            request.Debit,
-            request.Credit,
-            cancellationToken);
-
-        line.Update(
-            request.AccountId,
-            request.Debit,
-            request.Credit,
-            request.Description,
-            timeProvider.GetUtcNow());
-
-        await journalRepository.SaveChangesAsync(cancellationToken);
-        return MapLine(line, account);
     }
 
     public async Task<bool> DeleteLineAsync(
@@ -268,35 +247,30 @@ public sealed class JournalService(
         CancellationToken cancellationToken)
     {
         var organizationId = currentOrganization.RequireOrganizationId();
-        var entry = await journalRepository.GetEntryAsync(
-            organizationId,
-            journalEntryId,
-            trackChanges: false,
+        return await transactionRunner.ExecuteAsync(
+            async ct =>
+            {
+                await journalRepository.LockJournalForPostingAsync(
+                    organizationId, journalEntryId, ct);
+
+                var draft = await journalRepository.GetEntryAsync(
+                    organizationId, journalEntryId, trackChanges: false, ct);
+                if (draft is null) return false;
+                EnsureDraft(draft);
+
+                await ResolveOpenPostingContextAsync(
+                    organizationId, draft.PostingDate, draft.FiscalPeriodId, ct);
+
+                var line = await journalRepository.GetLineAsync(
+                    organizationId, journalEntryId, journalLineId,
+                    trackChanges: true, ct);
+                if (line is null) return false;
+
+                journalRepository.RemoveLine(line);
+                await journalRepository.SaveChangesAsync(ct);
+                return true;
+            },
             cancellationToken);
-
-        if (entry is null)
-        {
-            return false;
-        }
-
-        EnsureDraft(entry);
-
-        var line = await journalRepository.GetLineAsync(
-            organizationId,
-            journalEntryId,
-            journalLineId,
-            trackChanges: true,
-            cancellationToken);
-
-        if (line is null)
-        {
-            return false;
-        }
-
-        journalRepository.RemoveLine(line);
-        await journalRepository.SaveChangesAsync(cancellationToken);
-
-        return true;
     }
 
     public async Task<JournalEntryResponse?> PostAsync(
