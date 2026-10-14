@@ -1,5 +1,10 @@
 # Validation history — 2026-10-14
 
+## ACCOUNTING-001A / concurrent posting and fiscal close safety
+- IMPLEMENTED on `main`, **CI/build/test verification pending**; changes in `IJournalRepository`, `JournalRepository`, `JournalService`, `AutoPostingEngine` and `FinancialHttpPostgresRegressionTests`.
+- Four migrated PostgreSQL HTTP tests added: simultaneous post one winner; simultaneous reversal one winner; period close vs posting; fiscal-year soft-close vs posting. Real runs and results must be recorded after CI, not inferred from test code.
+- Shared PostgreSQL fiscal year / period row locks and exclusive journal lock protect status rechecks and numbering. See [posting concurrency](../accounting-posting-concurrency.md).
+
 ## API-001 / exact CORS policy and auth endpoint rate limits
 - IMPLEMENTED, **CI verification pending**. Source files: `src/Fintrox.Api/Security/ApiRequestSecurity.cs`, `src/Fintrox.Api/Program.cs`, auth and integration-token controllers, default `appsettings.json` deny list.
 - Six WebApplicationFactory HTTP regression tests added under `tests/Fintrox.Domain.Tests/Api/ApiRequestSecurityHttpTests.cs`; intended coverage: configured/unconfigured/unknown CORS origins, preflight, 429 login/register/integration-token quotas, isolation of unrelated endpoints, and forwarded-IP header spoofing resistance.
