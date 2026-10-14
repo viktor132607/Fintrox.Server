@@ -56,6 +56,16 @@ public interface IJournalRepository
         Guid periodId,
         CancellationToken cancellationToken);
 
+    Task LockFiscalYearForOpeningBalancesAsync(
+        Guid organizationId,
+        Guid fiscalYearId,
+        CancellationToken cancellationToken);
+
+    Task<bool> HasPostedEntriesForFiscalYearAsync(
+        Guid organizationId,
+        Guid fiscalYearId,
+        CancellationToken cancellationToken);
+
     Task<long> AllocatePostingSequenceAsync(
         Guid organizationId,
         Guid fiscalYearId,
