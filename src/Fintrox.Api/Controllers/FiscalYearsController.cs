@@ -80,6 +80,7 @@ public sealed class FiscalYearsController(
 
     [HttpPost("{fiscalYearId:guid}/soft-close")]
     [Authorize(Policy = Permissions.AccountingWrite)]
+    [Authorize(Policy = Permissions.AccountingPost)]
     public Task<ActionResult<FiscalYearResponse>> SoftClose(
         Guid fiscalYearId,
         CancellationToken cancellationToken)
@@ -92,6 +93,7 @@ public sealed class FiscalYearsController(
 
     [HttpPost("{fiscalYearId:guid}/close")]
     [Authorize(Policy = Permissions.AccountingWrite)]
+    [Authorize(Policy = Permissions.AccountingPost)]
     public Task<ActionResult<FiscalYearResponse>> Close(
         Guid fiscalYearId,
         CancellationToken cancellationToken)
@@ -104,6 +106,7 @@ public sealed class FiscalYearsController(
 
     [HttpPost("{fiscalYearId:guid}/reopen")]
     [Authorize(Policy = Permissions.AccountingWrite)]
+    [Authorize(Policy = Permissions.AccountingPost)]
     public Task<ActionResult<FiscalYearResponse>> Reopen(
         Guid fiscalYearId,
         CancellationToken cancellationToken)
@@ -195,6 +198,7 @@ public sealed class FiscalYearsController(
 
     [HttpPost("{fiscalYearId:guid}/periods/{periodId:guid}/soft-close")]
     [Authorize(Policy = Permissions.AccountingWrite)]
+    [Authorize(Policy = Permissions.AccountingPost)]
     public Task<ActionResult<AccountingPeriodResponse>> SoftClosePeriod(
         Guid fiscalYearId,
         Guid periodId,
@@ -209,6 +213,7 @@ public sealed class FiscalYearsController(
 
     [HttpPost("{fiscalYearId:guid}/periods/{periodId:guid}/close")]
     [Authorize(Policy = Permissions.AccountingWrite)]
+    [Authorize(Policy = Permissions.AccountingPost)]
     public Task<ActionResult<AccountingPeriodResponse>> ClosePeriod(
         Guid fiscalYearId,
         Guid periodId,
@@ -223,6 +228,7 @@ public sealed class FiscalYearsController(
 
     [HttpPost("{fiscalYearId:guid}/periods/{periodId:guid}/reopen")]
     [Authorize(Policy = Permissions.AccountingWrite)]
+    [Authorize(Policy = Permissions.AccountingPost)]
     public Task<ActionResult<AccountingPeriodResponse>> ReopenPeriod(
         Guid fiscalYearId,
         Guid periodId,
