@@ -654,6 +654,63 @@ public sealed class FinancialHttpPostgresRegressionTests
             x.OrganizationId == organizationA).Select(x => x.LastNumber).SingleAsync());
     }
 
+    [TestMethod]
+    public async Task OpeningBalancesRejectRevenueAndExpenseAccounts()
+    {
+        var yearId = await AddJanuaryOpeningPeriodAsync(organizationA);
+        using var client = Client(userA, organizationA);
+        using var response = await client.PostAsJsonAsync(
+            "/api/v1/accounting/opening-balances/import",
+            new ImportOpeningBalancesRequest(yearId,
+            [
+                new CreateJournalLineRequest(assetA, 50m, 0m, null),
+                new CreateJournalLineRequest(revenueA, 0m, 50m, null)
+            ]));
+        Assert.AreEqual(HttpStatusCode.Conflict, response.StatusCode);
+
+        await using var db = CreateDb();
+        Assert.AreEqual(0, await db.JournalEntries.CountAsync(x =>
+            x.OrganizationId == organizationA));
+    }
+
+    [TestMethod]
+    public async Task OpeningBalancesRequireOpenFiscalYearAndFirstAccountingPeriod()
+    {
+        var yearId = await AddJanuaryOpeningPeriodAsync(organizationA);
+        await using (var db = CreateDb())
+        {
+            var period = await db.AccountingPeriods.SingleAsync(x =>
+                x.OrganizationId == organizationA && x.StartDate == new DateOnly(2026, 1, 1));
+            period.Close(DateTimeOffset.UtcNow);
+            await db.SaveChangesAsync();
+        }
+
+        using var client = Client(userA, organizationA);
+        using var periodRejected = await client.PostAsJsonAsync(
+            "/api/v1/accounting/opening-balances/import",
+            ValidOpeningBalances(yearId));
+        Assert.AreEqual(HttpStatusCode.Conflict, periodRejected.StatusCode);
+
+        await using (var db = CreateDb())
+        {
+            var period = await db.AccountingPeriods.SingleAsync(x =>
+                x.OrganizationId == organizationA && x.StartDate == new DateOnly(2026, 1, 1));
+            period.Reopen(DateTimeOffset.UtcNow);
+            var year = await db.FiscalYears.SingleAsync(x => x.Id == yearId);
+            year.SoftClose(DateTimeOffset.UtcNow);
+            await db.SaveChangesAsync();
+        }
+
+        using var yearRejected = await client.PostAsJsonAsync(
+            "/api/v1/accounting/opening-balances/import",
+            ValidOpeningBalances(yearId));
+        Assert.AreEqual(HttpStatusCode.Conflict, yearRejected.StatusCode);
+
+        await using var verify = CreateDb();
+        Assert.AreEqual(0, await verify.JournalEntries.CountAsync(x =>
+            x.OrganizationId == organizationA));
+    }
+
     private ImportOpeningBalancesRequest ValidOpeningBalances(Guid fiscalYearId) =>
         new(fiscalYearId,
         [
