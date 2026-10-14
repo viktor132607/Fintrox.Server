@@ -23,6 +23,7 @@ public sealed partial class BankReconciliationService(
     ICurrentOrganization organization,
     IJournalRepository journals,
     IFiscalCalendarRepository calendars,
+    ICurrentUser currentUser,
     TimeProvider clock) : IBankReconciliationService
 {
     public async Task<IReadOnlyList<BankAccountResponse>> ListAccountsAsync(
