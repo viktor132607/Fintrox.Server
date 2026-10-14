@@ -132,6 +132,18 @@ public sealed partial class BankReconciliationService
                 }
             }
 
+            // A previously certified period-end valuation must not be
+            // invalidated by a later backdated settlement posting.
+            await using (var lockedCutoff = Command(cn, tx, """
+                SELECT EXISTS (SELECT 1 FROM banking.bank_fx_revaluations
+                    WHERE organization_id=@org AND bank_account_id=@account
+                      AND cutoff_date>=@date)
+                """, ("org", tenant), ("account", bankAccountId),
+                ("date", valueDate)))
+                if ((bool)(await lockedCutoff.ExecuteScalarAsync(cancellationToken))!)
+                    throw new BankReconciliationConflictException(
+                        "This bank value date was already covered by an approved FX revaluation. A controlled correction is required.");
+
             if (new[] { bankGlId, request.ClearingAccountId,
                 request.FxGainAccountId, request.FxLossAccountId }
                 .Distinct().Count() != 4)
