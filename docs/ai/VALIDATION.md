@@ -1,4 +1,10 @@
-# Validation history — 2026-10-14
+# Validation history — 2026-10-15
+
+## 2026-10-15 — ACCOUNTING-001 cumulative verification: GREEN
+- VERIFIED GitHub Actions CI/CD #503 (https://github.com/viktor132607/Fintrox.Server/actions/runs/38654907133), code SHA e28a16a11c695cdec191448f4d353f9f7435c089: successful Release dotnet build --warnaserror and actual migrated PostgreSQL tests: **3031 passed, 0 failed, 0 skipped**, net10.0.
+- EF has-pending-model-changes: **No changes have been made to the model since the last migration**. EF migrations applied and listed on clean PostgreSQL 18.6, including all seven 20261014000100–20261014000700 bank source, fees, realized/unrealized FX, review, correction, and versioned correction migrations. Docker Build & Publish: SUCCESS.
+- Concrete CI fixes since failed #484: implemented missing opening balance interface method; renamed reserved interface parameters and repaired LINQ; corrected analyzer globalization/static warnings and shadowed local; fixed test nullable and fiscal tuple errors; changed PostBankFeeRequest record validation to constructor parameters (HTTP 500 root cause); inserted test payment allocations while Draft before confirmation; supplied CORS origin early; removed invalid overlapping bank statement test inputs.
+- Prior unverified/NOT RUN annotations below were written before #503 and are **superseded for the code at verified SHA**. Documentation-only commits or any future code change require their own CI. Whole financial/enterprise statutory close, target-module wiring, external bank proof and rate approval still pending.
 
 ## ACCOUNTING-001F4C3B2 — versioned foreign bank cutoff correction and reapproval
 - **CODE IMPLEMENTED DIRECTLY ON main; no successful .NET compile, GitHub CI, EF migration execution or real PostgreSQL test result has been observed.**

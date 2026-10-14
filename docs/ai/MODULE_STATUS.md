@@ -1,5 +1,7 @@
 # Module status — 2026-10-13
 
+2026-10-15: CURRENT LEGACY ACCOUNTING/BANKING CI VERIFIED: #503 — 3031/3031 tests, Release build, EF snapshot, PostgreSQL all seven banking migrations, Docker: SUCCESS. Financial-wide enterprise close still pending. https://github.com/viktor132607/Fintrox.Server/actions/runs/38654907133
+
 Legacy list: [32 existing runtime/persistence models](LEGACY_MODEL_INVENTORY.md) (separate from the 936 module Domain classes). ENTITIES-EXPANSION: 936 Domain model classes across all 36 modules (180 initial + 756 new on 2026-10-13). All 36 module-level commits are in ENTITY_EXPANSION_LOG.md. Machine-inventory/tree and documentation counts checked; verified Release build (0 warnings/errors), 2,877 passing tests (0 skipped), EF snapshot and PostgreSQL migrations (CI 38324236400). No module EF mapping/API integration.
 
 2026-10-13 security milestone: the operational **legacy Identity/Organizations authorization** now blocks all permissions for inactive organizations except a new owner-only `organizations.reactivate` permission. ORG-002 verified in CI 38329276594 (2,884 tests). This does not change the target modules' EF/API status. Finance-wide requirements: [financial system of record](../financial-system-of-record.md).
