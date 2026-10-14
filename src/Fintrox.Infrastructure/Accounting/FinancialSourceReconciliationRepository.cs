@@ -12,11 +12,11 @@ public sealed class FinancialSourceReconciliationRepository(
     FintroxDbContext dbContext) : IFinancialSourceReconciliationRepository
 {
     public async Task<IReadOnlyList<FinancialSourcePostingSnapshot>> ListFinancialSourcesAsync(
-        Guid organizationId, DateOnly from, DateOnly to, CancellationToken cancellationToken)
+        Guid organizationId, DateOnly fromDate, DateOnly toDate, CancellationToken cancellationToken)
     {
         var sales = await dbContext.SalesInvoices.AsNoTracking()
             .Where(x => x.OrganizationId == organizationId &&
-                x.InvoiceDate >= from && x.InvoiceDate <= to)
+                x.InvoiceDate >= fromDate && x.InvoiceDate <= toDate)
             .Select(x => new
             {
                 x.Id, x.Status, Date = x.InvoiceDate, Amount = x.GrossTotal,
@@ -25,7 +25,7 @@ public sealed class FinancialSourceReconciliationRepository(
             .ToArrayAsync(cancellationToken);
         var purchases = await dbContext.PurchaseDocuments.AsNoTracking()
             .Where(x => x.OrganizationId == organizationId &&
-                x.DocumentDate >= from && x.DocumentDate <= to)
+                x.DocumentDate >= fromDate && x.DocumentDate <= toDate)
             .Select(x => new
             {
                 x.Id, x.Status, Date = x.DocumentDate, Amount = x.GrossTotal,
@@ -34,7 +34,7 @@ public sealed class FinancialSourceReconciliationRepository(
             .ToArrayAsync(cancellationToken);
         var payments = await dbContext.Payments.AsNoTracking()
             .Where(x => x.OrganizationId == organizationId &&
-                x.PaymentDate >= from && x.PaymentDate <= to)
+                x.PaymentDate >= fromDate && x.PaymentDate <= toDate)
             .Select(x => new
             {
                 x.Id, x.Status, Date = x.PaymentDate, Amount = x.Amount,
@@ -57,14 +57,14 @@ public sealed class FinancialSourceReconciliationRepository(
     }
 
     public async Task<IReadOnlyList<FinancialSourceJournalSnapshot>> ListSourceJournalsAsync(
-        Guid organizationId, DateOnly from, DateOnly to, CancellationToken cancellationToken)
+        Guid organizationId, DateOnly fromDate, DateOnly toDate, CancellationToken cancellationToken)
     {
         // Only ORIGINAL automatically generated source journals. Compensating
         // reversals have no external reference and are checked separately.
         var entries = await dbContext.JournalEntries.AsNoTracking()
             .Where(x => x.OrganizationId == organizationId &&
                 x.Source == JournalEntrySource.System &&
-                x.PostingDate >= from && x.PostingDate <= to &&
+                x.PostingDate >= fromDate && x.PostingDate <= toDate &&
                 x.ExternalReference != null &&
                 (x.ExternalReference.StartsWith("sales-invoice:") ||
                  x.ExternalReference.StartsWith("purchase-document:") ||
@@ -103,7 +103,7 @@ public sealed class FinancialSourceReconciliationRepository(
 
     public async Task<IReadOnlyList<FinancialPaymentAllocationSnapshot>>
         ListPaymentAllocationsAsync(
-            Guid organizationId, DateOnly from, DateOnly to,
+            Guid organizationId, DateOnly fromDate, DateOnly toDate,
             CancellationToken cancellationToken)
     {
         return await (
@@ -112,7 +112,7 @@ public sealed class FinancialSourceReconciliationRepository(
                 on new { allocation.PaymentId, allocation.OrganizationId }
                 equals new { PaymentId = payment.Id, payment.OrganizationId }
             where allocation.OrganizationId == organizationId &&
-                payment.PaymentDate >= from && payment.PaymentDate <= to
+                payment.PaymentDate >= fromDate && payment.PaymentDate <= toDate
             select new FinancialPaymentAllocationSnapshot(
                 allocation.PaymentId, allocation.PaymentAmount,
                 allocation.DocumentAmount,
