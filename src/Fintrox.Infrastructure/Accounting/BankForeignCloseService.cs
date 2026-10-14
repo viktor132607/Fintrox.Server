@@ -67,11 +67,20 @@ public sealed partial class BankReconciliationService
             Guid preparationId;
             Guid preparedBy;
             string previousHash;
-            await using (var previous = Command(cn, tx, """
-                SELECT id,prepared_by_user_id,evidence_sha256,review_note
-                FROM banking.bank_fx_close_preparations
-                WHERE organization_id=@org AND statement_id=@statement
-                """, ("org", tenant), ("statement", statementId)))
+            var preparationLookupSql = evidence.AmendmentId.HasValue
+                ? """
+                  SELECT id,prepared_by_user_id,evidence_sha256,review_note
+                  FROM banking.bank_fx_amendment_preparations
+                  WHERE organization_id=@org AND amendment_id=@amendment
+                  """
+                : """
+                  SELECT id,prepared_by_user_id,evidence_sha256,review_note
+                  FROM banking.bank_fx_close_preparations
+                  WHERE organization_id=@org AND statement_id=@statement
+                  """;
+            await using (var previous = Command(cn, tx, preparationLookupSql,
+                ("org", tenant), ("statement", statementId),
+                ("amendment", (object?)evidence.AmendmentId ?? DBNull.Value)))
             await using (var reader = await previous.ExecuteReaderAsync(cancellationToken))
             {
                 if (await reader.ReadAsync(cancellationToken))
@@ -87,18 +96,29 @@ public sealed partial class BankReconciliationService
                         statementId, accountId.Value, preparationId,
                         preparedBy, evidence.Report.ApprovedByUserId,
                         previousHash, evidence.Report.Approved,
-                        AlreadyRecorded: true);
+                        AlreadyRecorded: true,
+                        VersionNumber: evidence.Report.VersionNumber);
                 }
             }
 
             preparationId = Guid.NewGuid();
-            await using (var insert = Command(cn, tx, """
-                INSERT INTO banking.bank_fx_close_preparations (
-                    id,organization_id,statement_id,bank_account_id,cutoff_date,
-                    prepared_by_user_id,evidence_sha256,native_closing_balance,
-                    expected_ledger_base,review_note)
-                VALUES (@id,@org,@statement,@account,@cutoff,@maker,@hash,@native,@base,@note)
-                """, ("id", preparationId), ("org", tenant),
+            var preparationInsertSql = evidence.AmendmentId.HasValue
+                ? """
+                  INSERT INTO banking.bank_fx_amendment_preparations (
+                      id,organization_id,amendment_id,
+                      prepared_by_user_id,evidence_sha256,review_note)
+                  VALUES (@id,@org,@amendment,@maker,@hash,@note)
+                  """
+                : """
+                  INSERT INTO banking.bank_fx_close_preparations (
+                      id,organization_id,statement_id,bank_account_id,cutoff_date,
+                      prepared_by_user_id,evidence_sha256,native_closing_balance,
+                      expected_ledger_base,review_note)
+                  VALUES (@id,@org,@statement,@account,@cutoff,@maker,@hash,@native,@base,@note)
+                  """;
+            await using (var insert = Command(cn, tx, preparationInsertSql,
+                ("amendment", (object?)evidence.AmendmentId ?? DBNull.Value),
+                ("id", preparationId), ("org", tenant),
                 ("statement", statementId), ("account", accountId.Value),
                 ("cutoff", evidence.Report.CutoffDate), ("maker", maker),
                 ("hash", evidence.Fingerprint),
@@ -111,7 +131,8 @@ public sealed partial class BankReconciliationService
             return new ForeignBankCloseDecisionResponse(
                 statementId, accountId.Value, preparationId, maker,
                 null, evidence.Fingerprint, Approved: false,
-                AlreadyRecorded: false);
+                AlreadyRecorded: false,
+                VersionNumber: evidence.Report.VersionNumber);
         });
     }
 
@@ -202,7 +223,8 @@ public sealed partial class BankReconciliationService
             return new ForeignBankCloseDecisionResponse(
                 statementId, accountId.Value, preparationId, maker,
                 checker, evidence.Fingerprint, Approved: true,
-                AlreadyRecorded: false);
+                AlreadyRecorded: false,
+                VersionNumber: evidence.Report.VersionNumber);
         });
     }
 
