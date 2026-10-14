@@ -2,8 +2,8 @@
 
 ## ACCOUNTING-001C / transactional accounting close controls
 - **IMPLEMENTED, CI/.NET/real PostgreSQL execution NOT YET VERIFIED**. Active legacy `FiscalCalendarService` now closes/reopens periods/years within `ITransactionRunner` transactions using year-then-period exclusive PostgreSQL row locks; rejects unresolved Draft journals and period-misdated journals; requires all child periods closed before year hard close, no open periods before year soft close.
-- Journal draft create/update/line mutations now acquire posting/calendar locks, recheck period/year after waiting and reject edits in closed/soft-closed periods. Six fiscal status-transition endpoints additionally require `accounting.post` alongside `accounting.write`.
-- 8 new real HTTP + migrated PostgreSQL tests added: draft close gates, soft close/reopen, final year close and child reopen, year soft-close state, cross-tenant rejection, blocking lock contention, closed-period draft mutations and stranded-draft year-close denial. These test cases have **NOT YET BEEN RUN**.
+- Fiscal year/period edits and journal draft create/update/line mutations now acquire posting/calendar locks, recheck period/year after waiting and reject edits in closed/soft-closed periods. Six fiscal status-transition endpoints additionally require `accounting.post` alongside `accounting.write`.
+- 10 new real HTTP + migrated PostgreSQL tests added: draft close gates, soft close/reopen, final year close and child reopen, year soft-close state, cross-tenant rejection, blocking lock contention, closed-period draft mutations, stranded-draft year-close denial, period shrink denial over posted dates, and rejection of calendar changes after year close. These test cases have **NOT YET BEEN RUN**.
 - This does **not** perform statutory year-end entries, retained-earnings transfer, accruals/deferrals, subledger reconciliations or signed close checklist. See [period close controls](../accounting-period-close-controls.md).
 
 ## ACCOUNTING-001B / first-year opening ledger balances
