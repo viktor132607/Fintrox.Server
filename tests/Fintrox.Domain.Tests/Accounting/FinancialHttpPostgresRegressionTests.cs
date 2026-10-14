@@ -42,6 +42,8 @@ public sealed class FinancialHttpPostgresRegressionTests
     private Guid assetA;
     private Guid revenueA;
     private Guid equityA;
+    private Guid retainedA;
+    private Guid expenseA;
     private Guid assetB;
 
     [TestInitialize]
@@ -110,7 +112,13 @@ public sealed class FinancialHttpPostgresRegressionTests
             revenueA = creditA.Id;
             equityA = capitalA.Id;
             assetB = debitB.Id;
-            db.Accounts.AddRange(debitA, creditA, debitB, capitalA);
+            var retained = Account.Create(organizationA, "122", "Retained earnings",
+                AccountType.Equity, null, true, true, now);
+            var expense = Account.Create(organizationA, "602", "Services expense",
+                AccountType.Expense, null, true, true, now);
+            retainedA = retained.Id;
+            expenseA = expense.Id;
+            db.Accounts.AddRange(debitA, creditA, debitB, capitalA, retained, expense);
             await db.SaveChangesAsync();
         }
 
