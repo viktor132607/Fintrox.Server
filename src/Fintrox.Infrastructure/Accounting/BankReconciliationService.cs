@@ -21,6 +21,88 @@ public sealed class BankReconciliationService(
     FintroxDbContext db,
     ICurrentOrganization organization) : IBankReconciliationService
 {
+    public async Task<IReadOnlyList<BankAccountResponse>> ListAccountsAsync(
+        CancellationToken cancellationToken)
+    {
+        var tenant = organization.RequireOrganizationId();
+        return await db.Database.CreateExecutionStrategy().ExecuteAsync(async () =>
+        {
+            await using var tx = await db.Database.BeginTransactionAsync(
+                IsolationLevel.RepeatableRead, cancellationToken);
+            var connection = (NpgsqlConnection)db.Database.GetDbConnection();
+            var result = new List<BankAccountResponse>();
+            await using (var cmd = Command(connection, tx, """
+                SELECT id,iban,name,currency_code,gl_account_id
+                FROM banking.bank_accounts
+                WHERE organization_id=@org ORDER BY name,iban
+                """, ("org", tenant)))
+            await using (var reader = await cmd.ExecuteReaderAsync(cancellationToken))
+            {
+                while (await reader.ReadAsync(cancellationToken))
+                    result.Add(new BankAccountResponse(
+                        reader.GetGuid(0), reader.GetString(1),
+                        reader.GetString(2), reader.GetString(3),
+                        reader.GetGuid(4)));
+            }
+            await tx.CommitAsync(cancellationToken);
+            return (IReadOnlyList<BankAccountResponse>)result;
+        });
+    }
+
+    public async Task<BankStatementResponse?> GetStatementAsync(
+        Guid statementId, CancellationToken cancellationToken)
+    {
+        var tenant = organization.RequireOrganizationId();
+        return await db.Database.CreateExecutionStrategy().ExecuteAsync(async () =>
+        {
+            await using var tx = await db.Database.BeginTransactionAsync(
+                IsolationLevel.RepeatableRead, cancellationToken);
+            var cn = (NpgsqlConnection)db.Database.GetDbConnection();
+            Guid accountId;
+            string external;
+            DateOnly fromDate;
+            DateOnly toDate;
+            decimal opening;
+            decimal closing;
+            await using (var cmd = Command(cn, tx, """
+                SELECT bank_account_id,external_id,from_date,to_date,
+                    opening_balance,closing_balance
+                FROM banking.bank_statements WHERE id=@id AND organization_id=@org
+                """, ("id", statementId), ("org", tenant)))
+            await using (var reader = await cmd.ExecuteReaderAsync(cancellationToken))
+            {
+                if (!await reader.ReadAsync(cancellationToken)) return null;
+                accountId = reader.GetGuid(0);
+                external = reader.GetString(1);
+                fromDate = reader.GetFieldValue<DateOnly>(2);
+                toDate = reader.GetFieldValue<DateOnly>(3);
+                opening = reader.GetDecimal(4);
+                closing = reader.GetDecimal(5);
+            }
+            var lines = new List<BankStatementLineResponse>();
+            await using (var cmd = Command(cn, tx, """
+                SELECT id,external_id,value_date,signed_amount,description,
+                    matched_payment_id
+                FROM banking.bank_statement_lines
+                WHERE organization_id=@org AND statement_id=@id
+                ORDER BY value_date,external_id
+                """, ("org", tenant), ("id", statementId)))
+            await using (var reader = await cmd.ExecuteReaderAsync(cancellationToken))
+            {
+                while (await reader.ReadAsync(cancellationToken))
+                    lines.Add(new BankStatementLineResponse(
+                        reader.GetGuid(0), reader.GetString(1),
+                        reader.GetFieldValue<DateOnly>(2),
+                        reader.GetDecimal(3), reader.GetString(4),
+                        reader.IsDBNull(5) ? null : reader.GetGuid(5)));
+            }
+            await tx.CommitAsync(cancellationToken);
+            return new BankStatementResponse(
+                statementId, accountId, external, fromDate, toDate,
+                opening, closing, lines);
+        });
+    }
+
     public async Task<BankAccountResponse> CreateAccountAsync(
         CreateBankAccountRequest request, CancellationToken cancellationToken)
     {
