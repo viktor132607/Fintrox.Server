@@ -193,7 +193,7 @@ public sealed partial class FinancialHttpPostgresRegressionTests
             client, bank.Id, "CLOSED-FEE", -6m);
         var lineId = await BankLineIdAsync(statement.Id);
         var fiscal = await MarchCalendarAsync(organizationA);
-        await CloseMarchAsync(client, fiscal.YearId, fiscal.MarchPeriodId);
+        await CloseMarchAsync(client, fiscal.YearId, fiscal.PeriodId);
 
         using var rejected = await client.PostAsJsonAsync(
             FeeUrl(statement.Id, lineId),
@@ -231,8 +231,8 @@ public sealed partial class FinancialHttpPostgresRegressionTests
                 x.Content.ReadFromJsonAsync<BankFeePostingResponse>()));
             Assert.IsNotNull(results[0]);
             Assert.IsNotNull(results[1]);
-            Assert.AreEqual(results[0].JournalEntryId, results[1].JournalEntryId);
-            Assert.AreEqual(1, results.Count(x => x.AlreadyPosted));
+            Assert.AreEqual(results[0]!.JournalEntryId, results[1]!.JournalEntryId);
+            Assert.AreEqual(1, results.Count(x => x!.AlreadyPosted));
         }
         finally
         {
