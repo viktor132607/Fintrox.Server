@@ -1,5 +1,11 @@
 # Validation history — 2026-10-14
 
+## ACCOUNTING-001C / transactional accounting close controls
+- **IMPLEMENTED, CI/.NET/real PostgreSQL execution NOT YET VERIFIED**. Active legacy `FiscalCalendarService` now closes/reopens periods/years within `ITransactionRunner` transactions using year-then-period exclusive PostgreSQL row locks; rejects unresolved Draft journals and period-misdated journals; requires all child periods closed before year hard close, no open periods before year soft close.
+- Journal draft create/update/line mutations now acquire posting/calendar locks, recheck period/year after waiting and reject edits in closed/soft-closed periods. Six fiscal status-transition endpoints additionally require `accounting.post` alongside `accounting.write`.
+- 6 new real HTTP + migrated PostgreSQL tests added: draft close gates, soft close/reopen, final year close and child reopen, year soft-close state, cross-tenant rejection, and blocking lock contention. These test cases have **NOT YET BEEN RUN**.
+- This does **not** perform statutory year-end entries, retained-earnings transfer, accruals/deferrals, subledger reconciliations or signed close checklist. See [period close controls](../accounting-period-close-controls.md).
+
 ## ACCOUNTING-001B / first-year opening ledger balances
 - IMPLEMENTED on `main`, **CI/build/real PostgreSQL execution unverified**. Added `ImportOpeningBalancesRequest`, `JournalService.ImportOpeningBalancesAsync`, repository first-year lock and existing-posted check, dedicated authorized HTTP controller; existing `System` source reference uniqueness is used, **no new migration**.
 - Added 8 real migrated PostgreSQL HTTP tests to `FinancialHttpPostgresRegressionTests`: balanced import/idempotent replay, unbalanced/foreign account, already posted year, changed retry, tenant auth, two concurrent identical imports, P&L account restriction and closed calendar rejection.
