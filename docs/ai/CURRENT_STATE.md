@@ -14,3 +14,5 @@
 - ENTITIES-001: domain foundation implemented in all 36 modules; local affected-graph Release build and 604 tests passed; 5 PostgreSQL tests await CI. Per-module names and remaining work: MODULE_STATUS.md. New models are not yet runtime tables/APIs. Existing legacy entities, financial engines and migrations are unchanged.
 
 - 2026-10-14: INT-002 verified (2,906 tests, CI 38475619708). API-001 implemented (explicit-origin CORS, IP-auth endpoint rate limits, 6 in-process HTTP tests) with build/CI verification pending. Next planned item ACCOUNTING-001. See TASK_QUEUE.md and VALIDATION.md; new module EF/API mappings are still pending.
+
+- 2026-10-14: ACCOUNTING-001A posting/close race guard implemented and 4 real PostgreSQL HTTP regression tests added; CI pending. No accounting Domain module wiring/migrations. ACCOUNTING-001 overall in progress, next opening balances and period/closing workflows. See accounting-posting-concurrency.md.
