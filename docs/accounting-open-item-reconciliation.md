@@ -13,6 +13,7 @@ Requires bearer authorization, active organization and `accounting.read`. Anothe
 Response `FinancialOpenItemReconciliationResponse` includes:
 - `fiscalYearId`, `cutoffDate`, separate `receivablesOpenBase`, `payablesOpenBase`.
 - Document-level `openItems`: `documentId`, `sourceType`, `counterpartyId`, `documentNumber`, document/due dates, original document gross, confirmed payment allocations, open amount in document currency **and** in base currency, historical control `accountId`, `overdue`, `daysOverdue`, `agingBucket` (`Current`, `1-30`, `31-60`, `61-90`, `90+`).
+- `counterpartyBalances`: outstanding base-currency AR/AP totals and open/overdue document counts for each customer or supplier counterparty, grouped by role.
 - `controlAccounts` with explicit receivable/payable classification, expected sum of subledger open items, posted cumulative GL debit/credit-derived balance, signed difference `actual - expected`, `balanced`.
 - `issues` with codes and related document/payment IDs, and scoped `accountsReceivableReconciled`/`accountsPayableReconciled` flags.
 
