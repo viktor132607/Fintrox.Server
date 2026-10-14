@@ -37,7 +37,8 @@ public sealed record MatchBankStatementLineRequest(Guid PaymentId);
 public sealed record BankStatementLineResponse(
     Guid Id, string ExternalId, DateOnly ValueDate,
     decimal SignedAmount, string Description,
-    Guid? MatchedPaymentId, Guid? FeeJournalEntryId);
+    Guid? MatchedPaymentId, Guid? FeeJournalEntryId,
+    Guid? ForeignSettlementJournalEntryId);
 
 public sealed record BankStatementResponse(
     Guid Id, Guid BankAccountId, string ExternalId,
@@ -85,12 +86,13 @@ public sealed record BankReconciliationResponse(
     Guid StatementId, Guid BankAccountId, string CurrencyCode,
     DateOnly ToDate, decimal StatementOpeningBalance,
     decimal StatementClosingBalance, decimal ExpectedStatementClosingBalance,
-    decimal GeneralLedgerClosingBalance, decimal StatementVsLedgerDifference,
+    decimal GeneralLedgerClosingBalance, decimal? StatementVsLedgerDifference,
     int StatementLines, int MatchedLines, int UnmatchedLines,
     int UnclearedBookPayments,
     bool StatementsBalanced, bool StatementLinesAllMatched,
     bool BankAndLedgerBalanced, bool FullyReconciled,
     IReadOnlyList<Guid> UnmatchedLineIds,
-    IReadOnlyList<Guid> UnclearedPaymentIds, int PostedFeeLines);
+    IReadOnlyList<Guid> UnclearedPaymentIds, int PostedFeeLines,
+    int PostedForeignSettlementLines, bool BankAndLedgerCurrencyComparable);
 
 public sealed class BankReconciliationConflictException(string message) : Exception(message);
