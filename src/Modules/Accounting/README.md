@@ -93,3 +93,7 @@ The operational legacy Banking layer now accepts bounded RFC4180 CSV and offers 
 ## 2026-10-14 — ACCOUNTING-001F4B, approved fee financial effects
 
 Active legacy GL now supports bounded bank-fee posting from immutable negative statement evidence, booking DR analytical Expense / CR dedicated bank Asset in an open fiscal period, with one System journal and unique immutable source link. Replays, tenant access, concurrent close and double matching guarded; six migrated PostgreSQL HTTP tests authored but not executed. Tax, multi-currency fees and controlled bank fee correction remain pending. [Bank fee specification](../../../docs/accounting-bank-fee-posting.md).
+
+## 2026-10-14 — ACCOUNTING-001F4C1, realized foreign bank exchange result
+
+The operational legacy GL now accepts bank-initiated realized FX settlement postings from explicitly authorized foreign statement lines with approved tenant-dated ExchangeRate snapshots and original AR/AP carrying bases; it posts balanced bank Asset/clearing/FX gain or loss journal entries within the open fiscal year/period. New bank FX audit linkage immutable; original GL number retained and duplicate post blocked. Native foreign bank amount can never be subtracted from base-currency GL balance to claim fully reconciled banking. Six HTTP/PostgreSQL tests written but CI unverified; unrealized FX revaluation and end-to-end signed financial close still pending. [FX details](../../../docs/accounting-foreign-bank-settlements.md).
