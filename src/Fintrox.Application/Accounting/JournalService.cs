@@ -385,7 +385,7 @@ public sealed class JournalService(
                          reversedSource.ExternalReference?.StartsWith(
                             "bank-fx-settlement:v1:", StringComparison.Ordinal) == true ||
                          reversedSource.ExternalReference?.StartsWith(
-                            "bank-fx-revaluation:v1:", StringComparison.Ordinal) == true))
+                            "bank-fx-revaluation:v", StringComparison.Ordinal) == true))
                     {
                         throw new JournalConflictException(
                             "Corrections of protected financial journals cannot be reversed through the generic endpoint.");
@@ -821,7 +821,7 @@ public sealed class JournalService(
              entry.ExternalReference?.StartsWith(
                 "bank-fx-settlement:v1:", StringComparison.Ordinal) == true ||
              entry.ExternalReference?.StartsWith(
-                "bank-fx-revaluation:v1:", StringComparison.Ordinal) == true))
+                "bank-fx-revaluation:v", StringComparison.Ordinal) == true))
         {
             throw new JournalConflictException(
                 "Protected year-end, bank fee, FX settlement or FX revaluation journals require a dedicated correction workflow.");
