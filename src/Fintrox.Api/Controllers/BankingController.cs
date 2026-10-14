@@ -111,6 +111,27 @@ public sealed class BankingController(IBankReconciliationService service)
         return result is null ? NotFound() : Ok(result);
     }
 
+    [HttpPost("statements/{statementId:guid}/lines/{lineId:guid}/post-foreign-settlement")]
+    [Authorize(Policy = Permissions.AccountingWrite)]
+    [Authorize(Policy = Permissions.AccountingPost)]
+    public async Task<ActionResult<ForeignBankSettlementResponse>> PostForeignSettlement(
+        Guid statementId, Guid lineId,
+        PostForeignBankSettlementRequest request,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var result = await service.PostForeignSettlementAsync(
+                statementId, lineId, request, cancellationToken);
+            return result is null ? NotFound() : Ok(result);
+        }
+        catch (BankReconciliationConflictException ex)
+        {
+            return Conflict(Problem(StatusCodes.Status409Conflict,
+                "Foreign bank settlement conflict", ex.Message));
+        }
+    }
+
     [HttpPost("statements/{statementId:guid}/lines/{lineId:guid}/post-fee")]
     [Authorize(Policy = Permissions.AccountingWrite)]
     [Authorize(Policy = Permissions.AccountingPost)]
