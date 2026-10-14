@@ -31,6 +31,7 @@ public sealed class FinancialOpenItemReconciliationService(
             // open documents from earlier fiscal years may remain unsettled.
             var cutoff = fiscalYear.EndDate;
             var documents = await repository.GetDocumentsAsync(orgId, cutoff, ct);
+            var payments = await repository.GetPaymentsAsync(orgId, cutoff, ct);
             var allocations = await repository.GetAllocationsAsync(orgId, cutoff, ct);
             var originalLines = await repository.GetOriginalControlLinesAsync(
                 orgId, cutoff, ct);
@@ -61,24 +62,23 @@ public sealed class FinancialOpenItemReconciliationService(
                 document => (document.SourceType, document.Id));
             var allocatedByDocument = new Dictionary<(string Kind, Guid Id), decimal>();
 
-            // The same payment may allocate to multiple documents.
-            // Compare payment-currency allocation rows with its immutable
-            // Confirmed header's allocation summary before attributing open items.
-            foreach (var paymentRows in allocations
-                         .Where(row => row.PaymentStatus == "Confirmed")
-                         .GroupBy(row => row.PaymentId))
+            // Compare even a Confirmed payment without any allocation
+            // rows; relying only on the allocation table would miss it.
+            var paymentRowsById = allocations.GroupBy(row => row.PaymentId)
+                .ToDictionary(group => group.Key, group => group.ToArray());
+            foreach (var payment in payments.Where(p => p.Status == "Confirmed"))
             {
-                var header = paymentRows.First();
-                var rowTotal = paymentRows.Sum(row => row.PaymentAmount);
-                if (rowTotal != header.PaymentAllocatedAmount ||
-                    rowTotal < 0m ||
-                    rowTotal > header.PaymentGrossAmount)
+                var rows = paymentRowsById.TryGetValue(
+                    payment.Id, out var found) ? found : [];
+                var rowTotal = rows.Sum(row => row.PaymentAmount);
+                if (rowTotal != payment.AllocatedAmount ||
+                    rowTotal < 0m || rowTotal > payment.GrossAmount)
                 {
-                    var kind = header.Direction == "Incoming"
+                    var kind = payment.Direction == "Incoming"
                         ? "Receivables" : "Payables";
                     AddIssue("PaymentAllocationMismatch", kind, null,
-                        paymentRows.Key,
-                        "Confirmed payment allocation rows do not match the declared payment-currency allocated amount.");
+                        payment.Id,
+                        "Confirmed payment allocation rows do not match its declared payment-currency allocated amount.");
                 }
             }
 
