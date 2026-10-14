@@ -352,6 +352,134 @@ public sealed class FinancialHttpPostgresRegressionTests
         Assert.AreEqual(2, await verify.JournalLines.CountAsync(x => x.JournalEntryId == draft.Id));
     }
 
+    [TestMethod]
+    public async Task ConcurrentPostOfSameDraftProducesOneNumberAndOneWinner()
+    {
+        using var first = Client(userA, organizationA);
+        using var second = Client(userA, organizationA);
+        var draft = await CreateDraftAsync(first, 150m, 150m);
+
+        var attempts = await Task.WhenAll(
+            first.PostAsync($"{Endpoint}/{draft.Id}/post", null),
+            second.PostAsync($"{Endpoint}/{draft.Id}/post", null));
+
+        try
+        {
+            Assert.AreEqual(1, attempts.Count(x => x.StatusCode == HttpStatusCode.OK));
+            Assert.AreEqual(1, attempts.Count(x => x.StatusCode == HttpStatusCode.Conflict));
+        }
+        finally
+        {
+            foreach (var attempt in attempts) attempt.Dispose();
+        }
+
+        await using var db = CreateDb();
+        var posted = await db.JournalEntries.AsNoTracking()
+            .SingleAsync(x => x.Id == draft.Id && x.OrganizationId == organizationA);
+        Assert.AreEqual(JournalEntryStatus.Posted, posted.Status);
+        Assert.AreEqual(1, await db.JournalNumberSequences.CountAsync(x =>
+            x.OrganizationId == organizationA && x.LastNumber == 1));
+        Assert.AreEqual(1, await db.JournalEntries.CountAsync(x =>
+            x.Id == draft.Id && x.Status == JournalEntryStatus.Posted));
+    }
+
+    [TestMethod]
+    public async Task ConcurrentReverseOfSameJournalProducesOneReversal()
+    {
+        using var first = Client(userA, organizationA);
+        using var second = Client(userA, organizationA);
+        var draft = await CreateDraftAsync(first, 75m, 75m);
+        using (var post = await first.PostAsync($"{Endpoint}/{draft.Id}/post", null))
+            Assert.AreEqual(HttpStatusCode.OK, post.StatusCode);
+
+        var url = $"{Endpoint}/{draft.Id}/reverse";
+        var reversals = await Task.WhenAll(
+            first.PostAsJsonAsync(url, new ReverseJournalEntryRequest(
+                PostingDate, "Fix original entry A")),
+            second.PostAsJsonAsync(url, new ReverseJournalEntryRequest(
+                PostingDate, "Fix original entry B")));
+
+        try
+        {
+            Assert.AreEqual(1, reversals.Count(x => x.StatusCode == HttpStatusCode.Created));
+            Assert.AreEqual(1, reversals.Count(x => x.StatusCode == HttpStatusCode.Conflict));
+        }
+        finally
+        {
+            foreach (var reversal in reversals) reversal.Dispose();
+        }
+
+        await using var db = CreateDb();
+        Assert.AreEqual(1, await db.JournalEntries.CountAsync(x =>
+            x.OrganizationId == organizationA && x.ReversalOfJournalEntryId == draft.Id));
+        Assert.AreEqual(2, await db.JournalNumberSequences
+            .Where(x => x.OrganizationId == organizationA)
+            .Select(x => x.LastNumber).SingleAsync());
+    }
+
+    [TestMethod]
+    public async Task PostingWaitsForPeriodClosureAndRejectsStaleOpenStatus()
+    {
+        using var client = Client(userA, organizationA);
+        var draft = await CreateDraftAsync(client, 63m, 63m);
+
+        await using var locker = new NpgsqlConnection(connectionString);
+        await locker.OpenAsync();
+        await using var transaction = await locker.BeginTransactionAsync();
+        await using (var close = new NpgsqlCommand(
+            "UPDATE accounting.accounting_periods SET status = 'Closed' " +
+            "WHERE organization_id = @organization AND id = @period", locker, transaction))
+        {
+            close.Parameters.AddWithValue("organization", organizationA);
+            close.Parameters.AddWithValue("period", draft.FiscalPeriodId);
+            Assert.AreEqual(1, await close.ExecuteNonQueryAsync());
+        }
+
+        var pending = client.PostAsync($"{Endpoint}/{draft.Id}/post", null);
+        await Task.Delay(250);
+        await transaction.CommitAsync();
+
+        using var response = await pending;
+        Assert.AreEqual(HttpStatusCode.Conflict, response.StatusCode);
+
+        await using var db = CreateDb();
+        Assert.AreEqual(JournalEntryStatus.Draft,
+            (await db.JournalEntries.AsNoTracking().SingleAsync(x => x.Id == draft.Id)).Status);
+        Assert.AreEqual(0, await db.JournalNumberSequences.CountAsync(x =>
+            x.OrganizationId == organizationA));
+    }
+
+    [TestMethod]
+    public async Task PostingWaitsForFiscalYearClosureAndRejectsStaleOpenStatus()
+    {
+        using var client = Client(userA, organizationA);
+        var draft = await CreateDraftAsync(client, 80m, 80m);
+        await using var db = CreateDb();
+        var period = await db.AccountingPeriods.AsNoTracking()
+            .SingleAsync(x => x.Id == draft.FiscalPeriodId);
+
+        await using var locker = new NpgsqlConnection(connectionString);
+        await locker.OpenAsync();
+        await using var transaction = await locker.BeginTransactionAsync();
+        await using (var close = new NpgsqlCommand(
+            "UPDATE accounting.fiscal_years SET status = 'SoftClosed' " +
+            "WHERE organization_id = @organization AND id = @year", locker, transaction))
+        {
+            close.Parameters.AddWithValue("organization", organizationA);
+            close.Parameters.AddWithValue("year", period.FiscalYearId);
+            Assert.AreEqual(1, await close.ExecuteNonQueryAsync());
+        }
+
+        var pending = client.PostAsync($"{Endpoint}/{draft.Id}/post", null);
+        await Task.Delay(250);
+        await transaction.CommitAsync();
+
+        using var response = await pending;
+        Assert.AreEqual(HttpStatusCode.Conflict, response.StatusCode);
+        Assert.AreEqual(0, await db.JournalNumberSequences.CountAsync(x =>
+            x.OrganizationId == organizationA));
+    }
+
     private HttpClient Client(Guid userId, Guid organizationId)
     {
         var client = factory!.CreateClient(new WebApplicationFactoryClientOptions
