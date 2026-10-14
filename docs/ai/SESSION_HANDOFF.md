@@ -1,6 +1,8 @@
 # Fintrox Session Handoff — 2026-10-13
 
 ## Current milestone
+2026-10-14: **ACCOUNTING-001B IMPLEMENTED — CI PENDING**. Existing GL supports authorized and atomic first-day opening balance import with year-row serialization, duplicate replay and active balance-sheet account validation. Eight additional real PostgreSQL+HTTP tests were written but have not been executed/verified. `docs/accounting-opening-balances.md`. ACCOUNTING-001 overall in progress; API-001 and 001A CI still unverified. Next: verify CI, then period-close and subledger/recurring accounting slices.
+
 2026-10-14: **ACCOUNTING-001A IMPLEMENTED — CI PENDING**. Legacy manual and auto-generated journal posting/reversal now locks original journal and fiscal calendar rows inside transactions, re-reading open status after lock to avoid closing-race stale snapshots. Four added migrated PostgreSQL HTTP race tests; verification not yet obtained. `docs/accounting-posting-concurrency.md`. ACCOUNTING-001 overall still pending other accounting capabilities. API-001 CI result also not yet confirmed.
 
 2026-10-14: **API-001 IMPLEMENTED — CI PENDING**. Added explicit `Cors:AllowedOrigins` browser policy (default deny), IP-partitioned fixed-window HTTP 429 limits to five auth/integration token endpoints, six WebApplicationFactory HTTP tests. No financial/data-model changes. See `docs/api-request-security.md` and `docs/ai/VALIDATION.md`. Next accounting hardening is `ACCOUNTING-001`, contingent on this CI gate.
