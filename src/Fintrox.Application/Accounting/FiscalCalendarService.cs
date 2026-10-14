@@ -6,6 +6,7 @@ namespace Fintrox.Application.Accounting;
 
 public sealed class FiscalCalendarService(
     IFiscalCalendarRepository repository,
+    IJournalRepository journals,
     ITransactionRunner transactionRunner,
     ICurrentOrganization currentOrganization,
     TimeProvider timeProvider) : IFiscalCalendarService
@@ -198,6 +199,17 @@ public sealed class FiscalCalendarService(
                         {
                             throw new FiscalCalendarConflictException(
                                 "All accounting periods must be closed before the fiscal year can be closed.");
+                        }
+
+                        // A status-only year close must not bypass the
+                        // profit/loss transfer: all income/expense balances
+                        // must already be cleared in this fiscal year.
+                        var outstanding = await journals.GetProfitLossBalancesAsync(
+                            organizationId, fiscalYear.StartDate, fiscalYear.EndDate, ct);
+                        if (outstanding.Any(balance => balance.Debit != balance.Credit))
+                        {
+                            throw new FiscalCalendarConflictException(
+                                "Income and expense accounts still have open balances. Run the year-end profit/loss transfer before closing the fiscal year.");
                         }
 
                         fiscalYear.Close(timeProvider.GetUtcNow());
