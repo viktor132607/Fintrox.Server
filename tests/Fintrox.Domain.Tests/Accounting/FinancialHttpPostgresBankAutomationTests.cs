@@ -77,7 +77,8 @@ public sealed partial class FinancialHttpPostgresRegressionTests
             $"/api/v1/banking/accounts/{bank.Id}/statements/import-csv",
             CsvStatement("CSV-AUTO-001",
                 "externalId,valueDate,signedAmount,description\n" +
-                "RECEIPT-1,2026-03-12,100.0000,Client receipt\n"));
+                $"RECEIPT-1,{PostingDate:yyyy-MM-dd},100.0000,Client receipt\n",
+                closingBalance: 100m));
         Assert.AreEqual(HttpStatusCode.Created, imported.StatusCode);
         var statement = await imported.Content
             .ReadFromJsonAsync<BankStatementImportResponse>();
