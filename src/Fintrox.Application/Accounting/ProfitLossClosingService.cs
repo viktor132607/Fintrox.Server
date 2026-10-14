@@ -268,11 +268,13 @@ public sealed class ProfitLossClosingService(
     }
     public async Task<ProfitLossReopenResponse?> ReopenForCorrectionAsync(
         Guid fiscalYearId,
+        Guid expectedClosingJournalEntryId,
         string reason,
         CancellationToken cancellationToken)
     {
         var trimmedReason = reason?.Trim();
         if (fiscalYearId == Guid.Empty ||
+            expectedClosingJournalEntryId == Guid.Empty ||
             string.IsNullOrWhiteSpace(trimmedReason) ||
             trimmedReason.Length is < 15 or > 250)
         {
@@ -296,6 +298,15 @@ public sealed class ProfitLossClosingService(
             {
                 throw new FiscalCalendarConflictException(
                     "There is no posted year-end profit/loss closing entry to reverse.");
+            }
+
+            // A delayed retry for an older round must never reopen a newer
+            // already-closed year. Treat the closing journal ID as an
+            // optimistic concurrency / idempotency precondition.
+            if (latest.Id != expectedClosingJournalEntryId)
+            {
+                throw new FiscalCalendarConflictException(
+                    "The fiscal year has a newer closing journal. Refresh the reconciliation before requesting correction.");
             }
 
             var description = $"Year-end correction: {trimmedReason}";
