@@ -26,6 +26,13 @@ public sealed partial class FinancialHttpPostgresRegressionTests
         Assert.AreEqual(0, report.Issues.Count,
             string.Join(" | ", report.Issues.Select(i => i.Code)));
         Assert.HasCount(2, report.OpenItems);
+        Assert.HasCount(2, report.CounterpartyBalances);
+        Assert.AreEqual(60m,
+            report.CounterpartyBalances.Single(x => x.Type == "Receivables")
+                .OutstandingBaseAmount);
+        Assert.AreEqual(50m,
+            report.CounterpartyBalances.Single(x => x.Type == "Payables")
+                .OutstandingBaseAmount);
         var invoice = report.OpenItems.Single(x => x.DocumentId == values.InvoiceId);
         var purchase = report.OpenItems.Single(x => x.DocumentId == values.PurchaseId);
         Assert.AreEqual(40m, invoice.AllocatedDocumentAmount);
