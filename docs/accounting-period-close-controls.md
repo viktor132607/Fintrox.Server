@@ -35,6 +35,10 @@ an unknown matching period, or 409 for a failed business gate.
   journal or calendar row locks followed by open-period revalidation.
   This closes a race where creating/editing a draft could interleave
   with closing and violate the no-drafts gate.
+- Calendar period **creation**, period **range updates** and fiscal-year
+  **updates** now acquire the same exclusive year lock in an EF transaction,
+  re-reading Open status after waiting. Editing period dates also checks that
+  no existing journal would be stranded outside the amended date range.
 - Previously implemented manual posting/reversal and sales/purchases/payments
   auto-posting use shared locks on the same fiscal-year/period rows. A close
   waits for already running financial postings; a subsequent posting sees
@@ -60,7 +64,7 @@ an unknown matching period, or 409 for a failed business gate.
 
 ## Added real HTTP + migrated PostgreSQL tests (not yet verified)
 
-Eight regressions added to the existing `FinancialHttpPostgresRegressionTests` fixture:
+Ten regressions added to the existing `FinancialHttpPostgresRegressionTests` fixture:
 
 1. Reject close when a Draft exists, then allow close after posting;
    a new draft cannot be created once Closed.
@@ -78,6 +82,10 @@ Eight regressions added to the existing `FinancialHttpPostgresRegressionTests` f
    rejected after out-of-band legacy closing of their period.
 8. Final year close detects unresolved drafts even if a legacy period has
    already been marked Closed outside the new period-close API.
+9. Updating an open period cannot shrink its dates to exclude an already
+   posted journal's declared posting date.
+10. After closing the fiscal year, the existing API refuses both creation
+    of an additional period and fiscal-year modification.
 
 ## Important unimplemented financial closing obligations
 
