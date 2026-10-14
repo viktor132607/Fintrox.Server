@@ -1,6 +1,9 @@
 # Fintrox Session Handoff — 2026-10-13
 
 ## Current milestone
+2026-10-14: **ACCOUNTING-001F4A CODED; BUILD/CI/POSTGRESQL TEST EXECUTION UNKNOWN.** Added strict neutral UTF-8 bank CSV import `BankStatementCsvParser` (bounded and RFC4180 quotes) and existing transactional statement import reuse; tenant-scoped read-only exact 1:1 original bank-GL-confirmed-payment match suggestions and protected automatic match command with per-line safe revalidation, no guesses/ambiguous matches. 5 HTTP/PostgreSQL + 4 unit regressions written, not run. Routes `POST /api/v1/banking/accounts/{id}/statements/import-csv`, `GET /api/v1/banking/statements/{id}/match-suggestions`, `POST /api/v1/banking/statements/{id}/auto-match`. F4B bank fee accounting and F4C multi-currency/approvals pending; fiscal `ACCOUNTING-001F` still IN PROGRESS. See `docs/accounting-bank-csv-auto-match.md`. Next: get CI compile/test feedback and fix; implement bank fees with explicit controls, then FX and review close.
+
+
 2026-10-14: **ACCOUNTING-001F3 CODED — CI/.NET/POSTGRESQL TESTS UNVERIFIED**. First operational Banking persistence migration (raw SQL + EF discovery), dedicated tenant base-currency bank Asset GL account, immutable statement/header lines, signed structured statement idempotent import, confirmed BankTransfer match against exact posted original GL bank account, and read-only repeatable-read bank statement/GL report with unmatched bank vs uncleared posted book payments. 9 new migrated PostgreSQL HTTP tests (not run). See `docs/accounting-bank-statement-reconciliation.md`. No bank feed/ISO parser, mult-currency, fee posting, independent reconciliation approval or full enterprise finance signoff. Full ACCOUNTING-001F remains IN PROGRESS. Next: CI compile/test repair, then bank statement ingestion/MT940-ISO20022, FX and formal bank close approvals.
 
 
