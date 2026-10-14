@@ -41,6 +41,7 @@ public sealed class FinancialHttpPostgresRegressionTests
     private readonly Guid userB = Guid.NewGuid();
     private Guid assetA;
     private Guid revenueA;
+    private Guid equityA;
     private Guid assetB;
 
     [TestInitialize]
@@ -103,10 +104,13 @@ public sealed class FinancialHttpPostgresRegressionTests
                 AccountType.Revenue, null, true, true, now);
             var debitB = Account.Create(organizationB, "501", "Cash B",
                 AccountType.Asset, null, true, true, now);
+            var capitalA = Account.Create(organizationA, "101", "Share capital A",
+                AccountType.Equity, null, true, true, now);
             assetA = debitA.Id;
             revenueA = creditA.Id;
+            equityA = capitalA.Id;
             assetB = debitB.Id;
-            db.Accounts.AddRange(debitA, creditA, debitB);
+            db.Accounts.AddRange(debitA, creditA, debitB, capitalA);
             await db.SaveChangesAsync();
         }
 
@@ -527,7 +531,7 @@ public sealed class FinancialHttpPostgresRegressionTests
             new ImportOpeningBalancesRequest(fiscalYearId,
             [
                 new CreateJournalLineRequest(assetA, 350m, 0m, null),
-                new CreateJournalLineRequest(revenueA, 0m, 300m, null)
+                new CreateJournalLineRequest(equityA, 0m, 300m, null)
             ]));
         Assert.AreEqual(HttpStatusCode.Conflict, unbalanced.StatusCode);
 
@@ -536,7 +540,7 @@ public sealed class FinancialHttpPostgresRegressionTests
             new ImportOpeningBalancesRequest(fiscalYearId,
             [
                 new CreateJournalLineRequest(assetB, 350m, 0m, null),
-                new CreateJournalLineRequest(revenueA, 0m, 350m, null)
+                new CreateJournalLineRequest(equityA, 0m, 350m, null)
             ]));
         Assert.AreEqual(HttpStatusCode.Conflict, foreign.StatusCode);
 
@@ -583,7 +587,7 @@ public sealed class FinancialHttpPostgresRegressionTests
             new ImportOpeningBalancesRequest(fiscalYearId,
             [
                 new CreateJournalLineRequest(assetA, 400m, 0m, null),
-                new CreateJournalLineRequest(revenueA, 0m, 400m, null)
+                new CreateJournalLineRequest(equityA, 0m, 400m, null)
             ]));
         Assert.AreEqual(HttpStatusCode.Conflict, changed.StatusCode);
 
@@ -654,7 +658,7 @@ public sealed class FinancialHttpPostgresRegressionTests
         new(fiscalYearId,
         [
             new CreateJournalLineRequest(assetA, 350m, 0m, null),
-            new CreateJournalLineRequest(revenueA, 0m, 350m, null)
+            new CreateJournalLineRequest(equityA, 0m, 350m, null)
         ]);
 
     private async Task<Guid> AddJanuaryOpeningPeriodAsync(Guid organizationId)
