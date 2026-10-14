@@ -480,6 +480,199 @@ public sealed class FinancialHttpPostgresRegressionTests
             x.OrganizationId == organizationA));
     }
 
+    [TestMethod]
+    public async Task OpeningBalancesImportIsBalancedPostedAndIdempotentOnReplay()
+    {
+        var fiscalYearId = await AddJanuaryOpeningPeriodAsync(organizationA);
+        var request = ValidOpeningBalances(fiscalYearId);
+        using var client = Client(userA, organizationA);
+
+        using var first = await client.PostAsJsonAsync(
+            "/api/v1/accounting/opening-balances/import", request);
+        Assert.AreEqual(HttpStatusCode.OK, first.StatusCode,
+            await first.Content.ReadAsStringAsync());
+        var original = await first.Content.ReadFromJsonAsync<JournalEntryResponse>();
+        Assert.IsNotNull(original);
+        Assert.AreEqual("Posted", original.Status);
+        Assert.AreEqual("System", original.Source);
+        Assert.IsTrue(original.IsBalanced);
+        Assert.AreEqual(350m, original.DebitTotal);
+        Assert.AreEqual(350m, original.CreditTotal);
+        Assert.AreEqual(new DateOnly(2026, 1, 1), original.PostingDate);
+
+        using var replay = await client.PostAsJsonAsync(
+            "/api/v1/accounting/opening-balances/import", request);
+        Assert.AreEqual(HttpStatusCode.OK, replay.StatusCode);
+        var duplicate = await replay.Content.ReadFromJsonAsync<JournalEntryResponse>();
+        Assert.IsNotNull(duplicate);
+        Assert.AreEqual(original.Id, duplicate.Id);
+        Assert.AreEqual(original.Number, duplicate.Number);
+
+        await using var db = CreateDb();
+        Assert.AreEqual(1, await db.JournalEntries.CountAsync(x =>
+            x.OrganizationId == organizationA));
+        Assert.AreEqual(2, await db.JournalLines.CountAsync(x =>
+            x.OrganizationId == organizationA));
+        Assert.AreEqual(1L, await db.JournalNumberSequences.Where(x =>
+            x.OrganizationId == organizationA).Select(x => x.LastNumber).SingleAsync());
+    }
+
+    [TestMethod]
+    public async Task OpeningBalancesRejectInvalidAndForeignAccountWithoutAllocatingNumber()
+    {
+        var fiscalYearId = await AddJanuaryOpeningPeriodAsync(organizationA);
+        using var client = Client(userA, organizationA);
+        using var unbalanced = await client.PostAsJsonAsync(
+            "/api/v1/accounting/opening-balances/import",
+            new ImportOpeningBalancesRequest(fiscalYearId,
+            [
+                new CreateJournalLineRequest(assetA, 350m, 0m, null),
+                new CreateJournalLineRequest(revenueA, 0m, 300m, null)
+            ]));
+        Assert.AreEqual(HttpStatusCode.Conflict, unbalanced.StatusCode);
+
+        using var foreign = await client.PostAsJsonAsync(
+            "/api/v1/accounting/opening-balances/import",
+            new ImportOpeningBalancesRequest(fiscalYearId,
+            [
+                new CreateJournalLineRequest(assetB, 350m, 0m, null),
+                new CreateJournalLineRequest(revenueA, 0m, 350m, null)
+            ]));
+        Assert.AreEqual(HttpStatusCode.Conflict, foreign.StatusCode);
+
+        await using var db = CreateDb();
+        Assert.AreEqual(0, await db.JournalEntries.CountAsync(x =>
+            x.OrganizationId == organizationA));
+        Assert.AreEqual(0, await db.JournalNumberSequences.CountAsync(x =>
+            x.OrganizationId == organizationA));
+    }
+
+    [TestMethod]
+    public async Task OpeningBalancesCannotBeInsertedAfterOrdinaryLedgerPosting()
+    {
+        var fiscalYearId = await AddJanuaryOpeningPeriodAsync(organizationA);
+        using var client = Client(userA, organizationA);
+        var draft = await CreateDraftAsync(client, 25m, 25m);
+        using (var posted = await client.PostAsync($"{Endpoint}/{draft.Id}/post", null))
+            Assert.AreEqual(HttpStatusCode.OK, posted.StatusCode);
+
+        using var response = await client.PostAsJsonAsync(
+            "/api/v1/accounting/opening-balances/import",
+            ValidOpeningBalances(fiscalYearId));
+        Assert.AreEqual(HttpStatusCode.Conflict, response.StatusCode);
+
+        await using var db = CreateDb();
+        Assert.AreEqual(1, await db.JournalEntries.CountAsync(x =>
+            x.OrganizationId == organizationA));
+        Assert.AreEqual(1L, await db.JournalNumberSequences.Where(x =>
+            x.OrganizationId == organizationA).Select(x => x.LastNumber).SingleAsync());
+    }
+
+    [TestMethod]
+    public async Task OpeningBalancesChangedReplayIsRejectedEvenAfterInitialSuccess()
+    {
+        var fiscalYearId = await AddJanuaryOpeningPeriodAsync(organizationA);
+        using var client = Client(userA, organizationA);
+        using (var initial = await client.PostAsJsonAsync(
+            "/api/v1/accounting/opening-balances/import",
+            ValidOpeningBalances(fiscalYearId)))
+            Assert.AreEqual(HttpStatusCode.OK, initial.StatusCode);
+
+        using var changed = await client.PostAsJsonAsync(
+            "/api/v1/accounting/opening-balances/import",
+            new ImportOpeningBalancesRequest(fiscalYearId,
+            [
+                new CreateJournalLineRequest(assetA, 400m, 0m, null),
+                new CreateJournalLineRequest(revenueA, 0m, 400m, null)
+            ]));
+        Assert.AreEqual(HttpStatusCode.Conflict, changed.StatusCode);
+
+        await using var db = CreateDb();
+        Assert.AreEqual(1, await db.JournalEntries.CountAsync(x =>
+            x.OrganizationId == organizationA));
+    }
+
+    [TestMethod]
+    public async Task OpeningBalancesAreTenantScopedAndRequireAuthentication()
+    {
+        var fiscalYearId = await AddJanuaryOpeningPeriodAsync(organizationA);
+        using var otherTenant = Client(userB, organizationB);
+        using var crossTenant = await otherTenant.PostAsJsonAsync(
+            "/api/v1/accounting/opening-balances/import",
+            ValidOpeningBalances(fiscalYearId));
+        Assert.AreEqual(HttpStatusCode.Conflict, crossTenant.StatusCode);
+
+        using var anonymous = factory!.CreateClient(new WebApplicationFactoryClientOptions
+        {
+            BaseAddress = new Uri("https://localhost")
+        });
+        using var unauthenticated = await anonymous.PostAsJsonAsync(
+            "/api/v1/accounting/opening-balances/import",
+            ValidOpeningBalances(fiscalYearId));
+        Assert.AreEqual(HttpStatusCode.Unauthorized, unauthenticated.StatusCode);
+
+        await using var db = CreateDb();
+        Assert.AreEqual(0, await db.JournalEntries.CountAsync(x =>
+            x.OrganizationId == organizationA || x.OrganizationId == organizationB));
+    }
+
+    [TestMethod]
+    public async Task ConcurrentOpeningBalancesReplaysHaveOnlyOneLedgerEffect()
+    {
+        var fiscalYearId = await AddJanuaryOpeningPeriodAsync(organizationA);
+        var request = ValidOpeningBalances(fiscalYearId);
+        using var first = Client(userA, organizationA);
+        using var second = Client(userA, organizationA);
+
+        var attempts = await Task.WhenAll(
+            first.PostAsJsonAsync("/api/v1/accounting/opening-balances/import", request),
+            second.PostAsJsonAsync("/api/v1/accounting/opening-balances/import", request));
+        try
+        {
+            Assert.IsTrue(attempts.All(x => x.StatusCode == HttpStatusCode.OK),
+                string.Join("; ", await Task.WhenAll(
+                    attempts.Select(x => x.Content.ReadAsStringAsync()))));
+            var posted = await Task.WhenAll(
+                attempts.Select(x => x.Content.ReadFromJsonAsync<JournalEntryResponse>()));
+            Assert.IsNotNull(posted[0]);
+            Assert.IsNotNull(posted[1]);
+            Assert.AreEqual(posted[0].Id, posted[1].Id);
+        }
+        finally
+        {
+            foreach (var attempt in attempts) attempt.Dispose();
+        }
+
+        await using var db = CreateDb();
+        Assert.AreEqual(1, await db.JournalEntries.CountAsync(x =>
+            x.OrganizationId == organizationA));
+        Assert.AreEqual(1L, await db.JournalNumberSequences.Where(x =>
+            x.OrganizationId == organizationA).Select(x => x.LastNumber).SingleAsync());
+    }
+
+    private ImportOpeningBalancesRequest ValidOpeningBalances(Guid fiscalYearId) =>
+        new(fiscalYearId,
+        [
+            new CreateJournalLineRequest(assetA, 350m, 0m, null),
+            new CreateJournalLineRequest(revenueA, 0m, 350m, null)
+        ]);
+
+    private async Task<Guid> AddJanuaryOpeningPeriodAsync(Guid organizationId)
+    {
+        await using var db = CreateDb();
+        var year = await db.FiscalYears.SingleAsync(x => x.OrganizationId == organizationId);
+        db.AccountingPeriods.Add(AccountingPeriod.Create(
+            organizationId,
+            year.Id,
+            1,
+            "January opening",
+            new DateOnly(2026, 1, 1),
+            new DateOnly(2026, 1, 31),
+            DateTimeOffset.UtcNow));
+        await db.SaveChangesAsync();
+        return year.Id;
+    }
+
     private HttpClient Client(Guid userId, Guid organizationId)
     {
         var client = factory!.CreateClient(new WebApplicationFactoryClientOptions
