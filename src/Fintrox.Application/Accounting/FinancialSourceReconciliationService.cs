@@ -51,6 +51,10 @@ public sealed class FinancialSourceReconciliationService(
 
             foreach (var source in sources)
             {
+                void AddIssue(string code, string detail, Guid? journalId = null) =>
+                    issues.Add(new FinancialSourceReconciliationIssue(
+                        source.SourceType, source.Id, journalId, code, detail));
+
                 var key = Reference(source);
                 journalGroups.TryGetValue(key, out var matching);
                 matching ??= [];
@@ -154,9 +158,6 @@ public sealed class FinancialSourceReconciliationService(
                         "Document base-currency gross amount does not match its automatically posted control line.");
                 }
 
-                void AddIssue(string code, string detail) =>
-                    issues.Add(new FinancialSourceReconciliationIssue(
-                        source.SourceType, source.Id, journal.Id, code, detail));
             }
 
             foreach (var journal in journals)
