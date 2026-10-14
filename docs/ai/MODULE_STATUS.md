@@ -16,6 +16,8 @@ Legacy list: [32 existing runtime/persistence models](LEGACY_MODEL_INVENTORY.md)
 
 2026-10-14 Accounting concurrency milestone: **ACCOUNTING-001A IMPLEMENTED — CI PENDING**. Operational legacy manual posting/reversal and automatic sales/purchases/payments posting now acquire tenant-scoped PostgreSQL journal/calendar row locks and recheck fiscal status after waiting. Four migrated PostgreSQL HTTP regression tests added. No module entity persistence migration. See [GL posting concurrency](../accounting-posting-concurrency.md).
 
+2026-10-14 Accounting opening balance milestone: **ACCOUNTING-001B IMPLEMENTED — CI PENDING**. Active legacy Accounting now accepts a tenant-scoped balanced first-fiscal-day opening journal with existing transaction/sequence mechanics, a per-year exclusive lock, replay-safe unique system external reference, active balance-sheet account validation and eight migrated PostgreSQL HTTP tests. Does **not** map the new `OpeningBalanceImport`/`OpeningBalanceLine` Domain entities to EF; full module status remains PARTIAL. See [opening balances](../accounting-opening-balances.md).
+
 The new types have immutable IDs/organization ownership, constructor validation and typed business fields. They are not yet mapped in EF or exposed through APIs. No complete ERP workflow, database tenant isolation, authorization or cross-reference existence checks are claimed by these model classes.
 
 Every module keeps five projects. Domain=PARTIAL; Application/Contracts/Infrastructure/Presentation=SCAFFOLD. Frontend remains 23 shells (13 new module shells missing). Entity constructors do not activate a module.
