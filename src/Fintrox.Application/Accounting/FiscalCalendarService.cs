@@ -74,50 +74,40 @@ public sealed class FiscalCalendarService(
         CancellationToken cancellationToken)
     {
         ValidateRange(request.StartDate, request.EndDate, "Fiscal year");
-
         var organizationId = currentOrganization.RequireOrganizationId();
-        var fiscalYear = await repository.GetFiscalYearAsync(
-            organizationId,
-            fiscalYearId,
-            trackChanges: true,
+
+        return await transactionRunner.ExecuteAsync(
+            async ct =>
+            {
+                // Prevent concurrent close and period creation while editing
+                // the year bounds or name.
+                await repository.LockFiscalYearForCloseAsync(
+                    organizationId, fiscalYearId, ct);
+
+                var year = await repository.GetFiscalYearAsync(
+                    organizationId, fiscalYearId, trackChanges: true, ct);
+                if (year is null) return null;
+                EnsureFiscalYearOpen(year);
+
+                var name = request.Name.Trim();
+                await EnsureFiscalYearUniqueAsync(
+                    organizationId, name, request.StartDate, request.EndDate,
+                    fiscalYearId, ct);
+
+                if (await repository.HasPeriodOutsideRangeAsync(
+                        organizationId, fiscalYearId,
+                        request.StartDate, request.EndDate, ct))
+                {
+                    throw new FiscalCalendarConflictException(
+                        "The fiscal year cannot exclude existing accounting periods.");
+                }
+
+                year.Update(name, request.StartDate, request.EndDate,
+                    timeProvider.GetUtcNow());
+                await repository.SaveChangesAsync(ct);
+                return MapFiscalYear(year);
+            },
             cancellationToken);
-
-        if (fiscalYear is null)
-        {
-            return null;
-        }
-
-        EnsureFiscalYearOpen(fiscalYear);
-
-        var normalizedName = request.Name.Trim();
-
-        await EnsureFiscalYearUniqueAsync(
-            organizationId,
-            normalizedName,
-            request.StartDate,
-            request.EndDate,
-            fiscalYearId,
-            cancellationToken);
-
-        if (await repository.HasPeriodOutsideRangeAsync(
-                organizationId,
-                fiscalYearId,
-                request.StartDate,
-                request.EndDate,
-                cancellationToken))
-        {
-            throw new FiscalCalendarConflictException(
-                "The fiscal year cannot exclude existing accounting periods.");
-        }
-
-        fiscalYear.Update(
-            normalizedName,
-            request.StartDate,
-            request.EndDate,
-            timeProvider.GetUtcNow());
-
-        await repository.SaveChangesAsync(cancellationToken);
-        return MapFiscalYear(fiscalYear);
     }
 
     public Task<FiscalYearResponse?> SoftCloseFiscalYearAsync(
@@ -269,40 +259,36 @@ public sealed class FiscalCalendarService(
         CancellationToken cancellationToken)
     {
         ValidateRange(request.StartDate, request.EndDate, "Accounting period");
-
         var organizationId = currentOrganization.RequireOrganizationId();
-        var fiscalYear = await RequireOpenFiscalYearAsync(
-            organizationId,
-            fiscalYearId,
+
+        return await transactionRunner.ExecuteAsync(
+            async ct =>
+            {
+                // All calendar edits and close transitions lock year first.
+                // The final Open check cannot become stale before insert.
+                await repository.LockFiscalYearForCloseAsync(
+                    organizationId, fiscalYearId, ct);
+
+                var year = await RequireOpenFiscalYearAsync(
+                    organizationId, fiscalYearId, ct);
+                EnsurePeriodInsideFiscalYear(
+                    year, request.StartDate, request.EndDate);
+
+                await EnsurePeriodUniqueAsync(
+                    organizationId, fiscalYearId,
+                    request.Number, request.StartDate, request.EndDate,
+                    excludingPeriodId: null, ct);
+
+                var period = AccountingPeriod.Create(
+                    organizationId, fiscalYearId,
+                    request.Number, request.Name,
+                    request.StartDate, request.EndDate,
+                    timeProvider.GetUtcNow());
+                await repository.AddPeriodAsync(period, ct);
+                await repository.SaveChangesAsync(ct);
+                return MapPeriod(period);
+            },
             cancellationToken);
-
-        EnsurePeriodInsideFiscalYear(
-            fiscalYear,
-            request.StartDate,
-            request.EndDate);
-
-        await EnsurePeriodUniqueAsync(
-            organizationId,
-            fiscalYearId,
-            request.Number,
-            request.StartDate,
-            request.EndDate,
-            excludingPeriodId: null,
-            cancellationToken);
-
-        var period = AccountingPeriod.Create(
-            organizationId,
-            fiscalYearId,
-            request.Number,
-            request.Name,
-            request.StartDate,
-            request.EndDate,
-            timeProvider.GetUtcNow());
-
-        await repository.AddPeriodAsync(period, cancellationToken);
-        await repository.SaveChangesAsync(cancellationToken);
-
-        return MapPeriod(period);
     }
 
     public async Task<AccountingPeriodResponse?> UpdatePeriodAsync(
@@ -312,54 +298,55 @@ public sealed class FiscalCalendarService(
         CancellationToken cancellationToken)
     {
         ValidateRange(request.StartDate, request.EndDate, "Accounting period");
-
         var organizationId = currentOrganization.RequireOrganizationId();
-        var fiscalYear = await RequireOpenFiscalYearAsync(
-            organizationId,
-            fiscalYearId,
+
+        return await transactionRunner.ExecuteAsync(
+            async ct =>
+            {
+                await repository.LockFiscalYearForCloseAsync(
+                    organizationId, fiscalYearId, ct);
+                var year = await RequireOpenFiscalYearAsync(
+                    organizationId, fiscalYearId, ct);
+
+                await repository.LockAccountingPeriodForCloseAsync(
+                    organizationId, fiscalYearId, periodId, ct);
+                var period = await repository.GetPeriodAsync(
+                    organizationId, fiscalYearId, periodId,
+                    trackChanges: true, ct);
+                if (period is null) return null;
+
+                if (period.Status != AccountingPeriodStatus.Open)
+                {
+                    throw new FiscalCalendarConflictException(
+                        "Only an open accounting period can be modified.");
+                }
+
+                EnsurePeriodInsideFiscalYear(
+                    year, request.StartDate, request.EndDate);
+
+                // A preexisting journal must never be stranded outside
+                // the amended range of its declared fiscal period.
+                if (await repository.HasMisdatedJournalsInPeriodAsync(
+                        organizationId, periodId,
+                        request.StartDate, request.EndDate, ct))
+                {
+                    throw new FiscalCalendarConflictException(
+                        "Cannot change period dates to exclude an existing journal posting date.");
+                }
+
+                await EnsurePeriodUniqueAsync(
+                    organizationId, fiscalYearId,
+                    request.Number, request.StartDate, request.EndDate,
+                    periodId, ct);
+
+                period.Update(
+                    request.Number, request.Name,
+                    request.StartDate, request.EndDate,
+                    timeProvider.GetUtcNow());
+                await repository.SaveChangesAsync(ct);
+                return MapPeriod(period);
+            },
             cancellationToken);
-
-        var period = await repository.GetPeriodAsync(
-            organizationId,
-            fiscalYearId,
-            periodId,
-            trackChanges: true,
-            cancellationToken);
-
-        if (period is null)
-        {
-            return null;
-        }
-
-        if (period.Status != AccountingPeriodStatus.Open)
-        {
-            throw new FiscalCalendarConflictException(
-                "Only an open accounting period can be modified.");
-        }
-
-        EnsurePeriodInsideFiscalYear(
-            fiscalYear,
-            request.StartDate,
-            request.EndDate);
-
-        await EnsurePeriodUniqueAsync(
-            organizationId,
-            fiscalYearId,
-            request.Number,
-            request.StartDate,
-            request.EndDate,
-            periodId,
-            cancellationToken);
-
-        period.Update(
-            request.Number,
-            request.Name,
-            request.StartDate,
-            request.EndDate,
-            timeProvider.GetUtcNow());
-
-        await repository.SaveChangesAsync(cancellationToken);
-        return MapPeriod(period);
     }
 
     public Task<AccountingPeriodResponse?> SoftClosePeriodAsync(
