@@ -117,6 +117,192 @@ public sealed class JournalService(
         return await BuildResponseAsync(entry, cancellationToken);
     }
 
+    /// <summary>
+    /// Imports one balanced opening GL position on the fiscal year's first
+    /// day. A year with existing posted ledger activity cannot be initialized
+    /// retroactively. The year lock serializes this gate with normal posting.
+    /// </summary>
+    public async Task<JournalEntryResponse> ImportOpeningBalancesAsync(
+        ImportOpeningBalancesRequest request,
+        CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+
+        var lines = request.Lines ?? [];
+        if (request.FiscalYearId == Guid.Empty ||
+            lines.Count is < 2 or > 1000)
+        {
+            throw new JournalConflictException(
+                "An opening-balance import requires a fiscal year and 2 to 1000 lines.");
+        }
+
+        foreach (var line in lines)
+        {
+            ValidateLineAmounts(line.Debit, line.Credit);
+            if (line.AccountId == Guid.Empty)
+            {
+                throw new JournalConflictException(
+                    "Every opening-balance line must reference an account.");
+            }
+        }
+
+        var accountIds = lines.Select(line => line.AccountId).Distinct().ToArray();
+        if (accountIds.Length != lines.Count)
+        {
+            throw new JournalConflictException(
+                "An opening-balance import must contain each account exactly once.");
+        }
+
+        var debit = lines.Sum(line => line.Debit);
+        var credit = lines.Sum(line => line.Credit);
+        if (debit <= 0m || debit != credit)
+        {
+            throw new JournalConflictException(
+                "Opening balances must have equal positive debit and credit totals.");
+        }
+
+        var organizationId = currentOrganization.RequireOrganizationId();
+        var result = await transactionRunner.ExecuteAsync(
+            async transactionCancellationToken =>
+            {
+                await journalRepository.LockFiscalYearForOpeningBalancesAsync(
+                    organizationId,
+                    request.FiscalYearId,
+                    transactionCancellationToken);
+
+                // Every authorization, account and fiscal check is repeated
+                // after acquiring the PostgreSQL lock, not based on stale data.
+                var year = await fiscalCalendarRepository.GetFiscalYearAsync(
+                    organizationId,
+                    request.FiscalYearId,
+                    trackChanges: false,
+                    transactionCancellationToken);
+
+                if (year is null || year.Status != FiscalYearStatus.Open)
+                {
+                    throw new JournalConflictException(
+                        "The fiscal year does not exist or is not open.");
+                }
+
+                var (period, fiscalYear) = await ResolveOpenPostingContextAsync(
+                    organizationId,
+                    year.StartDate,
+                    expectedPeriodId: null,
+                    transactionCancellationToken);
+
+                if (period.FiscalYearId != request.FiscalYearId)
+                {
+                    throw new JournalConflictException(
+                        "The fiscal year's first day is not covered by one of its open periods.");
+                }
+
+                var reference = $"opening-balance:v1:{request.FiscalYearId:N}";
+                var existing = await journalRepository.GetSystemEntryByExternalReferenceAsync(
+                    organizationId,
+                    reference,
+                    trackChanges: false,
+                    transactionCancellationToken);
+
+                if (existing is not null)
+                {
+                    var existingLines = await journalRepository.ListLinesAsync(
+                        organizationId,
+                        existing.Id,
+                        transactionCancellationToken);
+
+                    if (existing.Status != JournalEntryStatus.Posted ||
+                        existing.PostingDate != fiscalYear.StartDate ||
+                        existingLines.Count != lines.Count ||
+                        existingLines.Where((line, index) =>
+                            line.AccountId != lines[index].AccountId ||
+                            line.Debit != lines[index].Debit ||
+                            line.Credit != lines[index].Credit ||
+                            line.Description != NormalizeOpeningDescription(
+                                lines[index].Description)).Any())
+                    {
+                        throw new JournalConflictException(
+                            "Opening balances for this fiscal year already exist with different values or status.");
+                    }
+
+                    return existing;
+                }
+
+                if (await journalRepository.HasPostedEntriesForFiscalYearAsync(
+                        organizationId,
+                        request.FiscalYearId,
+                        transactionCancellationToken))
+                {
+                    throw new JournalConflictException(
+                        "Opening balances cannot be imported after ledger activity has been posted in this fiscal year.");
+                }
+
+                var accounts = await accountRepository.ListByIdsAsync(
+                    organizationId,
+                    accountIds,
+                    transactionCancellationToken);
+
+                if (accounts.Count != accountIds.Length ||
+                    accounts.Values.Any(account =>
+                        !account.IsActive || !account.AllowManualPosting))
+                {
+                    throw new JournalConflictException(
+                        "Opening balances require active, manually postable accounts owned by this organization.");
+                }
+
+                var now = timeProvider.GetUtcNow();
+                var entry = JournalEntry.CreateDraft(
+                    organizationId,
+                    period.Id,
+                    fiscalYear.StartDate,
+                    fiscalYear.StartDate,
+                    $"Opening balances for fiscal year {fiscalYear.StartDate:yyyy-MM-dd}",
+                    JournalEntrySource.System,
+                    reference,
+                    now);
+
+                await journalRepository.AddEntryAsync(entry, transactionCancellationToken);
+                for (var index = 0; index < lines.Count; index++)
+                {
+                    var item = lines[index];
+                    await journalRepository.AddLineAsync(
+                        JournalLine.Create(
+                            organizationId,
+                            entry.Id,
+                            index + 1,
+                            item.AccountId,
+                            item.Debit,
+                            item.Credit,
+                            item.Description,
+                            now),
+                        transactionCancellationToken);
+                }
+
+                // Persist as draft first: PostgreSQL's journal immutability
+                // trigger forbids inserting lines under a posted parent.
+                await journalRepository.SaveChangesAsync(transactionCancellationToken);
+
+                var sequence = await journalRepository.AllocatePostingSequenceAsync(
+                    organizationId,
+                    period.FiscalYearId,
+                    transactionCancellationToken);
+
+                entry.Post(
+                    FormatJournalNumber(fiscalYear.StartDate, sequence),
+                    now);
+                await journalRepository.SaveChangesAsync(transactionCancellationToken);
+
+                return entry;
+            },
+            cancellationToken);
+
+        return await BuildResponseAsync(result, cancellationToken);
+    }
+
+    private static string? NormalizeOpeningDescription(string? value)
+    {
+        return string.IsNullOrWhiteSpace(value) ? null : value.Trim();
+    }
+
     public async Task<JournalEntryResponse?> UpdateAsync(
         Guid journalEntryId,
         UpdateJournalEntryRequest request,
