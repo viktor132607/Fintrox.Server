@@ -892,6 +892,77 @@ public sealed class FinancialHttpPostgresRegressionTests
             await response.Content.ReadAsStringAsync());
     }
 
+    [TestMethod]
+    public async Task DraftHeaderAndLinesRejectEditsWhenPeriodIsClosed()
+    {
+        var calendar = await MarchCalendarAsync(organizationA);
+        using var client = Client(userA, organizationA);
+        var draft = await CreateDraftAsync(client, 80m, 80m);
+        var firstLineId = draft.Lines[0].Id;
+
+        // Simulate legacy/out-of-band closing of an existing draft's period.
+        // The HTTP close route correctly rejects a period with drafts.
+        await using (var db = CreateDb())
+        {
+            var period = await db.AccountingPeriods.SingleAsync(x =>
+                x.Id == calendar.PeriodId);
+            period.Close(DateTimeOffset.UtcNow);
+            await db.SaveChangesAsync();
+        }
+
+        using (var header = await client.PutAsJsonAsync($"{Endpoint}/{draft.Id}",
+            new UpdateJournalEntryRequest(PostingDate, PostingDate,
+                "Modified despite close", null)))
+            Assert.AreEqual(HttpStatusCode.Conflict, header.StatusCode);
+
+        using (var add = await client.PostAsJsonAsync($"{Endpoint}/{draft.Id}/lines",
+            new CreateJournalLineRequest(assetA, 15m, 0m, null)))
+            Assert.AreEqual(HttpStatusCode.Conflict, add.StatusCode);
+
+        using (var update = await client.PutAsJsonAsync(
+            $"{Endpoint}/{draft.Id}/lines/{firstLineId}",
+            new UpdateJournalLineRequest(assetA, 150m, 0m, null)))
+            Assert.AreEqual(HttpStatusCode.Conflict, update.StatusCode);
+
+        using (var delete = await client.DeleteAsync(
+            $"{Endpoint}/{draft.Id}/lines/{firstLineId}"))
+            Assert.AreEqual(HttpStatusCode.Conflict, delete.StatusCode);
+
+        await using var verify = CreateDb();
+        Assert.AreEqual(2, await verify.JournalLines.CountAsync(x =>
+            x.JournalEntryId == draft.Id));
+        Assert.AreEqual("HTTP financial regression",
+            (await verify.JournalEntries.SingleAsync(x => x.Id == draft.Id)).Description);
+    }
+
+    [TestMethod]
+    public async Task YearCloseCannotSkipStrandedDraftsInLegacyClosedPeriod()
+    {
+        var calendar = await MarchCalendarAsync(organizationA);
+        using var client = Client(userA, organizationA);
+        var draft = await CreateDraftAsync(client, 45m, 45m);
+
+        // Legacy status can predate modern gates; a year finalization
+        // must revalidate even if the period already says Closed.
+        await using (var db = CreateDb())
+        {
+            var period = await db.AccountingPeriods.SingleAsync(x =>
+                x.Id == calendar.PeriodId);
+            period.Close(DateTimeOffset.UtcNow);
+            await db.SaveChangesAsync();
+        }
+
+        using var close = await client.PostAsync(
+            $"/api/v1/accounting/fiscal-years/{calendar.YearId}/close", null);
+        Assert.AreEqual(HttpStatusCode.Conflict, close.StatusCode);
+
+        await using var verify = CreateDb();
+        Assert.AreEqual(FiscalYearStatus.Open,
+            (await verify.FiscalYears.SingleAsync(x => x.Id == calendar.YearId)).Status);
+        Assert.AreEqual(JournalEntryStatus.Draft,
+            (await verify.JournalEntries.SingleAsync(x => x.Id == draft.Id)).Status);
+    }
+
     private async Task<(Guid YearId, Guid PeriodId)> MarchCalendarAsync(Guid organizationId)
     {
         await using var db = CreateDb();
