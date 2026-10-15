@@ -25,3 +25,18 @@ public sealed record RecurringJournalOccurrenceResponse(
 public sealed record RecurringJournalScheduleResponse(
     Guid TemplateId, DateOnly FromDate, DateOnly ToDate, DateOnly AsOfDate,
     IReadOnlyList<RecurringJournalOccurrenceResponse> Occurrences);
+
+/// <summary>Append-only replacement of a monthly template starting at a month boundary.</summary>
+public sealed record ReviseRecurringJournalTemplateRequest(
+    DateOnly EffectiveFromMonth, CreateRecurringJournalTemplateRequest Replacement);
+
+public sealed record RecurringJournalVersionResponse(
+    Guid TemplateId, Guid? PreviousTemplateId, int Version,
+    DateOnly EffectiveFromMonth, DateOnly? SupersededFromMonth);
+
+public sealed record RecurringJournalLineageResponse(
+    Guid RootTemplateId, IReadOnlyList<RecurringJournalVersionResponse> Versions);
+
+public sealed record RecurringJournalRevisionResponse(
+    Guid RootTemplateId, Guid PreviousTemplateId, int Version,
+    DateOnly EffectiveFromMonth, RecurringJournalTemplateResponse Replacement);

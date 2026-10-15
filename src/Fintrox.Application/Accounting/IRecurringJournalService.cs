@@ -15,6 +15,13 @@ public interface IRecurringJournalService
         Guid templateId, DateOnly fromDate, DateOnly toDate,
         DateOnly? asOfDate, CancellationToken cancellationToken);
 
+    Task<RecurringJournalRevisionResponse?> ReviseAsync(
+        Guid previousTemplateId, ReviseRecurringJournalTemplateRequest request,
+        CancellationToken cancellationToken);
+
+    Task<RecurringJournalLineageResponse?> GetLineageAsync(
+        Guid templateId, CancellationToken cancellationToken);
+
     Task<RecurringJournalGenerationResponse?> GenerateAsync(
         Guid templateId, GenerateRecurringJournalRequest request,
         CancellationToken cancellationToken);

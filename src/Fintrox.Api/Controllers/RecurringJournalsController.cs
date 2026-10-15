@@ -64,6 +64,36 @@ public sealed class RecurringJournalsController(IRecurringJournalService service
         }
     }
 
+    [HttpGet("{templateId:guid}/versions")]
+    [Authorize(Policy = Permissions.AccountingRead)]
+    public async Task<ActionResult<RecurringJournalLineageResponse>> Versions(
+        Guid templateId, CancellationToken cancellationToken)
+    {
+        return await service.GetLineageAsync(templateId, cancellationToken) is { } result
+            ? Ok(result) : NotFound();
+    }
+
+    [HttpPost("{templateId:guid}/revise")]
+    [Authorize(Policy = Permissions.AccountingWrite)]
+    public async Task<ActionResult<RecurringJournalRevisionResponse>> Revise(
+        Guid templateId, ReviseRecurringJournalTemplateRequest request,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var result = await service.ReviseAsync(templateId, request, cancellationToken);
+            return result is null ? NotFound() :
+                StatusCode(StatusCodes.Status201Created, result);
+        }
+        catch (JournalConflictException ex)
+        {
+            return Problem(
+                statusCode: StatusCodes.Status409Conflict,
+                title: "Recurring template revision conflict",
+                detail: ex.Message);
+        }
+    }
+
     [HttpPost("{templateId:guid}/generate")]
     [Authorize(Policy = Permissions.AccountingWrite)]
     public async Task<ActionResult<RecurringJournalGenerationResponse>> Generate(
