@@ -13,7 +13,9 @@ namespace Fintrox.Api.Controllers;
 [ApiController]
 [Authorize]
 [Route("api/v1/accounting/recurring-journals")]
-public sealed class RecurringJournalsController(IRecurringJournalService service) : ControllerBase
+public sealed class RecurringJournalsController(
+    IRecurringJournalService service,
+    IRecurringJournalAutomationService automation) : ControllerBase
 {
     [HttpGet]
     [Authorize(Policy = Permissions.AccountingRead)]
@@ -92,6 +94,42 @@ public sealed class RecurringJournalsController(IRecurringJournalService service
                 title: "Recurring template revision conflict",
                 detail: ex.Message);
         }
+    }
+
+    [HttpPut("{templateId:guid}/automation")]
+    [Authorize(Policy = Permissions.AccountingWrite)]
+    public async Task<ActionResult<RecurringJournalAutomationResponse>> SetAutomation(
+        Guid templateId, ConfigureRecurringJournalAutomationRequest request,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var result = await automation.ConfigureAsync(templateId, request, cancellationToken);
+            return result is null ? NotFound() : Ok(result);
+        }
+        catch (JournalConflictException ex)
+        {
+            return Problem(statusCode: StatusCodes.Status409Conflict,
+                title: "Recurring automation configuration conflict", detail: ex.Message);
+        }
+    }
+
+    [HttpGet("{templateId:guid}/automation")]
+    [Authorize(Policy = Permissions.AccountingRead)]
+    public async Task<ActionResult<RecurringJournalAutomationResponse>> GetAutomation(
+        Guid templateId, CancellationToken cancellationToken)
+    {
+        var result = await automation.GetConfigurationAsync(templateId, cancellationToken);
+        return result is null ? NotFound() : Ok(result);
+    }
+
+    [HttpGet("{templateId:guid}/automation/runs")]
+    [Authorize(Policy = Permissions.AccountingRead)]
+    public async Task<ActionResult<IReadOnlyList<RecurringJournalAutomationRunResponse>>> GetAutomationRuns(
+        Guid templateId, CancellationToken cancellationToken)
+    {
+        var result = await automation.GetRunsAsync(templateId, cancellationToken);
+        return result is null ? NotFound() : Ok(result);
     }
 
     [HttpPost("{templateId:guid}/generate")]

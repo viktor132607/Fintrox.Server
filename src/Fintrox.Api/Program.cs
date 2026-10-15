@@ -131,6 +131,7 @@ builder.Services.AddHttpClient(
     })
     .ConfigurePrimaryHttpMessageHandler(WebhookOutboundTransport.CreateHandler);
 builder.Services.AddHostedService<WebhookDeliveryWorker>();
+builder.Services.AddHostedService<Fintrox.Api.Accounting.RecurringJournalAutomationWorker>();
 
 builder.Services
     .AddHealthChecks()
