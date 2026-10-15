@@ -1,4 +1,4 @@
-# Validation history — 2026-10-15
+# Validation history — 2026-10-15\n\n## ACCOUNTING-001G1 — monthly recurring GL draft generation\n- SOURCE CODED, NOT YET VERIFIED: normalized additive migration 20261015000100, immutable account templates, authorized GET/POST/generate API, one-per-month idempotent System Draft snapshots with separate posting and no duplicate period entries. 5 migrated HTTP/PostgreSQL tests authored, not yet run. See [design](../accounting-recurring-journals.md).
 
 ## 2026-10-15 — ACCOUNTING-001 cumulative verification: GREEN
 - VERIFIED GitHub Actions CI/CD #503 (https://github.com/viktor132607/Fintrox.Server/actions/runs/38654907133), code SHA e28a16a11c695cdec191448f4d353f9f7435c089: successful Release dotnet build --warnaserror and actual migrated PostgreSQL tests: **3031 passed, 0 failed, 0 skipped**, net10.0.
