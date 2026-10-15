@@ -238,3 +238,17 @@ Supersedes earlier G2A CI-pending assertion. No new DB migration.
 - Verify release warnings-as-errors build, all PostgreSQL tests,
   EF snapshot, migration discovery/application, and Docker before
   claiming COMPLETE.
+
+
+2026-10-16 — ACCOUNTING-001G2B **COMPLETE — CI VERIFIED**:
+[GitHub CI/CD #531](https://github.com/viktor132607/Fintrox.Server/actions/runs/38808420273) at application SHA
+`3444b68430cfca6509e39dc090f70c392f46ce8d`: Release build warnings-as-errors **0 warnings/errors**,
+**3044/3044 tests passed**, 0 skipped/failed, EF model snapshot clean,
+migration `20261016000100_RecurringJournalTemplateRevisions` applied
+and listed in real PostgreSQL, Docker Build & Publish successful.
+This supersedes prior G2B CODED/CI PENDING statements. The immutable
+revision chain, cutover lock, historical generation replay, tenant
+isolation and concurrent single-successor tests are validated.
+Next `ACCOUNTING-001G2C`: opt-in leased generation execution;
+`ACCOUNTING-001H`: accruals and deferrals. Neither is implemented.
+Entire `ACCOUNTING-001` remains IN PROGRESS; this is not statutory close.

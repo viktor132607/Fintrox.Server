@@ -135,7 +135,7 @@ external reference format are preserved.
 
 Five real HTTP/migrated-PostgreSQL tests cover versions, cutoff
 schedules, historical idempotence, broken inputs, cross-tenant access,
-and concurrent competing revisions. **Build and CI pending**.
+and concurrent competing revisions. **CI VERIFIED:** [GitHub #531](https://github.com/viktor132607/Fintrox.Server/actions/runs/38808420273) at application source SHA `3444b68430cfca6509e39dc090f70c392f46ce8d`: Release build 0 warnings/errors; **3044/3044 tests passed, 0 failed/skipped**; EF snapshot clean, migration `20261016000100_RecurringJournalTemplateRevisions` successfully applied/listed on PostgreSQL; Docker build/publish successful.
 
 Remaining `ACCOUNTING-001G2C`: explicit opt-in scheduled generation,
 durable retry/lease and operations monitoring. Existing manual
