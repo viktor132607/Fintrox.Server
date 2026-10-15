@@ -291,7 +291,7 @@ public sealed class JournalService(
                     return null;
                 }
 
-                EnsureDraft(draft);
+                EnsureEditableDraft(draft);
 
                 var (period, _) = await ResolveOpenPostingContextAsync(
                     organizationId,
@@ -330,7 +330,7 @@ public sealed class JournalService(
                 var draft = await journalRepository.GetEntryAsync(
                     organizationId, journalEntryId, trackChanges: false, ct);
                 if (draft is null) return null;
-                EnsureDraft(draft);
+                EnsureEditableDraft(draft);
 
                 await ResolveOpenPostingContextAsync(
                     organizationId, draft.PostingDate, draft.FiscalPeriodId, ct);
@@ -368,7 +368,7 @@ public sealed class JournalService(
                 var draft = await journalRepository.GetEntryAsync(
                     organizationId, journalEntryId, trackChanges: false, ct);
                 if (draft is null) return null;
-                EnsureDraft(draft);
+                EnsureEditableDraft(draft);
 
                 await ResolveOpenPostingContextAsync(
                     organizationId, draft.PostingDate, draft.FiscalPeriodId, ct);
@@ -406,7 +406,7 @@ public sealed class JournalService(
                 var draft = await journalRepository.GetEntryAsync(
                     organizationId, journalEntryId, trackChanges: false, ct);
                 if (draft is null) return false;
-                EnsureDraft(draft);
+                EnsureEditableDraft(draft);
 
                 await ResolveOpenPostingContextAsync(
                     organizationId, draft.PostingDate, draft.FiscalPeriodId, ct);
@@ -958,6 +958,18 @@ public sealed class JournalService(
         {
             throw new JournalConflictException(
                 "Only draft journal entries can be edited.");
+        }
+    }
+
+    private static void EnsureEditableDraft(JournalEntry entry)
+    {
+        EnsureDraft(entry);
+        if (entry.Source == JournalEntrySource.System &&
+            entry.ExternalReference?.StartsWith(
+                "recurring-journal:v1:", StringComparison.Ordinal) == true)
+        {
+            throw new JournalConflictException(
+                "Generated recurring journal drafts cannot be edited through the manual journal endpoints. Create a revised template instead.");
         }
     }
 
