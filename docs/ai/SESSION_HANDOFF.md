@@ -98,3 +98,19 @@ safe recoverable scheduling mechanism (001G2B).
 tests passed, PostgreSQL migrations + EF snapshot clean, Docker
 publication passed. Earlier G2A pending note superseded. G2B revision
 lineage and safe automation still pending.
+
+
+2026-10-16 — ACCOUNTING-001G2B CODED, CI PENDING: migration
+`20261016000100_RecurringJournalTemplateRevisions` adds immutable
+tenant-composite-FK lineage (root, predecessor, successor, version,
+effective-from first of month). `POST /api/v1/accounting/recurring-journals/{id}/revise`
+atomically creates a replacement template and numbered edge under
+predecessor FOR UPDATE lock; rejects parent already superseded, a
+cutoff in/preceding parent's first month, invalid schedules/accounts/
+unbalanced lines, or prior generated journal on/after cutoff.
+`GET .../{id}/versions` reports the chain for any member. Existing
+`generate` and `schedule` enforce effective cutoff without mutating
+historic evidence or enabling auto-posting. Five real authenticated
+PostgreSQL HTTP regressions authored, not yet executed. Next validate
+CI, then ACCOUNTING-001G2C opt-in durable draft-generation scheduling.
+Full ACCOUNTING-001 and statutory close remain IN PROGRESS.

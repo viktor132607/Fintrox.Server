@@ -92,3 +92,53 @@ and bounds/missing templates. **CI VERIFIED:** [GitHub #526](https://github.com/
 Still pending in `ACCOUNTING-001G2`: immutable versioned template
 revisions, explicit scheduler/worker with recoverable leases and execution
 audit, and policy-controlled notifications. Nothing automatically posts.
+
+## ACCOUNTING-001G2B — immutable versioned templates (2026-10-16)
+
+New authorized routes:
+- `POST /api/v1/accounting/recurring-journals/{id}/revise`
+  (`accounting.write`, 201). Body:
+  `{"effectiveFromMonth":"2026-04-01","replacement":{"name":"Monthly rent v2","description":"Revised rental payment","firstPostingDate":"2026-04-20","lastPostingDate":null,"lines":[{"accountId":"...","debit":250,"credit":0,"description":"Rental expense"},{"accountId":"...","debit":0,"credit":250,"description":"Bank"}]}}`
+- `GET /api/v1/accounting/recurring-journals/{id}/versions`
+  (`accounting.read`, tenant-filtered list of root, previous/current
+  template version IDs, first effective month and superseding cutoff).
+
+The predecessor and all generated GL source snapshots remain immutable.
+A revision creates a new template ID and an append-only predecessor /
+replacement / root edge, with monotonically increasing version number.
+DB constraints enforce tenant-owned composite foreign keys, one successor
+per predecessor, one predecessor per replacement, and unique root+version.
+The new template is activated on the **first day of the month**
+(`effectiveFromMonth`); its first monthly posting must be in that month,
+with a day between 1 and 28. The cutoff must be strictly after the
+predecessor's first scheduled month. Revisions with a generation recorded
+on or beyond the requested cutoff are rejected rather than rewriting
+financial history, even if the original entry remains Draft or was reversed.
+A further revision must target the **current leaf**, not an ancestor.
+
+The predecessor row is locked `FOR UPDATE` in both revision and
+manual generation. This serializes competing cutovers and generation
+so an old version cannot generate any occurrence on/after its successor
+month. Previously generated older-month entries remain replayable,
+including after accounting period closure. The read-only schedule
+endpoint excludes superseded months, while the new template has its own
+monthly occurrences. No automatic journal posting or job runner.
+
+Replacement lines pass the same debit/credit precision, positive-side,
+balance, active/analytical/manual-posting eligibility and tenant checks
+as G1. Insertion of the template, normalized lines, and lineage edge is
+one transaction; a failure rolls back all three. Migration
+`20261016000100_RecurringJournalTemplateRevisions` adds immutable
+`accounting.recurring_journal_template_revisions` with guarded
+UPDATE/DELETE and tenant FKs. The old template/GL and existing source
+external reference format are preserved.
+
+Five real HTTP/migrated-PostgreSQL tests cover versions, cutoff
+schedules, historical idempotence, broken inputs, cross-tenant access,
+and concurrent competing revisions. **Build and CI pending**.
+
+Remaining `ACCOUNTING-001G2C`: explicit opt-in scheduled generation,
+durable retry/lease and operations monitoring. Existing manual
+`generate` only creates Draft; `accounting.post` is still a separate
+authorized action. `ACCOUNTING-001H` accruals/deferrals and statutory
+accounting close remain out of scope.

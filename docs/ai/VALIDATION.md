@@ -224,3 +224,17 @@ at code SHA `f5d231d6ab9ee08a44205ff70731fa27a2b85a82`: Release build **0 warnin
 3039/3039 tests passed, 0 skipped/failed, EF model snapshot clean,
 migrations applied/listed in PostgreSQL, Docker build/publish succeeded.
 Supersedes earlier G2A CI-pending assertion. No new DB migration.
+
+## ACCOUNTING-001G2B — immutable template versions (2026-10-16)
+- CODED on main, **CI pending**. New append-only PostgreSQL migration
+  `20261016000100_RecurringJournalTemplateRevisions` (no new EF tracked
+  model, raw SQL matching original recurring evidence strategy).
+- 5 real migrated PostgreSQL HTTP tests added to
+  `FinancialHttpPostgresRecurringJournalTests.cs`: current/past
+  schedule boundaries and history preservation; v1-v3 lineage and
+  no branching; cutoff already generated and request validation;
+  tenant isolation and cross-org account policy; concurrent successor
+  creation (exactly one 201).
+- Verify release warnings-as-errors build, all PostgreSQL tests,
+  EF snapshot, migration discovery/application, and Docker before
+  claiming COMPLETE.

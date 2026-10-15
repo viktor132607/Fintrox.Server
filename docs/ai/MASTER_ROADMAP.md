@@ -154,3 +154,19 @@ GitHub CI #526 (https://github.com/viktor132607/Fintrox.Server/actions/runs/3877
 3039/3039 tests (0 failure/skip), EF snapshot and PostgreSQL migrations,
 Docker publish all pass. ACCOUNTING-001G2B/001H and total ERP financial
 system remain in progress.
+
+
+2026-10-16 — ACCOUNTING-001G2B CODED, CI PENDING: migration
+`20261016000100_RecurringJournalTemplateRevisions` adds immutable
+tenant-composite-FK lineage (root, predecessor, successor, version,
+effective-from first of month). `POST /api/v1/accounting/recurring-journals/{id}/revise`
+atomically creates a replacement template and numbered edge under
+predecessor FOR UPDATE lock; rejects parent already superseded, a
+cutoff in/preceding parent's first month, invalid schedules/accounts/
+unbalanced lines, or prior generated journal on/after cutoff.
+`GET .../{id}/versions` reports the chain for any member. Existing
+`generate` and `schedule` enforce effective cutoff without mutating
+historic evidence or enabling auto-posting. Five real authenticated
+PostgreSQL HTTP regressions authored, not yet executed. Next validate
+CI, then ACCOUNTING-001G2C opt-in durable draft-generation scheduling.
+Full ACCOUNTING-001 and statutory close remain IN PROGRESS.
