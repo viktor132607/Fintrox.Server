@@ -22,7 +22,7 @@ public sealed class RecurringJournalAutomation : Migration
                     REFERENCES accounting.recurring_journal_templates(id,organization_id)
                     ON DELETE RESTRICT,
                 CONSTRAINT fk_rja_actor FOREIGN KEY (configured_by_user_id)
-                    REFERENCES identity.users(id) ON DELETE RESTRICT
+                    REFERENCES identity.users("Id") ON DELETE RESTRICT
             );
 
             CREATE TABLE accounting.recurring_journal_automation_runs (
