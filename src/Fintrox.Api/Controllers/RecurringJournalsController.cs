@@ -23,6 +23,27 @@ public sealed class RecurringJournalsController(IRecurringJournalService service
         return Ok(await service.ListAsync(cancellationToken));
     }
 
+    [HttpGet("{templateId:guid}/schedule")]
+    [Authorize(Policy = Permissions.AccountingRead)]
+    public async Task<ActionResult<RecurringJournalScheduleResponse>> Schedule(
+        Guid templateId, [FromQuery] DateOnly from, [FromQuery] DateOnly to,
+        [FromQuery] DateOnly? asOf, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var result = await service.GetScheduleAsync(
+                templateId, from, to, asOf, cancellationToken);
+            return result is null ? NotFound() : Ok(result);
+        }
+        catch (JournalConflictException ex)
+        {
+            return Problem(
+                statusCode: StatusCodes.Status409Conflict,
+                title: "Invalid recurring journal schedule window",
+                detail: ex.Message);
+        }
+    }
+
     [HttpPost]
     [Authorize(Policy = Permissions.AccountingWrite)]
     public async Task<ActionResult<RecurringJournalTemplateResponse>> Create(

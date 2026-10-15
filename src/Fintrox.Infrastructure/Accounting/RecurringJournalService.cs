@@ -309,6 +309,110 @@ public sealed class RecurringJournalService(
         });
     }
 
+
+    /// <summary>
+    /// Read-only tenant schedule projection; never generates or posts entries.
+    /// One PostgreSQL statement joins immutable generation and GL evidence.
+    /// </summary>
+    public async Task<RecurringJournalScheduleResponse?> GetScheduleAsync(
+        Guid templateId, DateOnly fromDate, DateOnly toDate,
+        DateOnly? asOfDate, CancellationToken cancellationToken)
+    {
+        var tenant = organization.RequireOrganizationId();
+        if (templateId == Guid.Empty || fromDate == default || toDate == default ||
+            toDate < fromDate || toDate.DayNumber - fromDate.DayNumber >= 366 ||
+            asOfDate == DateOnly.MinValue)
+            throw new JournalConflictException(
+                "A valid template and inclusive date window of at most 366 days are required.");
+
+        var today = asOfDate ?? DateOnly.FromDateTime(clock.GetUtcNow().UtcDateTime);
+        return await db.Database.CreateExecutionStrategy().ExecuteAsync(async () =>
+        {
+            var cn = (NpgsqlConnection)db.Database.GetDbConnection();
+            await db.Database.OpenConnectionAsync(cancellationToken);
+            try
+            {
+                DateOnly first = default;
+                DateOnly? last = null;
+                short day = 0;
+                var found = false;
+                var generated = new Dictionary<DateOnly, (Guid JournalId, string Status)>();
+                await using (var cmd = new NpgsqlCommand("""
+                    SELECT t.first_posting_date,t.last_posting_date,t.day_of_month,
+                           g.posting_date,g.journal_entry_id,e.status,e.external_reference
+                    FROM accounting.recurring_journal_templates t
+                    LEFT JOIN accounting.recurring_journal_generations g
+                      ON g.organization_id=t.organization_id AND g.template_id=t.id
+                     AND g.posting_date BETWEEN @from AND @to
+                    LEFT JOIN accounting.journal_entries e
+                      ON e.organization_id=g.organization_id AND e.id=g.journal_entry_id
+                    WHERE t.organization_id=@org AND t.id=@template
+                    ORDER BY g.posting_date
+                    """, cn))
+                {
+                    cmd.Parameters.AddWithValue("org", tenant);
+                    cmd.Parameters.AddWithValue("template", templateId);
+                    cmd.Parameters.AddWithValue("from", fromDate);
+                    cmd.Parameters.AddWithValue("to", toDate);
+                    await using var reader = await cmd.ExecuteReaderAsync(cancellationToken);
+                    while (await reader.ReadAsync(cancellationToken))
+                    {
+                        found = true;
+                        first = reader.GetFieldValue<DateOnly>(0);
+                        last = reader.IsDBNull(1) ? null : reader.GetFieldValue<DateOnly>(1);
+                        day = reader.GetInt16(2);
+                        if (reader.IsDBNull(3)) continue;
+
+                        var date = reader.GetFieldValue<DateOnly>(3);
+                        if (reader.IsDBNull(4) || reader.IsDBNull(5) || reader.IsDBNull(6) ||
+                            reader.GetString(6) !=
+                                $"recurring-journal:v1:{templateId:N}:{date:yyyyMMdd}")
+                            throw new JournalConflictException(
+                                "Recurring journal generation evidence does not match its GL source.");
+                        generated.Add(date, (reader.GetGuid(4), reader.GetString(5)));
+                    }
+                }
+
+                if (!found) return null;
+                var occurrences = new List<RecurringJournalOccurrenceResponse>();
+                var month = new DateOnly(fromDate.Year, fromDate.Month, 1);
+                while (month <= toDate)
+                {
+                    var date = new DateOnly(month.Year, month.Month, day);
+                    if (date >= fromDate && date <= toDate &&
+                        date >= first && (!last.HasValue || date <= last.Value))
+                    {
+                        if (generated.TryGetValue(date, out var evidence))
+                        {
+                            if (evidence.Status is not ("Draft" or "Posted" or "Reversed"))
+                                throw new JournalConflictException(
+                                    "Unexpected status for a generated recurring GL journal.");
+                            occurrences.Add(new RecurringJournalOccurrenceResponse(
+                                templateId, date, evidence.Status,
+                                evidence.JournalId, evidence.Status));
+                        }
+                        else
+                        {
+                            var status = date < today ? "Overdue" :
+                                date == today ? "Due" : "Scheduled";
+                            occurrences.Add(new RecurringJournalOccurrenceResponse(
+                                templateId, date, status, null, null));
+                        }
+                    }
+                    if (month.Year == 9999 && month.Month == 12) break;
+                    month = month.AddMonths(1);
+                }
+
+                return new RecurringJournalScheduleResponse(
+                    templateId, fromDate, toDate, today, occurrences);
+            }
+            finally
+            {
+                await db.Database.CloseConnectionAsync();
+            }
+        });
+    }
+
     private static NpgsqlCommand Command(
         NpgsqlConnection connection, IDbContextTransaction tx,
         string sql, params (string Name, object Value)[] args)
