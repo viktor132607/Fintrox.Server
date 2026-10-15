@@ -142,3 +142,48 @@ durable retry/lease and operations monitoring. Existing manual
 `generate` only creates Draft; `accounting.post` is still a separate
 authorized action. `ACCOUNTING-001H` accruals/deferrals and statutory
 accounting close remain out of scope.
+
+## ACCOUNTING-001G2C — opt-in durable UTC draft automation (2026-10-16)
+
+`PUT /api/v1/accounting/recurring-journals/{id}/automation`
+body `{"enabled":true}` or `{"enabled":false}`
+(`accounting.write`) explicitly enables/disables one template,
+recording the currently authenticated user. Missing/other-tenant
+template is 404; already superseded versions cannot be newly enabled.
+Replacement versions must be enabled separately. Read endpoints
+`GET .../{id}/automation` (configuration if opted) and
+`GET .../{id}/automation/runs` (last 200 run statuses) require
+`accounting.read`.
+
+Opt-in is **disabled by default**. Every minute, a hosted worker
+checks the **current UTC accounting date**, queues only that day's
+active eligible templates (days 1–28, effective range, not superseded)
+and claims up to 10 due jobs. The worker does not perform historical
+catch-up outside of explicitly stored retries; max job lookback is 7
+days. The polling loop is controlled by
+`RecurringJournals:EnableWorker` (default true).
+The system does **not** call `accounting.post`; the created System
+journals remain **Draft** until explicitly posted by authorized staff.
+
+PostgreSQL migration `20261016000200_RecurringJournalAutomation`
+adds per-template opt-in, unique tenant/template/date runs with
+status Pending/Claimed/Retry/Generated/Failed, 2-minute leases,
+max 5 attempts and 1/5/15/60-minute backoff, with append-only
+Claimed/Generated/Retry/Failed audit events. `FOR UPDATE SKIP LOCKED`
+atomically selects jobs across API instances; conditional
+lease-token CAS prevents old workers from writing outcomes for
+reclaimed leases. A crash after journal insertion but before
+completion is safe because the original GL source generation remains
+uniquely keyed, replaying to the same journal. A worker can only
+generate for the user who enabled the current schedule while that
+user and organization are active and accounting.write remains held.
+Opt-out is serialized with generation under a PostgreSQL share lock.
+Failures never bypass financial-period, account or tenant gates.
+
+Five real migrated PostgreSQL HTTP/worker tests cover opt-in, draft-only,
+opt-out/tenant boundaries, concurrency, lease recovery and
+closed-period retries. **CI verification pending.**
+
+Still outside G2C: automatic GL posting, arbitrary cron,
+timezone-local calendar scheduling, historical mass backfills,
+external notifications, formal maker/checker approvals and accruals.

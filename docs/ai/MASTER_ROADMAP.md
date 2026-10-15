@@ -184,3 +184,27 @@ isolation and concurrent single-successor tests are validated.
 Next `ACCOUNTING-001G2C`: opt-in leased generation execution;
 `ACCOUNTING-001H`: accruals and deferrals. Neither is implemented.
 Entire `ACCOUNTING-001` remains IN PROGRESS; this is not statutory close.
+
+
+2026-10-16 — ACCOUNTING-001G2C CODED, CI PENDING:
+Opt-in UTC-day recurring journal draft automation:
+`PUT /api/v1/accounting/recurring-journals/{id}/automation`
+and GET configuration/runs endpoints, `accounting.write` opt-in,
+`accounting.read` monitoring. New
+`20261016000200_RecurringJournalAutomation` migration creates
+mutable per-template enable settings, uniquely scheduled runs,
+lease token and expiry, 5-attempt retry, and append-only
+claim/outcome attempt events. Hosted worker polls once/minute, queues
+only templates due *today in UTC* and opt-in, PostgreSQL
+`FOR UPDATE SKIP LOCKED` prevents multi-instance duplicate work;
+CAS-fenced lease outcomes allow crash recovery; generation
+reuses existing idempotent and fiscal/tenant/actor authorization checks.
+Generates only Draft, never Posts; version successors opt in
+independently; disabled templates are not selected. Maximum 20
+claims per batch; read monitoring returns last 200 runs.
+Five migrated PostgreSQL HTTP/worker regressions authored:
+no opt-in/no post; disable and tenant boundary; concurrent one winner;
+expired lease reclaim; closed-period retry. **CI not yet verified.**
+Next: evaluate CI compile + tests/migration, repair failures, mark verified
+only after green. ACCOUNTING-001H accrual/deferral still outstanding;
+full statutory close remains incomplete.
