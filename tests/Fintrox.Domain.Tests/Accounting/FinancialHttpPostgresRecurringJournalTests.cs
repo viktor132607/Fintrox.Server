@@ -321,4 +321,266 @@ public sealed partial class FinancialHttpPostgresRegressionTests
         Assert.AreEqual(HttpStatusCode.NotFound, absent.StatusCode);
     }
 
+
+    [TestMethod]
+    public async Task RecurringRevisionKeepsPriorHistoryAndCutsOverSchedules()
+    {
+        using var client = Client(userA, organizationA);
+        var original = await CreateRecurringAsync(
+            client, RecurringExpenseRequest(assetA, expenseA));
+        using (var generated = await client.PostAsJsonAsync(
+            $"{RecurringUrl}/{original.Id}/generate",
+            new GenerateRecurringJournalRequest(PostingDate)))
+            Assert.AreEqual(HttpStatusCode.OK, generated.StatusCode);
+
+        var replacement = RecurringExpenseRequest(assetA, expenseA) with
+        {
+            Name = "Revised monthly services",
+            FirstPostingDate = new DateOnly(2026, 4, 20),
+            Lines =
+            [
+                new CreateJournalLineRequest(expenseA, 25m, 0m, "New service expense"),
+                new CreateJournalLineRequest(assetA, 0m, 25m, "New service payment")
+            ]
+        };
+        using var revised = await client.PostAsJsonAsync(
+            $"{RecurringUrl}/{original.Id}/revise",
+            new ReviseRecurringJournalTemplateRequest(
+                new DateOnly(2026, 4, 1), replacement));
+        Assert.AreEqual(HttpStatusCode.Created, revised.StatusCode,
+            await revised.Content.ReadAsStringAsync());
+        var result = await revised.Content
+            .ReadFromJsonAsync<RecurringJournalRevisionResponse>();
+        Assert.IsNotNull(result);
+        Assert.AreEqual(2, result.Version);
+        Assert.AreEqual(original.Id, result.RootTemplateId);
+        Assert.AreEqual(25m, result.Replacement.Lines.Sum(x => x.Debit));
+
+        using var versionsResult = await client.GetAsync(
+            $"{RecurringUrl}/{result.Replacement.Id}/versions");
+        Assert.AreEqual(HttpStatusCode.OK, versionsResult.StatusCode);
+        var lineage = await versionsResult.Content
+            .ReadFromJsonAsync<RecurringJournalLineageResponse>();
+        Assert.IsNotNull(lineage);
+        Assert.HasCount(2, lineage.Versions);
+        Assert.AreEqual(original.Id, lineage.Versions[0].TemplateId);
+        Assert.AreEqual(new DateOnly(2026, 4, 1),
+            lineage.Versions[0].SupersededFromMonth);
+        Assert.AreEqual(original.Id, lineage.Versions[1].PreviousTemplateId);
+
+        using var oldScheduleResponse = await client.GetAsync(
+            $"{RecurringUrl}/{original.Id}/schedule?from=2026-03-01&to=2026-06-30&asOf=2026-04-01");
+        var oldSchedule = await oldScheduleResponse.Content
+            .ReadFromJsonAsync<RecurringJournalScheduleResponse>();
+        Assert.IsNotNull(oldSchedule);
+        Assert.HasCount(1, oldSchedule.Occurrences);
+        Assert.AreEqual("Draft", oldSchedule.Occurrences[0].OccurrenceStatus);
+
+        using var newScheduleResponse = await client.GetAsync(
+            $"{RecurringUrl}/{result.Replacement.Id}/schedule?from=2026-03-01&to=2026-06-30&asOf=2026-04-01");
+        var newSchedule = await newScheduleResponse.Content
+            .ReadFromJsonAsync<RecurringJournalScheduleResponse>();
+        Assert.IsNotNull(newSchedule);
+        Assert.HasCount(3, newSchedule.Occurrences);
+        Assert.AreEqual(new DateOnly(2026, 4, 20),
+            newSchedule.Occurrences[0].PostingDate);
+
+        using (var stale = await client.PostAsJsonAsync(
+            $"{RecurringUrl}/{original.Id}/generate",
+            new GenerateRecurringJournalRequest(new DateOnly(2026, 4, 15))))
+        {
+            Assert.AreEqual(HttpStatusCode.Conflict, stale.StatusCode);
+            StringAssert.Contains(await stale.Content.ReadAsStringAsync(),
+                "superseded");
+        }
+
+        using var marchReplay = await client.PostAsJsonAsync(
+            $"{RecurringUrl}/{original.Id}/generate",
+            new GenerateRecurringJournalRequest(PostingDate));
+        Assert.AreEqual(HttpStatusCode.OK, marchReplay.StatusCode);
+        var replay = await marchReplay.Content
+            .ReadFromJsonAsync<RecurringJournalGenerationResponse>();
+        Assert.IsNotNull(replay);
+        Assert.IsTrue(replay.AlreadyGenerated);
+    }
+
+    [TestMethod]
+    public async Task RecurringRevisionSupportsChainedVersionsButNotBranching()
+    {
+        using var client = Client(userA, organizationA);
+        var original = await CreateRecurringAsync(
+            client, RecurringExpenseRequest(assetA, expenseA));
+        using var v2Response = await client.PostAsJsonAsync(
+            $"{RecurringUrl}/{original.Id}/revise",
+            new ReviseRecurringJournalTemplateRequest(
+                new DateOnly(2026, 4, 1),
+                RecurringExpenseRequest(assetA, expenseA) with
+                {
+                    FirstPostingDate = new DateOnly(2026, 4, 20)
+                }));
+        Assert.AreEqual(HttpStatusCode.Created, v2Response.StatusCode);
+        var v2 = await v2Response.Content
+            .ReadFromJsonAsync<RecurringJournalRevisionResponse>();
+        Assert.IsNotNull(v2);
+
+        using (var branch = await client.PostAsJsonAsync(
+            $"{RecurringUrl}/{original.Id}/revise",
+            new ReviseRecurringJournalTemplateRequest(
+                new DateOnly(2026, 5, 1),
+                RecurringExpenseRequest(assetA, expenseA) with
+                {
+                    FirstPostingDate = new DateOnly(2026, 5, 15)
+                })))
+            Assert.AreEqual(HttpStatusCode.Conflict, branch.StatusCode);
+
+        using var v3Response = await client.PostAsJsonAsync(
+            $"{RecurringUrl}/{v2.Replacement.Id}/revise",
+            new ReviseRecurringJournalTemplateRequest(
+                new DateOnly(2026, 6, 1),
+                RecurringExpenseRequest(assetA, expenseA) with
+                {
+                    FirstPostingDate = new DateOnly(2026, 6, 23)
+                }));
+        Assert.AreEqual(HttpStatusCode.Created, v3Response.StatusCode,
+            await v3Response.Content.ReadAsStringAsync());
+        var v3 = await v3Response.Content
+            .ReadFromJsonAsync<RecurringJournalRevisionResponse>();
+        Assert.IsNotNull(v3);
+        Assert.AreEqual(3, v3.Version);
+        Assert.AreEqual(original.Id, v3.RootTemplateId);
+
+        using var versionsResponse = await client.GetAsync(
+            $"{RecurringUrl}/{original.Id}/versions");
+        var versions = await versionsResponse.Content
+            .ReadFromJsonAsync<RecurringJournalLineageResponse>();
+        Assert.IsNotNull(versions);
+        Assert.HasCount(3, versions.Versions);
+        Assert.AreEqual(new DateOnly(2026, 6, 1),
+            versions.Versions[1].SupersededFromMonth);
+        Assert.IsNull(versions.Versions[2].SupersededFromMonth);
+    }
+
+    [TestMethod]
+    public async Task RecurringRevisionRejectsExistingGeneratedCutoverAndInvalidRequest()
+    {
+        using var client = Client(userA, organizationA);
+        var initial = RecurringExpenseRequest(assetA, expenseA) with
+        {
+            FirstPostingDate = new DateOnly(2026, 1, 15)
+        };
+        var original = await CreateRecurringAsync(client, initial);
+        using (var generated = await client.PostAsJsonAsync(
+            $"{RecurringUrl}/{original.Id}/generate",
+            new GenerateRecurringJournalRequest(PostingDate)))
+            Assert.AreEqual(HttpStatusCode.OK, generated.StatusCode);
+
+        using (var alreadyGenerated = await client.PostAsJsonAsync(
+            $"{RecurringUrl}/{original.Id}/revise",
+            new ReviseRecurringJournalTemplateRequest(
+                new DateOnly(2026, 3, 1),
+                initial with { FirstPostingDate = new DateOnly(2026, 3, 20) })))
+            Assert.AreEqual(HttpStatusCode.Conflict, alreadyGenerated.StatusCode);
+
+        using (var notFirst = await client.PostAsJsonAsync(
+            $"{RecurringUrl}/{original.Id}/revise",
+            new ReviseRecurringJournalTemplateRequest(
+                new DateOnly(2026, 4, 2),
+                initial with { FirstPostingDate = new DateOnly(2026, 4, 20) })))
+            Assert.AreEqual(HttpStatusCode.Conflict, notFirst.StatusCode);
+
+        using (var invalidLines = await client.PostAsJsonAsync(
+            $"{RecurringUrl}/{original.Id}/revise",
+            new ReviseRecurringJournalTemplateRequest(
+                new DateOnly(2026, 4, 1),
+                initial with
+                {
+                    FirstPostingDate = new DateOnly(2026, 4, 15),
+                    Lines =
+                    [
+                        new CreateJournalLineRequest(expenseA, 20m, 0m, null),
+                        new CreateJournalLineRequest(assetA, 0m, 15m, null)
+                    ]
+                })))
+            Assert.AreEqual(HttpStatusCode.Conflict, invalidLines.StatusCode);
+
+        await using var db = CreateDb();
+        Assert.AreEqual(1, await db.JournalEntries.CountAsync(
+            x => x.OrganizationId == organizationA));
+    }
+
+    [TestMethod]
+    public async Task RecurringRevisionIsTenantScoped()
+    {
+        using var owner = Client(userA, organizationA);
+        using var other = Client(userB, organizationB);
+        var original = await CreateRecurringAsync(
+            owner, RecurringExpenseRequest(assetA, expenseA));
+        var request = new ReviseRecurringJournalTemplateRequest(
+            new DateOnly(2026, 4, 1),
+            RecurringExpenseRequest(assetA, expenseA) with
+            {
+                FirstPostingDate = new DateOnly(2026, 4, 15)
+            });
+        using (var denied = await other.PostAsJsonAsync(
+            $"{RecurringUrl}/{original.Id}/revise", request))
+            Assert.AreEqual(HttpStatusCode.NotFound, denied.StatusCode);
+
+        using var lineage = await other.GetAsync(
+            $"{RecurringUrl}/{original.Id}/versions");
+        Assert.AreEqual(HttpStatusCode.NotFound, lineage.StatusCode);
+
+        using (var crossTenant = await owner.PostAsJsonAsync(
+            $"{RecurringUrl}/{original.Id}/revise",
+            request with
+            {
+                Replacement = request.Replacement with
+                {
+                    Lines =
+                    [
+                        new CreateJournalLineRequest(expenseA, 15m, 0m, null),
+                        new CreateJournalLineRequest(assetB, 0m, 15m, null)
+                    ]
+                }
+            }))
+            Assert.AreEqual(HttpStatusCode.Conflict, crossTenant.StatusCode);
+    }
+
+    [TestMethod]
+    public async Task ConcurrentRecurringRevisionAllowsExactlyOneSuccessor()
+    {
+        using var first = Client(userA, organizationA);
+        using var second = Client(userA, organizationA);
+        var original = await CreateRecurringAsync(
+            first, RecurringExpenseRequest(assetA, expenseA));
+        var request = new ReviseRecurringJournalTemplateRequest(
+            new DateOnly(2026, 4, 1),
+            RecurringExpenseRequest(assetA, expenseA) with
+            {
+                FirstPostingDate = new DateOnly(2026, 4, 20)
+            });
+        var url = $"{RecurringUrl}/{original.Id}/revise";
+        var responses = await Task.WhenAll(
+            first.PostAsJsonAsync(url, request),
+            second.PostAsJsonAsync(url, request));
+        try
+        {
+            Assert.AreEqual(1, responses.Count(x =>
+                x.StatusCode == HttpStatusCode.Created),
+                string.Join(" | ", await Task.WhenAll(
+                    responses.Select(x => x.Content.ReadAsStringAsync()))));
+            Assert.AreEqual(1, responses.Count(x =>
+                x.StatusCode == HttpStatusCode.Conflict));
+        }
+        finally
+        {
+            foreach (var response in responses) response.Dispose();
+        }
+        using var lineageResponse = await first.GetAsync(
+            $"{RecurringUrl}/{original.Id}/versions");
+        var lineage = await lineageResponse.Content
+            .ReadFromJsonAsync<RecurringJournalLineageResponse>();
+        Assert.IsNotNull(lineage);
+        Assert.HasCount(2, lineage.Versions);
+    }
+
 }
