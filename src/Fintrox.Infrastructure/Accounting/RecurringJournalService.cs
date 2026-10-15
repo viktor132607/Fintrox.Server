@@ -1,4 +1,5 @@
 using Fintrox.Application.Accounting;
+using Fintrox.Application.Authorization;
 using Fintrox.Application.Common.Interfaces;
 using Fintrox.Contracts.Accounting;
 using Fintrox.Domain.Accounting;
@@ -20,6 +21,7 @@ public sealed class RecurringJournalService(
     ICurrentUser currentUser,
     IJournalRepository journals,
     IFiscalCalendarRepository calendars,
+    IOrganizationAccessService access,
     TimeProvider clock) : IRecurringJournalService
 {
     public async Task<IReadOnlyList<RecurringJournalTemplateResponse>> ListAsync(
@@ -165,12 +167,26 @@ public sealed class RecurringJournalService(
         });
     }
 
-    public async Task<RecurringJournalGenerationResponse?> GenerateAsync(
+    public Task<RecurringJournalGenerationResponse?> GenerateAsync(
         Guid templateId, GenerateRecurringJournalRequest request,
+        CancellationToken cancellationToken) =>
+        GenerateCoreAsync(organization.RequireOrganizationId(),
+            currentUser.RequireUserId(), templateId, request,
+            automated: false, cancellationToken);
+
+    /// <summary>Internal worker entry point; requires a live opt-in and authorization.</summary>
+    public Task<RecurringJournalGenerationResponse?> GenerateForAutomationAsync(
+        Guid tenant, Guid actor, Guid templateId, DateOnly date,
+        CancellationToken cancellationToken) =>
+        GenerateCoreAsync(tenant, actor, templateId,
+            new GenerateRecurringJournalRequest(date),
+            automated: true, cancellationToken);
+
+    private async Task<RecurringJournalGenerationResponse?> GenerateCoreAsync(
+        Guid tenant, Guid actor, Guid templateId,
+        GenerateRecurringJournalRequest request, bool automated,
         CancellationToken cancellationToken)
     {
-        var tenant = organization.RequireOrganizationId();
-        var actor = currentUser.RequireUserId();
         if (templateId == Guid.Empty || request.PostingDate == default)
             throw new JournalConflictException("Template and posting date are mandatory.");
 
@@ -195,6 +211,25 @@ public sealed class RecurringJournalService(
                 first = reader.GetFieldValue<DateOnly>(2);
                 last = reader.IsDBNull(3) ? null : reader.GetFieldValue<DateOnly>(3);
                 day = reader.GetInt16(4);
+            }
+
+            if (automated)
+            {
+                // Same transaction as generation. Concurrent disable waits for
+                // this shared row lock; all callers still use the template lock.
+                await using var optIn = Command(cn, tx, """
+                    SELECT 1 FROM accounting.recurring_journal_automation
+                    WHERE organization_id=@org AND template_id=@template
+                      AND enabled AND configured_by_user_id=@actor FOR SHARE
+                    """, ("org", tenant), ("template", templateId),
+                    ("actor", actor));
+                if (await optIn.ExecuteScalarAsync(cancellationToken) is null ||
+                    !await db.Users.AsNoTracking().AnyAsync(
+                        u => u.Id == actor && u.IsActive, cancellationToken) ||
+                    !await access.HasPermissionAsync(
+                        actor, tenant, Permissions.AccountingWrite, cancellationToken))
+                    throw new JournalConflictException(
+                        "Automated draft generation requires an enabled schedule and a currently authorized active user.");
             }
 
             var date = request.PostingDate;
