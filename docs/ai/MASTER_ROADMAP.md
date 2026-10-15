@@ -208,3 +208,21 @@ expired lease reclaim; closed-period retry. **CI not yet verified.**
 Next: evaluate CI compile + tests/migration, repair failures, mark verified
 only after green. ACCOUNTING-001H accrual/deferral still outstanding;
 full statutory close remains incomplete.
+
+
+2026-10-16 — ACCOUNTING-001G2C **COMPLETE — CI VERIFIED**:
+GitHub [CI/CD #539](https://github.com/viktor132607/Fintrox.Server/actions/runs/38812934895) verified application SHA
+`0234425a09894690c5493d72cd1529e8b81471f4`: Release build 0 warnings and 0 errors,
+**3049/3049 tests passed** (0 failures, 0 skips), EF model snapshot
+clean, migration `20261016000200_RecurringJournalAutomation`
+applied/listed on real PostgreSQL, Docker Build & Publish passed.
+Initial CI #538 failed because the new migration FK referenced
+`identity.users(id)` instead of the actual case-sensitive
+`identity.users("Id")`; fixed in `0234425a09894690c5493d72cd1529e8b81471f4`. All new
+opt-in, disable, tenant isolation, concurrency, expired-lease
+recovery and closed-period retry tests passed. Earlier G2C
+CI-pending statements are superseded. G2 recurring automation
+milestone complete, though Accounting as a whole is IN PROGRESS;
+next ACCOUNTING-001H accrual/deferral business logic and more
+formal multi-module financial reconciliation. Draft generation never
+posts GL, and UTC schedule defaults still apply.

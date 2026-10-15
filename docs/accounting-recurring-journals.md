@@ -182,7 +182,7 @@ Failures never bypass financial-period, account or tenant gates.
 
 Five real migrated PostgreSQL HTTP/worker tests cover opt-in, draft-only,
 opt-out/tenant boundaries, concurrency, lease recovery and
-closed-period retries. **CI verification pending.**
+closed-period retries. **CI VERIFIED:** [GitHub #539](https://github.com/viktor132607/Fintrox.Server/actions/runs/38812934895), application SHA `0234425a09894690c5493d72cd1529e8b81471f4`: 3049/3049 tests passed (0 failed/skipped); Release build zero warnings/errors, EF snapshot clean, migration `20261016000200_RecurringJournalAutomation` applied/listed in PostgreSQL, Docker Build & Publish passed. Identity FK was corrected to `identity.users("Id")` after CI #538.
 
 Still outside G2C: automatic GL posting, arbitrary cron,
 timezone-local calendar scheduling, historical mass backfills,
