@@ -1,6 +1,6 @@
 # ACCOUNTING-001G1 — monthly recurring journal templates and manual generation
 
-2026-10-15. **SOURCE IMPLEMENTED; BUILD, MIGRATION, AND FIVE NEW MIGRATED POSTGRESQL HTTP TESTS PENDING CI.**
+2026-10-15. **CI VERIFIED:** GitHub #522 (https://github.com/viktor132607/Fintrox.Server/actions/runs/38658049296), source SHA `a7544869081888e7c090c9abba32919cb3316e4b`. All **3036 tests passed**, EF snapshot clean, PostgreSQL migration applied, Docker published.
 
 ## Bounded functional scope
 
@@ -62,7 +62,7 @@ tax recognition, approval workflows, posting queues, accruals, deferrals
 or automatic catch-up for missed months. Those remain `ACCOUNTING-001G2`
 and `ACCOUNTING-001H` / future enterprise accounting work.
 
-Five real migrated-PostgreSQL HTTP tests authored (not yet executed):
+Five real migrated-PostgreSQL HTTP tests authored and executed successfully:
 balanced Draft and separate Posted transition, invalid/cross-tenant
 accounts and invalid schedules, closed period, tenant boundary and parallel
 generation idempotency.
