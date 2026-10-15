@@ -142,3 +142,9 @@ The user authorized continuation after the model switch. Detailed business speci
 
 ---
 \n2026-10-15 — ACCOUNTING-001G1 CI VERIFIED on source SHA a7544869081888e7c090c9abba32919cb3316e4b: GitHub CI/CD #522 (38658049296): Release dotnet build --warnaserror SUCCESS, 3036/3036 tests passed with 0 failures and 0 skips, EF model snapshot clean, migration 20261015000100_RecurringJournalTemplates applied and listed on PostgreSQL 18.6, Docker Build & Publish SUCCESS. Added immutable monthly recurring journal templates and tenant-scoped one-per-schedule-date System Draft generation, with explicit separate authorized GL posting. No automatic scheduling. ACCOUNTING-001G2 (template revisions, scheduling/monitoring) and 001H accruals/deferrals pending. Whole ACCOUNTING-001 remains IN PROGRESS.\n
+
+2026-10-15 — ACCOUNTING-001G2A CODED (CI PENDING): bounded tenant monthly
+schedule/status preview added to recurring journals; immutable GL evidence
+exposes Draft/Posted/Reversed, ungenerated dates show Scheduled/Due/Overdue.
+Next ACCOUNTING-001G2B versioned template amendments and safe scheduling;
+no auto-posting or statutory close.

@@ -218,4 +218,107 @@ public sealed partial class FinancialHttpPostgresRegressionTests
             x.ExternalReference ==
                 $"recurring-journal:v1:{template.Id:N}:{PostingDate:yyyyMMdd}"));
     }
+
+    [TestMethod]
+    public async Task RecurringScheduleReportsOverdueScheduledDraftAndPostedWithoutSideEffects()
+    {
+        using var client = Client(userA, organizationA);
+        var template = await CreateRecurringAsync(
+            client, RecurringExpenseRequest(assetA, expenseA));
+        var url = $"{RecurringUrl}/{template.Id}/schedule?from=2026-03-01&to=2026-06-30&asOf=2026-04-01";
+
+        using (var before = await client.GetAsync(url))
+        {
+            Assert.AreEqual(HttpStatusCode.OK, before.StatusCode);
+            var schedule = await before.Content
+                .ReadFromJsonAsync<RecurringJournalScheduleResponse>();
+            Assert.IsNotNull(schedule);
+            Assert.AreEqual(new DateOnly(2026, 4, 1), schedule.AsOfDate);
+            Assert.HasCount(4, schedule.Occurrences);
+            Assert.AreEqual("Overdue", schedule.Occurrences[0].OccurrenceStatus);
+            Assert.AreEqual("Scheduled", schedule.Occurrences[1].OccurrenceStatus);
+            Assert.IsNull(schedule.Occurrences[0].JournalEntryId);
+        }
+        await using (var db = CreateDb())
+            Assert.AreEqual(0, await db.JournalEntries.CountAsync(
+                x => x.OrganizationId == organizationA));
+
+        using var gen = await client.PostAsJsonAsync(
+            $"{RecurringUrl}/{template.Id}/generate",
+            new GenerateRecurringJournalRequest(PostingDate));
+        Assert.AreEqual(HttpStatusCode.OK, gen.StatusCode,
+            await gen.Content.ReadAsStringAsync());
+        var generated = await gen.Content
+            .ReadFromJsonAsync<RecurringJournalGenerationResponse>();
+        Assert.IsNotNull(generated);
+
+        using (var draftResponse = await client.GetAsync(url))
+        {
+            var draft = await draftResponse.Content
+                .ReadFromJsonAsync<RecurringJournalScheduleResponse>();
+            Assert.IsNotNull(draft);
+            Assert.AreEqual("Draft", draft.Occurrences[0].OccurrenceStatus);
+            Assert.AreEqual(generated.JournalEntryId,
+                draft.Occurrences[0].JournalEntryId);
+        }
+
+        using (var post = await client.PostAsync(
+            $"/api/v1/accounting/journal/{generated.JournalEntryId}/post", null))
+            Assert.AreEqual(HttpStatusCode.OK, post.StatusCode,
+                await post.Content.ReadAsStringAsync());
+
+        using var postedResponse = await client.GetAsync(url);
+        var posted = await postedResponse.Content
+            .ReadFromJsonAsync<RecurringJournalScheduleResponse>();
+        Assert.IsNotNull(posted);
+        Assert.AreEqual("Posted", posted.Occurrences[0].OccurrenceStatus);
+        Assert.AreEqual("Scheduled", posted.Occurrences[1].OccurrenceStatus);
+    }
+
+    [TestMethod]
+    public async Task RecurringScheduleRespectsCutoffTodayAndTenantBoundary()
+    {
+        using var owner = Client(userA, organizationA);
+        using var other = Client(userB, organizationB);
+        var request = RecurringExpenseRequest(assetA, expenseA) with
+        {
+            LastPostingDate = new DateOnly(2026, 5, 15)
+        };
+        var template = await CreateRecurringAsync(owner, request);
+        var url = $"{RecurringUrl}/{template.Id}/schedule?from=2026-04-01&to=2026-07-01&asOf=2026-04-15";
+
+        using (var otherTenant = await other.GetAsync(url))
+            Assert.AreEqual(HttpStatusCode.NotFound, otherTenant.StatusCode);
+
+        using var response = await owner.GetAsync(url);
+        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        var schedule = await response.Content
+            .ReadFromJsonAsync<RecurringJournalScheduleResponse>();
+        Assert.IsNotNull(schedule);
+        Assert.HasCount(2, schedule.Occurrences);
+        Assert.AreEqual(new DateOnly(2026, 4, 15),
+            schedule.Occurrences[0].PostingDate);
+        Assert.AreEqual("Due", schedule.Occurrences[0].OccurrenceStatus);
+        Assert.AreEqual(new DateOnly(2026, 5, 15),
+            schedule.Occurrences[1].PostingDate);
+        Assert.AreEqual("Scheduled", schedule.Occurrences[1].OccurrenceStatus);
+    }
+
+    [TestMethod]
+    public async Task RecurringScheduleRejectsUnboundedAndReversedDates()
+    {
+        using var client = Client(userA, organizationA);
+        var template = await CreateRecurringAsync(
+            client, RecurringExpenseRequest(assetA, expenseA));
+        using (var tooLong = await client.GetAsync(
+            $"{RecurringUrl}/{template.Id}/schedule?from=2026-01-01&to=2028-01-01"))
+            Assert.AreEqual(HttpStatusCode.Conflict, tooLong.StatusCode);
+        using (var reversed = await client.GetAsync(
+            $"{RecurringUrl}/{template.Id}/schedule?from=2026-06-01&to=2026-05-01"))
+            Assert.AreEqual(HttpStatusCode.Conflict, reversed.StatusCode);
+        using var absent = await client.GetAsync(
+            $"{RecurringUrl}/{Guid.NewGuid()}/schedule?from=2026-03-01&to=2026-05-01");
+        Assert.AreEqual(HttpStatusCode.NotFound, absent.StatusCode);
+    }
+
 }

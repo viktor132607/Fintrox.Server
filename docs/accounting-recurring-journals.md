@@ -68,3 +68,27 @@ accounts and invalid schedules, closed period, tenant boundary and parallel
 generation idempotency.
 
 **Not evidence of statutory financial close.** Do not mark ACCOUNTING-001 complete.
+
+## ACCOUNTING-001G2A — read-only schedule monitoring (2026-10-15)
+
+Added `GET /api/v1/accounting/recurring-journals/{id}/schedule?from=YYYY-MM-DD&to=YYYY-MM-DD&asOf=YYYY-MM-DD`.
+Requires `accounting.read`. Both bounds are inclusive, maximum **366 days**;
+`asOf` is optional (defaults to current **UTC** date; callers should pass
+their chosen business date for local accounting calendars).
+Missing or other-tenant templates return 404. Invalid windows and corrupted
+generation/journal references return a typed 409. No new migration.
+
+Every scheduled day 1–28 within the immutable template effective dates is
+projected as `Scheduled`, `Due`, or `Overdue` relative to `asOf`.
+Existing immutable generation evidence is joined to the actual GL journal
+and reports `Draft`, `Posted` or `Reversed`, journal ID and journal status.
+The query is read-only and never generates, edits, posts, catches up or
+reschedules transactions. PostgreSQL provides a consistent snapshot for
+the single joined query; reporting does not replace the fiscal close controls.
+Three additional migrated-PostgreSQL authenticated HTTP tests cover
+state transitions and side-effect freedom, date cutoff and tenant isolation,
+and bounds/missing templates. **CI/build validation pending for G2A.**
+
+Still pending in `ACCOUNTING-001G2`: immutable versioned template
+revisions, explicit scheduler/worker with recoverable leases and execution
+audit, and policy-controlled notifications. Nothing automatically posts.

@@ -208,3 +208,13 @@ Post-publication verification and actual commit SHA are recorded in SESSION_HAND
 Architecture commit: c3f0ebfb1f2f4dc547cbaa1286bee61ae21de395 (main updated with expected-head check).
 All 362 written files verified against GitHub Git blob hashes; all untouched baseline files retain their original hashes.
 186 .csproj files confirmed in the published tree. No runtime verification performed.
+
+## ACCOUNTING-001G2A / recurring schedule projection (2026-10-15)
+- CODED; **new CI/.NET build/PostgreSQL test execution pending**. Added read-only
+  tenant-isolated monthly schedule preview bounded to 366 inclusive days, with
+  caller-supplied as-of date (UTC default), immutable generated draft/posting
+  audit references, and 409 for illegal windows/integrity mismatch.
+- 3 new full authenticated HTTP + migrated PostgreSQL regression methods
+  in `FinancialHttpPostgresRecurringJournalTests.cs`.
+- No migration or background executor; no change to already CI-verified G1
+  source semantics. All financial flows remain incomplete enterprise-wide.

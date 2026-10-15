@@ -83,3 +83,12 @@ Entity foundation only. New types are not yet EF tables, services, DTOs, endpoin
 Follow phases 1-3, then later operational and financial modules in dependency order. Before feature coding, apply the financial source-of-truth and transaction/idempotency rules from docs/financial-system-of-record.md.
 
 Domain expansion is complete and verified. Before ENTITIES-002 persistence/use cases, review per-module model boundaries and missing value objects. Then implement EF mappings/migrations, application workflows, authorization, endpoints and PostgreSQL/HTTP tests module by module. Frontend still has only 23 shells and no operational business screens; FE-001 remains pending.
+
+2026-10-15: ACCOUNTING-001G2A CODED, CI PENDING. Authenticated read-only
+`GET /api/v1/accounting/recurring-journals/{id}/schedule` generates a
+bounded (366-day) monthly *projection*, returning Scheduled/Due/Overdue
+or real Draft/Posted/Reversed evidence, with explicit asOf UTC-business-day
+semantics, cross-tenant 404 and integrity guards. Three migrated PostgreSQL
+HTTP regressions added. No new migration or automatic posting. Next:
+obtain CI results; then implement versioned template revisions and a
+safe recoverable scheduling mechanism (001G2B).
