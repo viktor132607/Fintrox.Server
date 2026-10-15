@@ -47,3 +47,13 @@
 
 - 2026-10-15: Verified cumulative ACCOUNTING CI #503 (https://github.com/viktor132607/Fintrox.Server/actions/runs/38654907133) at code SHA e28a16a11c695cdec191448f4d353f9f7435c089: Release dotnet build --warnaserror, **3,031 of 3,031 tests passed**, EF model snapshot clean, migrations 20261014000100–20261014000700 successfully applied/listed on PostgreSQL 18.6, Docker image built/published. Old CI-unverified statements are superseded for this code SHA. Enterprise-wide statutory financial close and new target module service integration still outstanding.
 \n2026-10-15 — ACCOUNTING-001G1 CODED (CI PENDING): legacy Accounting added immutable tenant-scoped monthly recurring journal templates (fixed 1–28 day, optional final date, 2–100 balanced debit/credit lines), authorized GET/POST templates, secured one-per-date manual generate route with template FOR UPDATE lock and normal GL fiscal period locks, normalized append-only PostgreSQL evidence, current account revalidation, System Draft+lines inserted atomically, separate authorized GL post and protection against manual mutation of the generated draft. Five actual migrated-PostgreSQL HTTP regression methods authored, NOT VERIFIED YET. See docs/accounting-recurring-journals.md; ACCOUNTING-001G2 scheduler/revisions and 001H accruals pending; no automatic posting.\n\n2026-10-15 — ACCOUNTING-001G1 CI VERIFIED on source SHA a7544869081888e7c090c9abba32919cb3316e4b: GitHub CI/CD #522 (38658049296): Release dotnet build --warnaserror SUCCESS, 3036/3036 tests passed with 0 failures and 0 skips, EF model snapshot clean, migration 20261015000100_RecurringJournalTemplates applied and listed on PostgreSQL 18.6, Docker Build & Publish SUCCESS. Added immutable monthly recurring journal templates and tenant-scoped one-per-schedule-date System Draft generation, with explicit separate authorized GL posting. No automatic scheduling. ACCOUNTING-001G2 (template revisions, scheduling/monitoring) and 001H accruals/deferrals pending. Whole ACCOUNTING-001 remains IN PROGRESS.\n
+
+2026-10-15 — ACCOUNTING-001G2A COMPLETE, CI VERIFIED [#526](https://github.com/viktor132607/Fintrox.Server/actions/runs/38772495791)
+at source `f5d231d6ab9ee08a44205ff70731fa27a2b85a82`: read-only tenant-scoped recurring schedule projection
+(`GET /api/v1/accounting/recurring-journals/{id}/schedule`) returns
+Scheduled/Due/Overdue and posted GL evidence Draft/Posted/Reversed with
+as-of semantics, max 366 days, no auto-posting. 3 new migrated-PostgreSQL
+HTTP tests; **3039/3039 passed**, Release build 0 warnings/errors,
+EF snapshot and PostgreSQL migrations clean, Docker publication passed.
+ACCOUNTING-001G2B versioned amendments/orchestration next; enterprise
+statutory close and full Accounting module cutover still pending.

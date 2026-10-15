@@ -218,3 +218,9 @@ All 362 written files verified against GitHub Git blob hashes; all untouched bas
   in `FinancialHttpPostgresRecurringJournalTests.cs`.
 - No migration or background executor; no change to already CI-verified G1
   source semantics. All financial flows remain incomplete enterprise-wide.
+
+2026-10-15 — ACCOUNTING-001G2A **CI VERIFIED**: GitHub [#526](https://github.com/viktor132607/Fintrox.Server/actions/runs/38772495791)
+at code SHA `f5d231d6ab9ee08a44205ff70731fa27a2b85a82`: Release build **0 warnings/0 errors**,
+3039/3039 tests passed, 0 skipped/failed, EF model snapshot clean,
+migrations applied/listed in PostgreSQL, Docker build/publish succeeded.
+Supersedes earlier G2A CI-pending assertion. No new DB migration.

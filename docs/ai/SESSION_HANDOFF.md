@@ -92,3 +92,9 @@ semantics, cross-tenant 404 and integrity guards. Three migrated PostgreSQL
 HTTP regressions added. No new migration or automatic posting. Next:
 obtain CI results; then implement versioned template revisions and a
 safe recoverable scheduling mechanism (001G2B).
+
+2026-10-15: ACCOUNTING-001G2A CI VERIFIED in GitHub #526
+(https://github.com/viktor132607/Fintrox.Server/actions/runs/38772495791), source f5d231d6ab9ee08a44205ff70731fa27a2b85a82. Zero-warning Release build; 3039/3039
+tests passed, PostgreSQL migrations + EF snapshot clean, Docker
+publication passed. Earlier G2A pending note superseded. G2B revision
+lineage and safe automation still pending.

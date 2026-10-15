@@ -148,3 +148,9 @@ schedule/status preview added to recurring journals; immutable GL evidence
 exposes Draft/Posted/Reversed, ungenerated dates show Scheduled/Due/Overdue.
 Next ACCOUNTING-001G2B versioned template amendments and safe scheduling;
 no auto-posting or statutory close.
+
+2026-10-15 — ACCOUNTING-001G2A **CI VERIFIED** on f5d231d6ab9ee08a44205ff70731fa27a2b85a82,
+GitHub CI #526 (https://github.com/viktor132607/Fintrox.Server/actions/runs/38772495791): Release build 0 warnings,
+3039/3039 tests (0 failure/skip), EF snapshot and PostgreSQL migrations,
+Docker publish all pass. ACCOUNTING-001G2B/001H and total ERP financial
+system remain in progress.

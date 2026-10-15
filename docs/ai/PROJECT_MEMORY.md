@@ -120,3 +120,21 @@ User direction 2026-10-11: prioritize adding module entities and record per-modu
 - Actual repairs across prior red runs: missing JournalService opening balance import; interface to keyword and invalid LINQ; analyzer globalization/static and delta shadow; nullable test warnings; PostBankFeeRequest MVC constructor validation; allocation Draft-first fixture; CORS test host origin; overlapping bank statements in banking test. All checks kept intact.
 - 36 new-module Domain shells still not operational. Full audited cross-module enterprise financial flow, true multi-period/statutory close, external bank evidence and rate approval still pending. ACCOUNTING-001 remains IN PROGRESS. Any later SHA requires separate green CI.
 \n2026-10-15 — ACCOUNTING-001G1 CODED (CI PENDING): legacy Accounting added immutable tenant-scoped monthly recurring journal templates (fixed 1–28 day, optional final date, 2–100 balanced debit/credit lines), authorized GET/POST templates, secured one-per-date manual generate route with template FOR UPDATE lock and normal GL fiscal period locks, normalized append-only PostgreSQL evidence, current account revalidation, System Draft+lines inserted atomically, separate authorized GL post and protection against manual mutation of the generated draft. Five actual migrated-PostgreSQL HTTP regression methods authored, NOT VERIFIED YET. See docs/accounting-recurring-journals.md; ACCOUNTING-001G2 scheduler/revisions and 001H accruals pending; no automatic posting.\n\n2026-10-15 — ACCOUNTING-001G1 CI VERIFIED on source SHA a7544869081888e7c090c9abba32919cb3316e4b: GitHub CI/CD #522 (38658049296): Release dotnet build --warnaserror SUCCESS, 3036/3036 tests passed with 0 failures and 0 skips, EF model snapshot clean, migration 20261015000100_RecurringJournalTemplates applied and listed on PostgreSQL 18.6, Docker Build & Publish SUCCESS. Added immutable monthly recurring journal templates and tenant-scoped one-per-schedule-date System Draft generation, with explicit separate authorized GL posting. No automatic scheduling. ACCOUNTING-001G2 (template revisions, scheduling/monitoring) and 001H accruals/deferrals pending. Whole ACCOUNTING-001 remains IN PROGRESS.\n
+
+## 2026-10-15 — ACCOUNTING-001G2A COMPLETE — VERIFIED
+- Append-only monthly recurring template generation from G1 remains unchanged;
+  G2A adds read-only tenant-scoped 366-day occurrence projections with
+  optional explicit `asOf` (UTC today default), statuses Scheduled/Due/Overdue
+  and Draft/Posted/Reversed backed by the real generated journal.
+- API: `GET /api/v1/accounting/recurring-journals/{id}/schedule?from=...&to=...&asOf=...`
+  with accounting.read permission. Tenant-scoped 404; invalid ranges and
+  GL-source tampering 409. Does not generate or post, no new migration.
+- Verified CI [#526](https://github.com/viktor132607/Fintrox.Server/actions/runs/38772495791) for code SHA `f5d231d6ab9ee08a44205ff70731fa27a2b85a82`:
+  Release build 0 warnings/errors, **3,039/3,039 tests**, migrated PostgreSQL
+  and EF snapshot pass, Docker build/publish pass. 3 additional real
+  PostgreSQL HTTP regressions exercise state transitions, date cutoff and
+  tenant guard, bad window. Documentation-only commits after this SHA do
+  not change the verified application code.
+- Next: ACCOUNTING-001G2B immutable template version/replacement lineage
+  plus safe scheduling/retry contracts; never auto-post without explicit
+  permission. ACCOUNTING-001H accruals/deferrals pending.

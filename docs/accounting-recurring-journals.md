@@ -87,7 +87,7 @@ reschedules transactions. PostgreSQL provides a consistent snapshot for
 the single joined query; reporting does not replace the fiscal close controls.
 Three additional migrated-PostgreSQL authenticated HTTP tests cover
 state transitions and side-effect freedom, date cutoff and tenant isolation,
-and bounds/missing templates. **CI/build validation pending for G2A.**
+and bounds/missing templates. **CI VERIFIED:** [GitHub #526](https://github.com/viktor132607/Fintrox.Server/actions/runs/38772495791) on code SHA `f5d231d6ab9ee08a44205ff70731fa27a2b85a82`: Release build 0 warnings/errors, **3039/3039 tests passed** (0 failures, 0 skipped), clean EF model snapshot, PostgreSQL migrations applied/listed and Docker Build & Publish passed.
 
 Still pending in `ACCOUNTING-001G2`: immutable versioned template
 revisions, explicit scheduler/worker with recoverable leases and execution
