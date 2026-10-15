@@ -205,8 +205,8 @@ public sealed partial class FinancialHttpPostgresRegressionTests
             Assert.IsNotNull(results[1]);
             Assert.AreEqual(results[0]!.JournalEntryId,
                 results[1]!.JournalEntryId);
-            Assert.AreNotEqual(results[0].AlreadyGenerated,
-                results[1].AlreadyGenerated);
+            Assert.AreNotEqual(results[0]!.AlreadyGenerated,
+                results[1]!.AlreadyGenerated);
         }
         finally
         {
