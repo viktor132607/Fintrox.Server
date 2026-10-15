@@ -36,8 +36,10 @@ public sealed class RecurringJournalsController(IRecurringJournalService service
         }
         catch (JournalConflictException ex)
         {
-            return Conflict(Problem(StatusCodes.Status409Conflict,
-                "Invalid recurring journal template", ex.Message));
+            return Problem(
+                statusCode: StatusCodes.Status409Conflict,
+                title: "Invalid recurring journal template",
+                detail: ex.Message);
         }
     }
 
@@ -55,8 +57,10 @@ public sealed class RecurringJournalsController(IRecurringJournalService service
         }
         catch (JournalConflictException ex)
         {
-            return Conflict(Problem(StatusCodes.Status409Conflict,
-                "Recurring journal generation conflict", ex.Message));
+            return Problem(
+                statusCode: StatusCodes.Status409Conflict,
+                title: "Recurring journal generation conflict",
+                detail: ex.Message);
         }
     }
 }
