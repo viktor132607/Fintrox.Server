@@ -29,3 +29,5 @@ Next task: AUTH-002, atomic single-use refresh-token rotation with relational co
 - Added five PostgreSQL concurrency/rollback/revocation tests; no new project or schema.
 - Code: 422cc38dd2a20200ca3a5e1ee91a8c6c78d876dd. CI run 38012762635 / job 114096261806: Release build 0 warnings/errors, 51/51 tests, EF snapshot and PostgreSQL migrations passed.
 - Client handoff synchronized at ec7ccf7; no frontend source changes. Next: INT-001.
+
+2026-11-03 — ACCOUNTING-001H1 COMPLETE — CI VERIFIED: [GitHub CI/CD #546](https://github.com/viktor132607/Fintrox.Server/actions/runs/41652384588) at source SHA `3fef5615b4a50cd1a2abd96e24e3baff13626735`: Release build 0 warnings/errors, 3054/3054 tests passed (0 failures/skips), EF snapshot clean, migration `20261103000100_RecognitionSchedules` applied/listed on PostgreSQL 18.6, Docker build/publish successful. Supersedes H1 CI-pending statements. Next ACCOUNTING-001H2: source-linked lifecycle/corrections; full statutory close and modular EF cutover still pending.

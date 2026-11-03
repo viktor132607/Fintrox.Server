@@ -1,6 +1,6 @@
 # ACCOUNTING-001H1 — fixed monthly accrual/deferral recognition
 
-Date: 2026-11-03. Status: CODED; **CI NOT YET VERIFIED**.
+Date: 2026-11-03. Status: **COMPLETE — CI VERIFIED**. [GitHub #546](https://github.com/viktor132607/Fintrox.Server/actions/runs/41652384588) at `3fef5615b4a50cd1a2abd96e24e3baff13626735`.
 
 ## Supported recognition kinds
 
@@ -65,10 +65,8 @@ created in the same transaction.
 Five migrated PostgreSQL + HTTP regression tests cover allocation and
 residual, immutable Draft → Posted, idempotency, four account-kind mappings,
 invalid input/cross-tenant rejection, closed periods and parallel requests.
-These tests are authored, **not yet executed** until GitHub CI confirms.
+All five new tests passed in CI: **3054/3054** total (0 failures/skips), zero-warning Release build, EF snapshot clean, PostgreSQL 18.6 migration applied/listed, Docker build/publish successful.
 
-Next: validate warnings-as-errors build, all .NET tests, migration and
-PostgreSQL, EF snapshot, Docker; repair failures before marking H1 complete.
 ACCOUNTING-001H2: schedule revision/termination, accountant-approved
 catch-up/corrections and controlled reversal tied to source documents.
 Full statutory close and cross-module financial attestation remain pending.

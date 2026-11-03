@@ -26,3 +26,5 @@
 - Preserved existing runtime entities/financial engines/migrations. Other module layers and persistence remain pending.
 - Added complete machine inventory, CI inventory check and 558 new test cases. Local Release affected graph build passed; 604 tests passed, 5 PostgreSQL tests skipped pending CI.
 - Per-module names and pending work recorded in MODULE_STATUS.md.
+
+2026-11-03 — ACCOUNTING-001H1 COMPLETE — CI VERIFIED: [GitHub CI/CD #546](https://github.com/viktor132607/Fintrox.Server/actions/runs/41652384588) at source SHA `3fef5615b4a50cd1a2abd96e24e3baff13626735`: Release build 0 warnings/errors, 3054/3054 tests passed (0 failures/skips), EF snapshot clean, migration `20261103000100_RecognitionSchedules` applied/listed on PostgreSQL 18.6, Docker build/publish successful. Supersedes H1 CI-pending statements. Next ACCOUNTING-001H2: source-linked lifecycle/corrections; full statutory close and modular EF cutover still pending.
