@@ -86,6 +86,7 @@ public static class DependencyInjection
         services.AddScoped<IRecurringJournalService>(
             provider => provider.GetRequiredService<RecurringJournalService>());
         services.AddScoped<IRecurringJournalAutomationService, RecurringJournalAutomationService>();
+        services.AddScoped<IRecognitionScheduleService, RecognitionScheduleService>();
         services.AddScoped<IAutoPostingRuleRepository, AutoPostingRuleRepository>();
         services.AddScoped<ICounterpartyRepository, CounterpartyRepository>();
         services.AddScoped<ICurrencyRepository, CurrencyRepository>();

@@ -965,8 +965,10 @@ public sealed class JournalService(
     {
         EnsureDraft(entry);
         if (entry.Source == JournalEntrySource.System &&
-            entry.ExternalReference?.StartsWith(
-                "recurring-journal:v1:", StringComparison.Ordinal) == true)
+            (entry.ExternalReference?.StartsWith(
+                "recurring-journal:v1:", StringComparison.Ordinal) == true ||
+             entry.ExternalReference?.StartsWith(
+                "recognition-schedule:v1:", StringComparison.Ordinal) == true))
         {
             throw new JournalConflictException(
                 "Generated recurring journal drafts cannot be edited through the manual journal endpoints. Create a revised template instead.");

@@ -294,3 +294,5 @@ milestone complete, though Accounting as a whole is IN PROGRESS;
 next ACCOUNTING-001H accrual/deferral business logic and more
 formal multi-module financial reconciliation. Draft generation never
 posts GL, and UTC schedule defaults still apply.
+
+2026-11-03 — ACCOUNTING-001H1 CODED, CI PENDING: immutable tenant-scoped monthly accrual/deferral recognition schedules (prepaid expense, deferred revenue, accrued expense, accrued revenue), 4-decimal allocation with final residual, source-controlled one-per-period System Draft generation under calendar locks, protected manual editing and separate authorized GL post. Five PostgreSQL/HTTP regression tests authored, not yet executed; see docs/accounting-accruals-deferrals.md. H2 source linkage/corrections and statutory close remain pending.
